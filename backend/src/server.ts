@@ -70,6 +70,9 @@ app.register(sbomRoutes, { prefix: '/api' });
 
 app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
 
+// Root health endpoint for Railway healthcheck
+app.get('/health', async () => ({ status: 'ok', service: 'anchor-backend' }));
+
 app.setErrorHandler((error, request, reply) => {
   request.log.error(error);
   reply.status(500).send({ error: 'Internal Server Error' });
