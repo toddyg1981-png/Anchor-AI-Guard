@@ -138,7 +138,7 @@ const CriticalInfrastructureProtection: React.FC = () => {
     { name: 'TSA Pipeline', score: 95, status: 'compliant', lastAudit: '2026-01-05', nextAudit: '2026-04-05' },
   ]);
 
-  const [threatLevel, setThreatLevel] = useState<'low' | 'guarded' | 'elevated' | 'high' | 'severe'>('elevated');
+  const [threatLevel, _setThreatLevel] = useState<'low' | 'guarded' | 'elevated' | 'high' | 'severe'>('elevated');
   const [liveMetric, setLiveMetric] = useState(0);
 
   useEffect(() => {

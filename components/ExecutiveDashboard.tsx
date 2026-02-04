@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // ============================================================================
 // EXECUTIVE RISK DASHBOARD - BOARD-LEVEL SECURITY REPORTING
@@ -171,7 +171,7 @@ export const ExecutiveDashboard: React.FC = () => {
     return `$${(value / 1000).toFixed(0)}K`;
   };
 
-  const formatPercent = (value: number) => `${value}%`;
+  const _formatPercent = (_value: number) => `${_value}%`;
 
   const getPostureColor = (posture: string) => {
     switch (posture) {
@@ -302,7 +302,7 @@ export const ExecutiveDashboard: React.FC = () => {
         <div className="lg:col-span-2 bg-gray-900/50 border border-gray-800 rounded-xl p-6">
           <h2 className="text-xl font-semibold mb-4">📈 Risk Exposure Trend</h2>
           <div className="h-64 flex items-end justify-between gap-2">
-            {riskTrends.map((trend, index) => {
+            {riskTrends.map((trend, _index) => {
               const maxExposure = Math.max(...riskTrends.map(t => t.exposure));
               const height = (trend.exposure / maxExposure) * 100;
               return (
@@ -414,7 +414,7 @@ export const ExecutiveDashboard: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">💰 Security Investment ROI</h2>
           <div className="space-y-4">
             {securityInvestments.map(investment => {
-              const gapPercent = ((investment.recommendedSpend - investment.currentSpend) / investment.recommendedSpend) * 100;
+              const _gapPercent = ((investment.recommendedSpend - investment.currentSpend) / investment.recommendedSpend) * 100;
               return (
                 <div key={investment.category}>
                   <div className="flex items-center justify-between mb-1">

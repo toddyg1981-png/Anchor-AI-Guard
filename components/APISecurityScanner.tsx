@@ -67,7 +67,7 @@ const OWASP_API_TOP_10: OWASPCategory[] = [
 
 export const APISecurityScanner: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'endpoints' | 'findings' | 'owasp' | 'discovery'>('overview');
-  const [selectedEndpoint, setSelectedEndpoint] = useState<APIEndpoint | null>(null);
+  const [_selectedEndpoint, _setSelectedEndpoint] = useState<APIEndpoint | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
 

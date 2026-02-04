@@ -56,7 +56,7 @@ interface SimulationFinding {
 
 export const BreachSimulator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'scenarios' | 'simulations' | 'results' | 'mitre'>('scenarios');
-  const [selectedScenario, setSelectedScenario] = useState<AttackScenario | null>(null);
+  const [_selectedScenario, setSelectedScenario] = useState<AttackScenario | null>(null);
   const [runningSimulation, setRunningSimulation] = useState<SimulationResult | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
 

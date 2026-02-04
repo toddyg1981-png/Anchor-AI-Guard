@@ -59,7 +59,7 @@ interface PolicyViolation {
 
 export const CICDSecurity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'pipelines' | 'gates' | 'secrets' | 'policies' | 'iac'>('pipelines');
-  const [selectedPipeline, setSelectedPipeline] = useState<string | null>(null);
+  const [_selectedPipeline, _setSelectedPipeline] = useState<string | null>(null);
 
   // Mock pipelines
   const pipelines: Pipeline[] = [

@@ -42,15 +42,7 @@ interface MaintainerRisk {
   recentActivity: string;
 }
 
-interface _SBOMEntry {
-  name: string;
-  version: string;
-  ecosystem: string;
-  license: string;
-  directDep: boolean;
-  depth: number;
-  vulnerabilities: number;
-}
+// SBOMEntry interface removed - using inline types
 
 export const SupplyChainAI: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'packages' | 'typosquatting' | 'maintainers' | 'sbom'>('overview');

@@ -43,7 +43,7 @@ interface ComplianceFramework {
   score: number;
 }
 
-interface CloudResource {
+interface _CloudResource {
   id: string;
   type: string;
   name: string;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // ============================================================================
 // COMPLIANCE HUB - WORLD'S MOST COMPREHENSIVE COMPLIANCE AUTOMATION
@@ -19,7 +19,7 @@ type ComplianceFramework =
 type MaturityLevel = 0 | 1 | 2 | 3;
 type ControlStatus = 'compliant' | 'partial' | 'non-compliant' | 'not-applicable';
 
-interface ComplianceControl {
+interface _ComplianceControl {
   id: string;
   name: string;
   description: string;
@@ -401,7 +401,7 @@ const ESSENTIAL_EIGHT_STRATEGIES: EssentialEightControl[] = [
 
 export const ComplianceHub: React.FC = () => {
   const [selectedFramework, setSelectedFramework] = useState<ComplianceFramework>('essential-eight');
-  const [assessments, setAssessments] = useState<FrameworkAssessment[]>([]);
+  const [_assessments, _setAssessments] = useState<FrameworkAssessment[]>([]);
   const [essentialEight, setEssentialEight] = useState<EssentialEightControl[]>(ESSENTIAL_EIGHT_STRATEGIES);
   const [isAssessing, setIsAssessing] = useState(false);
   const [showReport, setShowReport] = useState(false);

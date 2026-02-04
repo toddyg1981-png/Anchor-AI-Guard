@@ -58,7 +58,7 @@ interface ArtifactAnalysis {
 
 export const ForensicsInvestigation: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'cases' | 'evidence' | 'timeline' | 'artifacts'>('cases');
-  const [selectedCase, setSelectedCase] = useState<string | null>(null);
+  const [_selectedCase, _setSelectedCase] = useState<string | null>(null);
 
   const cases: ForensicCase[] = [
     { id: 'c-1', caseNumber: 'CASE-2026-0042', title: 'Suspected APT Intrusion', type: 'breach', status: 'analysis', priority: 'critical', assignedTo: 'Sarah Chen', createdDate: '2026-02-01', lastActivity: '2026-02-04T11:30:00Z', evidenceCount: 15, findings: ['Cobalt Strike beacon identified', 'Lateral movement via WMI', 'Data staging in temp folder'] },
@@ -286,7 +286,7 @@ export const ForensicsInvestigation: React.FC = () => {
         <div className="relative">
           <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-700" />
           <div className="space-y-4">
-            {timeline.map((event, idx) => (
+            {timeline.map((event, _idx) => (
               <div key={event.id} className="ml-8 relative">
                 <div className={`absolute -left-6 w-3 h-3 rounded-full ${
                   event.significance === 'critical' ? 'bg-red-500' :
