@@ -11,6 +11,8 @@ RUN npm run prisma:generate
 COPY src ./src
 COPY tsconfig.json ./
 
+ARG BUILD_VERSION=1
+RUN echo "Build version: $BUILD_VERSION"
 RUN npm run build
 
 FROM node:18-alpine
