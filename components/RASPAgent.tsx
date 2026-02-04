@@ -42,7 +42,7 @@ interface ProtectionRule {
 
 export const RASPAgent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'agents' | 'attacks' | 'rules' | 'analytics'>('agents');
-  const [selectedAgent, setSelectedAgent] = useState<RASPAgent | null>(null);
+  const [_selectedAgent, _setSelectedAgent] = useState<RASPAgent | null>(null);
   const [realtimeAttacks, setRealtimeAttacks] = useState<RuntimeAttack[]>([]);
 
   // Mock RASP agents

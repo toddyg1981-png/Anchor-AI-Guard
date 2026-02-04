@@ -28,7 +28,7 @@ interface ThreatBriefing {
 }
 
 const NationalSecurityModule: React.FC = () => {
-  const [classificationLevels] = useState<ClassificationLevel[]>([
+  const [_classificationLevels] = useState<ClassificationLevel[]>([
     { id: 'ts-sci', name: 'TS/SCI', color: 'yellow', description: 'Top Secret / Sensitive Compartmented Information' },
     { id: 'ts', name: 'TOP SECRET', color: 'orange', description: 'Top Secret' },
     { id: 'secret', name: 'SECRET', color: 'red', description: 'Secret' },

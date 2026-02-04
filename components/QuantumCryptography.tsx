@@ -327,7 +327,7 @@ export const QuantumCryptography: React.FC = () => {
         <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
           <h3 className="font-semibold mb-6">📅 Quantum Computing Threat Timeline</h3>
           <div className="space-y-6">
-            {quantumTimeline.map((point, idx) => (
+            {quantumTimeline.map((point, _idx) => (
               <div key={point.year} className="flex items-center gap-4">
                 <div className={`text-2xl font-bold w-16 ${
                   point.year <= 2028 ? 'text-green-400' :

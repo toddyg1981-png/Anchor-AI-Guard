@@ -49,7 +49,7 @@ interface EmployeeRisk {
 
 export const PhishingSimulator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'campaigns' | 'templates' | 'users' | 'analytics'>('campaigns');
-  const [showNewCampaign, setShowNewCampaign] = useState(false);
+  const [_showNewCampaign, setShowNewCampaign] = useState(false);
 
   const campaigns: PhishingCampaign[] = [
     { id: 'pc-1', name: 'Q1 2026 Baseline Test', template: 'Password Reset', difficulty: 'easy', status: 'completed', targetGroup: 'All Employees', targetCount: 150, sentCount: 150, openedCount: 120, clickedCount: 23, reportedCount: 45, credentialsEnteredCount: 8, completedDate: '2026-01-31' },

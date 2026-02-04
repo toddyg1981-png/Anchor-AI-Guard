@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // ============================================================================
 // INCIDENT RESPONSE AUTOMATION
@@ -232,7 +232,7 @@ export const IncidentResponseAutomation: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 mb-2">
-            {playbooks.find(p => p.id === activeIncident.playbookId)?.actions.map((action, idx) => (
+            {playbooks.find(p => p.id === activeIncident.playbookId)?.actions.map((_action, idx) => (
               <div
                 key={idx}
                 className={`flex-1 h-2 rounded-full ${

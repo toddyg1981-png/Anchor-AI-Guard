@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // ============================================================================
 // ANCHOR SELF-PROTECTION SYSTEM
@@ -83,7 +83,7 @@ export const SelfProtection: React.FC = () => {
   ];
 
   // Mock threat alerts
-  const [threatAlerts, setThreatAlerts] = useState<ThreatAlert[]>([
+  const [threatAlerts, _setThreatAlerts] = useState<ThreatAlert[]>([
     { id: 'ta-1', timestamp: '2026-02-04T11:45:00Z', type: 'brute_force', severity: 'medium', source: '185.234.72.15', description: 'Brute force attempt on admin login - 50 failed attempts', status: 'mitigated', autoMitigated: true },
     { id: 'ta-2', timestamp: '2026-02-04T10:30:00Z', type: 'anomaly', severity: 'low', source: 'internal', description: 'Unusual API call pattern from service account', status: 'investigating', autoMitigated: false },
     { id: 'ta-3', timestamp: '2026-02-04T09:15:00Z', type: 'intrusion_attempt', severity: 'high', source: '103.45.67.89', description: 'SQL injection attempt on /api/users endpoint', status: 'mitigated', autoMitigated: true },

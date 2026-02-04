@@ -42,7 +42,7 @@ interface MaintainerRisk {
   recentActivity: string;
 }
 
-interface SBOMEntry {
+interface _SBOMEntry {
   name: string;
   version: string;
   ecosystem: string;
@@ -54,7 +54,7 @@ interface SBOMEntry {
 
 export const SupplyChainAI: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'packages' | 'typosquatting' | 'maintainers' | 'sbom'>('overview');
-  const [selectedPackage, setSelectedPackage] = useState<DependencyPackage | null>(null);
+  const [_selectedPackage, _setSelectedPackage] = useState<DependencyPackage | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // ============================================================================
 // THREAT INTELLIGENCE PLATFORM - REAL-TIME THREAT FEEDS & CORRELATION

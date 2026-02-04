@@ -40,7 +40,7 @@ interface PermissionRisk {
 
 export const MobileSecurity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'apps' | 'findings' | 'permissions' | 'owasp'>('apps');
-  const [selectedApp, setSelectedApp] = useState<MobileApp | null>(null);
+  const [_selectedApp, _setSelectedApp] = useState<MobileApp | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
 

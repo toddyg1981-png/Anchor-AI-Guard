@@ -48,7 +48,7 @@ export const SOCDashboard: React.FC = () => {
   }, []);
 
   // Security events
-  const [events, setEvents] = useState<SecurityEvent[]>([
+  const [events, _setEvents] = useState<SecurityEvent[]>([
     { id: 'evt-1', timestamp: '2026-02-04T11:59:30Z', category: 'attack', severity: 'high', source: 'WAF', title: 'SQL Injection Blocked', description: 'Attempted SQL injection on /api/users from 185.234.72.15', status: 'resolved', assignee: 'Auto' },
     { id: 'evt-2', timestamp: '2026-02-04T11:58:00Z', category: 'anomaly', severity: 'medium', source: 'UEBA', title: 'Unusual Login Time', description: 'Service account logged in outside business hours', status: 'investigating' },
     { id: 'evt-3', timestamp: '2026-02-04T11:55:00Z', category: 'intel', severity: 'info', source: 'ThreatFeed', title: 'New IOCs Published', description: 'ACSC published 45 new IOCs for LockBit 3.0', status: 'acknowledged' },

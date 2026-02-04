@@ -41,7 +41,7 @@ interface VaultConnection {
 
 export const SecretsRotation: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'secrets' | 'rotation' | 'policies' | 'vaults'>('secrets');
-  const [selectedSecret, setSelectedSecret] = useState<Secret | null>(null);
+  const [_selectedSecret, _setSelectedSecret] = useState<Secret | null>(null);
   const [isRotating, setIsRotating] = useState<string | null>(null);
 
   // Mock secrets data

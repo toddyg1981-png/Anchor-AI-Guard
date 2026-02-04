@@ -207,7 +207,7 @@ export const OTICSecurity: React.FC = () => {
           <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
             <h3 className="font-semibold mb-4">🏗️ Purdue Model Network Architecture</h3>
             <div className="space-y-2">
-              {networkZones.map((zone, idx) => (
+              {networkZones.map((zone, _idx) => (
                 <div 
                   key={zone.id} 
                   className={`p-4 rounded-lg border ${
