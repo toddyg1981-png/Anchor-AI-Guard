@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum FindingSeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum FindingStatus {
+  OPEN
+  FIXED
+  FALSE_POSITIVE
+}
+
+enum ScanStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model Organization {
+  id           String        @id @default(cuid())
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  members      User[]
+  projects     Project[]
+  invites      Invite[]
+  integrations Integration[]
+  subscription Subscription?
+  apiKeys      APIKey[]
+  auditLogs    AuditLog[]
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String?
+  passwordHash  String?
+  role          String         @default("member")
+  avatarUrl     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  orgId         String
+  org           Organization   @relation(fields: [orgId], references: [id])
+  oauthAccounts OAuthAccount[]
+}
+
+model Invite {
+  id         String    @id @default(cuid())
+  email      String
+  name       String
+  role       String    @default("member")
+  token      String    @unique @default(cuid())
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+  orgId      String
+  org        Organization @relation(fields: [orgId], references: [id])
+}
+
+model Integration {
+  id        String   @id @default(cuid())
+  type      String
+  name      String
+  config    Json
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orgId     String
+  org       Organization @relation(fields: [orgId], references: [id])
+}
+
+model Project {
+  id          String     @id @default(cuid())
+  name        String
+  owner       String     @default("Unassigned")
+  description String?
+  scope       Json?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  orgId       String
+  org         Organization @relation(fields: [orgId], references: [id])
+  findings    Finding[]
+  scans       Scan[]
+  sbom        SBOM?
+}
+
+model Finding {
+  id              String          @id @default(cuid())
+  type            String
+  title           String
+  severity        FindingSeverity
+  status          FindingStatus   @default(OPEN)
+  description     String
+  guidance        String
+  reproduction    String
+  filePath        String?
+  lineNumber      Int?
+  ticketRef       String?
+  prRef           String?
+  autofixAvailable Boolean        @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  projectId       String
+  project         Project         @relation(fields: [projectId], references: [id])
+  autofixes       Autofix[]
+}
+
+model Autofix {
+  id           String   @id @default(cuid())
+  status       String   @default("PENDING")
+  prNumber     Int?
+  branchName   String?
+  targetBranch String?
+  diff         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  findingId    String
+  finding      Finding  @relation(fields: [findingId], references: [id])
+}
+
+model Scan {
+  id            String     @id @default(cuid())
+  status        ScanStatus @default(QUEUED)
+  progress      Int        @default(0)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  findingsCount Int        @default(0)
+  createdAt     DateTime   @default(now())
+  projectId     String
+  project       Project    @relation(fields: [projectId], references: [id])
+}
+
+model SBOM {
+  id                      String   @id @default(cuid())
+  projectId               String   @unique
+  project                 Project  @relation(fields: [projectId], references: [id])
+  components              Json
+  totalDependencies       Int      @default(0)
+  directDependencies      Int      @default(0)
+  transitiveDependencies  Int      @default(0)
+  generatedAt             DateTime @default(now())
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+// ============================================
+// BILLING & SUBSCRIPTIONS
+// ============================================
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+}
+
+enum PlanTier {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+  ENTERPRISE_PLUS
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  status               SubscriptionStatus @default(TRIALING)
+  planTier             PlanTier           @default(STARTER)
+  trialEndsAt          DateTime?
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  orgId                String             @unique
+  org                  Organization       @relation(fields: [orgId], references: [id])
+  usageRecords         UsageRecord[]
+}
+
+model UsageRecord {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  metric         String       // 'scans', 'projects', 'ai_queries', 'team_members'
+  quantity       Int
+  periodStart    DateTime
+  periodEnd      DateTime
+  createdAt      DateTime     @default(now())
+}
+
+model Plan {
+  id              String   @id @default(cuid())
+  name            String
+  tier            PlanTier @unique
+  stripePriceId   String?
+  monthlyPrice    Int      // in cents
+  yearlyPrice     Int      // in cents (annual)
+  maxProjects     Int
+  maxScansPerMonth Int
+  maxTeamMembers  Int
+  maxAIQueries    Int
+  features        Json     // array of feature strings
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ============================================
+// PASSWORD RESET & AUTH TOKENS
+// ============================================
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  token     String   @unique @default(cuid())
+  email     String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+model OAuthAccount {
+  id           String   @id @default(cuid())
+  provider     String   // 'github', 'google'
+  providerId   String   // external account ID
+  accessToken  String?
+  refreshToken String?
+  expiresAt    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerId])
+}
+
+// ============================================
+// API KEYS
+// ============================================
+
+model APIKey {
+  id          String    @id @default(cuid())
+  name        String
+  keyHash     String    @unique
+  keyPrefix   String    // First 8 chars for display
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  scopes      Json      // array of permission scopes
+  createdAt   DateTime  @default(now())
+  orgId       String
+  org         Organization @relation(fields: [orgId], references: [id])
+}
+
+// ============================================
+// AUDIT LOG
+// ============================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // 'user.login', 'project.create', 'scan.start', etc.
+  actor     String   // user ID or 'system'
+  target    String?  // resource ID
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  orgId     String
+  org       Organization @relation(fields: [orgId], references: [id])
+}

@@ -1,0 +1,16 @@
+# Docker ignore file
+node_modules
+npm-debug.log
+.env
+.env.local
+.env.*.local
+.git
+.gitignore
+README.md
+*.md
+.vscode
+.idea
+dist
+coverage
+.cache
+*.log

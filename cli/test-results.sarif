@@ -1,0 +1,3782 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Anchor Security",
+          "version": "1.0.0",
+          "informationUri": "https://anchor.security",
+          "rules": [
+            {
+              "id": "database-url",
+              "name": "database-url",
+              "shortDescription": {
+                "text": "database-url"
+              },
+              "fullDescription": {
+                "text": "Database connection string with credentials detected: post...rity"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-798"
+                ]
+              }
+            },
+            {
+              "id": "heroku-api-key",
+              "name": "heroku-api-key",
+              "shortDescription": {
+                "text": "heroku-api-key"
+              },
+              "fullDescription": {
+                "text": "Potential Heroku API Key (UUID format) detected: 0aa6...3ed6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-798"
+                ]
+              }
+            },
+            {
+              "id": "api-key-generic",
+              "name": "api-key-generic",
+              "shortDescription": {
+                "text": "api-key-generic"
+              },
+              "fullDescription": {
+                "text": "Hardcoded API key detected: API_...key\""
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-798"
+                ]
+              }
+            },
+            {
+              "id": "password-assignment",
+              "name": "password-assignment",
+              "shortDescription": {
+                "text": "password-assignment"
+              },
+              "fullDescription": {
+                "text": "Hardcoded password detected: secr...ger'"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-798"
+                ]
+              }
+            },
+            {
+              "id": "private-key-pkcs8",
+              "name": "private-key-pkcs8",
+              "shortDescription": {
+                "text": "private-key-pkcs8"
+              },
+              "fullDescription": {
+                "text": "Encrypted private key detected: ----...----"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-321"
+                ]
+              }
+            },
+            {
+              "id": "prototype-pollution",
+              "name": "prototype-pollution",
+              "shortDescription": {
+                "text": "prototype-pollution"
+              },
+              "fullDescription": {
+                "text": "Potential Prototype Pollution via dynamic property assignment"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-1321"
+                ]
+              }
+            },
+            {
+              "id": "hardcoded-ip",
+              "name": "hardcoded-ip",
+              "shortDescription": {
+                "text": "hardcoded-ip"
+              },
+              "fullDescription": {
+                "text": "Hardcoded IP address detected. Consider using configuration"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-547"
+                ]
+              }
+            },
+            {
+              "id": "ssrf-potential",
+              "name": "ssrf-potential",
+              "shortDescription": {
+                "text": "ssrf-potential"
+              },
+              "fullDescription": {
+                "text": "Potential SSRF: User input used in URL"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-918"
+                ],
+                "owasp": [
+                  "A10:2021"
+                ]
+              }
+            },
+            {
+              "id": "xss-innerhtml",
+              "name": "xss-innerhtml",
+              "shortDescription": {
+                "text": "xss-innerhtml"
+              },
+              "fullDescription": {
+                "text": "Potential XSS: Dynamic content assigned to innerHTML"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-79"
+                ],
+                "owasp": [
+                  "A03:2021"
+                ]
+              }
+            },
+            {
+              "id": "weak-random",
+              "name": "weak-random",
+              "shortDescription": {
+                "text": "weak-random"
+              },
+              "fullDescription": {
+                "text": "Math.random() is not cryptographically secure. Use crypto.randomBytes() for security purposes"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-330"
+                ],
+                "owasp": [
+                  "A02:2021"
+                ]
+              }
+            },
+            {
+              "id": "unsafe-deserialization",
+              "name": "unsafe-deserialization",
+              "shortDescription": {
+                "text": "unsafe-deserialization"
+              },
+              "fullDescription": {
+                "text": "Unsafe deserialization can lead to Remote Code Execution"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-502"
+                ],
+                "owasp": [
+                  "A08:2021"
+                ]
+              }
+            },
+            {
+              "id": "eval-usage",
+              "name": "eval-usage",
+              "shortDescription": {
+                "text": "eval-usage"
+              },
+              "fullDescription": {
+                "text": "eval() with dynamic input can lead to code injection"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-95"
+                ],
+                "owasp": [
+                  "A03:2021"
+                ]
+              }
+            },
+            {
+              "id": "vulnerable-dependency",
+              "name": "vulnerable-dependency",
+              "shortDescription": {
+                "text": "vulnerable-dependency"
+              },
+              "fullDescription": {
+                "text": "ReDoS in semver in semver@6.3.1 (transitive)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-1395"
+                ]
+              }
+            },
+            {
+              "id": "docker-root-user",
+              "name": "docker-root-user",
+              "shortDescription": {
+                "text": "docker-root-user"
+              },
+              "fullDescription": {
+                "text": "Container runs as root user by default"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-250"
+                ]
+              }
+            },
+            {
+              "id": "docker-healthcheck",
+              "name": "docker-healthcheck",
+              "shortDescription": {
+                "text": "docker-healthcheck"
+              },
+              "fullDescription": {
+                "text": "Dockerfile has no HEALTHCHECK instruction"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "cwe": [
+                  "CWE-693"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "database-url",
+          "level": "error",
+          "message": {
+            "text": "Database connection string with credentials detected: post...rity"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "docker-compose.yml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 1,
+                  "endLine": 34,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7095c6cb"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "heroku-api-key",
+          "level": "error",
+          "message": {
+            "text": "Potential Heroku API Key (UUID format) detected: 0aa6...3ed6"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "README.md",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 2,
+                  "startColumn": 1,
+                  "endLine": 2,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "41856b5a"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "database-url",
+          "level": "error",
+          "message": {
+            "text": "Database connection string with credentials detected: post...rity"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/.env",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 1,
+                  "endLine": 4,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6934c033"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "database-url",
+          "level": "error",
+          "message": {
+            "text": "Database connection string with credentials detected: post...rity"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/.env.example",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 1,
+                  "endLine": 4,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "11fde3b7"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "api-key-generic",
+          "level": "error",
+          "message": {
+            "text": "Hardcoded API key detected: API_...key\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 250,
+                  "startColumn": 1,
+                  "endLine": 250,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "23dafa84"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "password-assignment",
+          "level": "error",
+          "message": {
+            "text": "Hardcoded password detected: secr...ger'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/iac.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 334,
+                  "startColumn": 1,
+                  "endLine": 334,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "66cc1060"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "private-key-pkcs8",
+          "level": "error",
+          "message": {
+            "text": "Encrypted private key detected: ----...----"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/secrets.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 120,
+                  "startColumn": 1,
+                  "endLine": 120,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6ee676c"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Move sensitive data to environment variables or a secrets manager"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "constants.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 1,
+                  "endLine": 4,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "38e943b8"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "constants.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 1,
+                  "endLine": 57,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "510e59a8"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "constants.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 63,
+                  "startColumn": 1,
+                  "endLine": 63,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5f149933"
+          }
+        },
+        {
+          "ruleId": "hardcoded-ip",
+          "level": "note",
+          "message": {
+            "text": "Hardcoded IP address detected. Consider using configuration"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "vite.config.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 1,
+                  "endLine": 19,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "70c9610d"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "config/env.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 1,
+                  "endLine": 60,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5a088729"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 1,
+                  "endLine": 21,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "eb0def2"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 1,
+                  "endLine": 22,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2406333"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 1,
+                  "endLine": 23,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "a30188c"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 1,
+                  "endLine": 56,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "4ba17fd4"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 1,
+                  "endLine": 57,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "3f310415"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 1,
+                  "endLine": 58,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "32c08856"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 91,
+                  "startColumn": 1,
+                  "endLine": 91,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7ca805f5"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 92,
+                  "startColumn": 1,
+                  "endLine": 92,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "76e77e4c"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 93,
+                  "startColumn": 1,
+                  "endLine": 93,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6a77028d"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 115,
+                  "startColumn": 1,
+                  "endLine": 115,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "58a3ab74"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 116,
+                  "startColumn": 1,
+                  "endLine": 116,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "65142733"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAIAnalysis.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 117,
+                  "startColumn": 1,
+                  "endLine": 117,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7184a2f2"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAuth.tsx",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 100,
+                  "startColumn": 1,
+                  "endLine": 100,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1a24d5c5"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAuth.tsx",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 134,
+                  "startColumn": 1,
+                  "endLine": 134,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1c7d1a44"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAuth.tsx",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 1,
+                  "endLine": 165,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "197b8c26"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useAuth.tsx",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 207,
+                  "startColumn": 1,
+                  "endLine": 207,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7ca45f03"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useBackendData.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 1,
+                  "endLine": 26,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "3a677e17"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useBackendData.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 1,
+                  "endLine": 27,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2df70258"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useBackendData.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 1,
+                  "endLine": 40,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7e3393b1"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 45,
+                  "startColumn": 1,
+                  "endLine": 45,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7032a29e"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 59,
+                  "startColumn": 1,
+                  "endLine": 59,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "78e54bdf"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 77,
+                  "startColumn": 1,
+                  "endLine": 77,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1c163fdd"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 94,
+                  "startColumn": 1,
+                  "endLine": 94,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "82fbc78"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 110,
+                  "startColumn": 1,
+                  "endLine": 110,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "66c13aaf"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 145,
+                  "startColumn": 1,
+                  "endLine": 145,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "d4b0551"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 167,
+                  "startColumn": 1,
+                  "endLine": 167,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "45cecd91"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 199,
+                  "startColumn": 1,
+                  "endLine": 199,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "e4d9530"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 213,
+                  "startColumn": 1,
+                  "endLine": 213,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5a0232f3"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 233,
+                  "startColumn": 1,
+                  "endLine": 233,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "40c1dcf1"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 245,
+                  "startColumn": 1,
+                  "endLine": 245,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5e5d032"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 1,
+                  "endLine": 35,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "19048ed0"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 1,
+                  "endLine": 36,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "25750a8f"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 1,
+                  "endLine": 37,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "31e5864e"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 138,
+                  "startColumn": 1,
+                  "endLine": 138,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "68911712"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useIntegrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 194,
+                  "startColumn": 1,
+                  "endLine": 194,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6f66e2b8"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 55,
+                  "startColumn": 1,
+                  "endLine": 55,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "63031c5b"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 1,
+                  "endLine": 56,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6f73981a"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 1,
+                  "endLine": 88,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "d3183fb"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 89,
+                  "startColumn": 1,
+                  "endLine": 89,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "19a1ffba"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 125,
+                  "startColumn": 1,
+                  "endLine": 125,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7e2f7299"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 126,
+                  "startColumn": 1,
+                  "endLine": 126,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "71bef6da"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 157,
+                  "startColumn": 1,
+                  "endLine": 157,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1f8e7948"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 158,
+                  "startColumn": 1,
+                  "endLine": 158,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2bfef507"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 191,
+                  "startColumn": 1,
+                  "endLine": 191,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "24987cae"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 192,
+                  "startColumn": 1,
+                  "endLine": 192,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "182800ef"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 193,
+                  "startColumn": 1,
+                  "endLine": 193,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "bb78530"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useSecurityHooks.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 236,
+                  "startColumn": 1,
+                  "endLine": 236,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "3ddf72ba"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 43,
+                  "startColumn": 1,
+                  "endLine": 43,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "445de826"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 1,
+                  "endLine": 58,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7b6c387e"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 70,
+                  "startColumn": 1,
+                  "endLine": 70,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1b1b6974"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 1,
+                  "endLine": 88,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2a744885"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 105,
+                  "startColumn": 1,
+                  "endLine": 105,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "490a8d97"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 121,
+                  "startColumn": 1,
+                  "endLine": 121,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "73be04ef"
+          }
+        },
+        {
+          "ruleId": "ssrf-potential",
+          "level": "error",
+          "message": {
+            "text": "Potential SSRF: User input used in URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 137,
+                  "startColumn": 1,
+                  "endLine": 137,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "b11d52a"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 1,
+                  "endLine": 31,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "a1bbb6a"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 1,
+                  "endLine": 32,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "254c055"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 1,
+                  "endLine": 33,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "ec53c14"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 1,
+                  "endLine": 34,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1b35b7d3"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useTeam.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 1,
+                  "endLine": 35,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "27a63392"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useWebSocket.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 51,
+                  "startColumn": 1,
+                  "endLine": 51,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1d539038"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hooks/useWebSocket.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 1,
+                  "endLine": 52,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "10e31479"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "utils/logger.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 1,
+                  "endLine": 24,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5b44ccad"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "utils/performanceMonitor.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 1,
+                  "endLine": 18,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5bc888cc"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "utils/performanceMonitor.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 194,
+                  "startColumn": 1,
+                  "endLine": 194,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2a35226f"
+          }
+        },
+        {
+          "ruleId": "hardcoded-ip",
+          "level": "note",
+          "message": {
+            "text": "Hardcoded IP address detected. Consider using configuration"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/server.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 1,
+                  "endLine": 60,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "4b82b160"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/auth.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 1,
+                  "endLine": 36,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1a97dd48"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/sbom.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 148,
+                  "startColumn": 1,
+                  "endLine": 148,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "378ccae5"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/sbom.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 224,
+                  "startColumn": 1,
+                  "endLine": 224,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "45b3d5dc"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/sbom.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 250,
+                  "startColumn": 1,
+                  "endLine": 250,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "673124bd"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/sbom.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 278,
+                  "startColumn": 1,
+                  "endLine": 278,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6f4e83"
+          }
+        },
+        {
+          "ruleId": "xss-innerhtml",
+          "level": "error",
+          "message": {
+            "text": "Potential XSS: Dynamic content assigned to innerHTML"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 235,
+                  "startColumn": 1,
+                  "endLine": 235,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "653e48ce"
+          }
+        },
+        {
+          "ruleId": "weak-random",
+          "level": "warning",
+          "message": {
+            "text": "Math.random() is not cryptographically secure. Use crypto.randomBytes() for security purposes"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 124,
+                  "startColumn": 1,
+                  "endLine": 124,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "722208d3"
+          }
+        },
+        {
+          "ruleId": "hardcoded-ip",
+          "level": "note",
+          "message": {
+            "text": "Hardcoded IP address detected. Consider using configuration"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 278,
+                  "startColumn": 1,
+                  "endLine": 278,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7a7f4ed5"
+          }
+        },
+        {
+          "ruleId": "unsafe-deserialization",
+          "level": "error",
+          "message": {
+            "text": "Unsafe deserialization can lead to Remote Code Execution"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 214,
+                  "startColumn": 1,
+                  "endLine": 214,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "4f48152e"
+          }
+        },
+        {
+          "ruleId": "unsafe-deserialization",
+          "level": "error",
+          "message": {
+            "text": "Unsafe deserialization can lead to Remote Code Execution"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 219,
+                  "startColumn": 1,
+                  "endLine": 219,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "fe988c9"
+          }
+        },
+        {
+          "ruleId": "unsafe-deserialization",
+          "level": "error",
+          "message": {
+            "text": "Unsafe deserialization can lead to Remote Code Execution"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 220,
+                  "startColumn": 1,
+                  "endLine": 220,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2c498573"
+          }
+        },
+        {
+          "ruleId": "eval-usage",
+          "level": "error",
+          "message": {
+            "text": "eval() with dynamic input can lead to code injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 214,
+                  "startColumn": 1,
+                  "endLine": 214,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "223544ba"
+          }
+        },
+        {
+          "ruleId": "eval-usage",
+          "level": "error",
+          "message": {
+            "text": "eval() with dynamic input can lead to code injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 219,
+                  "startColumn": 1,
+                  "endLine": 219,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "60543461"
+          }
+        },
+        {
+          "ruleId": "eval-usage",
+          "level": "error",
+          "message": {
+            "text": "eval() with dynamic input can lead to code injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/autofix.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 220,
+                  "startColumn": 1,
+                  "endLine": 220,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "614ee9f5"
+          }
+        },
+        {
+          "ruleId": "weak-random",
+          "level": "warning",
+          "message": {
+            "text": "Math.random() is not cryptographically secure. Use crypto.randomBytes() for security purposes"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/integrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 290,
+                  "startColumn": 1,
+                  "endLine": 290,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "a06e070"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/routes/integrations.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 198,
+                  "startColumn": 1,
+                  "endLine": 198,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "78b8b9cb"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/commands/config.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 1,
+                  "endLine": 109,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6bd40932"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/commands/config.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 112,
+                  "startColumn": 1,
+                  "endLine": 112,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "69a05ce6"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/commands/scan.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 1,
+                  "endLine": 75,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "6cce08cf"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 1,
+                  "endLine": 23,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "20c94c6f"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 53,
+                  "startColumn": 1,
+                  "endLine": 53,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5a59bf2e"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 83,
+                  "startColumn": 1,
+                  "endLine": 83,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2a833535"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 129,
+                  "startColumn": 1,
+                  "endLine": 129,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "376e20f2"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 186,
+                  "startColumn": 1,
+                  "endLine": 186,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5305ab69"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 239,
+                  "startColumn": 1,
+                  "endLine": 239,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "38e9cd2"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dockerfile.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 19,
+                  "startColumn": 1,
+                  "endLine": 19,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "590b0c95"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dockerfile.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 298,
+                  "startColumn": 1,
+                  "endLine": 298,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7237b408"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/iac.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 1,
+                  "endLine": 11,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "8367358"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/iac.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 173,
+                  "startColumn": 1,
+                  "endLine": 173,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "3e3fe44f"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/iac.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 264,
+                  "startColumn": 1,
+                  "endLine": 264,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "12ddcb2"
+          }
+        },
+        {
+          "ruleId": "weak-random",
+          "level": "warning",
+          "message": {
+            "text": "Math.random() is not cryptographically secure. Use crypto.randomBytes() for security purposes"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 119,
+                  "startColumn": 1,
+                  "endLine": 119,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "50fcc4cf"
+          }
+        },
+        {
+          "ruleId": "unsafe-deserialization",
+          "level": "error",
+          "message": {
+            "text": "Unsafe deserialization can lead to Remote Code Execution"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 143,
+                  "startColumn": 1,
+                  "endLine": 143,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "257f1597"
+          }
+        },
+        {
+          "ruleId": "unsafe-deserialization",
+          "level": "error",
+          "message": {
+            "text": "Unsafe deserialization can lead to Remote Code Execution"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 149,
+                  "startColumn": 1,
+                  "endLine": 149,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "730da051"
+          }
+        },
+        {
+          "ruleId": "eval-usage",
+          "level": "error",
+          "message": {
+            "text": "eval() with dynamic input can lead to code injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 143,
+                  "startColumn": 1,
+                  "endLine": 143,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7a606c41"
+          }
+        },
+        {
+          "ruleId": "eval-usage",
+          "level": "error",
+          "message": {
+            "text": "eval() with dynamic input can lead to code injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 149,
+                  "startColumn": 1,
+                  "endLine": 149,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "22448b79"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1,
+                  "endLine": 10,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7b77670b"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/sast.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 239,
+                  "startColumn": 1,
+                  "endLine": 239,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2ea41874"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/secrets.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1,
+                  "endLine": 10,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2c08a7a1"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/secrets.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 225,
+                  "startColumn": 1,
+                  "endLine": 225,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "2326007f"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/dependencies.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 1,
+                  "endLine": 8,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "666af188"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/dockerfile.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 1,
+                  "endLine": 6,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "655760d"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/iac.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 1,
+                  "endLine": 6,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "d9866de"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/secrets.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 1,
+                  "endLine": 12,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7bf66d37"
+          }
+        },
+        {
+          "ruleId": "unsafe-deserialization",
+          "level": "error",
+          "message": {
+            "text": "Unsafe deserialization can lead to Remote Code Execution"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/staticCode.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 1,
+                  "endLine": 6,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "553853b9"
+          }
+        },
+        {
+          "ruleId": "eval-usage",
+          "level": "error",
+          "message": {
+            "text": "eval() with dynamic input can lead to code injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/staticCode.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 1,
+                  "endLine": 6,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "69652991"
+          }
+        },
+        {
+          "ruleId": "prototype-pollution",
+          "level": "error",
+          "message": {
+            "text": "Potential Prototype Pollution via dynamic property assignment"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/staticCode.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 1,
+                  "endLine": 13,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "4e3e9c2e"
+          }
+        },
+        {
+          "ruleId": "vulnerable-dependency",
+          "level": "warning",
+          "message": {
+            "text": "ReDoS in semver in semver@6.3.1 (transitive)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package-lock.json",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "7351333"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Run: npm update semver or manually upgrade"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "docker-root-user",
+          "level": "error",
+          "message": {
+            "text": "Container runs as root user by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "18a84ac5"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Add USER instruction to run as non-root user (e.g., USER 1000:1000)"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "docker-root-user",
+          "level": "error",
+          "message": {
+            "text": "Container runs as root user by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "5f4dfd40"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Add USER instruction to run as non-root user (e.g., USER 1000:1000)"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "docker-healthcheck",
+          "level": "note",
+          "message": {
+            "text": "Dockerfile has no HEALTHCHECK instruction"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/Dockerfile",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "b586d"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Add: HEALTHCHECK --interval=30s CMD curl -f http://localhost/ || exit 1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "docker-root-user",
+          "level": "error",
+          "message": {
+            "text": "Container runs as root user by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "cli/src/scanners/dockerfile.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "19e3d27a"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Add USER instruction to run as non-root user (e.g., USER 1000:1000)"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "docker-root-user",
+          "level": "error",
+          "message": {
+            "text": "Container runs as root user by default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/dockerfile.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "fed7c90"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Add USER instruction to run as non-root user (e.g., USER 1000:1000)"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "docker-healthcheck",
+          "level": "note",
+          "message": {
+            "text": "Dockerfile has no HEALTHCHECK instruction"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/lib/scanners/dockerfile.ts",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationLineHash": "1307459d"
+          },
+          "fixes": [
+            {
+              "description": {
+                "text": "Add: HEALTHCHECK --interval=30s CMD curl -f http://localhost/ || exit 1"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

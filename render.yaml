@@ -1,0 +1,45 @@
+# Render Blueprint for Backend Deployment
+# https://render.com
+
+services:
+  - type: web
+    name: anchor-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm ci && npx prisma generate && npm run build
+    startCommand: cd backend && npx prisma migrate deploy && node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: anchor-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: FROM_EMAIL
+        value: noreply@anchorsecurity.io
+
+databases:
+  - name: anchor-db
+    plan: free
+    databaseName: anchor
+    user: anchor

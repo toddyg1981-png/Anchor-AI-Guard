@@ -1,0 +1,149 @@
+/* Anchor Security Dashboard - Global Styles */
+
+/* Reset and Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+
+:root {
+  /* Brand palette inspired by the Anchor logo */
+  --anchor-cyan: #35c6ff;
+  --anchor-pink: #ff4fa3;
+  --anchor-orange: #ff5b30;
+  --anchor-purple: #7a3cff;
+  --anchor-deep: #05080a;
+  --anchor-card: rgba(12, 17, 23, 0.9);
+  --anchor-border: rgba(255, 255, 255, 0.08);
+  --anchor-glow: radial-gradient(circle at 50% 50%, rgba(53, 198, 255, 0.35), rgba(255, 79, 163, 0.15), transparent 55%);
+}
+
+body {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--anchor-deep);
+  background-image: url('/assets/screen%20back%20ground.jpeg');
+  background-size: contain;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: #E5E7EB;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark overlay on top of background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(5, 8, 10, 0.4), rgba(5, 8, 10, 0.5));
+  pointer-events: none;
+  z-index: -1;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/* Selection */
+::selection {
+  background: rgba(6, 182, 212, 0.3);
+  color: #fff;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid rgba(6, 182, 212, 0.5);
+  outline-offset: 2px;
+}
+
+/* Utility classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Glass Neon Bubble Effect */
+.glass-bubble {
+  background: linear-gradient(135deg, 
+    rgba(53, 198, 255, 0.1) 0%, 
+    rgba(122, 60, 255, 0.1) 50%, 
+    rgba(255, 79, 163, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(53, 198, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(53, 198, 255, 0.15),
+    0 0 60px rgba(255, 79, 163, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+}
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(53, 198, 255, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+}
+
+.neon-glow {
+  box-shadow: 
+    0 0 20px rgba(53, 198, 255, 0.3),
+    0 0 40px rgba(122, 60, 255, 0.2),
+    0 0 60px rgba(255, 79, 163, 0.1);
+}
+
+.neon-border {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--anchor-deep), var(--anchor-deep)) padding-box,
+              linear-gradient(135deg, var(--anchor-cyan), var(--anchor-purple), var(--anchor-pink)) border-box;
+}
+
+/* Logo blend mode */
+.logo-blend {
+  mix-blend-mode: lighten;
+}
+
+/* Prevent logo dragging */
+.no-drag {
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}

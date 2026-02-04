@@ -1,5 +1,5 @@
 
-import { Project, ActiveScan, Finding, Severity, ScanRun } from './types';
+import { Project, ActiveScan, Finding, Severity } from './types';
 
 export const mockProjects: Project[] = [
   {

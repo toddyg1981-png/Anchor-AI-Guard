@@ -1,0 +1,17 @@
+# Railway Deployment Configuration
+# https://railway.app
+
+[build]
+builder = "nixpacks"
+buildCommand = "cd backend && npm ci && npx prisma generate && npm run build"
+
+[deploy]
+startCommand = "cd backend && npx prisma migrate deploy && node dist/index.js"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[[services]]
+name = "anchor-backend"
+internalPort = 3001

@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Anchor Security Dashboard
+  anchor-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anchor-security-dashboard
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - anchor-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add backend API service
+  anchor-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: anchor-api
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://anchor:${DB_PASSWORD}@postgres:5432/anchor_security
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGIN=http://localhost:3000
+    networks:
+      - anchor-network
+    depends_on:
+      - postgres
+      - redis
+
+  # Optional: PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: anchor-postgres
+    environment:
+      - POSTGRES_USER=anchor
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=anchor_security
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - anchor-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anchor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: anchor-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - anchor-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  anchor-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
