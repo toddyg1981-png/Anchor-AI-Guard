@@ -6,8 +6,8 @@ WORKDIR /app
 # Install OpenSSL for Prisma generate
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-COPY package*.json ./
-COPY prisma ./prisma
+COPY backend/package*.json ./
+COPY backend/prisma ./prisma
 
 # Clean install - no cache
 RUN npm cache clean --force
@@ -17,8 +17,8 @@ RUN npm ci
 # Generate Prisma for debian-openssl-3.0.x
 RUN npx prisma generate
 
-COPY src ./src
-COPY tsconfig.json ./
+COPY backend/src ./src
+COPY backend/tsconfig.json ./
 
 RUN rm -rf dist
 RUN npm run build
@@ -33,7 +33,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY package.json ./
+COPY backend/package.json ./
 
 ENV NODE_ENV=production
 EXPOSE 3001
