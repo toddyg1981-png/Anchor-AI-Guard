@@ -19,22 +19,6 @@ type ComplianceFramework =
 type MaturityLevel = 0 | 1 | 2 | 3;
 type ControlStatus = 'compliant' | 'partial' | 'non-compliant' | 'not-applicable';
 
-interface _ComplianceControl {
-  id: string;
-  name: string;
-  description: string;
-  framework: ComplianceFramework;
-  category: string;
-  status: ControlStatus;
-  maturityLevel?: MaturityLevel;
-  targetMaturity?: MaturityLevel;
-  evidence: Evidence[];
-  findings: string[];
-  remediationSteps: string[];
-  lastAssessed: string;
-  automatedCheck: boolean;
-}
-
 interface Evidence {
   id: string;
   type: 'scan' | 'document' | 'screenshot' | 'log' | 'attestation';

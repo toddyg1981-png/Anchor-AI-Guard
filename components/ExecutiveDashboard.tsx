@@ -171,8 +171,6 @@ export const ExecutiveDashboard: React.FC = () => {
     return `$${(value / 1000).toFixed(0)}K`;
   };
 
-  const _formatPercent = (_value: number) => `${_value}%`;
-
   const getPostureColor = (posture: string) => {
     switch (posture) {
       case 'excellent': return 'text-green-400 bg-green-500/10 border-green-500';
@@ -414,7 +412,6 @@ export const ExecutiveDashboard: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">💰 Security Investment ROI</h2>
           <div className="space-y-4">
             {securityInvestments.map(investment => {
-              const _gapPercent = ((investment.recommendedSpend - investment.currentSpend) / investment.recommendedSpend) * 100;
               return (
                 <div key={investment.category}>
                   <div className="flex items-center justify-between mb-1">

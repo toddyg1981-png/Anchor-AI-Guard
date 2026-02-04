@@ -43,17 +43,6 @@ interface ComplianceFramework {
   score: number;
 }
 
-interface _CloudResource {
-  id: string;
-  type: string;
-  name: string;
-  provider: string;
-  region: string;
-  status: 'secure' | 'vulnerable' | 'misconfigured';
-  findings: number;
-  tags: { [key: string]: string };
-}
-
 export const CloudSecurityPosture: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'findings' | 'compliance' | 'resources' | 'identity'>('overview');
   const [selectedAccount, setSelectedAccount] = useState<string>('all');
