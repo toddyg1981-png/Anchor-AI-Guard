@@ -2,7 +2,6 @@
   "name": "anchor-backend",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
   "description": "Anchor Security Dashboard backend API",
   "scripts": {
     "dev": "tsx watch src/server.ts",

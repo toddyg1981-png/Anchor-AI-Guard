@@ -18,69 +18,76 @@ import { oauthRoutes } from './routes/oauth';
 import { emailRoutes } from './routes/email';
 import { wsManager } from './lib/websocket';
 
-const app = Fastify({ 
-  logger: true,
-  // Enable raw body for Stripe webhooks
-  bodyLimit: 1048576, // 1MB
-});
+async function main() {
+  const app = Fastify({ 
+    logger: true,
+    // Enable raw body for Stripe webhooks
+    bodyLimit: 1048576, // 1MB
+  });
 
-await app.register(cors, {
-  origin: env.corsOrigin,
-  credentials: true,
-});
+  await app.register(cors, {
+    origin: env.corsOrigin,
+    credentials: true,
+  });
 
-await app.register(jwt, { secret: env.jwtSecret });
+  await app.register(jwt, { secret: env.jwtSecret });
 
-await app.register(swagger, {
-  swagger: {
-    info: {
-      title: 'Anchor Security API',
-      description: 'Backend API for Anchor Security Dashboard',
-      version: '1.0.0',
-    },
-    host: `localhost:${env.port}`,
-    schemes: ['http'],
-    consumes: ['application/json'],
-    produces: ['application/json'],
-    securityDefinitions: {
-      Bearer: {
-        type: 'apiKey',
-        name: 'Authorization',
-        in: 'header',
+  await app.register(swagger, {
+    swagger: {
+      info: {
+        title: 'Anchor Security API',
+        description: 'Backend API for Anchor Security Dashboard',
+        version: '1.0.0',
+      },
+      host: `localhost:${env.port}`,
+      schemes: ['http'],
+      consumes: ['application/json'],
+      produces: ['application/json'],
+      securityDefinitions: {
+        Bearer: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+        },
       },
     },
-  },
-});
+  });
 
-await app.register(swaggerUI, { routePrefix: '/docs' });
+  await app.register(swaggerUI, { routePrefix: '/docs' });
 
-// Register routes
-app.register(healthRoutes, { prefix: '/api' });
-app.register(authRoutes, { prefix: '/api' });
-app.register(oauthRoutes, { prefix: '/api' });
-app.register(emailRoutes, { prefix: '/api' });
-app.register(billingRoutes, { prefix: '/api' });
-app.register(projectRoutes, { prefix: '/api' });
-app.register(findingRoutes, { prefix: '/api' });
-app.register(scanRoutes, { prefix: '/api' });
-app.register(teamRoutes, { prefix: '/api' });
-app.register(integrationRoutes, { prefix: '/api' });
-app.register(autofixRoutes, { prefix: '/api' });
-app.register(sbomRoutes, { prefix: '/api' });
+  // Register routes
+  app.register(healthRoutes, { prefix: '/api' });
+  app.register(authRoutes, { prefix: '/api' });
+  app.register(oauthRoutes, { prefix: '/api' });
+  app.register(emailRoutes, { prefix: '/api' });
+  app.register(billingRoutes, { prefix: '/api' });
+  app.register(projectRoutes, { prefix: '/api' });
+  app.register(findingRoutes, { prefix: '/api' });
+  app.register(scanRoutes, { prefix: '/api' });
+  app.register(teamRoutes, { prefix: '/api' });
+  app.register(integrationRoutes, { prefix: '/api' });
+  app.register(autofixRoutes, { prefix: '/api' });
+  app.register(sbomRoutes, { prefix: '/api' });
 
-app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
+  app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
 
-// Root health endpoint for Railway healthcheck
-app.get('/health', async () => ({ status: 'ok', service: 'anchor-backend' }));
+  // Root health endpoint for Railway healthcheck
+  app.get('/health', async () => ({ status: 'ok', service: 'anchor-backend' }));
 
-app.setErrorHandler((error, request, reply) => {
-  request.log.error(error);
-  reply.status(500).send({ error: 'Internal Server Error' });
-});
+  app.setErrorHandler((error, request, reply) => {
+    request.log.error(error);
+    reply.status(500).send({ error: 'Internal Server Error' });
+  });
 
-app.listen({ port: env.port, host: '0.0.0.0' }).then(() => {
+  await app.listen({ port: env.port, host: '0.0.0.0' });
+  
   // Initialize WebSocket server
   wsManager.initialize(app.server);
   app.log.info(`Anchor backend running on http://localhost:${env.port}`);
   app.log.info(`WebSocket server available at ws://localhost:${env.port}/ws`);
+}
+
+main().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
