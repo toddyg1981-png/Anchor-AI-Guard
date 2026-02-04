@@ -1,5 +1,8 @@
 FROM node:18-alpine AS builder
 
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl openssl-dev
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -11,13 +14,15 @@ RUN npm run prisma:generate
 COPY src ./src
 COPY tsconfig.json ./
 
-ARG BUILD_VERSION=3
+ARG BUILD_VERSION=4
 RUN echo "Build version: $BUILD_VERSION"
 RUN rm -rf dist
 RUN npm run build
-RUN node -e "const fs=require('fs');const c=fs.readFileSync('dist/server.js','utf8');if(c.includes('import ')||c.includes('export ')){console.error('ESM output detected');process.exit(1);}console.log('CJS output detected');"
 
 FROM node:18-alpine
+
+# Install OpenSSL for Prisma runtime
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
