@@ -17,15 +17,7 @@ type ComplianceFramework =
   | 'ism';
 
 type MaturityLevel = 0 | 1 | 2 | 3;
-type ControlStatus = 'compliant' | 'partial' | 'non-compliant' | 'not-applicable';
-
-interface Evidence {
-  id: string;
-  type: 'scan' | 'document' | 'screenshot' | 'log' | 'attestation';
-  name: string;
-  uploadedAt: string;
-  verified: boolean;
-}
+type _ControlStatus = 'compliant' | 'partial' | 'non-compliant' | 'not-applicable';
 
 interface FrameworkAssessment {
   framework: ComplianceFramework;
