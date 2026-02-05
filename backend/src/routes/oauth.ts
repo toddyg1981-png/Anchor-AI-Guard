@@ -7,7 +7,10 @@ const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || '';
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || '';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
-const OAUTH_REDIRECT_BASE = process.env.OAUTH_REDIRECT_BASE || 'http://localhost:3000';
+// BACKEND_URL is used for OAuth callbacks (where GitHub/Google redirects back)
+const BACKEND_URL = process.env.OAUTH_REDIRECT_BASE || process.env.BACKEND_URL || 'http://localhost:3001';
+// FRONTEND_URL is used for redirecting users after auth
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5174';
 
 interface GitHubUser {
   id: number;
@@ -33,7 +36,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   app.get('/auth/github', async (_request: FastifyRequest, reply: FastifyReply) => {
     const params = new URLSearchParams({
       client_id: GITHUB_CLIENT_ID,
-      redirect_uri: `${OAUTH_REDIRECT_BASE}/api/auth/github/callback`,
+      redirect_uri: `${BACKEND_URL}/api/auth/github/callback`,
       scope: 'read:user user:email',
       state: generateState(),
     });
@@ -46,7 +49,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
     const { code, state: _state } = request.query as { code?: string; state?: string };
 
     if (!code) {
-      return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=github_auth_failed`);
+      return reply.redirect(`${FRONTEND_URL}/login?error=github_auth_failed`);
     }
 
     try {
@@ -61,7 +64,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
           client_id: GITHUB_CLIENT_ID,
           client_secret: GITHUB_CLIENT_SECRET,
           code,
-          redirect_uri: `${OAUTH_REDIRECT_BASE}/api/auth/github/callback`,
+          redirect_uri: `${BACKEND_URL}/api/auth/github/callback`,
         }),
       });
 
@@ -69,7 +72,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
       
       if (!tokenData.access_token) {
         console.error('GitHub token error:', tokenData);
-        return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=github_token_failed`);
+        return reply.redirect(`${FRONTEND_URL}/login?error=github_token_failed`);
       }
 
       // Get user info from GitHub
@@ -97,7 +100,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
       }
 
       if (!email) {
-        return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=github_no_email`);
+        return reply.redirect(`${FRONTEND_URL}/login?error=github_no_email`);
       }
 
       // Find or create user
@@ -113,14 +116,14 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
       });
 
       // Redirect with token
-      const redirectUrl = new URL(`${OAUTH_REDIRECT_BASE}/auth/callback`);
+      const redirectUrl = new URL(`${FRONTEND_URL}/auth/callback`);
       redirectUrl.searchParams.set('token', token);
       redirectUrl.searchParams.set('isNewUser', isNewUser.toString());
 
       return reply.redirect(redirectUrl.toString());
     } catch (error) {
       console.error('GitHub OAuth error:', error);
-      return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=github_auth_error`);
+      return reply.redirect(`${FRONTEND_URL}/login?error=github_auth_error`);
     }
   });
 
@@ -132,7 +135,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   app.get('/auth/google', async (_request: FastifyRequest, reply: FastifyReply) => {
     const params = new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
-      redirect_uri: `${OAUTH_REDIRECT_BASE}/api/auth/google/callback`,
+      redirect_uri: `${BACKEND_URL}/api/auth/google/callback`,
       response_type: 'code',
       scope: 'openid email profile',
       state: generateState(),
@@ -148,7 +151,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
     const { code, state: _state } = request.query as { code?: string; state?: string };
 
     if (!code) {
-      return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=google_auth_failed`);
+      return reply.redirect(`${FRONTEND_URL}/login?error=google_auth_failed`);
     }
 
     try {
@@ -162,7 +165,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
           code,
           client_id: GOOGLE_CLIENT_ID,
           client_secret: GOOGLE_CLIENT_SECRET,
-          redirect_uri: `${OAUTH_REDIRECT_BASE}/api/auth/google/callback`,
+          redirect_uri: `${BACKEND_URL}/api/auth/google/callback`,
           grant_type: 'authorization_code',
         }),
       });
@@ -171,7 +174,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
 
       if (!tokenData.access_token) {
         console.error('Google token error:', tokenData);
-        return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=google_token_failed`);
+        return reply.redirect(`${FRONTEND_URL}/login?error=google_token_failed`);
       }
 
       // Get user info from Google
@@ -184,7 +187,7 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
       const googleUser: GoogleUser = await userResponse.json();
 
       if (!googleUser.email) {
-        return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=google_no_email`);
+        return reply.redirect(`${FRONTEND_URL}/login?error=google_no_email`);
       }
 
       // Find or create user
@@ -203,14 +206,14 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
       });
 
       // Redirect with token
-      const redirectUrl = new URL(`${OAUTH_REDIRECT_BASE}/auth/callback`);
+      const redirectUrl = new URL(`${FRONTEND_URL}/auth/callback`);
       redirectUrl.searchParams.set('token', token);
       redirectUrl.searchParams.set('isNewUser', isNewUser.toString());
 
       return reply.redirect(redirectUrl.toString());
     } catch (error) {
       console.error('Google OAuth error:', error);
-      return reply.redirect(`${OAUTH_REDIRECT_BASE}/login?error=google_auth_error`);
+      return reply.redirect(`${FRONTEND_URL}/login?error=google_auth_error`);
     }
   });
 
@@ -222,12 +225,12 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   app.get('/auth/link/github', async (request: FastifyRequest, reply: FastifyReply) => {
     const authHeader = request.headers.authorization;
     if (!authHeader) {
-      return reply.redirect(`${OAUTH_REDIRECT_BASE}/settings?error=not_authenticated`);
+      return reply.redirect(`${FRONTEND_URL}/settings?error=not_authenticated`);
     }
 
     const params = new URLSearchParams({
       client_id: GITHUB_CLIENT_ID,
-      redirect_uri: `${OAUTH_REDIRECT_BASE}/api/auth/link/github/callback`,
+      redirect_uri: `${BACKEND_URL}/api/auth/link/github/callback`,
       scope: 'read:user user:email',
       state: authHeader.replace('Bearer ', ''), // Pass token in state
     });
@@ -239,12 +242,12 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   app.get('/auth/link/google', async (request: FastifyRequest, reply: FastifyReply) => {
     const authHeader = request.headers.authorization;
     if (!authHeader) {
-      return reply.redirect(`${OAUTH_REDIRECT_BASE}/settings?error=not_authenticated`);
+      return reply.redirect(`${FRONTEND_URL}/settings?error=not_authenticated`);
     }
 
     const params = new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
-      redirect_uri: `${OAUTH_REDIRECT_BASE}/api/auth/link/google/callback`,
+      redirect_uri: `${BACKEND_URL}/api/auth/link/google/callback`,
       response_type: 'code',
       scope: 'openid email profile',
       state: authHeader.replace('Bearer ', ''),
