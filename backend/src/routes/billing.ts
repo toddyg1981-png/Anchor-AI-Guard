@@ -50,54 +50,76 @@ export const PLANS = {
   },
   ENTERPRISE: {
     name: 'Enterprise',
-    monthlyPrice: 79900, // $799
-    yearlyPrice: 767000, // $7,670 (20% off)
+    monthlyPrice: 0, // Custom - $50K-150K/year
+    yearlyPrice: 5000000, // $50,000 starting
     maxProjects: -1, // unlimited
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      'Unlimited projects',
-      'Unlimited scans',
-      'Unlimited team members',
-      'Unlimited AI queries',
-      'Custom rule creation',
-      'SAML/SSO',
-      'Audit logs',
-      'Dedicated support',
+      '$50,000 - $150,000/year',
+      'For 100-500 developers',
+      'Unlimited everything',
+      'On-premise deployment',
+      'Custom AI model training',
+      'Dedicated security engineer',
+      '24/7/365 support',
       '99.9% SLA guarantee',
+      'SOC 2 Type II compliance',
     ],
   },
   ENTERPRISE_PLUS: {
     name: 'Enterprise+',
-    monthlyPrice: 0, // Custom - starts at $50K/year
-    yearlyPrice: 5000000, // $50,000 starting
+    monthlyPrice: 0, // Custom - $150K-500K/year
+    yearlyPrice: 15000000, // $150,000 starting
     maxProjects: -1,
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
+      '$150,000 - $500,000/year',
+      'For 500-2000+ developers',
       'Everything in Enterprise',
-      'On-premise deployment',
-      'Custom AI model training',
-      'Dedicated CSM',
-      'Custom integrations',
-      'White-glove onboarding',
-      '24/7 phone support',
-      'Starting at $50,000/year',
+      'Multi-region deployment',
+      'White-label licensing',
+      'Dedicated CSM + security team',
+      '99.99% SLA guarantee',
+      'Priority feature development',
+      'Executive business reviews',
+    ],
+  },
+  GOVERNMENT: {
+    name: 'Government & Defense',
+    monthlyPrice: 0, // Custom - $500K-2M+/year
+    yearlyPrice: 50000000, // $500,000 starting
+    maxProjects: -1,
+    maxScansPerMonth: -1,
+    maxTeamMembers: -1,
+    maxAIQueries: -1,
+    features: [
+      '$500,000 - $2,000,000+/year',
+      'Federal, State & Defense',
+      'FedRAMP High Ready',
+      'NIST 800-53 Compliant',
+      'ITAR/EAR Compliant',
+      'Air-gapped deployment',
+      'Classified environment support',
+      'Security-cleared support staff',
+      'Nation-state threat detection',
+      'Critical infrastructure protection',
     ],
   },
 };
 
 const createCheckoutSchema = z.object({
-  planTier: z.enum(['STARTER', 'PROFESSIONAL', 'ENTERPRISE', 'ENTERPRISE_PLUS']),
+  planTier: z.enum(['STARTER', 'PROFESSIONAL', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
   billingPeriod: z.enum(['monthly', 'yearly']),
   successUrl: z.string().url(),
   cancelUrl: z.string().url(),
 });
 
 const updateSubscriptionSchema = z.object({
-  planTier: z.enum(['STARTER', 'PROFESSIONAL', 'ENTERPRISE', 'ENTERPRISE_PLUS']),
+  planTier: z.enum(['STARTER', 'PROFESSIONAL', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
 });
 
 export async function billingRoutes(app: FastifyInstance): Promise<void> {
@@ -377,7 +399,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const orgId = session.metadata?.orgId;
-        const planTier = session.metadata?.planTier as 'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE' | 'ENTERPRISE_PLUS';
+        const planTier = session.metadata?.planTier as 'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE' | 'ENTERPRISE_PLUS' | 'GOVERNMENT';
 
         if (orgId && planTier) {
           await prisma.subscription.update({

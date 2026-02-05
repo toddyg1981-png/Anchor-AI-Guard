@@ -171,6 +171,7 @@ enum PlanTier {
   PROFESSIONAL
   ENTERPRISE
   ENTERPRISE_PLUS
+  GOVERNMENT
 }
 
 model Subscription {
