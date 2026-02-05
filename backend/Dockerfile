@@ -1,4 +1,4 @@
-# FORCE FRESH BUILD - Railway clear cache required
+# Build from backend/ root directory
 FROM node:18-slim AS builder
 
 WORKDIR /app
@@ -6,21 +6,18 @@ WORKDIR /app
 # Install OpenSSL for Prisma generate
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-COPY backend/package*.json ./
-COPY backend/prisma ./prisma
+COPY package*.json ./
+COPY prisma ./prisma
 
-# Clean install - no cache
-RUN npm cache clean --force
-RUN rm -rf node_modules
+# Clean install
 RUN npm ci
 
 # Generate Prisma for debian-openssl-3.0.x
 RUN npx prisma generate
 
-COPY backend/src ./src
-COPY backend/tsconfig.json ./
+COPY src ./src
+COPY tsconfig.json ./
 
-RUN rm -rf dist
 RUN npm run build
 
 FROM node:18-slim
@@ -33,7 +30,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY backend/package.json ./
+COPY package.json ./
 
 ENV NODE_ENV=production
 EXPOSE 3001
