@@ -13,8 +13,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 export const PLANS = {
   STARTER: {
     name: 'Starter',
-    monthlyPrice: 4900, // $49
-    yearlyPrice: 47000, // $470 (20% off)
+    monthlyPrice: 7900, // $79
+    yearlyPrice: 75800, // $758 (20% off)
     maxProjects: 5,
     maxScansPerMonth: 100,
     maxTeamMembers: 3,
@@ -30,8 +30,8 @@ export const PLANS = {
   },
   PROFESSIONAL: {
     name: 'Professional',
-    monthlyPrice: 14900, // $149
-    yearlyPrice: 143000, // $1,430 (20% off)
+    monthlyPrice: 24900, // $249
+    yearlyPrice: 239000, // $2,390 (20% off)
     maxProjects: 50,
     maxScansPerMonth: 1000,
     maxTeamMembers: 25,
@@ -41,8 +41,8 @@ export const PLANS = {
       'All CLI scanners',
       'Attack Path Visualization',
       'AI Security Chat',
-      'Predictive CVE Intelligence',
-      'Real-time collaboration',
+      'Predictive CVE Intelligence (WORLD FIRST)',
+      'Real-time collaboration (WORLD FIRST)',
       'Priority support',
       '1,000 scans/month',
       '5,000 AI queries/month',
@@ -50,8 +50,8 @@ export const PLANS = {
   },
   ENTERPRISE: {
     name: 'Enterprise',
-    monthlyPrice: 29900, // $299
-    yearlyPrice: 287000, // $2,870 (20% off)
+    monthlyPrice: 79900, // $799
+    yearlyPrice: 767000, // $7,670 (20% off)
     maxProjects: -1, // unlimited
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
@@ -65,13 +65,13 @@ export const PLANS = {
       'SAML/SSO',
       'Audit logs',
       'Dedicated support',
-      'SLA guarantee',
+      '99.9% SLA guarantee',
     ],
   },
   ENTERPRISE_PLUS: {
     name: 'Enterprise+',
-    monthlyPrice: 44900, // $449
-    yearlyPrice: 431000, // $4,310 (20% off)
+    monthlyPrice: 0, // Custom - starts at $50K/year
+    yearlyPrice: 5000000, // $50,000 starting
     maxProjects: -1,
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
@@ -84,6 +84,7 @@ export const PLANS = {
       'Custom integrations',
       'White-glove onboarding',
       '24/7 phone support',
+      'Starting at $50,000/year',
     ],
   },
 };
