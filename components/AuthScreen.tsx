@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { env } from '../config/env';
 
 interface AuthScreenProps {
   onSuccess: () => void;
@@ -65,7 +66,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
   };
 
   const handleOAuthLogin = (provider: 'github' | 'google') => {
-    window.location.href = `/api/auth/${provider}`;
+    // Use backend URL for OAuth flow (backend handles the OAuth dance)
+    const backendUrl = env.apiBaseUrl.replace('/api', '');
+    window.location.href = `${backendUrl}/api/auth/${provider}`;
   };
 
   // Terms of Service Modal

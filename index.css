@@ -136,9 +136,9 @@ body::before {
               linear-gradient(135deg, var(--anchor-cyan), var(--anchor-purple), var(--anchor-pink)) border-box;
 }
 
-/* Logo blend mode */
+/* Logo blend mode - removed lighten to keep logo fully visible */
 .logo-blend {
-  mix-blend-mode: lighten;
+  /* mix-blend-mode removed - was hiding dark colors in logo */
 }
 
 /* Prevent logo dragging */

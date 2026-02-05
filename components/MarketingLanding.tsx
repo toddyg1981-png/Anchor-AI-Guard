@@ -185,8 +185,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="w-12 h-12 object-contain select-none pointer-events-none logo-blend" />
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">ANCHOR</span>
+              <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="h-12 w-auto object-contain select-none pointer-events-none" />
             </div>
             <div className="hidden md:flex items-center gap-8">
               <a href="#features" className="text-cyan-400 hover:text-pink-400 transition-colors">
@@ -498,8 +497,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center mb-4">
-                <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="w-10 h-10 object-contain select-none pointer-events-none logo-blend" />
-                <span className="ml-2 text-lg font-bold bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">ANCHOR</span>
+                <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="w-[170px] h-[113px] object-contain select-none pointer-events-none" />
               </div>
               <p className="text-purple-300 text-sm">
                 <strong>The world&apos;s most advanced</strong> AI-powered security platform. 
