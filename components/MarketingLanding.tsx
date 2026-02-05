@@ -4,12 +4,22 @@ interface MarketingLandingProps {
   onGetStarted: () => void;
   onLogin: () => void;
   onViewPricing: () => void;
+  onViewPrivacy?: () => void;
+  onViewTerms?: () => void;
+  onViewSecurity?: () => void;
+  onViewAbout?: () => void;
+  onViewContact?: () => void;
 }
 
 const MarketingLanding: React.FC<MarketingLandingProps> = ({
   onGetStarted,
   onLogin,
   onViewPricing,
+  onViewPrivacy,
+  onViewTerms,
+  onViewSecurity,
+  onViewAbout,
+  onViewContact,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -501,26 +511,26 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <ul className="space-y-2 text-purple-300">
                 <li><a href="#features" className="hover:text-pink-400 transition-colors">Features</a></li>
                 <li><button onClick={onViewPricing} className="hover:text-pink-400 transition-colors">Pricing</button></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">CLI Tool</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Integrations</a></li>
+                <li><a href="https://github.com/toddyg1981-png/Anchor" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">CLI Tool</a></li>
+                <li><a href="#features" className="hover:text-pink-400 transition-colors">Integrations</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-cyan-400 mb-4">Company</h4>
               <ul className="space-y-2 text-purple-300">
-                <li><a href="#" className="hover:text-pink-400 transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Contact</a></li>
+                <li><button onClick={onViewAbout} className="hover:text-pink-400 transition-colors text-left">About</button></li>
+                <li><a href="https://blog.anchorsecurity.com" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">Blog</a></li>
+                <li><a href="mailto:careers@anchorsecurity.com" className="hover:text-pink-400 transition-colors">Careers</a></li>
+                <li><button onClick={onViewContact} className="hover:text-pink-400 transition-colors text-left">Contact</button></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-cyan-400 mb-4">Legal</h4>
               <ul className="space-y-2 text-purple-300">
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">Security</a></li>
-                <li><a href="#" className="hover:text-pink-400 transition-colors">SOC 2 Report</a></li>
+                <li><button onClick={onViewPrivacy} className="hover:text-pink-400 transition-colors text-left">Privacy Policy</button></li>
+                <li><button onClick={onViewTerms} className="hover:text-pink-400 transition-colors text-left">Terms of Service</button></li>
+                <li><button onClick={onViewSecurity} className="hover:text-pink-400 transition-colors text-left">Security</button></li>
+                <li><a href="mailto:compliance@anchorsecurity.com" className="hover:text-pink-400 transition-colors">SOC 2 Report</a></li>
               </ul>
             </div>
           </div>
@@ -529,9 +539,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               © 2026 Anchor Security. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-cyan-400 hover:text-pink-400 transition-colors">Twitter</a>
-              <a href="#" className="text-cyan-400 hover:text-pink-400 transition-colors">GitHub</a>
-              <a href="#" className="text-cyan-400 hover:text-pink-400 transition-colors">LinkedIn</a>
+              <a href="https://twitter.com/anchorsecurity" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">Twitter</a>
+              <a href="https://github.com/toddyg1981-png/Anchor" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">GitHub</a>
+              <a href="https://linkedin.com/company/anchorsecurity" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">LinkedIn</a>
             </div>
           </div>
         </div>

@@ -56,6 +56,7 @@ import { useBackendData } from './hooks/useBackendData';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useWebSocket } from './hooks/useWebSocket';
 import LoginSuccessOverlay from './components/LoginSuccessOverlay';
+import { PrivacyPolicy, TermsOfService, SecurityPage, AboutPage, ContactPage } from './components/LegalPages';
 
 // Main navigation views
 export type AppView = 
@@ -66,7 +67,12 @@ export type AppView =
   | 'reset-password'
   | 'auth-callback'  // OAuth callback
   | 'onboarding'     // New user onboarding
-  | 'dashboard';     // Main app (authenticated)
+  | 'dashboard'      // Main app (authenticated)
+  | 'privacy'        // Privacy policy
+  | 'terms'          // Terms of service
+  | 'security-info'  // Security page
+  | 'about'          // About page
+  | 'contact';       // Contact page
 
 // Dashboard sub-views
 export type DashboardView = 
@@ -141,6 +147,16 @@ const AppContent: React.FC = () => {
       setCurrentView('forgot-password');
     } else if (path === '/pricing') {
       setCurrentView('pricing');
+    } else if (path === '/privacy') {
+      setCurrentView('privacy');
+    } else if (path === '/terms') {
+      setCurrentView('terms');
+    } else if (path === '/security') {
+      setCurrentView('security-info');
+    } else if (path === '/about') {
+      setCurrentView('about');
+    } else if (path === '/contact') {
+      setCurrentView('contact');
     } else if (path === '/login' || path === '/signup') {
       setCurrentView('auth');
     }
@@ -150,7 +166,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     if (!authLoading) {
       // Don't override special routes
-      if (['auth-callback', 'reset-password', 'forgot-password', 'pricing'].includes(currentView)) {
+      if (['auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact'].includes(currentView)) {
         return;
       }
       
@@ -188,6 +204,36 @@ const AppContent: React.FC = () => {
   const handleViewPricing = useCallback(() => {
     setCurrentView('pricing');
     window.history.pushState({}, '', '/pricing');
+  }, []);
+
+  const handleViewPrivacy = useCallback(() => {
+    setCurrentView('privacy');
+    window.history.pushState({}, '', '/privacy');
+  }, []);
+
+  const handleViewTerms = useCallback(() => {
+    setCurrentView('terms');
+    window.history.pushState({}, '', '/terms');
+  }, []);
+
+  const handleViewSecurityInfo = useCallback(() => {
+    setCurrentView('security-info');
+    window.history.pushState({}, '', '/security');
+  }, []);
+
+  const handleViewAbout = useCallback(() => {
+    setCurrentView('about');
+    window.history.pushState({}, '', '/about');
+  }, []);
+
+  const handleViewContact = useCallback(() => {
+    setCurrentView('contact');
+    window.history.pushState({}, '', '/contact');
+  }, []);
+
+  const handleBackToMarketing = useCallback(() => {
+    setCurrentView('marketing');
+    window.history.pushState({}, '', '/');
   }, []);
 
   const handleAuthSuccess = useCallback(() => {
@@ -503,12 +549,32 @@ const AppContent: React.FC = () => {
           </DashboardLayout>
         );
       
+      case 'privacy':
+        return <PrivacyPolicy onBack={handleBackToMarketing} />;
+      
+      case 'terms':
+        return <TermsOfService onBack={handleBackToMarketing} />;
+      
+      case 'security-info':
+        return <SecurityPage onBack={handleBackToMarketing} />;
+      
+      case 'about':
+        return <AboutPage onBack={handleBackToMarketing} />;
+      
+      case 'contact':
+        return <ContactPage onBack={handleBackToMarketing} />;
+      
       default:
         return (
           <MarketingLanding 
             onGetStarted={handleGetStarted} 
             onLogin={handleLogin}
             onViewPricing={handleViewPricing}
+            onViewPrivacy={handleViewPrivacy}
+            onViewTerms={handleViewTerms}
+            onViewSecurity={handleViewSecurityInfo}
+            onViewAbout={handleViewAbout}
+            onViewContact={handleViewContact}
           />
         );
     }
