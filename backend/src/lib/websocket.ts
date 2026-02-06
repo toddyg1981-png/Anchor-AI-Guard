@@ -1,5 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { WebSocket, WebSocketServer } from 'ws';
+import { IncomingMessage } from 'http';
+import jwt from 'jsonwebtoken';
+import { env } from '../config/env';
 
 interface ScanProgressEvent {
   type: 'scan:progress';
@@ -44,8 +47,24 @@ class WebSocketManager {
   initialize(server: FastifyInstance['server']) {
     this.wss = new WebSocketServer({ server, path: '/ws' });
 
-    this.wss.on('connection', (ws: WebSocket) => {
-      console.log('WebSocket client connected');
+    this.wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
+      // Authenticate WebSocket connections via token query param
+      const url = new URL(req.url || '', `http://${req.headers.host}`);
+      const token = url.searchParams.get('token');
+
+      if (!token) {
+        ws.close(4001, 'Authentication required');
+        return;
+      }
+
+      try {
+        jwt.verify(token, env.jwtSecret);
+      } catch {
+        ws.close(4001, 'Invalid token');
+        return;
+      }
+
+      console.log('WebSocket client connected (authenticated)');
       this.clients.add(ws);
 
       ws.on('close', () => {

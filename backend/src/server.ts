@@ -1,8 +1,11 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import jwt from '@fastify/jwt';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUI from '@fastify/swagger-ui';
+import * as Sentry from '@sentry/node';
 import { env } from './config/env';
 import { healthRoutes } from './routes/health';
 import { projectRoutes } from './routes/projects';
@@ -21,10 +24,43 @@ import { aiRoutes } from './routes/ai';
 import { wsManager } from './lib/websocket';
 
 async function main() {
+  // Initialize Sentry for error tracking
+  if (env.sentryDsn) {
+    Sentry.init({
+      dsn: env.sentryDsn,
+      environment: env.nodeEnv,
+      tracesSampleRate: env.nodeEnv === 'production' ? 0.1 : 1.0,
+    });
+  }
+
   const app = Fastify({
     logger: true,
     // 10MB to support file-upload scanning
     bodyLimit: 10485760,
+  });
+
+  // Add rawBody for Stripe webhook signature verification
+  app.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {
+    try {
+      const json = JSON.parse(body as string);
+      (req as any).rawBody = body;
+      done(null, json);
+    } catch (err) {
+      done(err as Error, undefined);
+    }
+  });
+
+  // Security headers
+  await app.register(helmet, {
+    contentSecurityPolicy: false, // Allow frontend to load from different origin
+    crossOriginEmbedderPolicy: false,
+  });
+
+  // Global rate limiting - 100 requests per minute per IP
+  await app.register(rateLimit, {
+    max: 100,
+    timeWindow: '1 minute',
+    allowList: ['127.0.0.1'],
   });
 
   await app.register(cors, {
@@ -106,6 +142,11 @@ async function main() {
     // Rate limit errors
     if (error.statusCode === 429) {
       return reply.status(429).send({ error: 'Too many requests. Please slow down.' });
+    }
+
+    // Capture unexpected errors in Sentry
+    if (!error.statusCode || error.statusCode >= 500) {
+      Sentry.captureException(error);
     }
 
     reply.status(error.statusCode || 500).send({ error: error.statusCode ? error.message : 'Internal Server Error' });

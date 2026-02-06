@@ -3,10 +3,11 @@ import { z } from 'zod';
 import Stripe from 'stripe';
 import { prisma } from '../lib/prisma';
 import { authMiddleware } from '../lib/auth';
+import { env } from '../config/env';
 import { PlanTier } from '@prisma/client';
 
 // Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+const stripe = new Stripe(env.stripeSecretKey || '', {
   apiVersion: '2023-10-16',
 });
 
@@ -468,7 +469,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
   // Stripe webhook handler
   app.post('/billing/webhook', async (request: FastifyRequest, reply: FastifyReply) => {
     const sig = request.headers['stripe-signature'] as string;
-    const rawBody = (request.body as Buffer);
+    const rawBody = (request as any).rawBody;
 
     if (!rawBody) {
       return reply.status(400).send({ error: 'No raw body' });
@@ -480,7 +481,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       event = stripe.webhooks.constructEvent(
         rawBody,
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET || ''
+        env.stripeWebhookSecret
       );
     } catch (err) {
       console.error('Webhook signature verification failed:', err);

@@ -22,8 +22,15 @@ const inviteSchema = z.object({
 });
 
 export async function authRoutes(app: FastifyInstance): Promise<void> {
-  // Sign up - creates new org and user
-  app.post('/auth/signup', async (request, reply) => {
+  // Sign up - creates new org and user (rate limited)
+  app.post('/auth/signup', {
+    config: {
+      rateLimit: {
+        max: 3,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (request, reply) => {
     const parsed = signupSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -76,8 +83,15 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  // Login
-  app.post('/auth/login', async (request, reply) => {
+  // Login (strict rate limit: 5 attempts per minute to prevent brute force)
+  app.post('/auth/login', {
+    config: {
+      rateLimit: {
+        max: 5,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (request, reply) => {
     const parsed = loginSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });

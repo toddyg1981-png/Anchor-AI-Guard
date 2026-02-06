@@ -17,8 +17,15 @@ export async function analyticsRoutes(app: FastifyInstance): Promise<void> {
     return { views: stats.videoViews };
   });
 
-  // Increment video view count
-  app.post('/analytics/video-view', async () => {
+  // Increment video view count (stricter rate limit to prevent abuse)
+  app.post('/analytics/video-view', {
+    config: {
+      rateLimit: {
+        max: 10,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async () => {
     const stats = await prisma.siteStats.upsert({
       where: { id: 'global' },
       update: { videoViews: { increment: 1 } },
@@ -43,8 +50,15 @@ export async function analyticsRoutes(app: FastifyInstance): Promise<void> {
     return { views: stats.pageViews };
   });
 
-  // Increment page view count
-  app.post('/analytics/page-view', async () => {
+  // Increment page view count (stricter rate limit to prevent abuse)
+  app.post('/analytics/page-view', {
+    config: {
+      rateLimit: {
+        max: 10,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async () => {
     const stats = await prisma.siteStats.upsert({
       where: { id: 'global' },
       update: { pageViews: { increment: 1 } },
