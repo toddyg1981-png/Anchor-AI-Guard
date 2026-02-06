@@ -167,8 +167,11 @@ enum SubscriptionStatus {
 }
 
 enum PlanTier {
+  FREE
   STARTER
-  PROFESSIONAL
+  PRO
+  TEAM
+  BUSINESS
   ENTERPRISE
   ENTERPRISE_PLUS
   GOVERNMENT
@@ -180,7 +183,7 @@ model Subscription {
   stripeSubscriptionId String?            @unique
   stripePriceId        String?
   status               SubscriptionStatus @default(TRIALING)
-  planTier             PlanTier           @default(STARTER)
+  planTier             PlanTier           @default(FREE)
   trialEndsAt          DateTime?
   currentPeriodStart   DateTime?
   currentPeriodEnd     DateTime?
@@ -280,4 +283,15 @@ model AuditLog {
   createdAt DateTime @default(now())
   orgId     String
   org       Organization @relation(fields: [orgId], references: [id])
+}
+
+// ============================================
+// SITE ANALYTICS
+// ============================================
+
+model SiteStats {
+  id        String   @id @default("global")
+  videoViews Int     @default(0)
+  pageViews  Int     @default(0)
+  updatedAt  DateTime @updatedAt
 }

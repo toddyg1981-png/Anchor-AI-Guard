@@ -3,123 +3,216 @@ import { z } from 'zod';
 import Stripe from 'stripe';
 import { prisma } from '../lib/prisma';
 import { authMiddleware } from '../lib/auth';
+import { PlanTier } from '@prisma/client';
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2023-10-16',
 });
 
-// Plan configuration
-export const PLANS = {
-  STARTER: {
-    name: 'Starter',
-    monthlyPrice: 7900, // $79
-    yearlyPrice: 75800, // $758 (20% off)
-    maxProjects: 5,
-    maxScansPerMonth: 100,
-    maxTeamMembers: 3,
-    maxAIQueries: 500,
+// Plan type definition
+type PlanConfig = {
+  name: string;
+  monthlyPrice: number;
+  yearlyPrice: number;
+  maxProjects: number;
+  maxScansPerMonth: number;
+  maxTeamMembers: number;
+  maxAIQueries: number;
+  features: string[];
+};
+
+// Define plan tier keys explicitly to avoid Prisma type cache issues
+type PlanTierKey = 'FREE' | 'STARTER' | 'PRO' | 'TEAM' | 'BUSINESS' | 'ENTERPRISE' | 'ENTERPRISE_PLUS' | 'GOVERNMENT';
+
+// Plan configuration - 86 modules, 12 world-first features
+export const PLANS: Record<PlanTierKey, PlanConfig> = {
+  FREE: {
+    name: 'Free',
+    monthlyPrice: 0,
+    yearlyPrice: 0,
+    maxProjects: 1,
+    maxScansPerMonth: 5,
+    maxTeamMembers: 1,
+    maxAIQueries: 10,
     features: [
-      'Up to 5 projects',
-      'Basic CLI scanner',
+      '1 project',
+      '5 scans/month',
+      '10 AI queries/month',
+      'Basic vulnerability scanning',
       'GitHub integration',
-      'Email support',
-      '100 scans/month',
-      '500 AI queries/month',
+      'Community support',
     ],
   },
-  PROFESSIONAL: {
-    name: 'Professional',
-    monthlyPrice: 24900, // $249
-    yearlyPrice: 239000, // $2,390 (20% off)
-    maxProjects: 50,
-    maxScansPerMonth: 1000,
-    maxTeamMembers: 25,
-    maxAIQueries: 5000,
+  STARTER: {
+    name: 'Starter',
+    monthlyPrice: 4900, // $49
+    yearlyPrice: 47000, // $470 (20% off)
+    maxProjects: 3,
+    maxScansPerMonth: 50,
+    maxTeamMembers: 1,
+    maxAIQueries: 100,
     features: [
-      'Up to 50 projects',
-      'All CLI scanners',
-      'Attack Path Visualization',
+      '3 projects',
+      '50 scans/month',
+      '100 AI queries/month',
+      'All vulnerability scanners',
       'AI Security Chat',
+      'Email support',
+      'Export reports (PDF)',
+      'Security score badge',
+    ],
+  },
+  PRO: {
+    name: 'Pro',
+    monthlyPrice: 19900, // $199
+    yearlyPrice: 191000, // $1,910 (20% off)
+    maxProjects: 10,
+    maxScansPerMonth: 250,
+    maxTeamMembers: 3,
+    maxAIQueries: 1000,
+    features: [
+      '10 projects',
+      '250 scans/month',
+      '1,000 AI queries/month',
+      '3 team members',
       'Predictive CVE Intelligence (WORLD FIRST)',
-      'Real-time collaboration (WORLD FIRST)',
+      'AI Auto-Fix with 1-click PRs',
+      'Attack Path Visualization',
+      'Threat Hunting Module',
+      'API access',
+      'Priority email support',
+      'Slack integration',
+    ],
+  },
+  TEAM: {
+    name: 'Team',
+    monthlyPrice: 59900, // $599
+    yearlyPrice: 575000, // $5,750 (20% off)
+    maxProjects: 50,
+    maxScansPerMonth: 1500,
+    maxTeamMembers: 15,
+    maxAIQueries: 7500,
+    features: [
+      '50 projects',
+      '1,500 scans/month',
+      '7,500 AI queries/month',
+      '15 team members',
+      'Real-time Collaboration (WORLD FIRST)',
+      'Digital Twin Security (WORLD FIRST)',
+      'Autonomous SOC Access',
+      'All Pro features included',
+      'Team dashboard & analytics',
+      'Role-based access control',
+      'Full audit logs',
+      'Jira & GitHub integration',
       'Priority support',
-      '1,000 scans/month',
-      '5,000 AI queries/month',
+    ],
+  },
+  BUSINESS: {
+    name: 'Business',
+    monthlyPrice: 199900, // $1,999
+    yearlyPrice: 1919000, // $19,190 (20% off)
+    maxProjects: 200,
+    maxScansPerMonth: 10000,
+    maxTeamMembers: 75,
+    maxAIQueries: 50000,
+    features: [
+      '200 projects',
+      '10,000 scans/month',
+      '50,000 AI queries/month',
+      '75 team members',
+      'All 86 Security Modules',
+      'SSO/SAML authentication',
+      'Cyber Insurance Integration (WORLD FIRST)',
+      'Supply Chain Attestation (WORLD FIRST)',
+      'Custom security rules',
+      'Advanced threat analytics',
+      'Dedicated CSM',
+      'Phone & Slack support',
+      '99.9% SLA',
     ],
   },
   ENTERPRISE: {
     name: 'Enterprise',
-    monthlyPrice: 0, // Custom - $50K-150K/year
-    yearlyPrice: 5000000, // $50,000 starting
+    monthlyPrice: 0, // Custom - $100K-250K/year
+    yearlyPrice: 10000000, // $100,000 starting
     maxProjects: -1, // unlimited
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      '$50,000 - $150,000/year',
+      '$100,000 - $250,000/year',
       'For 100-500 developers',
       'Unlimited everything',
-      'On-premise deployment',
+      'On-premise deployment option',
       'Custom AI model training',
       'Dedicated security engineer',
-      '24/7/365 support',
-      '99.9% SLA guarantee',
+      '24/7/365 phone & Slack support',
+      '99.95% SLA guarantee',
       'SOC 2 Type II compliance',
+      'Quarterly business reviews',
+      'Custom integrations',
     ],
   },
   ENTERPRISE_PLUS: {
     name: 'Enterprise+',
-    monthlyPrice: 0, // Custom - $150K-500K/year
-    yearlyPrice: 15000000, // $150,000 starting
+    monthlyPrice: 0, // Custom - $250K-750K/year
+    yearlyPrice: 25000000, // $250,000 starting
     maxProjects: -1,
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      '$150,000 - $500,000/year',
+      '$250,000 - $750,000/year',
       'For 500-2000+ developers',
       'Everything in Enterprise',
       'Multi-region deployment',
-      'White-label licensing',
+      'Custom AI model fine-tuning',
+      'White-label licensing available',
       'Dedicated CSM + security team',
+      'Custom API development',
       '99.99% SLA guarantee',
-      'Priority feature development',
+      'Priority feature roadmap input',
       'Executive business reviews',
+      'On-site training & workshops',
     ],
   },
   GOVERNMENT: {
     name: 'Government & Defense',
-    monthlyPrice: 0, // Custom - $500K-2M+/year
-    yearlyPrice: 50000000, // $500,000 starting
+    monthlyPrice: 0, // Custom - $750K-3M+/year
+    yearlyPrice: 75000000, // $750,000 starting
     maxProjects: -1,
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      '$500,000 - $2,000,000+/year',
+      '$750,000 - $3,000,000+/year',
       'Federal, State & Defense',
+      'National Security Module (WORLD FIRST)',
+      'Critical Infrastructure Protection (WORLD FIRST)',
       'FedRAMP High Ready',
-      'NIST 800-53 Compliant',
+      'NIST 800-53 / CMMC Compliant',
       'ITAR/EAR Compliant',
       'Air-gapped deployment',
-      'Classified environment support',
+      'Classified environment support (TS/SCI)',
       'Security-cleared support staff',
+      'Custom threat intelligence feeds',
       'Nation-state threat detection',
-      'Critical infrastructure protection',
+      'Dedicated government account team',
     ],
   },
 };
 
 const createCheckoutSchema = z.object({
-  planTier: z.enum(['STARTER', 'PROFESSIONAL', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
+  planTier: z.enum(['FREE', 'STARTER', 'PRO', 'TEAM', 'BUSINESS', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
   billingPeriod: z.enum(['monthly', 'yearly']),
   successUrl: z.string().url(),
   cancelUrl: z.string().url(),
 });
 
 const updateSubscriptionSchema = z.object({
-  planTier: z.enum(['STARTER', 'PROFESSIONAL', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
+  planTier: z.enum(['FREE', 'STARTER', 'PRO', 'TEAM', 'BUSINESS', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
 });
 
 export async function billingRoutes(app: FastifyInstance): Promise<void> {
@@ -161,7 +254,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       });
     }
 
-    const plan = PLANS[subscription.planTier];
+    const plan = PLANS[subscription.planTier as PlanTierKey];
     const now = new Date();
     const trialDaysRemaining = subscription.trialEndsAt
       ? Math.max(0, Math.ceil((subscription.trialEndsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
@@ -341,7 +434,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
     // Update local record
     await prisma.subscription.update({
       where: { id: subscription.id },
-      data: { planTier },
+      data: { planTier: planTier as PlanTier },
     });
 
     return reply.send({ success: true, planTier });
@@ -399,7 +492,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const orgId = session.metadata?.orgId;
-        const planTier = session.metadata?.planTier as 'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE' | 'ENTERPRISE_PLUS' | 'GOVERNMENT';
+        const planTier = session.metadata?.planTier as PlanTierKey;
 
         if (orgId && planTier) {
           await prisma.subscription.update({
@@ -407,7 +500,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
             data: {
               stripeSubscriptionId: session.subscription as string,
               status: 'ACTIVE',
-              planTier,
+              planTier: planTier as PlanTier,
             },
           });
         }
@@ -496,7 +589,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       where: { orgId: user.orgId },
     });
 
-    const plan = subscription ? PLANS[subscription.planTier] : PLANS.STARTER;
+    const plan = subscription ? PLANS[subscription.planTier as PlanTierKey] : PLANS.STARTER;
 
     // Get current month's usage
     const startOfMonth = new Date();
