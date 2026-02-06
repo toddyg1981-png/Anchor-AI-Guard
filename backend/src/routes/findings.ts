@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
+import { authMiddleware } from '../lib/auth';
 
 const createFindingSchema = z.object({
   projectId: z.string().min(1),
@@ -15,18 +16,21 @@ const createFindingSchema = z.object({
 });
 
 export async function findingRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/findings', async (request) => {
+  app.get('/findings', { preHandler: authMiddleware() }, async (request) => {
+    const user = (request as any).user;
     const projectId = (request.query as { projectId?: string }).projectId;
-    const where = projectId ? { projectId } : undefined;
     const findings = await prisma.finding.findMany({
-      where,
+      where: {
+        ...(projectId ? { projectId } : {}),
+        project: { orgId: user.orgId },
+      },
       orderBy: { createdAt: 'desc' },
       include: { project: true },
     });
     return { findings };
   });
 
-  app.post('/findings', async (request, reply) => {
+  app.post('/findings', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = createFindingSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });

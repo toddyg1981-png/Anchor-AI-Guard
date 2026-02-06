@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { env } from '../config/env';
 
 interface ForgotPasswordScreenProps {
   onBack: () => void;
@@ -16,7 +17,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ onBa
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
+      const response = await fetch(`${env.apiBaseUrl}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { env } from '../config/env';
 
 interface Plan {
   tier: string;
@@ -52,7 +53,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
   const fetchPlans = async () => {
     try {
-      const response = await fetch('/api/billing/plans');
+      const response = await fetch(`${env.apiBaseUrl}/billing/plans`);
       const data = await response.json();
       setPlans(data.plans);
     } catch (error) {
@@ -296,7 +297,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     setCheckoutLoading(tier);
     try {
       const token = localStorage.getItem('anchor_auth_token');
-      const response = await fetch('/api/billing/checkout', {
+      const response = await fetch(`${env.apiBaseUrl}/billing/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

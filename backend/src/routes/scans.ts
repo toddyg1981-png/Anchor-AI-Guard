@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { runScan, runGithubScan, runUploadScan, runSnippetScan, failScan } from '../lib/scanEngine';
+import { authMiddleware } from '../lib/auth';
 
 const createScanSchema = z.object({
   projectId: z.string().min(1),
@@ -34,7 +35,7 @@ const snippetScanSchema = z.object({
 });
 
 export async function scanRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/scans', async (request) => {
+  app.get('/scans', { preHandler: authMiddleware() }, async (request) => {
     const projectId = (request.query as { projectId?: string }).projectId;
     const where = projectId ? { projectId } : undefined;
     const scans = await prisma.scan.findMany({
@@ -45,7 +46,7 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
     return { scans };
   });
 
-  app.post('/scans', async (request, reply) => {
+  app.post('/scans', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = createScanSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -63,7 +64,7 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // Original local-path scan
-  app.post('/scans/run', async (request, reply) => {
+  app.post('/scans/run', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = runScanSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -93,7 +94,7 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
   // ------------------------------------------------------------------
   // GitHub repo scan — clone a public repo and scan it
   // ------------------------------------------------------------------
-  app.post('/scans/github', async (request, reply) => {
+  app.post('/scans/github', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = githubScanSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -129,7 +130,7 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
   // ------------------------------------------------------------------
   // Upload scan — accept files as JSON and scan them
   // ------------------------------------------------------------------
-  app.post('/scans/upload', async (request, reply) => {
+  app.post('/scans/upload', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = uploadScanSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -161,7 +162,7 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
   // ------------------------------------------------------------------
   // Snippet scan — accept raw code text and scan it
   // ------------------------------------------------------------------
-  app.post('/scans/snippet', async (request, reply) => {
+  app.post('/scans/snippet', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = snippetScanSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });

@@ -1,10 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { prisma } from './prisma';
 
-// Password hashing using built-in crypto
-import { createHash, randomBytes, timingSafeEqual } from 'crypto';
+import bcrypt from 'bcryptjs';
 
-const SALT_LENGTH = 16;
+const BCRYPT_ROUNDS = 12;
 
 export interface AuthUser {
   id: string;
@@ -23,29 +21,21 @@ export interface JWTPayload {
   exp: number;
 }
 
-// Simple hash function for password storage
-export function hashPassword(password: string): string {
-  const salt = randomBytes(SALT_LENGTH).toString('hex');
-  const hash = createHash('sha256')
-    .update(salt + password)
-    .digest('hex');
-  return `${salt}:${hash}`;
+// Secure password hashing using bcrypt
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, BCRYPT_ROUNDS);
 }
 
-export function verifyPassword(password: string, stored: string): boolean {
-  const [salt, storedHash] = stored.split(':');
-  if (!salt || !storedHash) return false;
-  
-  const hash = createHash('sha256')
-    .update(salt + password)
-    .digest('hex');
-  
-  // Timing-safe comparison
-  try {
-    return timingSafeEqual(Buffer.from(hash), Buffer.from(storedHash));
-  } catch {
-    return false;
+export async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  // Support legacy SHA-256 hashes (salt:hash format) for migration
+  if (stored.includes(':') && !stored.startsWith('$2')) {
+    const { createHash } = await import('crypto');
+    const [salt, storedHash] = stored.split(':');
+    if (!salt || !storedHash) return false;
+    const hash = createHash('sha256').update(salt + password).digest('hex');
+    return hash === storedHash;
   }
+  return bcrypt.compare(password, stored);
 }
 
 export async function createUser(
@@ -55,7 +45,8 @@ export async function createUser(
   orgId: string,
   role: string = 'member'
 ) {
-  const passwordHash = hashPassword(password);
+  const { prisma } = await import('./prisma');
+  const passwordHash = await hashPassword(password);
   
   const user = await prisma.user.create({
     data: {
@@ -77,6 +68,7 @@ export async function createUser(
 }
 
 export async function authenticateUser(email: string, password: string): Promise<AuthUser | null> {
+  const { prisma } = await import('./prisma');
   const user = await prisma.user.findUnique({
     where: { email: email.toLowerCase().trim() },
   });
@@ -85,9 +77,16 @@ export async function authenticateUser(email: string, password: string): Promise
     return null;
   }
 
-  const isValid = verifyPassword(password, user.passwordHash);
+  const isValid = await verifyPassword(password, user.passwordHash);
   if (!isValid) {
     return null;
+  }
+
+  // Auto-migrate legacy SHA-256 hashes to bcrypt on successful login
+  if (user.passwordHash.includes(':') && !user.passwordHash.startsWith('$2')) {
+    const { prisma } = await import('./prisma');
+    const newHash = await hashPassword(password);
+    await prisma.user.update({ where: { id: user.id }, data: { passwordHash: newHash } });
   }
 
   return {
@@ -100,6 +99,7 @@ export async function authenticateUser(email: string, password: string): Promise
 }
 
 export async function getUserById(userId: string): Promise<AuthUser | null> {
+  const { prisma } = await import('./prisma');
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });

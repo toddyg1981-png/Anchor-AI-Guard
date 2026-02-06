@@ -56,7 +56,7 @@ const SecurityMetrics = React.lazy(() => import('./components/SecurityMetrics'))
 const RegulatoryIntelligence = React.lazy(() => import('./components/RegulatoryIntelligence'));
 const VendorRiskManagement = React.lazy(() => import('./components/VendorRiskManagement'));
 const AssetInventory = React.lazy(() => import('./components/AssetInventory'));
-const OTICSSecurity = React.lazy(() => import('./components/OTICSSecurity'));
+const OTICSSecurity = React.lazy(() => import('./components/OTICSecurity'));
 const ForensicsLab = React.lazy(() => import('./components/ForensicsLab'));
 const MalwareAnalysis = React.lazy(() => import('./components/MalwareAnalysis'));
 const SecurityTraining = React.lazy(() => import('./components/SecurityTraining'));
@@ -66,6 +66,26 @@ const CyberInsuranceIntegration = React.lazy(() => import('./components/CyberIns
 const NationalSecurityModule = React.lazy(() => import('./components/NationalSecurityModule'));
 const CriticalInfrastructureProtection = React.lazy(() => import('./components/CriticalInfrastructureProtection'));
 const SupplyChainAttestation = React.lazy(() => import('./components/SupplyChainAttestation'));
+const ActiveDefense = React.lazy(() => import('./components/ActiveDefense'));
+const DarkWebMonitor = React.lazy(() => import('./components/DarkWebMonitor'));
+const ComplianceHub = React.lazy(() => import('./components/ComplianceHub'));
+const BreachSimulator = React.lazy(() => import('./components/BreachSimulator'));
+const CloudSecurityPosture = React.lazy(() => import('./components/CloudSecurityPosture'));
+const CICDSecurity = React.lazy(() => import('./components/CICDSecurity'));
+const ThreatIntelligence = React.lazy(() => import('./components/ThreatIntelligence'));
+const APISecurityScanner = React.lazy(() => import('./components/APISecurityScanner'));
+const ExecutiveDashboard = React.lazy(() => import('./components/ExecutiveDashboard'));
+const InsiderThreatDetection = React.lazy(() => import('./components/InsiderThreatDetection'));
+const ZeroTrustSecurity = React.lazy(() => import('./components/ZeroTrustSecurity'));
+const SOCDashboard = React.lazy(() => import('./components/SOCDashboard'));
+const QuantumCryptography = React.lazy(() => import('./components/QuantumCryptography'));
+const IncidentResponse = React.lazy(() => import('./components/IncidentResponseAutomation'));
+const SecretsRotation = React.lazy(() => import('./components/SecretsRotation'));
+const SupplyChainAI = React.lazy(() => import('./components/SupplyChainAI'));
+const RASPAgent = React.lazy(() => import('./components/RASPAgent'));
+const MobileSecurity = React.lazy(() => import('./components/MobileSecurity'));
+const BackupDisasterRecovery = React.lazy(() => import('./components/BackupDisasterRecovery'));
+const SelfProtection = React.lazy(() => import('./components/SelfProtection'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -142,7 +162,27 @@ export type DashboardView =
   | 'cyberInsurance'
   | 'nationalSecurity'
   | 'criticalInfra'
-  | 'supplyChainAttestation';
+  | 'supplyChainAttestation'
+  | 'activeDefense'
+  | 'darkWebMonitor'
+  | 'complianceHub'
+  | 'breachSimulator'
+  | 'cloudSecurity'
+  | 'cicdSecurity'
+  | 'threatIntelligence'
+  | 'apiSecurity'
+  | 'executiveDashboard'
+  | 'insiderThreat'
+  | 'zeroTrust'
+  | 'socDashboard'
+  | 'quantumCryptography'
+  | 'incidentResponse'
+  | 'secretsRotation'
+  | 'supplyChainAI'
+  | 'raspAgent'
+  | 'mobileSecurity'
+  | 'backupRecovery'
+  | 'selfProtection';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -453,6 +493,46 @@ const AppContent: React.FC = () => {
         return <CriticalInfrastructureProtection />;
       case 'supplyChainAttestation':
         return <SupplyChainAttestation />;
+      case 'activeDefense':
+        return <ActiveDefense />;
+      case 'darkWebMonitor':
+        return <DarkWebMonitor />;
+      case 'complianceHub':
+        return <ComplianceHub />;
+      case 'breachSimulator':
+        return <BreachSimulator />;
+      case 'cloudSecurity':
+        return <CloudSecurityPosture />;
+      case 'cicdSecurity':
+        return <CICDSecurity />;
+      case 'threatIntelligence':
+        return <ThreatIntelligence />;
+      case 'apiSecurity':
+        return <APISecurityScanner />;
+      case 'executiveDashboard':
+        return <ExecutiveDashboard />;
+      case 'insiderThreat':
+        return <InsiderThreatDetection />;
+      case 'zeroTrust':
+        return <ZeroTrustSecurity />;
+      case 'socDashboard':
+        return <SOCDashboard />;
+      case 'quantumCryptography':
+        return <QuantumCryptography />;
+      case 'incidentResponse':
+        return <IncidentResponse />;
+      case 'secretsRotation':
+        return <SecretsRotation />;
+      case 'supplyChainAI':
+        return <SupplyChainAI />;
+      case 'raspAgent':
+        return <RASPAgent />;
+      case 'mobileSecurity':
+        return <MobileSecurity />;
+      case 'backupRecovery':
+        return <BackupDisasterRecovery />;
+      case 'selfProtection':
+        return <SelfProtection />;
       case 'overview':
       default:
         return (

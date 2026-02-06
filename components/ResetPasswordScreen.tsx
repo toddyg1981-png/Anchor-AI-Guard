@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { env } from '../config/env';
 
 interface ResetPasswordScreenProps {
   onSuccess: () => void;
@@ -20,7 +21,7 @@ export const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({ onSucc
     if (resetToken) {
       setToken(resetToken);
       // Verify token is valid
-      fetch(`/api/auth/verify-reset-token?token=${resetToken}`)
+      fetch(`${env.apiBaseUrl}/auth/verify-reset-token?token=${resetToken}`)
         .then(res => res.json())
         .then(data => {
           setTokenValid(data.valid);
@@ -55,7 +56,7 @@ export const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({ onSucc
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
+      const response = await fetch(`${env.apiBaseUrl}/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password }),

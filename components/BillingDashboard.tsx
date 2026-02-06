@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { env } from '../config/env';
 
 interface UsageData {
   projects: { used: number; limit: number };
@@ -40,10 +41,10 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
     try {
       const token = localStorage.getItem('anchor_auth_token');
       const [subResponse, usageResponse] = await Promise.all([
-        fetch('/api/billing/subscription', {
+        fetch(`${env.apiBaseUrl}/billing/subscription`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch('/api/billing/usage', {
+        fetch(`${env.apiBaseUrl}/billing/usage`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -66,7 +67,7 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
   const openBillingPortal = async () => {
     setPortalLoading(true);
     try {
-      const response = await fetch('/api/billing/portal', {
+      const response = await fetch(`${env.apiBaseUrl}/billing/portal`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

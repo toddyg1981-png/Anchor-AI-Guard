@@ -41,8 +41,8 @@ async function main() {
         description: 'Backend API for Anchor Security Dashboard',
         version: '1.0.0',
       },
-      host: `localhost:${env.port}`,
-      schemes: ['http'],
+      host: env.nodeEnv === 'production' ? env.backendUrl.replace(/^https?:\/\//, '') : `localhost:${env.port}`,
+      schemes: env.nodeEnv === 'production' ? ['https'] : ['http'],
       consumes: ['application/json'],
       produces: ['application/json'],
       securityDefinitions: {
@@ -80,7 +80,35 @@ async function main() {
 
   app.setErrorHandler((error, request, reply) => {
     request.log.error(error);
-    reply.status(500).send({ error: 'Internal Server Error' });
+
+    // Zod validation errors
+    if (error.name === 'ZodError') {
+      return reply.status(400).send({ error: 'Validation error', details: error });
+    }
+
+    // Prisma known errors
+    if (error.name === 'PrismaClientKnownRequestError') {
+      const prismaError = error as any;
+      if (prismaError.code === 'P2002') {
+        return reply.status(409).send({ error: 'Resource already exists' });
+      }
+      if (prismaError.code === 'P2025') {
+        return reply.status(404).send({ error: 'Resource not found' });
+      }
+      return reply.status(400).send({ error: 'Database error' });
+    }
+
+    // JWT errors
+    if (error.statusCode === 401 || error.code === 'FST_JWT_NO_AUTHORIZATION_IN_HEADER') {
+      return reply.status(401).send({ error: 'Unauthorized' });
+    }
+
+    // Rate limit errors
+    if (error.statusCode === 429) {
+      return reply.status(429).send({ error: 'Too many requests. Please slow down.' });
+    }
+
+    reply.status(error.statusCode || 500).send({ error: error.statusCode ? error.message : 'Internal Server Error' });
   });
 
   await app.listen({ port: env.port, host: '0.0.0.0' });

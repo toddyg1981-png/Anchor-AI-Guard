@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
+import { authMiddleware } from '../lib/auth';
 
 const createProjectSchema = z.object({
   name: z.string().min(2),
@@ -54,15 +55,17 @@ const mapProject = (project: any) => {
 };
 
 export async function projectRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/projects', async () => {
+  app.get('/projects', { preHandler: authMiddleware() }, async (request) => {
+    const user = (request as any).user;
     const projects = await prisma.project.findMany({
+      where: { orgId: user.orgId },
       orderBy: { createdAt: 'desc' },
       include: { findings: true, scans: true },
     });
     return { projects: projects.map(mapProject) };
   });
 
-  app.post('/projects', async (request, reply) => {
+  app.post('/projects', { preHandler: authMiddleware() }, async (request, reply) => {
     const parsed = createProjectSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -74,7 +77,7 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
         description: parsed.data.description,
         owner: parsed.data.owner ?? 'Unassigned',
         scope: parsed.data.scope ?? defaultScope,
-        orgId: parsed.data.orgId,
+        orgId: (request as any).user.orgId,
       },
       include: { findings: true, scans: true },
     });
