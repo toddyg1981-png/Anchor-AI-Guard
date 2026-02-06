@@ -109,6 +109,7 @@ body::before {
     rgba(53, 198, 255, 0.1) 0%, 
     rgba(122, 60, 255, 0.1) 50%, 
     rgba(255, 79, 163, 0.1) 100%);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(53, 198, 255, 0.2);
   box-shadow: 
@@ -120,6 +121,7 @@ body::before {
 
 .glass-card {
   background: rgba(15, 23, 42, 0.4);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(53, 198, 255, 0.15);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
@@ -146,7 +148,7 @@ body::before {
 
 /* Prevent logo dragging */
 .no-drag {
+  -webkit-user-select: none;
   user-select: none;
   pointer-events: none;
-  -webkit-user-drag: none;
 }
