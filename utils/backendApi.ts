@@ -90,6 +90,12 @@ const mapProject = (project: ApiProject): Project => ({
 });
 
 export const backendApi = {
+  async createProject(data: { name: string; description?: string; owner?: string; scope?: { domains?: string[]; apis?: string[]; mobileBuilds?: string[] } }): Promise<Project> {
+    const baseUrl = env.apiBaseUrl;
+    const response = await apiClient.post<{ project: ApiProject }>(`${baseUrl}/projects`, data);
+    return mapProject(response.project);
+  },
+
   async getProjects(): Promise<Project[]> {
     const baseUrl = env.apiBaseUrl;
     const response = await apiClient.get<{ projects: ApiProject[] }>(`${baseUrl}/projects`);

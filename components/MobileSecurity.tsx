@@ -43,6 +43,8 @@ export const MobileSecurity: React.FC = () => {
   const [_selectedApp, _setSelectedApp] = useState<MobileApp | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [uploadedApp, setUploadedApp] = useState<string | null>(null);
+  const appFileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Mock mobile apps
   const apps: MobileApp[] = [
@@ -134,8 +136,26 @@ export const MobileSecurity: React.FC = () => {
           <p className="text-gray-400">iOS and Android application security scanning and analysis</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
-            📤 Upload App
+          <input
+            ref={appFileInputRef}
+            type="file"
+            accept=".apk,.aab,.ipa,.zip"
+            className="hidden"
+            title="Upload mobile app package"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setUploadedApp(file.name);
+                // Trigger scan after upload
+                runScan();
+              }
+            }}
+          />
+          <button
+            onClick={() => appFileInputRef.current?.click()}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium"
+          >
+            📤 {uploadedApp ? `Uploaded: ${uploadedApp}` : 'Upload App'}
           </button>
           <button
             onClick={runScan}

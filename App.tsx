@@ -343,6 +343,16 @@ const AppContent: React.FC = () => {
     setDashboardView(view);
   }, []);
 
+  const handleNewScan = useCallback(() => {
+    // If a project is already selected, stay on its detail and the scan panel is there
+    if (selectedProject) {
+      setDashboardView('projectDetail');
+      return;
+    }
+    // Otherwise go to overview where user can select a project to scan
+    setDashboardView('overview');
+  }, [selectedProject]);
+
   // Render dashboard content based on sub-view
   const renderDashboardContent = () => {
     const content = (() => {
@@ -646,6 +656,7 @@ const AppContent: React.FC = () => {
             onLogout={handleLogout}
             onViewBilling={() => setDashboardView('billing')}
             onViewAdmin={() => setDashboardView('admin')}
+            onNewScan={handleNewScan}
             user={user}
           >
             {renderDashboardContent()}

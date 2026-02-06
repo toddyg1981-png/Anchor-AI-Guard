@@ -17,6 +17,7 @@ interface DashboardLayoutProps {
   onViewIntegrations?: () => void;
   onViewBilling?: () => void;
   onViewAdmin?: () => void;
+  onNewScan?: () => void;
   onLogout?: () => void;
   user?: User | null;
   children: React.ReactNode;
@@ -30,6 +31,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onViewIntegrations,
   onViewBilling,
   onViewAdmin,
+  onNewScan,
   onLogout,
   user,
   children,
@@ -219,7 +221,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           
           <div className="flex items-center gap-3">
             {/* Quick Actions */}
-            <button className="px-4 py-2 bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-pink-500/25">
+            <button
+              onClick={onNewScan}
+              className="px-4 py-2 bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-pink-500/25">
               + New Scan
             </button>
 

@@ -14,7 +14,6 @@ const createProjectSchema = z.object({
       mobileBuilds: z.array(z.string()).optional(),
     })
     .optional(),
-  orgId: z.string().min(1),
 });
 
 const defaultScope = {
