@@ -282,11 +282,10 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             </div>
           </div>
 
-          {/* Hero Image/Demo */}
+          {/* Hero Video Demo */}
           <div className="mt-20 relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#05080a] via-transparent to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#05080a] via-transparent to-transparent z-10 pointer-events-none" />
             <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-2xl shadow-cyan-500/10">
-              {/* Mock Dashboard Preview */}
               <div className="bg-gray-800 px-4 py-3 flex items-center gap-2 border-b border-gray-700">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
@@ -295,45 +294,15 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                 </div>
                 <span className="text-sm text-cyan-400 ml-4">app.anchorsecurity.io/dashboard</span>
               </div>
-              <div className="p-8 grid md:grid-cols-3 gap-6">
-                {/* Security Score */}
-                <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/30">
-                  <h3 className="text-cyan-400 text-sm mb-2">Security Score</h3>
-                  <div className="text-5xl font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
-                    847
-                  </div>
-                  <p className="text-green-400 text-sm mt-2">↑ 12 points this week</p>
-                </div>
-
-                {/* Active Threats */}
-                <div className="bg-gray-800/50 rounded-xl p-6 border border-pink-500/30">
-                  <h3 className="text-pink-400 text-sm mb-2">Active Threats</h3>
-                  <div className="flex gap-4 mt-2">
-                    <div>
-                      <span className="text-3xl font-bold text-red-400">3</span>
-                      <p className="text-xs text-cyan-400">Critical</p>
-                    </div>
-                    <div>
-                      <span className="text-3xl font-bold text-orange-400">12</span>
-                      <p className="text-xs text-purple-400">High</p>
-                    </div>
-                    <div>
-                      <span className="text-3xl font-bold text-yellow-400">28</span>
-                      <p className="text-xs text-pink-400">Medium</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Predicted CVEs */}
-                <div className="bg-gradient-to-br from-purple-500/10 to-cyan-500/10 rounded-xl p-6 border border-purple-500/30">
-                  <h3 className="text-purple-400 text-sm mb-2 flex items-center gap-2">
-                    🔮 Predicted CVEs
-                    <span className="bg-purple-500/20 text-purple-300 text-xs px-2 py-0.5 rounded-full">AI</span>
-                  </h3>
-                  <div className="text-3xl font-bold text-cyan-400">2</div>
-                  <p className="text-purple-300 text-sm mt-2">vulnerabilities predicted</p>
-                </div>
-              </div>
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full"
+              >
+                <source src="/assets/anchor-demo-1.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>
@@ -351,6 +320,32 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                 <div className="text-cyan-400">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Demo Section */}
+      <section className="py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              See Anchor
+              <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"> in Action</span>
+            </h2>
+            <p className="text-xl text-purple-300 max-w-2xl mx-auto">
+              Watch how Anchor detects, analyses, and remediates security threats in real time.
+            </p>
+          </div>
+          <div className="relative rounded-2xl overflow-hidden border border-cyan-500/30 shadow-2xl shadow-purple-500/10">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full"
+            >
+              <source src="/assets/anchor-demo-2.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </section>
