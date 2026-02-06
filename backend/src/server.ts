@@ -17,6 +17,7 @@ import { billingRoutes } from './routes/billing';
 import { oauthRoutes } from './routes/oauth';
 import { emailRoutes } from './routes/email';
 import { analyticsRoutes } from './routes/analytics';
+import { aiRoutes } from './routes/ai';
 import { wsManager } from './lib/websocket';
 
 async function main() {
@@ -70,6 +71,7 @@ async function main() {
   app.register(autofixRoutes, { prefix: '/api' });
   app.register(sbomRoutes, { prefix: '/api' });
   app.register(analyticsRoutes, { prefix: '/api' });
+  app.register(aiRoutes, { prefix: '/api' });
 
   app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
 

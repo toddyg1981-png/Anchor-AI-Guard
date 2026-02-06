@@ -4,9 +4,6 @@
  */
 
 interface EnvironmentConfig {
-  // API Keys
-  geminiApiKey: string;
-
   // Application Settings
   appEnv: 'development' | 'staging' | 'production';
   appName: string;
@@ -85,9 +82,6 @@ export function loadEnvironmentConfig(): EnvironmentConfig {
   }
 
   const config: EnvironmentConfig = {
-    // API Keys (optional in frontend - backend handles actual API calls)
-    geminiApiKey: import.meta.env.VITE_GEMINI_API_KEY || '',
-
     // Application Settings
     appEnv: (import.meta.env.VITE_APP_ENV || 'development') as EnvironmentConfig['appEnv'],
     appName: import.meta.env.VITE_APP_NAME || 'Anchor Security Dashboard',
@@ -120,10 +114,7 @@ export function loadEnvironmentConfig(): EnvironmentConfig {
 
   // Log configuration in development
   if (config.debugMode && config.appEnv === 'development') {
-    console.log('🔧 Environment Configuration:', {
-      ...config,
-      geminiApiKey: config.geminiApiKey ? '***' : '(not set)',
-    });
+    console.log('🔧 Environment Configuration:', config);
   }
 
   return config;

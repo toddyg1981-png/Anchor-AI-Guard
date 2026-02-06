@@ -14,4 +14,5 @@ export const env = {
   databaseUrl: required('DATABASE_URL'),
   jwtSecret: required('JWT_SECRET', 'dev-secret-change-me'),
   corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? '',
 };

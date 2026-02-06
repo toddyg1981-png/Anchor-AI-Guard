@@ -1,12 +1,12 @@
 /**
- * AI Security Service - Gemini Integration
+ * AI Security Service - Backend Integration
  * Provides intelligent security analysis, threat assessment, and remediation guidance
+ * Routes AI calls through the backend for security (API keys stay server-side)
  */
 
 import { Finding, Severity } from '../types';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 export interface AIAnalysis {
   threatScore: number; // 0-100
@@ -32,70 +32,22 @@ export interface BulkAnalysisResult {
  * Get AI-powered analysis for a single security finding
  */
 export async function analyzeSecurityFinding(finding: Finding): Promise<AIAnalysis> {
-  if (!GEMINI_API_KEY) {
-    return getDefaultAnalysis(finding);
-  }
-
   try {
-    const prompt = `You are a security expert analyzing a vulnerability finding. Provide a concise JSON response (no markdown formatting, just plain JSON).
-
-Finding Type: ${finding.type}
-Severity: ${finding.severity}
-Description: ${finding.description}
-Reproduction Steps: ${finding.reproduction}
-Current Guidance: ${finding.guidance}
-
-Respond ONLY with valid JSON (no code blocks, no markdown) in this exact format:
-{
-  "threatScore": <number 0-100>,
-  "riskAssessment": "<brief risk explanation>",
-  "automatedRemediationSteps": ["<step1>", "<step2>"],
-  "estimatedFixTime": "<time estimate>",
-  "relatedCVEs": ["<CVE-XXXX-XXXXX>"],
-  "preventionStrategies": ["<strategy1>", "<strategy2>"],
-  "priority": "critical|high|medium|low",
-  "automationSuggestions": ["<automation idea 1>", "<automation idea 2>"]
-}`;
-
-    const response = await fetch(GEMINI_API_URL, {
+    const response = await fetch(`${API_BASE_URL}/ai/analyze`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 1024,
-        },
-      }),
-      signal: AbortSignal.timeout(10000),
+      body: JSON.stringify({ finding }),
+      signal: AbortSignal.timeout(15000),
     });
 
     if (!response.ok) {
-      console.error('Gemini API error:', response.statusText);
+      console.error('AI analysis error:', response.statusText);
       return getDefaultAnalysis(finding);
     }
 
-    const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    
-    // Clean up the response - remove markdown code blocks if present
-    const cleanedContent = content
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
-    
-    const analysis = JSON.parse(cleanedContent) as AIAnalysis;
-    return analysis;
+    return await response.json();
   } catch (error) {
     console.error('AI analysis error:', error);
     return getDefaultAnalysis(finding);
@@ -106,75 +58,22 @@ Respond ONLY with valid JSON (no code blocks, no markdown) in this exact format:
  * Analyze multiple findings and provide prioritized recommendations
  */
 export async function analyzeBulkFindings(findings: Finding[]): Promise<BulkAnalysisResult> {
-  if (!GEMINI_API_KEY) {
-    return getDefaultBulkAnalysis(findings);
-  }
-
   try {
-    const findingsSummary = findings
-      .map(f => `- ${f.severity}: ${f.type} (${f.description.substring(0, 100)}...)`)
-      .join('\n');
-
-    const prompt = `You are a security expert. Analyze these ${findings.length} security findings and provide strategic recommendations. Respond ONLY with valid JSON (no markdown).
-
-Findings:
-${findingsSummary}
-
-Total findings by severity:
-- Critical: ${findings.filter(f => f.severity === Severity.Critical).length}
-- High: ${findings.filter(f => f.severity === Severity.High).length}
-- Medium: ${findings.filter(f => f.severity === Severity.Medium).length}
-- Low: ${findings.filter(f => f.severity === Severity.Low).length}
-
-Respond ONLY with valid JSON (no code blocks) in this exact format:
-{
-  "totalFindings": ${findings.length},
-  "criticalCount": <number>,
-  "averageThreatScore": <number 0-100>,
-  "prioritizedActions": ["<action1>", "<action2>", "<action3>"],
-  "automationRecommendations": ["<automation1>", "<automation2>"],
-  "estimatedTotalFixTime": "<time estimate>"
-}`;
-
-    const response = await fetch(GEMINI_API_URL, {
+    const response = await fetch(`${API_BASE_URL}/ai/analyze-bulk`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 2048,
-        },
-      }),
-      signal: AbortSignal.timeout(15000),
+      body: JSON.stringify({ findings }),
+      signal: AbortSignal.timeout(20000),
     });
 
     if (!response.ok) {
-      console.error('Gemini API error:', response.statusText);
+      console.error('Bulk AI analysis error:', response.statusText);
       return getDefaultBulkAnalysis(findings);
     }
 
-    const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    
-    // Clean up the response
-    const cleanedContent = content
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
-    
-    const analysis = JSON.parse(cleanedContent) as BulkAnalysisResult;
-    return analysis;
+    return await response.json();
   } catch (error) {
     console.error('Bulk AI analysis error:', error);
     return getDefaultBulkAnalysis(findings);
@@ -185,63 +84,23 @@ Respond ONLY with valid JSON (no code blocks) in this exact format:
  * Generate a security assessment report
  */
 export async function generateSecurityReport(findings: Finding[], projectName: string): Promise<string> {
-  if (!GEMINI_API_KEY) {
-    return getDefaultReport(findings, projectName);
-  }
-
   try {
-    const criticalCount = findings.filter(f => f.severity === Severity.Critical).length;
-    const highCount = findings.filter(f => f.severity === Severity.High).length;
-    const mediumCount = findings.filter(f => f.severity === Severity.Medium).length;
-
-    const prompt = `Generate a professional security assessment report for project "${projectName}".
-
-Findings Summary:
-- Critical: ${criticalCount}
-- High: ${highCount}
-- Medium: ${mediumCount}
-- Total: ${findings.length}
-
-Top 3 Issues:
-${findings.slice(0, 3).map(f => `• ${f.type}: ${f.description}`).join('\n')}
-
-Provide a 3-4 paragraph professional assessment including:
-1. Executive summary of security posture
-2. Key risks and immediate actions needed
-3. Long-term security improvements
-
-Keep it concise and actionable.`;
-
-    const response = await fetch(GEMINI_API_URL, {
+    const response = await fetch(`${API_BASE_URL}/ai/report`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.4,
-          maxOutputTokens: 1024,
-        },
-      }),
-      signal: AbortSignal.timeout(10000),
+      body: JSON.stringify({ findings, projectName }),
+      signal: AbortSignal.timeout(15000),
     });
 
     if (!response.ok) {
-      console.error('Gemini API error:', response.statusText);
+      console.error('Report generation error:', response.statusText);
       return getDefaultReport(findings, projectName);
     }
 
     const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || getDefaultReport(findings, projectName);
+    return data.report;
   } catch (error) {
     console.error('Report generation error:', error);
     return getDefaultReport(findings, projectName);
@@ -257,57 +116,22 @@ export async function getThreatIntelligence(vulnerabilityType: string): Promise<
   mitigation: string[];
   detectionMethods: string[];
 }> {
-  if (!GEMINI_API_KEY) {
-    return getDefaultThreatIntel(vulnerabilityType);
-  }
-
   try {
-    const prompt = `Provide threat intelligence for "${vulnerabilityType}" vulnerability. Respond ONLY with valid JSON.
-
-{
-  "commonAttackPatterns": ["<pattern1>", "<pattern2>"],
-  "realWorldExamples": ["<example1>", "<example2>"],
-  "mitigation": ["<step1>", "<step2>"],
-  "detectionMethods": ["<method1>", "<method2>"]
-}`;
-
-    const response = await fetch(GEMINI_API_URL, {
+    const response = await fetch(`${API_BASE_URL}/ai/threat-intel`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 1024,
-        },
-      }),
-      signal: AbortSignal.timeout(10000),
+      body: JSON.stringify({ vulnerabilityType }),
+      signal: AbortSignal.timeout(15000),
     });
 
     if (!response.ok) {
-      console.error('Gemini API error:', response.statusText);
+      console.error('Threat intelligence error:', response.statusText);
       return getDefaultThreatIntel(vulnerabilityType);
     }
 
-    const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    
-    const cleanedContent = content
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
-    
-    return JSON.parse(cleanedContent);
+    return await response.json();
   } catch (error) {
     console.error('Threat intelligence error:', error);
     return getDefaultThreatIntel(vulnerabilityType);
