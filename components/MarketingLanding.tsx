@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { env } from '../config/env';
 
 interface MarketingLandingProps {
   onGetStarted: () => void;
@@ -11,7 +12,8 @@ interface MarketingLandingProps {
   onViewContact?: () => void;
 }
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// Use centralized env config - strip /api suffix for analytics endpoints
+const API_BASE = env.apiBaseUrl.replace(/\/api$/, '');
 
 const MarketingLanding: React.FC<MarketingLandingProps> = ({
   onGetStarted,

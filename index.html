@@ -27,16 +27,14 @@
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
   
-  <!-- Security Headers -->
+  <!-- Security Headers (X-Frame-Options must be set via HTTP headers, not meta) -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="X-Frame-Options" content="DENY" />
   <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="permissions-policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), xr-spatial-tracking=()" />
   
   <title>Anchor Security - World First AI Security Platform</title>
   <link rel="stylesheet" href="./index.css">
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
