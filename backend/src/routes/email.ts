@@ -7,6 +7,7 @@ import crypto from 'crypto';
 // Email configuration - using Resend
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@anchorsecurity.io';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
 const APP_NAME = 'Anchor Security';
 
@@ -323,7 +324,92 @@ const emailTemplates = {
     `,
     text: `Hi ${name},\n\nWe couldn't process your latest payment. Please update your payment method: ${APP_URL}/settings/billing`,
   }),
+
+  adminNewSignup: (userEmail: string, userName: string, signupTime: Date) => ({
+    subject: `🎉 New Signup: ${userEmail}`,
+    html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0f172a; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #1e293b; border-radius: 16px; overflow: hidden;">
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981, #06b6d4); padding: 40px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">🎉 New User Signup!</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 40px;">
+              <h2 style="color: white; margin: 0 0 20px 0;">Someone just joined Anchor!</h2>
+              
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 20px 0;">
+                <tr>
+                  <td style="padding: 15px; background-color: #0f172a; border-radius: 8px;">
+                    <p style="color: #94a3b8; margin: 0 0 5px 0; font-size: 12px;">EMAIL</p>
+                    <p style="color: #06b6d4; margin: 0; font-size: 18px; font-weight: bold;">${userEmail}</p>
+                  </td>
+                </tr>
+                <tr><td style="height: 10px;"></td></tr>
+                <tr>
+                  <td style="padding: 15px; background-color: #0f172a; border-radius: 8px;">
+                    <p style="color: #94a3b8; margin: 0 0 5px 0; font-size: 12px;">NAME</p>
+                    <p style="color: white; margin: 0; font-size: 18px;">${userName || 'Not provided'}</p>
+                  </td>
+                </tr>
+                <tr><td style="height: 10px;"></td></tr>
+                <tr>
+                  <td style="padding: 15px; background-color: #0f172a; border-radius: 8px;">
+                    <p style="color: #94a3b8; margin: 0 0 5px 0; font-size: 12px;">SIGNED UP</p>
+                    <p style="color: white; margin: 0; font-size: 18px;">${signupTime.toLocaleString()}</p>
+                  </td>
+                </tr>
+                <tr><td style="height: 10px;"></td></tr>
+                <tr>
+                  <td style="padding: 15px; background-color: #10b981; border-radius: 8px;">
+                    <p style="color: white; margin: 0 0 5px 0; font-size: 12px;">PLAN</p>
+                    <p style="color: white; margin: 0; font-size: 18px; font-weight: bold;">14-Day Free Trial (Starter)</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <a href="${APP_URL}/admin" style="display: inline-block; background: linear-gradient(135deg, #06b6d4, #8b5cf6); color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; margin-top: 20px;">
+                View in Admin Dashboard →
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    `,
+    text: `New User Signup!\n\nEmail: ${userEmail}\nName: ${userName || 'Not provided'}\nSigned up: ${signupTime.toLocaleString()}\nPlan: 14-Day Free Trial (Starter)`,
+  }),
 };
+
+// Notify admin of new signup - exported for use in other routes
+export async function notifyAdminNewSignup(userEmail: string, userName: string): Promise<void> {
+  if (!ADMIN_EMAIL) {
+    console.log('No ADMIN_EMAIL configured, skipping admin notification');
+    return;
+  }
+  
+  const template = emailTemplates.adminNewSignup(userEmail, userName, new Date());
+  await sendEmail({
+    to: ADMIN_EMAIL,
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+  });
+  console.log(`Admin notification sent for new signup: ${userEmail}`);
+}
 
 // Password reset schemas
 const requestResetSchema = z.object({

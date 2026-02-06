@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../lib/prisma';
 import { Roles } from '../lib/auth';
+import { notifyAdminNewSignup } from './email';
 
 // OAuth configuration
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || '';
@@ -374,6 +375,11 @@ async function findOrCreateOAuthUser({
           },
         },
       });
+
+      // Notify admin of new signup
+      notifyAdminNewSignup(email, name || 'Unknown').catch(err => 
+        console.error('Failed to send admin notification:', err)
+      );
     }
   }
 
