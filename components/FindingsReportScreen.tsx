@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Finding, Severity } from '../types';
 import { useSecureFinding } from '../hooks/useSecurityHooks';
 import { sanitizeHtml } from '../utils/sanitization';
@@ -65,6 +65,28 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
         return 'bg-green-500/10';
     }
   };
+
+  const exportFinding = useCallback(() => {
+    if (!secureSelectedFinding) return;
+    const csv = [
+      'Severity,Type,Project,Description,Guidance,Reproduction',
+      [
+        secureSelectedFinding.severity,
+        `"${secureSelectedFinding.type.replace(/"/g, '""')}"`,
+        `"${secureSelectedFinding.project.replace(/"/g, '""')}"`,
+        `"${secureSelectedFinding.description.replace(/"/g, '""')}"`,
+        `"${secureSelectedFinding.guidance.replace(/"/g, '""')}"`,
+        `"${secureSelectedFinding.reproduction.replace(/"/g, '""')}"`,
+      ].join(','),
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `finding-${secureSelectedFinding.id}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [secureSelectedFinding]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
@@ -166,7 +188,7 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
               <button className="flex-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 py-2 rounded transition-colors">
                 ✓ Mark as Resolved
               </button>
-              <button className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 py-2 rounded transition-colors">
+              <button onClick={exportFinding} className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 py-2 rounded transition-colors">
                 📋 Export
               </button>
             </div>

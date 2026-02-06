@@ -42,6 +42,7 @@ interface ExternalScan {
 export const AttackSurfaceManagement: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'assets' | 'domains' | 'scans'>('overview');
   const [isScanning, setIsScanning] = useState(false);
+  const [riskFilter, setRiskFilter] = useState<'all' | 'critical'>('all');
 
   const exposedAssets: ExposedAsset[] = [
     { id: 'ea-1', type: 'subdomain', identifier: 'dev.anchor.security', discovered: '2026-02-04', riskLevel: 'critical', status: 'new', findings: ['Exposed admin panel', 'Default credentials', 'Debug mode enabled'], exposureType: 'misconfiguration' },
@@ -126,7 +127,7 @@ export const AttackSurfaceManagement: React.FC = () => {
               <div className="text-sm text-gray-400">Immediate action required</div>
             </div>
           </div>
-          <button className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
+          <button onClick={() => { setRiskFilter('critical'); setActiveTab('assets'); }} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
             View Critical
           </button>
         </div>
@@ -221,7 +222,13 @@ export const AttackSurfaceManagement: React.FC = () => {
       {/* Assets Tab */}
       {activeTab === 'assets' && (
         <div className="space-y-4">
-          {exposedAssets.map(asset => (
+          {riskFilter === 'critical' && (
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-red-400 font-semibold">Showing critical assets only</span>
+              <button onClick={() => setRiskFilter('all')} className="text-sm text-cyan-400 hover:text-cyan-300 underline">Show all</button>
+            </div>
+          )}
+          {exposedAssets.filter(a => riskFilter === 'all' || a.riskLevel === 'critical').map(asset => (
             <div key={asset.id} className={`p-6 rounded-xl border ${getRiskColor(asset.riskLevel)}`}>
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">

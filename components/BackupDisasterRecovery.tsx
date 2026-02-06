@@ -46,6 +46,18 @@ interface DRTest {
 export const BackupDisasterRecovery: React.FC = () => {
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [selectedBackup, setSelectedBackup] = useState<string | null>(null);
+  const [restoreStatus, setRestoreStatus] = useState<'idle' | 'restoring' | 'success'>('idle');
+
+  const handleRestore = (rpId: string) => {
+    if (!window.confirm('Are you sure you want to restore from this recovery point? This will overwrite current data.')) return;
+    setRestoreStatus('restoring');
+    setTimeout(() => {
+      setRestoreStatus('success');
+      setSelectedBackup(null);
+      setIsRecoveryMode(false);
+      setTimeout(() => setRestoreStatus('idle'), 3000);
+    }, 2000);
+  };
 
   // Backup jobs
   const backupJobs: BackupJob[] = [
@@ -103,6 +115,13 @@ export const BackupDisasterRecovery: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Restore Success Banner */}
+      {restoreStatus === 'success' && (
+        <div className="mb-6 p-4 bg-green-500/10 border border-green-500/50 rounded-xl text-green-400 font-semibold text-center">
+          ✅ Recovery completed successfully. All systems restored.
+        </div>
+      )}
 
       {/* Recovery Mode Alert */}
       {isRecoveryMode && (
@@ -214,8 +233,8 @@ export const BackupDisasterRecovery: React.FC = () => {
                   <span>RTO: {rp.rto}</span>
                 </div>
                 {selectedBackup === rp.id && isRecoveryMode && (
-                  <button className="mt-3 w-full py-2 bg-red-500 hover:bg-red-600 rounded-lg font-bold">
-                    🚨 RESTORE FROM THIS POINT
+                  <button onClick={() => handleRestore(rp.id)} disabled={restoreStatus === 'restoring'} className="mt-3 w-full py-2 bg-red-500 hover:bg-red-600 rounded-lg font-bold disabled:opacity-50">
+                    {restoreStatus === 'restoring' ? '⏳ Restoring...' : '🚨 RESTORE FROM THIS POINT'}
                   </button>
                 )}
               </div>

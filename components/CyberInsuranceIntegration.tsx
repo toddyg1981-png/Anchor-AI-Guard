@@ -159,6 +159,29 @@ const CyberInsuranceIntegration: React.FC = () => {
     }
   };
 
+  const exportRiskReport = () => {
+    const lines = [
+      'Anchor Security - Cyber Risk Report',
+      `Generated: ${new Date().toISOString()}`,
+      '',
+      `Overall Risk Score: ${riskScore.overall}/900`,
+      `Trend: ${riskScore.trend}`,
+      '',
+      'Category Scores:',
+      ...riskScore.categories.map(c => `  ${c.name}: ${c.score}/100 (weight: ${c.weight}%) - ${c.factors.join(', ')}`),
+      '',
+      'Active Policies:',
+      ...policies.map(p => `  ${p.provider} (${p.policyNumber}) - Coverage: ${p.coverage}, Premium: ${p.premium}, Tier: ${p.riskTier}`),
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `risk-report-${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -167,7 +190,7 @@ const CyberInsuranceIntegration: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🛡️ Cyber Insurance Integration</h1>
           <p className="text-gray-400 mt-1">Real-time risk scoring for insurers — Lower premiums through verified security</p>
         </div>
-        <button className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:opacity-90 transition-opacity">
+        <button onClick={exportRiskReport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           Export Risk Report
         </button>
       </div>

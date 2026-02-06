@@ -25,7 +25,7 @@ interface AttackSimulation {
 }
 
 const DigitalTwinSecurity: React.FC = () => {
-  const [twins] = useState<DigitalTwin[]>([
+  const [twins, setTwins] = useState<DigitalTwin[]>([
     {
       id: 'twin-1',
       name: 'Production Network',
@@ -68,7 +68,7 @@ const DigitalTwinSecurity: React.FC = () => {
     },
   ]);
 
-  const [simulations] = useState<AttackSimulation[]>([
+  const [simulations, setSimulations] = useState<AttackSimulation[]>([
     {
       id: 'sim-1',
       name: 'APT29 Full Kill Chain',
@@ -120,6 +120,50 @@ const DigitalTwinSecurity: React.FC = () => {
   ]);
 
   const [selectedTwin, setSelectedTwin] = useState<string | null>(null);
+  const [showNewTwin, setShowNewTwin] = useState(false);
+  const [showNewSim, setShowNewSim] = useState(false);
+  const [newTwinName, setNewTwinName] = useState('');
+  const [newTwinType, setNewTwinType] = useState<DigitalTwin['type']>('network');
+  const [newSimName, setNewSimName] = useState('');
+  const [newSimVector, setNewSimVector] = useState('');
+
+  const handleCreateTwin = () => {
+    if (!newTwinName.trim()) return;
+    const twin: DigitalTwin = {
+      id: `twin-${Date.now()}`,
+      name: newTwinName.trim(),
+      type: newTwinType,
+      syncStatus: 'syncing',
+      lastSync: 'In progress...',
+      components: 0,
+      simulationsRun: 0,
+      vulnerabilitiesFound: 0,
+    };
+    setTwins(prev => [...prev, twin]);
+    setNewTwinName('');
+    setNewTwinType('network');
+    setShowNewTwin(false);
+  };
+
+  const handleLaunchSim = () => {
+    if (!newSimName.trim() || !newSimVector.trim()) return;
+    const sim: AttackSimulation = {
+      id: `sim-${Date.now()}`,
+      name: newSimName.trim(),
+      twinId: selectedTwin || twins[0]?.id || '',
+      status: 'running',
+      attackVector: newSimVector.trim(),
+      progress: 0,
+      pathsExplored: 0,
+      breachesFound: 0,
+      duration: '0 minutes',
+      recommendations: [],
+    };
+    setSimulations(prev => [sim, ...prev]);
+    setNewSimName('');
+    setNewSimVector('');
+    setShowNewSim(false);
+  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -147,7 +191,7 @@ const DigitalTwinSecurity: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🪞 Digital Twin Security</h1>
           <p className="text-gray-400 mt-1">Simulate attacks on virtual replicas — Zero risk to production</p>
         </div>
-        <button className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">
+        <button onClick={() => setShowNewTwin(true)} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           + Create New Twin
         </button>
       </div>
@@ -199,7 +243,7 @@ const DigitalTwinSecurity: React.FC = () => {
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <span className="text-2xl">⚔️</span> Attack Simulations
           </h2>
-          <button className="px-3 py-1.5 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg text-sm hover:bg-red-600/30 transition-colors">
+          <button onClick={() => setShowNewSim(true)} className="px-3 py-1.5 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg text-sm hover:bg-red-600/30 transition-colors">
             + Launch New Simulation
           </button>
         </div>
@@ -305,6 +349,63 @@ const DigitalTwinSecurity: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Create New Twin Modal */}
+      {showNewTwin && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowNewTwin(false)}>
+          <div className="bg-gray-900 border border-cyan-500/30 rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-white mb-4">Create New Digital Twin</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Twin Name</label>
+                <input type="text" value={newTwinName} onChange={e => setNewTwinName(e.target.value)} placeholder="e.g. Production API Cluster" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Environment Type</label>
+                <select value={newTwinType} onChange={e => setNewTwinType(e.target.value as DigitalTwin['type'])} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
+                  <option value="network">Network</option>
+                  <option value="application">Application</option>
+                  <option value="infrastructure">Infrastructure</option>
+                  <option value="ot-system">OT/ICS System</option>
+                </select>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button onClick={() => setShowNewTwin(false)} className="flex-1 px-4 py-2 border border-gray-600 text-gray-400 rounded-lg hover:bg-gray-800 transition-colors">Cancel</button>
+                <button onClick={handleCreateTwin} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">Create Twin</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Launch New Simulation Modal */}
+      {showNewSim && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowNewSim(false)}>
+          <div className="bg-gray-900 border border-red-500/30 rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-white mb-4">Launch Attack Simulation</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Simulation Name</label>
+                <input type="text" value={newSimName} onChange={e => setNewSimName(e.target.value)} placeholder="e.g. APT41 Kill Chain" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-red-500 outline-none" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Attack Vector</label>
+                <input type="text" value={newSimVector} onChange={e => setNewSimVector(e.target.value)} placeholder="e.g. Phishing → Lateral Movement → Exfil" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-red-500 outline-none" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Target Twin</label>
+                <select className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-red-500 outline-none">
+                  {twins.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button onClick={() => setShowNewSim(false)} className="flex-1 px-4 py-2 border border-gray-600 text-gray-400 rounded-lg hover:bg-gray-800 transition-colors">Cancel</button>
+                <button onClick={handleLaunchSim} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">Launch Simulation</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

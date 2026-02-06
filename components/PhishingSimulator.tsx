@@ -49,7 +49,11 @@ interface EmployeeRisk {
 
 export const PhishingSimulator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'campaigns' | 'templates' | 'users' | 'analytics'>('campaigns');
-  const [_showNewCampaign, setShowNewCampaign] = useState(false);
+  const [showNewCampaign, setShowNewCampaign] = useState(false);
+  const [newCampaignName, setNewCampaignName] = useState('');
+  const [newCampaignTemplate, setNewCampaignTemplate] = useState('');
+  const [newCampaignTarget, setNewCampaignTarget] = useState('All Employees');
+  const [localCampaigns, setLocalCampaigns] = useState<PhishingCampaign[]>([]);
 
   const campaigns: PhishingCampaign[] = [
     { id: 'pc-1', name: 'Q1 2026 Baseline Test', template: 'Password Reset', difficulty: 'easy', status: 'completed', targetGroup: 'All Employees', targetCount: 150, sentCount: 150, openedCount: 120, clickedCount: 23, reportedCount: 45, credentialsEnteredCount: 8, completedDate: '2026-01-31' },
@@ -110,6 +114,32 @@ export const PhishingSimulator: React.FC = () => {
   const totalReported = campaigns.reduce((sum, c) => sum + c.reportedCount, 0);
   const clickRate = totalSent > 0 ? ((totalClicked / totalSent) * 100).toFixed(1) : '0';
   const reportRate = totalSent > 0 ? ((totalReported / totalSent) * 100).toFixed(1) : '0';
+
+  const allCampaigns = [...campaigns, ...localCampaigns];
+
+  const handleCreateCampaign = () => {
+    if (!newCampaignName.trim()) return;
+    const newCampaign: PhishingCampaign = {
+      id: `pc-${Date.now()}`,
+      name: newCampaignName.trim(),
+      template: newCampaignTemplate || 'Custom',
+      difficulty: 'medium',
+      status: 'scheduled',
+      targetGroup: newCampaignTarget,
+      targetCount: 0,
+      sentCount: 0,
+      openedCount: 0,
+      clickedCount: 0,
+      reportedCount: 0,
+      credentialsEnteredCount: 0,
+      scheduledDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+    };
+    setLocalCampaigns(prev => [...prev, newCampaign]);
+    setNewCampaignName('');
+    setNewCampaignTemplate('');
+    setNewCampaignTarget('All Employees');
+    setShowNewCampaign(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
@@ -179,7 +209,7 @@ export const PhishingSimulator: React.FC = () => {
       {/* Campaigns Tab */}
       {activeTab === 'campaigns' && (
         <div className="space-y-4">
-          {campaigns.map(campaign => (
+          {allCampaigns.map(campaign => (
             <div key={campaign.id} className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -360,6 +390,43 @@ export const PhishingSimulator: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Campaign Modal */}
+      {showNewCampaign && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setShowNewCampaign(false)}>
+          <div className="bg-gray-900 border border-cyan-500/30 rounded-xl p-6 w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-white mb-4">New Phishing Campaign</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Campaign Name</label>
+                <input type="text" value={newCampaignName} onChange={e => setNewCampaignName(e.target.value)} placeholder="e.g. Q2 Security Awareness Test" className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Template</label>
+                <select value={newCampaignTemplate} onChange={e => setNewCampaignTemplate(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
+                  <option value="">Select a template...</option>
+                  {templates.map(t => <option key={t.id} value={t.name}>{t.name}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 block mb-1">Target Group</label>
+                <select value={newCampaignTarget} onChange={e => setNewCampaignTarget(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
+                  <option value="All Employees">All Employees</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Finance Team">Finance Team</option>
+                  <option value="HR">HR</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Executive Team">Executive Team</option>
+                </select>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button onClick={() => setShowNewCampaign(false)} className="flex-1 px-4 py-2 border border-gray-600 text-gray-400 rounded-lg hover:bg-gray-800 transition-colors">Cancel</button>
+                <button onClick={handleCreateCampaign} className="flex-1 px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors font-bold">Create Campaign</button>
+              </div>
             </div>
           </div>
         </div>
