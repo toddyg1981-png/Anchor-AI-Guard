@@ -700,6 +700,16 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           <p className="text-purple-400 text-sm">
             💯 30-day money-back guarantee • 🔒 SOC 2 Type II Compliant • 🌍 GDPR Ready
           </p>
+          <p className="text-purple-500 text-xs mt-4">
+            By subscribing, you agree to our{' '}
+            <a href="/purchase-terms" className="text-cyan-400 hover:text-pink-400 underline">
+              Purchase Terms & Conditions
+            </a>
+            {' '}and{' '}
+            <a href="/terms" className="text-cyan-400 hover:text-pink-400 underline">
+              Terms of Service
+            </a>
+          </p>
         </div>
       </div>
     </div>

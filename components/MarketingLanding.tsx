@@ -10,6 +10,7 @@ interface MarketingLandingProps {
   onViewSecurity?: () => void;
   onViewAbout?: () => void;
   onViewContact?: () => void;
+  onViewPurchaseTerms?: () => void;
 }
 
 // Use centralized env config - strip /api suffix for analytics endpoints
@@ -24,6 +25,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
   onViewSecurity,
   onViewAbout,
   onViewContact,
+  onViewPurchaseTerms,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -659,6 +661,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <ul className="space-y-2 text-purple-300">
                 <li><button onClick={onViewPrivacy} className="hover:text-pink-400 transition-colors text-left">Privacy Policy</button></li>
                 <li><button onClick={onViewTerms} className="hover:text-pink-400 transition-colors text-left">Terms of Service</button></li>
+                <li><button onClick={onViewPurchaseTerms} className="hover:text-pink-400 transition-colors text-left">Purchase Terms</button></li>
                 <li><button onClick={onViewSecurity} className="hover:text-pink-400 transition-colors text-left">Security</button></li>
                 <li><a href="mailto:compliance@anchorsecurity.com" className="hover:text-pink-400 transition-colors">SOC 2 Report</a></li>
               </ul>

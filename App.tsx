@@ -20,6 +20,7 @@ const TermsOfService = React.lazy(() => import('./components/LegalPages').then(m
 const SecurityPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.SecurityPage })));
 const AboutPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.AboutPage })));
 const ContactPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.ContactPage })));
+const PurchaseTerms = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.PurchaseTerms })));
 
 // Lazy-loaded dashboard sub-views
 const ProjectDetailScreen = React.lazy(() => import('./components/ProjectDetailScreen'));
@@ -93,7 +94,8 @@ export type AppView =
   | 'terms'          // Terms of service
   | 'security-info'  // Security page
   | 'about'          // About page
-  | 'contact';       // Contact page
+  | 'contact'        // Contact page
+  | 'purchase-terms'; // Purchase terms and conditions
 
 // Dashboard sub-views
 export type DashboardView = 
@@ -250,6 +252,11 @@ const AppContent: React.FC = () => {
   const handleViewContact = useCallback(() => {
     setCurrentView('contact');
     window.history.pushState({}, '', '/contact');
+  }, []);
+
+  const handleViewPurchaseTerms = useCallback(() => {
+    setCurrentView('purchase-terms');
+    window.history.pushState({}, '', '/purchase-terms');
   }, []);
 
   const handleBackToMarketing = useCallback(() => {
@@ -580,6 +587,9 @@ const AppContent: React.FC = () => {
       case 'contact':
         return <ContactPage onBack={handleBackToMarketing} />;
       
+      case 'purchase-terms':
+        return <PurchaseTerms onBack={handleBackToMarketing} />;
+      
       default:
         return (
           <MarketingLanding 
@@ -591,6 +601,7 @@ const AppContent: React.FC = () => {
             onViewSecurity={handleViewSecurityInfo}
             onViewAbout={handleViewAbout}
             onViewContact={handleViewContact}
+            onViewPurchaseTerms={handleViewPurchaseTerms}
           />
         );
     }
