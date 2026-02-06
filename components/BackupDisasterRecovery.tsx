@@ -48,7 +48,7 @@ export const BackupDisasterRecovery: React.FC = () => {
   const [selectedBackup, setSelectedBackup] = useState<string | null>(null);
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'restoring' | 'success'>('idle');
 
-  const handleRestore = (rpId: string) => {
+  const handleRestore = (_rpId: string) => {
     if (!window.confirm('Are you sure you want to restore from this recovery point? This will overwrite current data.')) return;
     setRestoreStatus('restoring');
     setTimeout(() => {
