@@ -293,7 +293,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const isCurrent = (tier: string) => currentPlan === tier;
 
   const copyReferralLink = () => {
-    const link = `https://anchorsecurity.io/signup?ref=${referralCode || 'YOUR_CODE'}`;
+    const link = `${window.location.origin}/signup?ref=${referralCode || 'YOUR_CODE'}`;
     navigator.clipboard.writeText(link);
     alert('Referral link copied!');
   };
@@ -382,7 +382,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    value={`anchorsecurity.io/r/${referralCode || 'YOUR_CODE'}`}
+                    value={`${window.location.host}/signup?ref=${referralCode || 'YOUR_CODE'}`}
                     readOnly
                     placeholder="Your referral link"
                     aria-label="Your referral link"
