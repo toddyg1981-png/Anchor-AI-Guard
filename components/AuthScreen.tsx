@@ -80,7 +80,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
       <div className="bg-slate-800 rounded-2xl max-w-2xl max-h-[80vh] overflow-y-auto p-8 border border-slate-700">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white">Terms of Service</h2>
-          <button onClick={() => setShowTerms(false)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setShowTerms(false)} className="text-slate-400 hover:text-white" aria-label="Close terms">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -131,7 +131,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
         </div>
         <button
           onClick={() => setShowTerms(false)}
-          className="mt-6 w-full py-3 bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg hover:brightness-110 transition-all shadow-lg shadow-cyan-500/25"
+          className="mt-6 w-full py-3 bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg hover:brightness-110 transition-all shadow-lg shadow-cyan-500/25"
         >
           Close
         </button>
@@ -145,7 +145,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
       <div className="bg-slate-800 rounded-2xl max-w-2xl max-h-[80vh] overflow-y-auto p-8 border border-slate-700">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white">Privacy Policy</h2>
-          <button onClick={() => setShowPrivacy(false)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setShowPrivacy(false)} className="text-slate-400 hover:text-white" aria-label="Close privacy policy">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -218,7 +218,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
         </div>
         <button
           onClick={() => setShowPrivacy(false)}
-          className="mt-6 w-full py-3 bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg hover:brightness-110 transition-all shadow-lg shadow-cyan-500/25"
+          className="mt-6 w-full py-3 bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg hover:brightness-110 transition-all shadow-lg shadow-cyan-500/25"
         >
           Close
         </button>
@@ -407,7 +407,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
             <button
               type="submit"
               disabled={isLoading || (mode === 'signup' && !acceptedTerms)}
-              className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white font-semibold hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-pink-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-pink-500/25"
+              className="w-full py-3 px-4 rounded-lg bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white font-semibold hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-pink-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-pink-500/25"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">

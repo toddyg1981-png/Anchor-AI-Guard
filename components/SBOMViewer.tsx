@@ -115,7 +115,7 @@ export const SBOMViewer: React.FC<SBOMViewerProps> = ({ projectId, projectName, 
             onClick={onBack}
             aria-label="Go back"
             title="Go back"
-            className="p-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-400 hover:text-white transition-all hover:shadow-lg hover:shadow-pink-500/20"
+            className="p-2 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-400 hover:text-white transition-all hover:shadow-lg hover:shadow-pink-500/20"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

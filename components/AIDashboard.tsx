@@ -45,7 +45,7 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
   return (
     <div className="min-h-screen bg-transparent text-white">
       {/* Header - Glass Neon Style */}
-      <header className="border-b border-cyan-500/20 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl sticky top-0 z-50 shadow-[0_4px_30px_rgba(53,198,255,0.1)]">
+      <header className="border-b border-cyan-500/20 bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl sticky top-0 z-50 shadow-[0_4px_30px_rgba(53,198,255,0.1)]">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -70,7 +70,7 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
 
             <div className="flex items-center gap-3">
               {/* World First Badge */}
-              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-500/30">
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-500/30">
                 <span className="text-sm">🌟</span>
                 <span className="text-xs text-purple-300 font-medium">World First AI Security</span>
               </div>
@@ -92,7 +92,7 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
 
               {/* User */}
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-8 h-8 rounded-full bg-linear-to-br from-cyan-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
                   {userName.charAt(0).toUpperCase()}
                 </div>
               </div>
@@ -109,7 +109,7 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
             {activeTab === 'overview' && (
               <>
                 {/* World First Features Banner */}
-                <div className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-500/20 rounded-xl p-4">
+                <div className="bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-500/20 rounded-xl p-4">
                   <div className="flex items-center gap-4">
                     <div className="text-4xl">🚀</div>
                     <div>

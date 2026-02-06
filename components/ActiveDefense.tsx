@@ -182,6 +182,7 @@ export const ActiveDefense: React.FC = () => {
       setLiveAttacks(prev => [newAttack, ...prev.slice(0, 19)]);
     }, 3000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deterrentEnabled]);
 
   const getThreatColor = (level: string) => {
@@ -228,6 +229,7 @@ export const ActiveDefense: React.FC = () => {
             <span className="text-sm text-gray-400">Deterrent Messages</span>
             <button
               onClick={() => setDeterrentEnabled(!deterrentEnabled)}
+              aria-label="Toggle deterrent messages"
               className={`w-12 h-6 rounded-full transition-colors ${deterrentEnabled ? 'bg-green-500' : 'bg-gray-600'}`}
             >
               <div className={`w-5 h-5 bg-white rounded-full transition-transform ${deterrentEnabled ? 'translate-x-6' : 'translate-x-0.5'}`} />
@@ -237,6 +239,7 @@ export const ActiveDefense: React.FC = () => {
             <span className="text-sm text-gray-400">Auto-Report</span>
             <button
               onClick={() => setAutoReportEnabled(!autoReportEnabled)}
+              aria-label="Toggle auto-report"
               className={`w-12 h-6 rounded-full transition-colors ${autoReportEnabled ? 'bg-green-500' : 'bg-gray-600'}`}
             >
               <div className={`w-5 h-5 bg-white rounded-full transition-transform ${autoReportEnabled ? 'translate-x-6' : 'translate-x-0.5'}`} />
@@ -298,7 +301,7 @@ export const ActiveDefense: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeTab === tab.id
                 ? 'bg-red-500/20 text-red-400 border border-red-500'
@@ -322,7 +325,7 @@ export const ActiveDefense: React.FC = () => {
                 Real-time
               </span>
             </div>
-            <div className="space-y-2 max-h-[500px] overflow-y-auto">
+            <div className="space-y-2 max-h-125 overflow-y-auto">
               {liveAttacks.map((attack, idx) => (
                 <div key={attack.id} className={`p-3 rounded-lg border border-gray-700 ${idx === 0 ? 'bg-red-500/10 border-red-500/50 animate-pulse' : 'bg-gray-800/50'}`}>
                   <div className="flex items-center justify-between mb-1">

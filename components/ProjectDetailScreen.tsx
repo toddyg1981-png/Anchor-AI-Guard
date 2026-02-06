@@ -121,7 +121,7 @@ const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBa
           )}
           <button
             onClick={() => setShowScanPanel(!showScanPanel)}
-            className="px-4 py-2 bg-gradient-to-r from-[#35c6ff] to-[#7a3cff] text-white rounded shadow hover:opacity-90"
+            className="px-4 py-2 bg-linear-to-r from-[#35c6ff] to-[#7a3cff] text-white rounded shadow hover:opacity-90"
           >
             {showScanPanel ? 'Close Scanner' : 'New Scan'}
           </button>
@@ -141,7 +141,7 @@ const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBa
                 onClick={() => setScanMode(mode)}
                 className={`flex-1 px-3 py-2 rounded text-sm font-medium transition-colors ${
                   scanMode === mode
-                    ? 'bg-gradient-to-r from-[#35c6ff] to-[#7a3cff] text-white'
+                    ? 'bg-linear-to-r from-[#35c6ff] to-[#7a3cff] text-white'
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -191,6 +191,7 @@ const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBa
                   accept=".ts,.tsx,.js,.jsx,.json,.env,.yml,.yaml,.tf,.md,.py,.go,.rs,.java,.dockerfile"
                   onChange={handleFileSelect}
                   className="hidden"
+                  title="Select files to scan"
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}
@@ -262,7 +263,7 @@ const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBa
           <button
             onClick={handleRunScan}
             disabled={scanStatus === 'running'}
-            className="w-full px-4 py-3 bg-gradient-to-r from-[#35c6ff] to-[#7a3cff] text-white rounded font-semibold shadow hover:opacity-90 disabled:opacity-50 transition-opacity"
+            className="w-full px-4 py-3 bg-linear-to-r from-[#35c6ff] to-[#7a3cff] text-white rounded font-semibold shadow hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
             {scanStatus === 'running' ? 'Scanning...' : `Scan via ${modeLabels[scanMode]}`}
           </button>

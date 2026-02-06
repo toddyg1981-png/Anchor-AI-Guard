@@ -2,13 +2,14 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { hashPassword, authMiddleware } from '../lib/auth';
+import { env } from '../config/env';
 import crypto from 'crypto';
 
 // Email configuration - using Resend
-const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@anchorsecurity.io';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
-const APP_URL = process.env.APP_URL || 'http://localhost:3000';
+const RESEND_API_KEY = env.resendApiKey;
+const FROM_EMAIL = env.fromEmail;
+const ADMIN_EMAIL = env.adminEmail;
+const APP_URL = env.frontendUrl;
 const APP_NAME = 'Anchor Security';
 
 interface EmailOptions {
@@ -422,8 +423,15 @@ const resetPasswordSchema = z.object({
 });
 
 export async function emailRoutes(app: FastifyInstance): Promise<void> {
-  // Request password reset
-  app.post('/auth/forgot-password', async (request: FastifyRequest, reply: FastifyReply) => {
+  // Request password reset (rate limited to prevent email abuse)
+  app.post('/auth/forgot-password', {
+    config: {
+      rateLimit: {
+        max: 3,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
     const parsed = requestResetSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid email' });

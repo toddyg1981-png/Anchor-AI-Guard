@@ -5,8 +5,17 @@
  */
 
 import { Finding, Severity } from '../types';
+import { env } from '../config/env';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+const API_BASE_URL = env.apiBaseUrl;
+
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem('anchor_auth_token');
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+  };
+}
 
 export interface AIAnalysis {
   threatScore: number; // 0-100
@@ -35,9 +44,7 @@ export async function analyzeSecurityFinding(finding: Finding): Promise<AIAnalys
   try {
     const response = await fetch(`${API_BASE_URL}/ai/analyze`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ finding }),
       signal: AbortSignal.timeout(15000),
     });
@@ -61,9 +68,7 @@ export async function analyzeBulkFindings(findings: Finding[]): Promise<BulkAnal
   try {
     const response = await fetch(`${API_BASE_URL}/ai/analyze-bulk`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ findings }),
       signal: AbortSignal.timeout(20000),
     });
@@ -87,9 +92,7 @@ export async function generateSecurityReport(findings: Finding[], projectName: s
   try {
     const response = await fetch(`${API_BASE_URL}/ai/report`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ findings, projectName }),
       signal: AbortSignal.timeout(15000),
     });
@@ -119,9 +122,7 @@ export async function getThreatIntelligence(vulnerabilityType: string): Promise<
   try {
     const response = await fetch(`${API_BASE_URL}/ai/threat-intel`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ vulnerabilityType }),
       signal: AbortSignal.timeout(15000),
     });

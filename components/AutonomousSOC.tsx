@@ -335,7 +335,7 @@ const AutonomousSOC: React.FC = () => {
       </div>
 
       {/* ROI Calculator */}
-      <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-xl p-6">
+      <div className="bg-linear-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-4">💰 ROI: Autonomous SOC vs Traditional SOC</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>

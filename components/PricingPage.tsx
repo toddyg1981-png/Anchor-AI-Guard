@@ -370,10 +370,10 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-block px-4 py-1 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-1 bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-medium mb-4">
             🚀 WORLD-FIRST PREDICTIVE CVE INTELLIGENCE
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-purple-300 max-w-2xl mx-auto">
@@ -383,7 +383,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
         {/* Referral Program Banner */}
         <div className="mb-12 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-cyan-900/40 border border-pink-500/30 rounded-2xl p-6 backdrop-blur-sm">
+          <div className="bg-linear-to-r from-purple-900/40 via-pink-900/40 to-cyan-900/40 border border-pink-500/30 rounded-2xl p-6 backdrop-blur-sm">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-center md:text-left">
                 <h3 className="text-xl font-bold text-pink-400 mb-1">🎁 Referral Program</h3>
@@ -394,7 +394,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               </div>
               <button
                 onClick={() => setShowReferral(true)}
-                className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-pink-500/30 whitespace-nowrap"
+                className="px-6 py-3 bg-linear-to-r from-pink-500 to-purple-500 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-pink-500/30 whitespace-nowrap"
               >
                 Get Your Referral Link
               </button>
@@ -405,7 +405,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* Referral Modal */}
         {showReferral && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-            <div className="bg-gradient-to-br from-gray-900 via-purple-900/30 to-gray-900 border border-cyan-500/30 rounded-2xl p-8 max-w-md w-full backdrop-blur-xl">
+            <div className="bg-linear-to-br from-gray-900 via-purple-900/30 to-gray-900 border border-cyan-500/30 rounded-2xl p-8 max-w-md w-full backdrop-blur-xl">
               <h3 className="text-2xl font-bold text-cyan-400 mb-4">🎁 Your Referral Program</h3>
               
               <div className="space-y-4 mb-6">
@@ -417,7 +417,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   <p className="text-cyan-400 font-semibold mb-1">Get 1 Month Free</p>
                   <p className="text-purple-300 text-sm">You get a free month for every friend who signs up</p>
                 </div>
-                <div className="bg-gradient-to-r from-pink-500/20 to-cyan-500/20 border border-pink-500/50 rounded-lg p-4">
+                <div className="bg-linear-to-r from-pink-500/20 to-cyan-500/20 border border-pink-500/50 rounded-lg p-4">
                   <p className="text-white font-bold mb-1">🏆 Invite 3 Devs = Pro FREE Forever!</p>
                   <p className="text-cyan-300 text-sm">Get 3 friends on paid plans and unlock Pro for life</p>
                 </div>
@@ -460,7 +460,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               onClick={() => setBillingPeriod('monthly')}
               className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 billingPeriod === 'monthly'
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg'
+                  ? 'bg-linear-to-r from-cyan-500 to-purple-500 text-white shadow-lg'
                   : 'text-purple-400 hover:text-cyan-400'
               }`}
             >
@@ -470,7 +470,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               onClick={() => setBillingPeriod('yearly')}
               className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
                 billingPeriod === 'yearly'
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg'
+                  ? 'bg-linear-to-r from-cyan-500 to-purple-500 text-white shadow-lg'
                   : 'text-purple-400 hover:text-cyan-400'
               }`}
             >
@@ -500,7 +500,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               {/* Popular Badge */}
               {isPopular(plan.tier) && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg shadow-pink-500/50">
+                  <span className="bg-linear-to-r from-pink-500 to-purple-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg shadow-pink-500/50">
                     ⭐ MOST POPULAR
                   </span>
                 </div>
@@ -558,11 +558,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   isCurrent(plan.tier) || checkoutLoading === plan.tier
                     ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                     : plan.tier === 'FREE'
-                    ? 'bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-black shadow-lg shadow-cyan-500/30'
+                    ? 'bg-linear-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-black shadow-lg shadow-cyan-500/30'
                     : isPopular(plan.tier)
-                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 hover:from-cyan-500 hover:via-purple-500 hover:to-pink-500 text-white shadow-lg shadow-pink-500/30'
+                    ? 'bg-linear-to-r from-pink-500 via-purple-500 to-cyan-500 hover:from-cyan-500 hover:via-purple-500 hover:to-pink-500 text-white shadow-lg shadow-pink-500/30'
                     : plan.tier === 'ENTERPRISE'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white shadow-lg shadow-purple-500/30'
+                    ? 'bg-linear-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white shadow-lg shadow-purple-500/30'
                     : 'bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300'
                 }`}
               >
@@ -584,7 +584,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <svg
-                      className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
+                      className={`w-5 h-5 shrink-0 mt-0.5 ${
                         feature.includes('🔮') || feature.includes('🔧') || feature.includes('👥')
                           ? 'text-pink-400'
                           : 'text-cyan-400'
@@ -639,7 +639,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
         {/* FAQ Section */}
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold text-center mb-12 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
             Frequently Asked Questions
           </h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -679,7 +679,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         </div>
 
         {/* Enterprise CTA */}
-        <div className="mt-20 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-pink-500/30 rounded-2xl p-8 text-center backdrop-blur-sm">
+        <div className="mt-20 bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-pink-500/30 rounded-2xl p-8 text-center backdrop-blur-sm">
           <h2 className="text-2xl font-bold text-white mb-4">
             Need enterprise-grade security?
           </h2>
@@ -687,7 +687,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             Custom integrations, on-premise deployment, dedicated security engineer, and SOC 2 Type II compliance for large organizations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-pink-500/30">
+            <button className="bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-pink-500/30">
               Talk to Sales
             </button>
             <button className="bg-transparent border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 px-8 py-3 rounded-lg font-semibold transition-colors">

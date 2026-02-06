@@ -207,7 +207,7 @@ export const AttackSurfaceManagement: React.FC = () => {
               {scans.slice().reverse().map((scan, idx) => (
                 <div key={scan.id} className="flex flex-col items-center">
                   <div 
-                    className="w-16 bg-gradient-to-t from-cyan-500 to-purple-500 rounded-t"
+                    className="w-16 bg-linear-to-t from-cyan-500 to-purple-500 rounded-t"
                     style={{ height: `${scan.assetsDiscovered}px` }}
                   />
                   <div className="text-xs text-gray-500 mt-2">Day {idx + 1}</div>

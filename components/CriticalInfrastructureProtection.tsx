@@ -312,7 +312,7 @@ const CriticalInfrastructureProtection: React.FC = () => {
       </div>
 
       {/* Value Proposition */}
-      <div className="bg-gradient-to-r from-red-900/30 to-orange-900/30 border border-red-500/30 rounded-xl p-6">
+      <div className="bg-linear-to-r from-red-900/30 to-orange-900/30 border border-red-500/30 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-4">🛡️ Critical Infrastructure Value</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>

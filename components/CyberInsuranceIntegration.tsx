@@ -190,7 +190,7 @@ const CyberInsuranceIntegration: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🛡️ Cyber Insurance Integration</h1>
           <p className="text-gray-400 mt-1">Real-time risk scoring for insurers — Lower premiums through verified security</p>
         </div>
-        <button onClick={exportRiskReport} className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:opacity-90 transition-opacity">
+        <button onClick={exportRiskReport} className="px-4 py-2 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           Export Risk Report
         </button>
       </div>
@@ -325,7 +325,7 @@ const CyberInsuranceIntegration: React.FC = () => {
       </div>
 
       {/* Insurer API Integration */}
-      <div className="bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border border-blue-500/30 rounded-xl p-6">
+      <div className="bg-linear-to-r from-blue-900/30 to-cyan-900/30 border border-blue-500/30 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-4">🔗 Connected Insurers</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {['Coalition', 'Beazley', 'Chubb', 'AIG'].map((insurer, idx) => (

@@ -353,7 +353,7 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
           {sortedFindings.length > 0 && (
             <button
               onClick={exportFullReportPdf}
-              className="px-3 py-1.5 bg-gradient-to-r from-[#35c6ff] to-[#7a3cff] text-white text-xs rounded font-medium hover:opacity-90 transition-opacity"
+              className="px-3 py-1.5 bg-linear-to-r from-[#35c6ff] to-[#7a3cff] text-white text-xs rounded font-medium hover:opacity-90 transition-opacity"
             >
               PDF Report
             </button>
@@ -372,7 +372,7 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
               }`}
             >
               <div className="flex items-start gap-2">
-                <span className={`px-2 py-1 rounded text-xs font-semibold flex-shrink-0 ${getSeverityColor(finding.severity)}`}>
+                <span className={`px-2 py-1 rounded text-xs font-semibold shrink-0 ${getSeverityColor(finding.severity)}`}>
                   {finding.severity}
                 </span>
                 <div className="flex-1 min-w-0">

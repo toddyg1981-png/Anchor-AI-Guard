@@ -83,8 +83,8 @@ const MessageBubble: React.FC<{
       <div className={`max-w-[85%] ${isUser ? 'order-2' : 'order-1'}`}>
         {/* Avatar */}
         <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-            isUser ? 'bg-cyan-500' : 'bg-gradient-to-br from-purple-500 to-pink-500'
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+            isUser ? 'bg-cyan-500' : 'bg-linear-to-br from-purple-500 to-pink-500'
           }`}>
             {isUser ? (
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -153,7 +153,7 @@ const MessageBubble: React.FC<{
                           </p>
                         )}
                       </div>
-                      <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 flex-shrink-0 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 shrink-0 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
@@ -482,7 +482,7 @@ const result = await db.query(query, [userId]);`,
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center">
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
@@ -495,7 +495,7 @@ const result = await db.query(query, [userId]);`,
             </p>
           </div>
         </div>
-        <button aria-label="Refresh chat" title="Refresh" className="p-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 transition-all hover:shadow-lg hover:shadow-pink-500/20 text-gray-400 hover:text-white">
+        <button aria-label="Refresh chat" title="Refresh" className="p-2 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 transition-all hover:shadow-lg hover:shadow-pink-500/20 text-gray-400 hover:text-white">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>

@@ -119,7 +119,7 @@ const CommentThread: React.FC<{
     <div className={`border-l-2 ${comment.resolved ? 'border-green-500 opacity-60' : 'border-cyan-500'} pl-3 py-2`}>
       <div className="flex items-start gap-2">
         <div
-          className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs flex-shrink-0"
+          className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs shrink-0"
           style={{ backgroundColor: '#6366f1' }}
         >
           {comment.userName.charAt(0).toUpperCase()}
@@ -142,7 +142,7 @@ const CommentThread: React.FC<{
                 onChange={(e) => setEditContent(e.target.value)}
                 aria-label="Edit comment"
                 placeholder="Edit your comment..."
-                className="w-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm text-white text-sm rounded-xl px-2 py-1 border border-cyan-500/30 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20 outline-none resize-none transition-all"
+                className="w-full bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm text-white text-sm rounded-xl px-2 py-1 border border-cyan-500/30 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20 outline-none resize-none transition-all"
                 rows={2}
               />
               <div className="flex gap-2 mt-1">
@@ -203,7 +203,7 @@ const CommentThread: React.FC<{
               {comment.replies.map(reply => (
                 <div key={reply.id} className="flex items-start gap-2">
                   <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs flex-shrink-0"
+                    className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs shrink-0"
                     style={{ backgroundColor: '#8b5cf6' }}
                   >
                     {reply.userName.charAt(0).toUpperCase()}
@@ -448,7 +448,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
               disabled={!newComment.trim()}
               aria-label="Send comment"
               title="Send"
-              className="px-4 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl hover:from-pink-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-cyan-500/25 hover:shadow-pink-500/25"
+              className="px-4 bg-linear-to-r from-cyan-500 to-purple-500 text-white rounded-xl hover:from-pink-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-cyan-500/25 hover:shadow-pink-500/25"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

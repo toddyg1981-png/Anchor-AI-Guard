@@ -86,7 +86,7 @@ export const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }
               <p className="text-slate-400 mb-6">{message}</p>
               <a
                 href="/login"
-                className="inline-block w-full py-3 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 transition-all"
+                className="inline-block w-full py-3 px-4 rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 transition-all"
               >
                 Back to Login
               </a>

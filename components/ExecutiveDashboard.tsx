@@ -238,7 +238,7 @@ export const ExecutiveDashboard: React.FC = () => {
           <div className="text-gray-500 text-sm">Annualized potential loss</div>
           <div className="mt-4 h-2 bg-gray-800 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"
+              className="h-full bg-linear-to-r from-green-500 via-yellow-500 to-red-500"
               style={{ width: '65%' }}
             />
           </div>
@@ -307,7 +307,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 <div key={trend.date} className="flex-1 flex flex-col items-center gap-2">
                   <div className="text-xs text-gray-400">{formatCurrency(trend.exposure)}</div>
                   <div 
-                    className="w-full bg-gradient-to-t from-cyan-500/50 to-cyan-500 rounded-t-lg transition-all duration-500"
+                    className="w-full bg-linear-to-t from-cyan-500/50 to-cyan-500 rounded-t-lg transition-all duration-500"
                     style={{ height: `${height}%` }}
                   />
                   <div className="text-xs text-gray-500">{trend.date.split('-')[1]}/{trend.date.split('-')[0].slice(2)}</div>

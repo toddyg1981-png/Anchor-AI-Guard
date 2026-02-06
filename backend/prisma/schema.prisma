@@ -53,6 +53,8 @@ model User {
   orgId         String
   org           Organization   @relation(fields: [orgId], references: [id])
   oauthAccounts OAuthAccount[]
+
+  @@index([orgId])
 }
 
 model Invite {
@@ -78,6 +80,8 @@ model Integration {
   updatedAt DateTime @updatedAt
   orgId     String
   org       Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
 }
 
 model Project {
@@ -93,6 +97,8 @@ model Project {
   findings    Finding[]
   scans       Scan[]
   sbom        SBOM?
+
+  @@index([orgId])
 }
 
 model Finding {
@@ -114,6 +120,9 @@ model Finding {
   projectId       String
   project         Project         @relation(fields: [projectId], references: [id])
   autofixes       Autofix[]
+
+  @@index([projectId])
+  @@index([severity])
 }
 
 model Autofix {
@@ -139,6 +148,8 @@ model Scan {
   createdAt     DateTime   @default(now())
   projectId     String
   project       Project    @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
 }
 
 model SBOM {
@@ -266,6 +277,8 @@ model APIKey {
   createdAt   DateTime  @default(now())
   orgId       String
   org         Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
 }
 
 // ============================================
@@ -283,6 +296,9 @@ model AuditLog {
   createdAt DateTime @default(now())
   orgId     String
   org       Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
+  @@index([createdAt])
 }
 
 // ============================================

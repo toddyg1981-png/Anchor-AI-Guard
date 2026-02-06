@@ -358,7 +358,7 @@ export const PhishingSimulator: React.FC = () => {
                 return (
                   <div key={month} className="flex flex-col items-center">
                     <div 
-                      className="w-12 bg-gradient-to-t from-red-500 to-green-500 rounded-t"
+                      className="w-12 bg-linear-to-t from-red-500 to-green-500 rounded-t"
                       style={{ height: `${rate * 4}px` }}
                     />
                     <div className="text-xs text-gray-500 mt-2">{month}</div>

@@ -191,7 +191,7 @@ const DigitalTwinSecurity: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🪞 Digital Twin Security</h1>
           <p className="text-gray-400 mt-1">Simulate attacks on virtual replicas — Zero risk to production</p>
         </div>
-        <button onClick={() => setShowNewTwin(true)} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">
+        <button onClick={() => setShowNewTwin(true)} className="px-4 py-2 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           + Create New Twin
         </button>
       </div>
@@ -279,7 +279,7 @@ const DigitalTwinSecurity: React.FC = () => {
                   </div>
                   <div className="w-full bg-gray-700/50 rounded-full h-2">
                     <div
-                      className="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full transition-all"
+                      className="bg-linear-to-r from-cyan-500 to-purple-500 h-2 rounded-full transition-all"
                       style={{ width: `${sim.progress}%` }}
                     />
                   </div>
@@ -324,7 +324,7 @@ const DigitalTwinSecurity: React.FC = () => {
       </div>
 
       {/* Value Proposition */}
-      <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/30 rounded-xl p-6">
+      <div className="bg-linear-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/30 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-4">💎 Digital Twin Value</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
@@ -371,7 +371,7 @@ const DigitalTwinSecurity: React.FC = () => {
               </div>
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setShowNewTwin(false)} className="flex-1 px-4 py-2 border border-gray-600 text-gray-400 rounded-lg hover:bg-gray-800 transition-colors">Cancel</button>
-                <button onClick={handleCreateTwin} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">Create Twin</button>
+                <button onClick={handleCreateTwin} className="flex-1 px-4 py-2 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-opacity">Create Twin</button>
               </div>
             </div>
           </div>

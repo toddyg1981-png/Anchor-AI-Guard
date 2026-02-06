@@ -70,7 +70,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   <div className="text-sm font-medium text-white mb-2">{scan.projectName}</div>
                   <div className="w-full bg-gray-800/50 rounded-full h-2">
                     <div
-                      className="bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] h-2 rounded-full transition-all duration-300"
+                      className="bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] h-2 rounded-full transition-all duration-300"
                       style={{ width: `${scan.progress}%` } as React.CSSProperties}
                     />
                   </div>

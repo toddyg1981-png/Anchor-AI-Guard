@@ -210,7 +210,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       {/* Navigation - Glass Style */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_30px_rgba(53,198,255,0.1)]' : ''
+          scrolled ? 'bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_30px_rgba(53,198,255,0.1)]' : ''
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -236,14 +236,14 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <button
                 onClick={onLogin}
                 aria-label="Log in to your account"
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 text-cyan-400 hover:border-pink-500/50 hover:text-pink-400 hover:shadow-lg hover:shadow-pink-500/20 transition-all"
+                className="px-4 py-2 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 text-cyan-400 hover:border-pink-500/50 hover:text-pink-400 hover:shadow-lg hover:shadow-pink-500/20 transition-all"
               >
                 Log in
               </button>
               <button
                 onClick={onGetStarted}
                 aria-label="Start your free trial"
-                className="bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:from-[#ff4fa3] hover:via-[#35c6ff] hover:to-[#7a3cff] px-4 py-2 rounded-xl font-semibold transition-all shadow-lg shadow-pink-500/25 hover:shadow-cyan-500/40 border border-white/20"
+                className="bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:from-[#ff4fa3] hover:via-[#35c6ff] hover:to-[#7a3cff] px-4 py-2 rounded-xl font-semibold transition-all shadow-lg shadow-pink-500/25 hover:shadow-cyan-500/40 border border-white/20"
               >
                 Start Free Trial
               </button>
@@ -263,7 +263,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
         <div className="max-w-7xl mx-auto relative">
           <div className="text-center max-w-4xl mx-auto">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
+            <div className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
               <span className="text-cyan-400">✨</span>
               <span className="text-sm text-cyan-300">
                 85+ Security Modules • 12 World-First AI Features
@@ -274,7 +274,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
               The World&apos;s First
               <br />
-              <span className="bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] bg-clip-text text-transparent">
                 AI Security Platform
               </span>
             </h1>
@@ -290,7 +290,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <button
                 onClick={onGetStarted}
-                className="bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:from-[#ff4fa3] hover:via-[#35c6ff] hover:to-[#7a3cff] px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-pink-500/30 hover:shadow-cyan-500/50"
+                className="bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:from-[#ff4fa3] hover:via-[#35c6ff] hover:to-[#7a3cff] px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-pink-500/30 hover:shadow-cyan-500/50"
               >
                 Start Free 14-Day Trial →
               </button>
@@ -315,7 +315,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
 
           {/* Hero Video Demo */}
           <div className="mt-20 relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#05080a] via-transparent to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#05080a] via-transparent to-transparent z-10 pointer-events-none" />
             <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-2xl shadow-cyan-500/10">
               <div className="bg-gray-800 px-4 py-3 flex items-center gap-2 border-b border-gray-700">
                 <div className="flex gap-2">
@@ -351,7 +351,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] bg-clip-text text-transparent mb-2">
+                <div className="text-4xl md:text-5xl font-bold bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] bg-clip-text text-transparent mb-2">
                   {stat.value}
                 </div>
                 <div className="text-cyan-400">{stat.label}</div>
@@ -367,7 +367,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               See Anchor
-              <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"> in Action</span>
+              <span className="bg-linear-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"> in Action</span>
             </h2>
             <p className="text-xl text-purple-300 max-w-2xl mx-auto">
               Watch how Anchor detects, analyses, and remediates security threats in real time.
@@ -400,7 +400,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               <strong>Security Capabilities</strong> That
               <br />
-              <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                 Don&apos;t Exist Anywhere Else
               </span>
             </h2>
@@ -414,7 +414,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="bg-gradient-to-br from-cyan-500/5 to-purple-500/5 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/20 hover:border-pink-500/50 transition-all group hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/20"
+                className="bg-linear-to-br from-cyan-500/5 to-purple-500/5 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/20 hover:border-pink-500/50 transition-all group hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/20"
               >
                 <div className="flex items-start justify-between mb-4">
                   <span className="text-4xl">{feature.icon}</span>
@@ -431,10 +431,10 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-24 px-4 bg-gradient-to-b from-purple-500/5 to-cyan-500/5">
+      <section id="testimonials" className="py-24 px-4 bg-linear-to-b from-purple-500/5 to-cyan-500/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
               Loved by Security Teams
             </h2>
             <p className="text-xl text-purple-300">
@@ -446,7 +446,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.author}
-                className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/30 hover:border-pink-500/50 transition-all hover:shadow-lg hover:shadow-pink-500/20"
+                className="bg-linear-to-br from-cyan-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/30 hover:border-pink-500/50 transition-all hover:shadow-lg hover:shadow-pink-500/20"
               >
                 <div className="text-4xl mb-4 text-pink-400">&ldquo;</div>
                 <p className="text-cyan-300 mb-6">{testimonial.quote}</p>
@@ -467,7 +467,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       <section id="pricing" className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-purple-300">
@@ -477,7 +477,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
 
           <div className="grid md:grid-cols-4 gap-6 mb-12">
             {/* Free */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Free</h3>
               <div className="text-3xl font-bold text-cyan-400 mb-4">$0<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
@@ -492,8 +492,8 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             </div>
 
             {/* Pro - Most Popular */}
-            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-pink-500/50 hover:border-pink-400 transition-all relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-1 rounded-full text-xs font-bold">
+            <div className="bg-linear-to-br from-cyan-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-pink-500/50 hover:border-pink-400 transition-all relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-linear-to-r from-pink-500 to-purple-500 px-4 py-1 rounded-full text-xs font-bold">
                 MOST POPULAR
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Pro</h3>
@@ -505,13 +505,13 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                 <li>✓ AI Auto-Fix PRs</li>
                 <li>✓ Attack Path Visualization</li>
               </ul>
-              <button onClick={onViewPricing} className="w-full py-2 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold hover:from-pink-600 hover:to-purple-600 transition-colors">
+              <button onClick={onViewPricing} className="w-full py-2 rounded-lg bg-linear-to-r from-pink-500 to-purple-500 text-white font-semibold hover:from-pink-600 hover:to-purple-600 transition-colors">
                 Start Free Trial
               </button>
             </div>
 
             {/* Team */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Team</h3>
               <div className="text-3xl font-bold text-cyan-400 mb-4">$599<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
@@ -527,7 +527,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             </div>
 
             {/* Business */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Business</h3>
               <div className="text-3xl font-bold text-cyan-400 mb-4">$1,999<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
@@ -561,7 +561,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       <section id="faq" className="py-24 px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Frequently Asked Questions
             </h2>
           </div>
@@ -570,7 +570,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl border border-cyan-500/30 overflow-hidden hover:border-pink-500/50 transition-all"
+                className="bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm rounded-xl border border-cyan-500/30 overflow-hidden hover:border-pink-500/50 transition-all"
               >
                 <button
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
@@ -602,8 +602,8 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       {/* CTA Section */}
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-cyan-500/30 rounded-3xl p-12 hover:border-pink-500/50 transition-all">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <div className="bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-cyan-500/30 rounded-3xl p-12 hover:border-pink-500/50 transition-all">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Ready to Transform Your Security?
             </h2>
             <p className="text-xl text-purple-300 mb-4">
@@ -614,7 +614,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             </p>
             <button
               onClick={onGetStarted}
-              className="bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-cyan-500 hover:to-purple-500 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25 hover:shadow-pink-500/40"
+              className="bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-cyan-500 hover:to-purple-500 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25 hover:shadow-pink-500/40"
             >
               Start Free 14-Day Trial →
             </button>
@@ -626,12 +626,12 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       </section>
 
       {/* Footer - Glass Style */}
-      <footer className="border-t border-cyan-500/20 py-12 px-4 bg-gradient-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5 backdrop-blur-sm">
+      <footer className="border-t border-cyan-500/20 py-12 px-4 bg-linear-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center mb-4">
-                <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="w-[170px] h-[113px] object-contain select-none pointer-events-none" />
+                <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="w-42.5 h-28.25 object-contain select-none pointer-events-none" />
               </div>
               <p className="text-purple-300 text-sm">
                 <strong>The world&apos;s most advanced</strong> AI-powered security platform. 

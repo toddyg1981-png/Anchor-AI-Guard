@@ -469,7 +469,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
   // Stripe webhook handler
   app.post('/billing/webhook', async (request: FastifyRequest, reply: FastifyReply) => {
     const sig = request.headers['stripe-signature'] as string;
-    const rawBody = (request as any).rawBody;
+    const rawBody = (request as FastifyRequest & { rawBody?: string }).rawBody;
 
     if (!rawBody) {
       return reply.status(400).send({ error: 'No raw body' });

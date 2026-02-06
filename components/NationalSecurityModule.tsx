@@ -248,7 +248,7 @@ const NationalSecurityModule: React.FC = () => {
       </div>
 
       {/* Air-Gap Deployment */}
-      <div className="bg-gradient-to-r from-gray-800/50 to-gray-900/50 border border-gray-600/50 rounded-xl p-6">
+      <div className="bg-linear-to-r from-gray-800/50 to-gray-900/50 border border-gray-600/50 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-4">🔌 Air-Gap Deployment Options</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-gray-800/50 rounded-lg p-4">

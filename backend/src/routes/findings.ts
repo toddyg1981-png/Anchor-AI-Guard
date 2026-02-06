@@ -31,9 +31,18 @@ export async function findingRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post('/findings', { preHandler: authMiddleware() }, async (request, reply) => {
+    const user = (request as any).user;
     const parsed = createFindingSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
+    }
+
+    // Verify project belongs to user's org
+    const project = await prisma.project.findFirst({
+      where: { id: parsed.data.projectId, orgId: user.orgId },
+    });
+    if (!project) {
+      return reply.status(404).send({ error: 'Project not found' });
     }
 
     const finding = await prisma.finding.create({

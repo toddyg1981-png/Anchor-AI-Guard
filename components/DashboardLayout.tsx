@@ -120,7 +120,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   return (
     <div className="h-screen flex bg-transparent">
       {/* Sidebar - Glass Neon Style */}
-      <aside className="w-64 bg-gradient-to-b from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border-r border-cyan-500/20 overflow-y-auto flex flex-col shadow-[0_0_40px_rgba(53,198,255,0.15)]">
+      <aside className="w-64 bg-linear-to-b from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border-r border-cyan-500/20 overflow-y-auto flex flex-col shadow-[0_0_40px_rgba(53,198,255,0.15)]">
         <div className="p-6 flex-1">
           {/* Search */}
           <div className="mb-8 mt-4">
@@ -147,7 +147,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 onClick={() => { setActiveNav(item.id); setDashboardView(item.view); }}
                 className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center gap-3 ${
                   activeNav === item.id
-                    ? 'bg-gradient-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3] border-l-2 border-[#ff4fa3]'
+                    ? 'bg-linear-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3] border-l-2 border-[#ff4fa3]'
                     : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
                 }`}
               >
@@ -167,7 +167,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   onClick={() => { setActiveNav(item.id); setDashboardView(item.view); item.action?.(); }}
                   className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center gap-3 ${
                     activeNav === item.id
-                      ? 'bg-gradient-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3]'
+                      ? 'bg-linear-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3]'
                       : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
                   }`}
                 >
@@ -180,7 +180,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   onClick={() => { setActiveNav('admin'); setDashboardView('admin'); onViewAdmin?.(); }}
                   className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center gap-3 ${
                     activeNav === 'admin'
-                      ? 'bg-gradient-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3]'
+                      ? 'bg-linear-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3]'
                       : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
                   }`}
                 >
@@ -193,9 +193,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         </div>
 
         {/* User Profile in Sidebar Footer */}
-        <div className="p-4 border-t border-cyan-500/20 bg-gradient-to-r from-cyan-500/5 to-pink-500/5">
+        <div className="p-4 border-t border-cyan-500/20 bg-linear-to-r from-cyan-500/5 to-pink-500/5">
           <div className="flex items-center gap-3 px-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] rounded-full flex items-center justify-center text-white font-semibold shadow-lg shadow-pink-500/25">
+            <div className="w-10 h-10 bg-linear-to-br from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] rounded-full flex items-center justify-center text-white font-semibold shadow-lg shadow-pink-500/25">
               {user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 min-w-0">
@@ -209,7 +209,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar - Glass Style */}
-        <header className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border-b border-cyan-500/20 px-8 py-4 flex justify-between items-center shadow-[0_4px_30px_rgba(53,198,255,0.1)]">
+        <header className="bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border-b border-cyan-500/20 px-8 py-4 flex justify-between items-center shadow-[0_4px_30px_rgba(53,198,255,0.1)]">
           <div>
             <h1 className="text-xl font-semibold text-white">{activeMeta?.label || 'Security Dashboard'}</h1>
             {activeMeta?.description && (
@@ -219,7 +219,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           
           <div className="flex items-center gap-3">
             {/* Quick Actions */}
-            <button className="px-4 py-2 bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-pink-500/25">
+            <button className="px-4 py-2 bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-pink-500/25">
               + New Scan
             </button>
 
@@ -229,7 +229,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 onClick={() => setShowNotifications(!showNotifications)}
                 aria-label="View notifications"
                 title="Notifications"
-                className="relative p-2.5 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 rounded-xl transition-all hover:shadow-lg hover:shadow-pink-500/20"
+                className="relative p-2.5 bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 rounded-xl transition-all hover:shadow-lg hover:shadow-pink-500/20"
               >
                 <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -269,7 +269,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-2 px-3 py-2 hover:bg-slate-800/50 rounded-lg transition-colors"
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                <div className="w-8 h-8 bg-linear-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                   {user?.name?.[0]?.toUpperCase() || 'U'}
                 </div>
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

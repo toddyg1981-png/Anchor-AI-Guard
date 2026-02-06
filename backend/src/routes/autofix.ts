@@ -28,9 +28,9 @@ export async function autofixRoutes(app: FastifyInstance): Promise<void> {
     const { orgId } = (request as any).user;
     const { findingId, summary, description, priority } = parsed.data;
 
-    // Get the finding
+    // Get the finding (verify it belongs to user's org)
     const finding = await prisma.finding.findFirst({
-      where: { id: findingId },
+      where: { id: findingId, project: { orgId } },
       include: { project: true },
     });
 
@@ -94,9 +94,9 @@ ${finding.filePath ? `**File:** ${finding.filePath}${finding.lineNumber ? `:${fi
     const { orgId } = (request as any).user;
     const { findingId, targetBranch } = parsed.data;
 
-    // Get the finding
+    // Get the finding (verify it belongs to user's org)
     const finding = await prisma.finding.findFirst({
-      where: { id: findingId },
+      where: { id: findingId, project: { orgId } },
       include: { project: true },
     });
 

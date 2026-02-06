@@ -18,7 +18,7 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
           Back
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
           Privacy Policy
         </h1>
         
@@ -128,7 +128,7 @@ export const TermsOfService: React.FC<LegalPageProps> = ({ onBack }) => {
           Back
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
           Terms of Service
         </h1>
         
@@ -243,7 +243,7 @@ export const SecurityPage: React.FC<LegalPageProps> = ({ onBack }) => {
           Back
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
           Security at Anchor
         </h1>
         
@@ -341,7 +341,7 @@ export const SecurityPage: React.FC<LegalPageProps> = ({ onBack }) => {
             </ul>
           </section>
 
-          <section className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 rounded-xl p-6 mt-8">
+          <section className="bg-linear-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 rounded-xl p-6 mt-8">
             <h2 className="text-xl font-semibold text-white mb-2">Report a Vulnerability</h2>
             <p className="mb-4">
               Found a security issue? We appreciate responsible disclosure.
@@ -373,7 +373,7 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
           Back
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
           About Anchor Security
         </h1>
         
@@ -430,7 +430,7 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
             </p>
           </section>
 
-          <section className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 rounded-xl p-6 mt-8">
+          <section className="bg-linear-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 rounded-xl p-6 mt-8">
             <h2 className="text-xl font-semibold text-white mb-2">Get in Touch</h2>
             <p className="mb-4">
               Interested in learning more or joining our team?
@@ -470,7 +470,7 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
           Back
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
           Purchase Terms & Conditions
         </h1>
         
@@ -653,7 +653,7 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
             </ul>
           </section>
 
-          <section className="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 rounded-xl p-6 mt-8">
+          <section className="bg-linear-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 rounded-xl p-6 mt-8">
             <h2 className="text-xl font-semibold text-white mb-2">Billing Support</h2>
             <p className="mb-4">
               Questions about your subscription or billing?
@@ -685,7 +685,7 @@ export const ContactPage: React.FC<LegalPageProps> = ({ onBack }) => {
           Back
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
           Contact Us
         </h1>
         
@@ -768,7 +768,7 @@ export const ContactPage: React.FC<LegalPageProps> = ({ onBack }) => {
               
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white font-semibold py-3 rounded-lg transition-all"
+                className="w-full bg-linear-to-r from-cyan-500 to-pink-500 hover:from-cyan-600 hover:to-pink-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
                 Send Message
               </button>

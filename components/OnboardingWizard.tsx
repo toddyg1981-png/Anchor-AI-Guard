@@ -107,7 +107,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           </div>
           <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] transition-all duration-300"
+              className="h-full bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] transition-all duration-300"
               style={{ width: `${(step / totalSteps) * 100}%` }}
             />
           </div>
@@ -353,7 +353,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               disabled={!canProceed()}
               className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                 canProceed()
-                  ? 'bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:brightness-110 text-white shadow-lg shadow-pink-500/25'
+                  ? 'bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:brightness-110 text-white shadow-lg shadow-pink-500/25'
                   : 'bg-gray-700 text-gray-500 cursor-not-allowed'
               }`}
             >

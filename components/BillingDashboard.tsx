@@ -156,7 +156,7 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
     <div className="space-y-6">
       {/* Trial Banner */}
       {isTrialing && (
-        <div className="bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between">
+        <div className="bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-cyan-500/20 rounded-full p-2">
               <svg

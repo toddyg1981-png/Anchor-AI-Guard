@@ -147,7 +147,7 @@ const SupplyChainAttestation: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🔗 Supply Chain Attestation</h1>
           <p className="text-gray-400 mt-1">Blockchain-verified software provenance — Trust but verify every dependency</p>
         </div>
-        <button className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity">
+        <button className="px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           Generate SBOM Report
         </button>
       </div>
@@ -287,7 +287,7 @@ const SupplyChainAttestation: React.FC = () => {
       </div>
 
       {/* Value Proposition */}
-      <div className="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border border-cyan-500/30 rounded-xl p-6">
+      <div className="bg-linear-to-r from-cyan-900/30 to-blue-900/30 border border-cyan-500/30 rounded-xl p-6">
         <h2 className="text-lg font-semibold text-white mb-4">💎 Supply Chain Attestation Value</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>

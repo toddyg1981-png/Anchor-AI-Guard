@@ -304,7 +304,7 @@ export const CICDSecurity: React.FC = () => {
                 <div className="flex items-center gap-2 overflow-x-auto pb-2">
                   {pipeline.stages.map((stage, idx) => (
                     <React.Fragment key={stage.id}>
-                      <div className={`flex-shrink-0 p-3 rounded-lg border min-w-[140px] ${getStatusColor(stage.status)}`}>
+                      <div className={`shrink-0 p-3 rounded-lg border min-w-[140px] ${getStatusColor(stage.status)}`}>
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium uppercase opacity-70">{stage.type}</span>
                           {stage.status === 'running' && (
@@ -330,7 +330,7 @@ export const CICDSecurity: React.FC = () => {
                         )}
                       </div>
                       {idx < pipeline.stages.length - 1 && (
-                        <div className="text-gray-600 flex-shrink-0">→</div>
+                        <div className="text-gray-600 shrink-0">→</div>
                       )}
                     </React.Fragment>
                   ))}

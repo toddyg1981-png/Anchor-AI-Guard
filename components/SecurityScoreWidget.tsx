@@ -409,7 +409,7 @@ export const SecurityLeaderboard: React.FC<{ users: Array<{ id: string; name: st
             }`}>
               {index + 1}
             </div>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-cyan-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">

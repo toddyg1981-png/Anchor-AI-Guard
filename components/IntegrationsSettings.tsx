@@ -128,7 +128,7 @@ export const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({ onBa
             onClick={onBack}
             aria-label="Go back"
             title="Go back"
-            className="p-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-400 hover:text-white transition-all hover:shadow-lg hover:shadow-pink-500/20"
+            className="p-2 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-400 hover:text-white transition-all hover:shadow-lg hover:shadow-pink-500/20"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -286,7 +286,7 @@ export const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({ onBa
                     onChange={(e) => setIntegrationName(e.target.value)}
                     required
                     placeholder="Enter integration name"
-                    className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/30 transition-all"
+                    className="w-full px-4 py-3 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500/30 transition-all"
                   />
                 </div>
 
@@ -322,7 +322,7 @@ export const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({ onBa
                   <button
                     type="submit"
                     disabled={addLoading}
-                    className="flex-1 py-3 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 transition-all"
+                    className="flex-1 py-3 px-4 rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 transition-all"
                   >
                     {addLoading ? 'Adding...' : 'Add Integration'}
                   </button>

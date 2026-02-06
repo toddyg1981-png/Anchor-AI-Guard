@@ -13,7 +13,7 @@ const SecurityAutomation: React.FC = () => {
     <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500">Security Automation</h1>
+          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-indigo-500">Security Automation</h1>
           <p className="text-slate-400">No-code workflows to react in seconds across your stack.</p>
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300">Queue depth: Low</div>

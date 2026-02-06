@@ -154,7 +154,7 @@ const PredictionTimeline: React.FC<{ timeline: PredictedVulnerability['timeline'
       </div>
       <div className="relative h-2 bg-gray-700 rounded-full overflow-hidden">
         <div 
-          className="absolute left-0 top-0 h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full"
+          className="absolute left-0 top-0 h-full bg-linear-to-r from-cyan-500 to-purple-500 rounded-full"
           style={{ width: `${progress}%` }}
         />
         {/* Disclosure marker */}
@@ -511,7 +511,7 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
             onChange={(e) => setSortBy(e.target.value as any)}
             aria-label="Sort alerts by"
             title="Sort by"
-            className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm text-white text-sm rounded-xl px-3 py-1 border border-cyan-500/30 hover:border-pink-500/50 focus:ring-2 focus:ring-pink-500/30 transition-all"
+            className="bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm text-white text-sm rounded-xl px-3 py-1 border border-cyan-500/30 hover:border-pink-500/50 focus:ring-2 focus:ring-pink-500/30 transition-all"
           >
             <option value="confidence">Confidence</option>
             <option value="severity">Severity</option>

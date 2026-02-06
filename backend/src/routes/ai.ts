@@ -74,7 +74,7 @@ function cleanJsonResponse(content: string): string {
 
 export async function aiRoutes(app: FastifyInstance): Promise<void> {
   // Analyze single finding
-  app.post('/ai/analyze', { preHandler: authMiddleware() }, async (request, reply) => {
+  app.post('/ai/analyze', { preHandler: authMiddleware(), config: { rateLimit: { max: 20, timeWindow: '1 minute' } } }, async (request, reply) => {
     const parsed = analyzeSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -117,7 +117,7 @@ Respond ONLY with valid JSON (no code blocks, no markdown) in this exact format:
   });
 
   // Bulk analyze findings
-  app.post('/ai/analyze-bulk', { preHandler: authMiddleware() }, async (request, reply) => {
+  app.post('/ai/analyze-bulk', { preHandler: authMiddleware(), config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (request, reply) => {
     const parsed = bulkAnalyzeSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -170,7 +170,7 @@ Respond ONLY with valid JSON (no code blocks) in this exact format:
   });
 
   // Generate security report
-  app.post('/ai/report', { preHandler: authMiddleware() }, async (request, reply) => {
+  app.post('/ai/report', { preHandler: authMiddleware(), config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }, async (request, reply) => {
     const parsed = reportSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
@@ -214,7 +214,7 @@ Keep it concise and actionable.`;
   });
 
   // Get threat intelligence
-  app.post('/ai/threat-intel', { preHandler: authMiddleware() }, async (request, reply) => {
+  app.post('/ai/threat-intel', { preHandler: authMiddleware(), config: { rateLimit: { max: 20, timeWindow: '1 minute' } } }, async (request, reply) => {
     const parsed = threatIntelSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });

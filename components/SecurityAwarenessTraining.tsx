@@ -210,7 +210,7 @@ export const SecurityAwarenessTraining: React.FC = () => {
                     </div>
                     <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-cyan-500 to-green-500 rounded-full"
+                        className="h-full bg-linear-to-r from-cyan-500 to-green-500 rounded-full"
                         style={{ width: `${avgCompletion}%` }}
                       />
                     </div>

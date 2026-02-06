@@ -2,16 +2,43 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../lib/prisma';
 import { Roles } from '../lib/auth';
 import { notifyAdminNewSignup } from './email';
+import { env } from '../config/env';
+import crypto from 'crypto';
 
-// OAuth configuration
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || '';
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || '';
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+// OAuth configuration - use centralized env
+const GITHUB_CLIENT_ID = env.githubClientId;
+const GITHUB_CLIENT_SECRET = env.githubClientSecret;
+const GOOGLE_CLIENT_ID = env.googleClientId;
+const GOOGLE_CLIENT_SECRET = env.googleClientSecret;
 // BACKEND_URL is used for OAuth callbacks (where GitHub/Google redirects back)
-const BACKEND_URL = process.env.OAUTH_REDIRECT_BASE || process.env.BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = process.env.OAUTH_REDIRECT_BASE || env.backendUrl;
 // FRONTEND_URL is used for redirecting users after auth
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = env.frontendUrl;
+
+// In-memory CSRF state store (short-lived, cleaned up periodically)
+const pendingStates = new Map<string, { createdAt: number }>();
+
+// Clean up expired states every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [state, data] of pendingStates) {
+    if (now - data.createdAt > 10 * 60 * 1000) { // 10 min expiry
+      pendingStates.delete(state);
+    }
+  }
+}, 5 * 60 * 1000);
+
+function generateAndStoreState(): string {
+  const state = crypto.randomBytes(32).toString('hex');
+  pendingStates.set(state, { createdAt: Date.now() });
+  return state;
+}
+
+function validateState(state: string | undefined): boolean {
+  if (!state || !pendingStates.has(state)) return false;
+  pendingStates.delete(state); // Single-use
+  return true;
+}
 
 interface GitHubUser {
   id: number;
@@ -34,12 +61,14 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   // ============================================
 
   // Initiate GitHub OAuth
-  app.get('/auth/github', async (_request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/auth/github', {
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+  }, async (_request: FastifyRequest, reply: FastifyReply) => {
     const params = new URLSearchParams({
       client_id: GITHUB_CLIENT_ID,
       redirect_uri: `${BACKEND_URL}/api/auth/github/callback`,
       scope: 'read:user user:email',
-      state: generateState(),
+      state: generateAndStoreState(),
     });
 
     return reply.redirect(`https://github.com/login/oauth/authorize?${params}`);
@@ -47,9 +76,9 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
 
   // GitHub OAuth callback
   app.get('/auth/github/callback', async (request: FastifyRequest, reply: FastifyReply) => {
-    const { code, state: _state } = request.query as { code?: string; state?: string };
+    const { code, state } = request.query as { code?: string; state?: string };
 
-    if (!code) {
+    if (!code || !validateState(state)) {
       return reply.redirect(`${FRONTEND_URL}/login?error=github_auth_failed`);
     }
 
@@ -133,13 +162,15 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   // ============================================
 
   // Initiate Google OAuth
-  app.get('/auth/google', async (_request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/auth/google', {
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+  }, async (_request: FastifyRequest, reply: FastifyReply) => {
     const params = new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
       redirect_uri: `${BACKEND_URL}/api/auth/google/callback`,
       response_type: 'code',
       scope: 'openid email profile',
-      state: generateState(),
+      state: generateAndStoreState(),
       access_type: 'offline',
       prompt: 'consent',
     });
@@ -149,9 +180,9 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
 
   // Google OAuth callback
   app.get('/auth/google/callback', async (request: FastifyRequest, reply: FastifyReply) => {
-    const { code, state: _state } = request.query as { code?: string; state?: string };
+    const { code, state } = request.query as { code?: string; state?: string };
 
-    if (!code) {
+    if (!code || !validateState(state)) {
       return reply.redirect(`${FRONTEND_URL}/login?error=google_auth_failed`);
     }
 
@@ -406,7 +437,4 @@ async function findOrCreateOAuthUser({
   };
 }
 
-// Generate random state for CSRF protection
-function generateState(): string {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
+// findOrCreateOAuthUser is below

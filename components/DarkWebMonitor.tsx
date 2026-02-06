@@ -315,7 +315,7 @@ export const DarkWebMonitor: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${
               activeTab === tab.id
                 ? 'bg-purple-500/20 text-purple-400 border border-purple-500'
@@ -538,7 +538,7 @@ export const DarkWebMonitor: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setSelectedAlert(null)} className="text-gray-400 hover:text-white">
+              <button onClick={() => setSelectedAlert(null)} className="text-gray-400 hover:text-white" aria-label="Close alert details">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>

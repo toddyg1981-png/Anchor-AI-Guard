@@ -78,7 +78,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({ onBack }) => {
             onClick={onBack}
             aria-label="Go back"
             title="Go back"
-            className="p-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-400 hover:text-white transition-all hover:shadow-lg hover:shadow-pink-500/20"
+            className="p-2 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-400 hover:text-white transition-all hover:shadow-lg hover:shadow-pink-500/20"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -128,7 +128,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({ onBack }) => {
               {members.map((member) => (
                 <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-700/20 transition-all">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold">
                       {(member.name || member.email).charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -147,7 +147,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({ onBack }) => {
                           onChange={(e) => updateMemberRole(member.id, e.target.value as 'admin' | 'member' | 'viewer')}
                           aria-label="Change member role"
                           title="Change role"
-                          className="px-2 py-1 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500/30 transition-all"
+                          className="px-2 py-1 rounded-xl bg-linear-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-sm border border-cyan-500/30 hover:border-pink-500/50 text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500/30 transition-all"
                         >
                           <option value="admin">Admin</option>
                           <option value="member">Member</option>
@@ -275,7 +275,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({ onBack }) => {
                 <button
                   type="submit"
                   disabled={inviteLoading}
-                  className="flex-1 py-3 px-4 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 transition-all"
+                  className="flex-1 py-3 px-4 rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 transition-all"
                 >
                   {inviteLoading ? 'Sending...' : 'Send Invite'}
                 </button>

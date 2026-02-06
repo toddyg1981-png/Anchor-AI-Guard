@@ -42,7 +42,7 @@ export type WebSocketEvent =
 
 class WebSocketManager {
   private wss: WebSocketServer | null = null;
-  private clients: Set<WebSocket> = new Set();
+  private clients: Map<WebSocket, { orgId: string }> = new Map();
 
   initialize(server: FastifyInstance['server']) {
     this.wss = new WebSocketServer({ server, path: '/ws' });
@@ -57,15 +57,17 @@ class WebSocketManager {
         return;
       }
 
+      let payload: any;
       try {
-        jwt.verify(token, env.jwtSecret);
+        payload = jwt.verify(token, env.jwtSecret);
       } catch {
         ws.close(4001, 'Invalid token');
         return;
       }
 
+      const orgId = payload.orgId || '';
       console.log('WebSocket client connected (authenticated)');
-      this.clients.add(ws);
+      this.clients.set(ws, { orgId });
 
       ws.on('close', () => {
         console.log('WebSocket client disconnected');
@@ -84,11 +86,14 @@ class WebSocketManager {
     console.log('WebSocket server initialized on /ws');
   }
 
-  broadcast(event: WebSocketEvent) {
+  broadcast(event: WebSocketEvent, targetOrgId?: string) {
     const message = JSON.stringify(event);
-    this.clients.forEach((client) => {
+    this.clients.forEach((meta, client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
+        // If targetOrgId is specified, only send to clients in that org
+        if (!targetOrgId || meta.orgId === targetOrgId) {
+          client.send(message);
+        }
       }
     });
   }

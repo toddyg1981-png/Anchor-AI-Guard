@@ -36,10 +36,13 @@ const snippetScanSchema = z.object({
 
 export async function scanRoutes(app: FastifyInstance): Promise<void> {
   app.get('/scans', { preHandler: authMiddleware() }, async (request) => {
+    const user = (request as any).user;
     const projectId = (request.query as { projectId?: string }).projectId;
-    const where = projectId ? { projectId } : undefined;
     const scans = await prisma.scan.findMany({
-      where,
+      where: {
+        ...(projectId ? { projectId } : {}),
+        project: { orgId: user.orgId },
+      },
       orderBy: { createdAt: 'desc' },
       include: { project: true },
     });
@@ -47,9 +50,18 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post('/scans', { preHandler: authMiddleware() }, async (request, reply) => {
+    const user = (request as any).user;
     const parsed = createScanSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
+    }
+
+    // Verify project belongs to user's org
+    const project = await prisma.project.findFirst({
+      where: { id: parsed.data.projectId, orgId: user.orgId },
+    });
+    if (!project) {
+      return reply.status(404).send({ error: 'Project not found' });
     }
 
     const scan = await prisma.scan.create({
@@ -71,6 +83,14 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
     }
 
     const { projectId, targetPath } = parsed.data;
+
+    // Verify project belongs to user's org
+    const project = await prisma.project.findFirst({
+      where: { id: projectId, orgId: (request as any).user.orgId },
+    });
+    if (!project) {
+      return reply.status(404).send({ error: 'Project not found' });
+    }
 
     const scan = await prisma.scan.create({
       data: {
@@ -102,8 +122,10 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
 
     const { projectId, repoUrl, branch } = parsed.data;
 
-    // Verify project exists
-    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    // Verify project exists and belongs to user's org
+    const project = await prisma.project.findFirst({
+      where: { id: projectId, orgId: (request as any).user.orgId },
+    });
     if (!project) {
       return reply.status(404).send({ error: 'Project not found' });
     }
@@ -138,7 +160,9 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
 
     const { projectId, files } = parsed.data;
 
-    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    const project = await prisma.project.findFirst({
+      where: { id: projectId, orgId: (request as any).user.orgId },
+    });
     if (!project) {
       return reply.status(404).send({ error: 'Project not found' });
     }
@@ -170,7 +194,9 @@ export async function scanRoutes(app: FastifyInstance): Promise<void> {
 
     const { projectId, code, filename } = parsed.data;
 
-    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    const project = await prisma.project.findFirst({
+      where: { id: projectId, orgId: (request as any).user.orgId },
+    });
     if (!project) {
       return reply.status(404).send({ error: 'Project not found' });
     }

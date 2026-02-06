@@ -22,7 +22,7 @@ const LoginSuccessOverlay: React.FC<LoginSuccessOverlayProps> = ({ onContinue, i
       />
       
       {/* Dark overlay with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/70" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-black/70" />
       
       {/* Animated glow effects */}
       <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(53,198,255,0.4) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(255,79,163,0.4) 0%, transparent 50%)' }} />
@@ -42,7 +42,7 @@ const LoginSuccessOverlay: React.FC<LoginSuccessOverlayProps> = ({ onContinue, i
         <div className="flex flex-col items-center gap-4 pt-4">
           <button
             onClick={onContinue}
-            className="px-8 py-4 rounded-full font-bold text-lg text-white shadow-[0_0_40px_rgba(53,198,255,0.4)] bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:brightness-110 hover:scale-105 transition-all duration-300"
+            className="px-8 py-4 rounded-full font-bold text-lg text-white shadow-[0_0_40px_rgba(53,198,255,0.4)] bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] hover:brightness-110 hover:scale-105 transition-all duration-300"
           >
             Continue to Dashboard →
           </button>

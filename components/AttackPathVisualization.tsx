@@ -282,7 +282,7 @@ const NodeDetailPanel: React.FC<{ node: AttackNode | null; onClose: () => void }
     <div className="absolute right-4 top-4 w-72 bg-gray-900/95 backdrop-blur border border-gray-700 rounded-xl overflow-hidden z-10">
       <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
         <h4 className="font-medium text-white">{nodeTypeIcons[node.type]} {node.label}</h4>
-        <button onClick={onClose} aria-label="Close panel" title="Close" className="p-1 rounded-lg bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 hover:border-pink-500/50 text-gray-400 hover:text-white transition-all">
+        <button onClick={onClose} aria-label="Close panel" title="Close" className="p-1 rounded-lg bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 hover:border-pink-500/50 text-gray-400 hover:text-white transition-all">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>

@@ -259,7 +259,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
                     <tr key={member.id} className="hover:bg-gray-700/50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                          <div className="w-10 h-10 rounded-full bg-linear-to-r from-cyan-500 to-purple-500 flex items-center justify-center text-white font-semibold">
                             {member.name.charAt(0)}
                           </div>
                           <div>

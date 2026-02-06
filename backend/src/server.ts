@@ -91,7 +91,10 @@ async function main() {
     },
   });
 
-  await app.register(swaggerUI, { routePrefix: '/docs' });
+  // Only expose Swagger UI in non-production environments
+  if (env.nodeEnv !== 'production') {
+    await app.register(swaggerUI, { routePrefix: '/docs' });
+  }
 
   // Register routes
   app.register(healthRoutes, { prefix: '/api' });

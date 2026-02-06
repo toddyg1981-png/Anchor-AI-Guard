@@ -18,7 +18,7 @@ const CryptographyManager: React.FC = () => {
     <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">Cryptography Manager</h1>
+          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-500">Cryptography Manager</h1>
           <p className="text-slate-400">Keys, certificates, and signing with hardware-backed protection.</p>
         </div>
         <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300">PKI health: Good</div>
