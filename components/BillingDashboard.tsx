@@ -38,12 +38,13 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
 
   const fetchBillingData = async () => {
     try {
+      const token = localStorage.getItem('anchor_auth_token');
       const [subResponse, usageResponse] = await Promise.all([
         fetch('/api/billing/subscription', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: { Authorization: `Bearer ${token}` },
         }),
         fetch('/api/billing/usage', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
 
@@ -69,7 +70,7 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('anchor_auth_token')}`,
         },
         body: JSON.stringify({ returnUrl: window.location.href }),
       });

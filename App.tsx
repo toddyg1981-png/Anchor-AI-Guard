@@ -499,16 +499,7 @@ const AppContent: React.FC = () => {
               setCurrentView(isAuthenticated ? 'dashboard' : 'marketing');
               window.history.pushState({}, '', '/');
             }}
-            onSelectPlan={(_planId) => {
-              if (!isAuthenticated) {
-                setCurrentView('auth');
-                window.history.pushState({}, '', '/signup');
-              } else {
-                // Handle plan selection - navigate to billing
-                setDashboardView('billing');
-                setCurrentView('dashboard');
-              }
-            }}
+            isAuthenticated={isAuthenticated}
           />
         );
       

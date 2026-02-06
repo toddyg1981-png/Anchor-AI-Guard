@@ -32,6 +32,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const [plans, setPlans] = useState<Plan[]>([]);
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [referralCode, setReferralCode] = useState('');
   const [showReferral, setShowReferral] = useState(false);
 
@@ -279,11 +280,50 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     }
   };
 
-  const handleSelectPlan = (tier: string) => {
+  const handleSelectPlan = async (tier: string) => {
     if (onSelectPlan) {
       onSelectPlan(tier);
-    } else {
-      window.location.href = `/checkout?plan=${tier}&billing=${billingPeriod}`;
+      return;
+    }
+
+    // If not authenticated, redirect to signup
+    if (!isAuthenticated) {
+      window.location.href = `/signup?plan=${tier}`;
+      return;
+    }
+
+    // Create Stripe checkout session
+    setCheckoutLoading(tier);
+    try {
+      const token = localStorage.getItem('anchor_auth_token');
+      const response = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          planTier: tier.toUpperCase(),
+          billingPeriod,
+          successUrl: `${window.location.origin}/dashboard?checkout=success`,
+          cancelUrl: `${window.location.origin}/pricing?checkout=canceled`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+      } else {
+        console.error('No checkout URL returned');
+        alert('Failed to start checkout. Please try again.');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to start checkout. Please try again.');
+    } finally {
+      setCheckoutLoading(null);
     }
   };
 
@@ -512,9 +552,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               {/* CTA Button */}
               <button
                 onClick={() => handleSelectPlan(plan.tier)}
-                disabled={isCurrent(plan.tier)}
+                disabled={isCurrent(plan.tier) || checkoutLoading === plan.tier}
                 className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 mb-6 ${
-                  isCurrent(plan.tier)
+                  isCurrent(plan.tier) || checkoutLoading === plan.tier
                     ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                     : plan.tier === 'FREE'
                     ? 'bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-cyan-300 text-black shadow-lg shadow-cyan-500/30'
@@ -525,7 +565,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                     : 'bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300'
                 }`}
               >
-                {isCurrent(plan.tier)
+                {checkoutLoading === plan.tier
+                  ? 'Loading...'
+                  : isCurrent(plan.tier)
                   ? 'Current Plan'
                   : plan.tier === 'FREE'
                   ? 'Start Free'
