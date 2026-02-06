@@ -22,8 +22,8 @@ RUN npm run build
 
 FROM node:18-slim
 
-# Install OpenSSL for Prisma runtime
-RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+# Install OpenSSL for Prisma runtime + git for GitHub repo scanning
+RUN apt-get update && apt-get install -y openssl ca-certificates git && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

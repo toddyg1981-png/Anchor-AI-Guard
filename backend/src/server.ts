@@ -19,10 +19,10 @@ import { emailRoutes } from './routes/email';
 import { wsManager } from './lib/websocket';
 
 async function main() {
-  const app = Fastify({ 
+  const app = Fastify({
     logger: true,
-    // Enable raw body for Stripe webhooks
-    bodyLimit: 1048576, // 1MB
+    // 10MB to support file-upload scanning
+    bodyLimit: 10485760,
   });
 
   await app.register(cors, {

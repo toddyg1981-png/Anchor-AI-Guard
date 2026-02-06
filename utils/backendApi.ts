@@ -126,4 +126,45 @@ export const backendApi = {
       throw error;
     }
   },
+
+  async scanGithub(projectId: string, repoUrl: string, branch: string = 'main'): Promise<{ scanId: string; status: string }> {
+    const baseUrl = env.apiBaseUrl;
+    try {
+      return await apiClient.post<{ scanId: string; status: string }>(`${baseUrl}/scans/github`, {
+        projectId,
+        repoUrl,
+        branch,
+      });
+    } catch (error) {
+      logger.error('Failed to trigger GitHub scan', { projectId, repoUrl, error });
+      throw error;
+    }
+  },
+
+  async scanUpload(projectId: string, files: Array<{ name: string; content: string }>): Promise<{ scanId: string; status: string }> {
+    const baseUrl = env.apiBaseUrl;
+    try {
+      return await apiClient.post<{ scanId: string; status: string }>(`${baseUrl}/scans/upload`, {
+        projectId,
+        files,
+      });
+    } catch (error) {
+      logger.error('Failed to trigger upload scan', { projectId, error });
+      throw error;
+    }
+  },
+
+  async scanSnippet(projectId: string, code: string, filename: string = 'snippet.ts'): Promise<{ scanId: string; status: string }> {
+    const baseUrl = env.apiBaseUrl;
+    try {
+      return await apiClient.post<{ scanId: string; status: string }>(`${baseUrl}/scans/snippet`, {
+        projectId,
+        code,
+        filename,
+      });
+    } catch (error) {
+      logger.error('Failed to trigger snippet scan', { projectId, error });
+      throw error;
+    }
+  },
 };
