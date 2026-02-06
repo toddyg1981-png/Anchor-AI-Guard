@@ -301,7 +301,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                 playsInline
                 className="w-full"
               >
-                <source src="/assets/anchor-demo-1.mp4" type="video/mp4" />
+                <source src="/assets/anchor-demo-2.mp4" type="video/mp4" />
               </video>
             </div>
           </div>
