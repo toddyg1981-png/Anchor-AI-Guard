@@ -53,8 +53,15 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttempts = useRef(0);
+  const maxReconnectAttempts = 5;
 
   const connect = useCallback(() => {
+    // Stop if we've exceeded max reconnect attempts
+    if (reconnectAttempts.current >= maxReconnectAttempts) {
+      console.warn(`WebSocket: max reconnect attempts (${maxReconnectAttempts}) reached, stopping`);
+      return;
+    }
+
     // Build WebSocket URL from API base URL
     const wsUrl = env.apiBaseUrl
       .replace(/^http/, 'ws')
@@ -74,17 +81,19 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
         setIsConnected(false);
         options.onDisconnected?.();
 
-        // Attempt to reconnect with exponential backoff
-        const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
-        reconnectAttempts.current++;
+        // Attempt to reconnect with exponential backoff, up to max attempts
+        if (reconnectAttempts.current < maxReconnectAttempts) {
+          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
+          reconnectAttempts.current++;
 
-        reconnectTimeoutRef.current = setTimeout(() => {
-          connect();
-        }, delay);
+          reconnectTimeoutRef.current = setTimeout(() => {
+            connect();
+          }, delay);
+        }
       };
 
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+      ws.onerror = () => {
+        // Suppress noisy WebSocket error logging in production
       };
 
       ws.onmessage = (event) => {

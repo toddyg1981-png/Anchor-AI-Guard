@@ -5,7 +5,7 @@ import { ScannerFinding } from './types';
 const SECRET_PATTERNS: Array<{ name: string; regex: RegExp; severity: 'HIGH' | 'MEDIUM' }> = [
   { name: 'AWS Access Key', regex: /AKIA[0-9A-Z]{16}/g, severity: 'HIGH' },
   { name: 'GitHub Token', regex: /ghp_[A-Za-z0-9]{36,}/g, severity: 'HIGH' },
-  { name: 'Generic API Key', regex: /(api_key|apikey|secret|token)\s*[:=]\s*['\"][A-Za-z0-9-_]{16,}['\"]/gi, severity: 'MEDIUM' },
+  { name: 'Generic API Key', regex: /(api_key|apikey|secret|token)\s*[:=]\s*['"][A-Za-z0-9-_]{16,}['"]/gi, severity: 'MEDIUM' },
 ];
 
 export function scanSecrets(root: string, files: string[]): ScannerFinding[] {

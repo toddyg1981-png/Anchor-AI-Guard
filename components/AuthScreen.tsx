@@ -87,7 +87,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           <p className="text-sm text-slate-400">Last updated: February 1, 2026</p>
           
           <h3 className="text-lg font-semibold text-white">1. Acceptance of Terms</h3>
-          <p>By accessing or using Anchor Security ("Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
+          <p>By accessing or using Anchor Security (&quot;Service&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
           
           <h3 className="text-lg font-semibold text-white">2. Description of Service</h3>
           <p>Anchor Security provides automated security scanning, vulnerability detection, and AI-powered security analysis for software projects. The Service includes web-based dashboards, CLI tools, and API access.</p>
@@ -109,7 +109,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           <p>Paid subscriptions are billed in advance on a monthly or yearly basis. Refunds are available within 30 days of initial purchase. Subscription cancellations take effect at the end of the billing period.</p>
           
           <h3 className="text-lg font-semibold text-white">6. Data and Security</h3>
-          <p>We scan your code to identify security vulnerabilities. We do not store your source code beyond the duration of the scan. Scan results and metadata are retained according to your plan's data retention policy.</p>
+          <p>We scan your code to identify security vulnerabilities. We do not store your source code beyond the duration of the scan. Scan results and metadata are retained according to your plan&apos;s data retention policy.</p>
           
           <h3 className="text-lg font-semibold text-white">7. Intellectual Property</h3>
           <p>The Service and its original content, features, and functionality are owned by Anchor Security and are protected by international copyright, trademark, and other intellectual property laws.</p>
@@ -118,7 +118,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           <p>Anchor Security shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the Service. Our total liability shall not exceed the amount paid by you in the past 12 months.</p>
           
           <h3 className="text-lg font-semibold text-white">9. Disclaimer</h3>
-          <p>The Service is provided "as is" without warranties of any kind. We do not guarantee that the Service will identify all security vulnerabilities in your code.</p>
+          <p>The Service is provided &quot;as is&quot; without warranties of any kind. We do not guarantee that the Service will identify all security vulnerabilities in your code.</p>
           
           <h3 className="text-lg font-semibold text-white">10. Changes to Terms</h3>
           <p>We reserve the right to modify these terms at any time. We will notify users of significant changes via email or in-app notification.</p>
@@ -172,7 +172,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
             <li>Share your code with third parties</li>
             <li>Use your code to train AI models</li>
           </ul>
-          <p>Scan results and vulnerability metadata are stored according to your plan's retention policy.</p>
+          <p>Scan results and vulnerability metadata are stored according to your plan&apos;s retention policy.</p>
           
           <h3 className="text-lg font-semibold text-white">4. Data Sharing</h3>
           <p>We do not sell your personal information. We may share data with:</p>

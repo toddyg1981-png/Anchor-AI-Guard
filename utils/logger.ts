@@ -154,7 +154,7 @@ class Logger {
     const start = performance.now();
     return () => {
       const duration = performance.now() - start;
-      this.debug(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
+      this.info(`⏱️ ${label}: ${duration.toFixed(2)}ms`);
     };
   }
 }

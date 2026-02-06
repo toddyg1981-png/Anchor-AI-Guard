@@ -196,7 +196,7 @@ export const QuantumCryptography: React.FC = () => {
               </div>
               <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
                 <div className="font-bold text-cyan-400">AES-256</div>
-                <div className="text-sm text-gray-400">Already quantum-resistant (Grover's halves key strength)</div>
+                <div className="text-sm text-gray-400">Already quantum-resistant (Grover&apos;s halves key strength)</div>
                 <div className="text-xs text-gray-500 mt-1">Continue using for symmetric encryption</div>
               </div>
             </div>
@@ -363,7 +363,7 @@ export const QuantumCryptography: React.FC = () => {
             ))}
           </div>
           <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500 rounded-lg">
-            <div className="font-bold text-yellow-400">⚠️ "Harvest Now, Decrypt Later" Attacks</div>
+            <div className="font-bold text-yellow-400">⚠️ &quot;Harvest Now, Decrypt Later&quot; Attacks</div>
             <div className="text-sm text-gray-400 mt-1">
               Nation-state actors are already collecting encrypted data to decrypt once quantum computers are available.
               Migrate sensitive, long-lived data to post-quantum cryptography NOW.

@@ -29,23 +29,28 @@ export const useSecureFinding = (finding: Finding | null) => {
 };
 
 /**
+ * Pure function to sanitize Project data for safe display
+ */
+export const sanitizeProject = (project: Project | null) => {
+  if (!project) return null;
+
+  return {
+    ...project,
+    name: sanitizeHtml(project.name),
+    owner: sanitizeHtml(project.owner),
+    scope: {
+      domains: project.scope.domains.map(d => sanitizeHtml(d)),
+      apis: project.scope.apis.map(a => sanitizeHtml(a)),
+      mobileBuilds: project.scope.mobileBuilds.map(m => sanitizeHtml(m)),
+    },
+  };
+};
+
+/**
  * Hook to safely display Project data with sanitization
  */
 export const useSecureProject = (project: Project | null) => {
-  return useMemo(() => {
-    if (!project) return null;
-    
-    return {
-      ...project,
-      name: sanitizeHtml(project.name),
-      owner: sanitizeHtml(project.owner),
-      scope: {
-        domains: project.scope.domains.map(d => sanitizeHtml(d)),
-        apis: project.scope.apis.map(a => sanitizeHtml(a)),
-        mobileBuilds: project.scope.mobileBuilds.map(m => sanitizeHtml(m)),
-      },
-    };
-  }, [project]);
+  return useMemo(() => sanitizeProject(project), [project]);
 };
 
 /**

@@ -123,7 +123,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   Welcome, {userName}! 👋
                 </h1>
                 <p className="text-gray-400">
-                  Let's set up your security dashboard. First, tell us about your team.
+                  Let&apos;s set up your security dashboard. First, tell us about your team.
                 </p>
               </div>
 
@@ -159,7 +159,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   Create your first project
                 </h1>
                 <p className="text-gray-400">
-                  We'll scan this project to find security vulnerabilities
+                  We&apos;ll scan this project to find security vulnerabilities
                 </p>
               </div>
 

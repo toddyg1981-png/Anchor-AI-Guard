@@ -162,7 +162,7 @@ export const SelfProtection: React.FC = () => {
       <div className={`flex items-center justify-between mb-8 ${panicMode ? 'mt-16' : ''}`}>
         <div>
           <h1 className="text-3xl font-bold mb-2">🏰 Anchor Self-Protection</h1>
-          <p className="text-gray-400">"We eat our own dog food" - Protecting ourselves first</p>
+          <p className="text-gray-400">&quot;We eat our own dog food&quot; - Protecting ourselves first</p>
         </div>
         <div className="flex items-center gap-4">
           <button

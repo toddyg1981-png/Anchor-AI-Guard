@@ -7,7 +7,7 @@ describe('App', () => {
     render(<App />);
     
     // Check for landing page elements
-    expect(screen.getByText(/Anchor/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Anchor/i).length).toBeGreaterThan(0);
   });
 
   it('renders without crashing', () => {

@@ -640,7 +640,7 @@ export const ExecutiveDashboard: React.FC = () => {
               <p className="text-gray-300">
                 Our current annualized risk exposure stands at <strong className="text-red-400">{formatCurrency(riskMetrics.totalExposure)}</strong>, 
                 representing a <strong className="text-green-400">{riskMetrics.riskReduction}% reduction</strong> from the previous quarter. 
-                The organization's security posture is rated as <strong className="text-yellow-400">{riskMetrics.securityPosture}</strong>, 
+                The organization&apos;s security posture is rated as <strong className="text-yellow-400">{riskMetrics.securityPosture}</strong>, 
                 with a compliance score of <strong>{riskMetrics.complianceScore}/100</strong>.
               </p>
 

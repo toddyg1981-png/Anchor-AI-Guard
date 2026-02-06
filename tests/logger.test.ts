@@ -4,6 +4,7 @@ import { logger, LogLevel } from '../utils/logger';
 describe('Logger', () => {
   beforeEach(() => {
     logger.clearLogs();
+    logger.setLogLevel(LogLevel.INFO);
   });
 
   it('logs debug messages', () => {

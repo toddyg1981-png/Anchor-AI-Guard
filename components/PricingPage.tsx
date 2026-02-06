@@ -568,13 +568,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         <div className="mb-16 max-w-5xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-cyan-400 mb-2">🌟 World-First Features Included</h2>
-            <p className="text-purple-300">Technology that doesn't exist anywhere else</p>
+            <p className="text-purple-300">Technology that doesn&apos;t exist anywhere else</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-black/30 border border-cyan-500/30 rounded-xl p-4 text-center">
               <div className="text-2xl mb-2">🔮</div>
               <h3 className="font-bold text-cyan-400 mb-1">Predictive CVE Intelligence</h3>
-              <p className="text-sm text-purple-300">Know about vulnerabilities before they're public</p>
+              <p className="text-sm text-purple-300">Know about vulnerabilities before they&apos;re public</p>
             </div>
             <div className="bg-black/30 border border-pink-500/30 rounded-xl p-4 text-center">
               <div className="text-2xl mb-2">🔧</div>
@@ -597,7 +597,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="bg-black/40 border border-cyan-500/30 rounded-xl p-6 backdrop-blur-sm">
               <h3 className="text-lg font-semibold text-cyan-400 mb-2">
-                What's included in the free plan?
+                What&apos;s included in the free plan?
               </h3>
               <p className="text-purple-300">
                 Get 1 project, 10 scans/month, and 25 AI queries to test our platform. Perfect for side projects and evaluation.

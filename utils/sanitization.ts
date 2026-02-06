@@ -70,13 +70,13 @@ export const stripDangerousHtml = (html: string | null | undefined): string => {
   
   // Remove script tags and their content
   dangerousTags.forEach(tag => {
-    const regex = new RegExp(`<${tag}[^>]*>.*?<\/${tag}>`, 'gi');
+    const regex = new RegExp(`<${tag}[^>]*>.*?</${tag}>`, 'gi');
     cleaned = cleaned.replace(regex, '');
   });
   
   // Remove dangerous event attributes
   dangerousAttrs.forEach(attr => {
-    const regex = new RegExp(`\\s${attr}=["\']?[^"\'\\s>]*["\']?`, 'gi');
+    const regex = new RegExp(`\\s${attr}=["']?[^"'\\s>]*["']?`, 'gi');
     cleaned = cleaned.replace(regex, '');
   });
   

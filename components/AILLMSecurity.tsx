@@ -210,7 +210,7 @@ export const AILLMSecurity: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-sm text-gray-400">{threat.model}</div>
-                  <div className="text-xs text-gray-500 mt-1 font-mono truncate">"{threat.inputSnippet}"</div>
+                  <div className="text-xs text-gray-500 mt-1 font-mono truncate">&quot;{threat.inputSnippet}&quot;</div>
                 </div>
               ))}
             </div>
@@ -348,7 +348,7 @@ export const AILLMSecurity: React.FC = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    <span className="text-sm font-mono text-gray-400 truncate block max-w-xs">"{threat.inputSnippet}"</span>
+                    <span className="text-sm font-mono text-gray-400 truncate block max-w-xs">&quot;{threat.inputSnippet}&quot;</span>
                   </td>
                   <td className="p-4">
                     <span className={`px-2 py-1 rounded text-xs ${

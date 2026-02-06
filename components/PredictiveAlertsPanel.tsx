@@ -425,9 +425,10 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
       switch (sortBy) {
         case 'confidence':
           return b.confidence - a.confidence;
-        case 'severity':
+        case 'severity': {
           const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
           return severityOrder[b.predictedSeverity] - severityOrder[a.predictedSeverity];
+        }
         case 'timeline':
           return a.timeline.estimatedDisclosure - b.timeline.estimatedDisclosure;
         default:

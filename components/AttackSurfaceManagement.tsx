@@ -101,7 +101,7 @@ export const AttackSurfaceManagement: React.FC = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">🎯 Attack Surface Management</h1>
-          <p className="text-gray-400">See your organization from the attacker's perspective</p>
+          <p className="text-gray-400">See your organization from the attacker&apos;s perspective</p>
         </div>
         <button
           onClick={runScan}

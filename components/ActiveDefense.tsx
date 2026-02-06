@@ -253,7 +253,7 @@ export const ActiveDefense: React.FC = () => {
             <h3 className="text-blue-400 font-bold">Legal Active Defense</h3>
             <p className="text-gray-400 text-sm">
               This system operates within Australian law. We use deception (honeypots), evidence collection, and 
-              automated reporting - NOT "hacking back" which is illegal under the Criminal Code Act 1995.
+              automated reporting - NOT &quot;hacking back&quot; which is illegal under the Criminal Code Act 1995.
             </p>
           </div>
         </div>

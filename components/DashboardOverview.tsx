@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ActiveScan, Finding, Project } from '../types';
-import { useSecureProject } from '../hooks/useSecurityHooks';
+import { sanitizeProject } from '../hooks/useSecurityHooks';
 import AIAnalysisComponent from './AIAnalysisComponent';
 
 interface DashboardOverviewProps {
@@ -22,7 +22,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   error,
   onRefetch,
 }) => {
-  const secureProjects = projects.map(p => useSecureProject(p)).filter(Boolean) as any[];
+  const secureProjects = useMemo(() => projects.map(p => sanitizeProject(p)).filter(Boolean), [projects]) as any[];
 
   const isEmpty = !loading && !error && secureProjects.length === 0;
 

@@ -48,11 +48,11 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ onBa
             </div>
             <h2 className="text-2xl font-bold text-white mb-4">Check Your Email</h2>
             <p className="text-slate-400 mb-6">
-              We've sent a password reset link to <span className="text-cyan-400">{email}</span>. 
+              We&apos;ve sent a password reset link to <span className="text-cyan-400">{email}</span>. 
               The link will expire in 1 hour.
             </p>
             <p className="text-sm text-slate-500 mb-6">
-              Didn't receive the email? Check your spam folder or{' '}
+              Didn&apos;t receive the email? Check your spam folder or{' '}
               <button
                 onClick={() => setSent(false)}
                 className="text-cyan-400 hover:underline"
@@ -95,7 +95,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ onBa
             </div>
             <h1 className="text-2xl font-bold text-white">Forgot Password?</h1>
             <p className="text-slate-400 mt-2">
-              No worries, we'll send you reset instructions.
+              No worries, we&apos;ll send you reset instructions.
             </p>
           </div>
 

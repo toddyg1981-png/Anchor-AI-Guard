@@ -35,7 +35,7 @@ const LoginSuccessOverlay: React.FC<LoginSuccessOverlayProps> = ({ onContinue, i
             Logged in successfully
           </h2>
           <p className="text-lg text-slate-300/90 leading-relaxed max-w-lg mx-auto">
-            You're now connected to Anchor's world-first AI security platform. Your dashboard is ready with live insights and predictive CVE intelligence.
+            You&apos;re now connected to Anchor&apos;s world-first AI security platform. Your dashboard is ready with live insights and predictive CVE intelligence.
           </p>
         </div>
         

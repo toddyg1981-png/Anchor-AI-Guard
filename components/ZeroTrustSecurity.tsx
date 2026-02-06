@@ -120,7 +120,7 @@ export const ZeroTrustSecurity: React.FC = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">🔐 Zero Trust Security</h1>
-          <p className="text-gray-400">"Never trust, always verify" - Continuous authentication & authorization</p>
+          <p className="text-gray-400">&quot;Never trust, always verify&quot; - Continuous authentication & authorization</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-center px-6 py-3 bg-green-500/10 border border-green-500 rounded-xl">

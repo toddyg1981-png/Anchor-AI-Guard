@@ -780,7 +780,7 @@ export const ComplianceHub: React.FC = () => {
                 <h2 className="text-xl font-bold mb-4">Executive Summary</h2>
                 <div className="bg-gray-800/50 rounded-xl p-4">
                   <p className="text-gray-300 mb-4">
-                    This assessment evaluates the organisation's implementation of the Australian Cyber Security Centre's 
+                    This assessment evaluates the organisation&apos;s implementation of the Australian Cyber Security Centre&apos;s 
                     Essential Eight mitigation strategies. The current overall maturity level is <strong>ML{overallMaturity}</strong>.
                   </p>
                   <div className="grid grid-cols-2 gap-4">

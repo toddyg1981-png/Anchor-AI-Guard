@@ -1,62 +1,83 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, Suspense } from 'react';
 import MarketingLanding from './components/MarketingLanding';
-import AuthScreen from './components/AuthScreen';
-import ForgotPasswordScreen from './components/ForgotPasswordScreen';
-import ResetPasswordScreen from './components/ResetPasswordScreen';
-import AuthCallback from './components/AuthCallback';
-import OnboardingWizard from './components/OnboardingWizard';
-import { PricingPage } from './components/PricingPage';
 import DashboardLayout from './components/DashboardLayout';
 import DashboardOverview from './components/DashboardOverview';
-import ProjectDetailScreen from './components/ProjectDetailScreen';
-import FindingsReportScreen from './components/FindingsReportScreen';
-import TeamManagement from './components/TeamManagement';
-import IntegrationsSettings from './components/IntegrationsSettings';
-import SBOMViewer from './components/SBOMViewer';
-import { BillingDashboard } from './components/BillingDashboard';
-import AdminDashboard from './components/AdminDashboard';
-import ThreatHunting from './components/ThreatHunting';
-import { VulnerabilityManagement } from './components/VulnerabilityManagement';
-import PhishingSimulator from './components/PhishingSimulator';
-import DataLossPrevention from './components/DataLossPrevention';
-import AttackSurfaceManagement from './components/AttackSurfaceManagement';
-import AISecurityGuard from './components/AISecurityGuard';
-import EDRPlatform from './components/EDRPlatform';
-import UEBAPlatform from './components/UEBAPlatform';
-import SOARPlatform from './components/SOARPlatform';
-import NetworkTrafficAnalysis from './components/NetworkTrafficAnalysis';
-import EmailSecurity from './components/EmailSecurity';
-import BrowserIsolation from './components/BrowserIsolation';
-import SecurityAutomation from './components/SecurityAutomation';
-import IdentityGovernance from './components/IdentityGovernance';
-import PasswordVault from './components/PasswordVault';
-import CryptographyManager from './components/CryptographyManager';
-import ContainerSecurity from './components/ContainerSecurity';
-import NetworkSegmentation from './components/NetworkSegmentation';
-import DeceptionTechnology from './components/DeceptionTechnology';
-import ThreatModeling from './components/ThreatModeling';
-import PenetrationTesting from './components/PenetrationTesting';
-import PurpleTeam from './components/PurpleTeam';
-import SecurityMetrics from './components/SecurityMetrics';
-import RegulatoryIntelligence from './components/RegulatoryIntelligence';
-import VendorRiskManagement from './components/VendorRiskManagement';
-import AssetInventory from './components/AssetInventory';
-import OTICSSecurity from './components/OTICSSecurity';
-import ForensicsLab from './components/ForensicsLab';
-import MalwareAnalysis from './components/MalwareAnalysis';
-import SecurityTraining from './components/SecurityTraining';
-import AutonomousSOC from './components/AutonomousSOC';
-import DigitalTwinSecurity from './components/DigitalTwinSecurity';
-import CyberInsuranceIntegration from './components/CyberInsuranceIntegration';
-import NationalSecurityModule from './components/NationalSecurityModule';
-import CriticalInfrastructureProtection from './components/CriticalInfrastructureProtection';
-import SupplyChainAttestation from './components/SupplyChainAttestation';
 import { Project, Finding } from './types';
 import { useBackendData } from './hooks/useBackendData';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useWebSocket } from './hooks/useWebSocket';
 import LoginSuccessOverlay from './components/LoginSuccessOverlay';
-import { PrivacyPolicy, TermsOfService, SecurityPage, AboutPage, ContactPage } from './components/LegalPages';
+
+// Lazy-loaded views (only loaded when navigated to)
+const AuthScreen = React.lazy(() => import('./components/AuthScreen'));
+const ForgotPasswordScreen = React.lazy(() => import('./components/ForgotPasswordScreen'));
+const ResetPasswordScreen = React.lazy(() => import('./components/ResetPasswordScreen'));
+const AuthCallback = React.lazy(() => import('./components/AuthCallback'));
+const OnboardingWizard = React.lazy(() => import('./components/OnboardingWizard'));
+const PricingPage = React.lazy(() => import('./components/PricingPage').then(m => ({ default: m.PricingPage })));
+const PrivacyPolicy = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.PrivacyPolicy })));
+const TermsOfService = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.TermsOfService })));
+const SecurityPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.SecurityPage })));
+const AboutPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.AboutPage })));
+const ContactPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.ContactPage })));
+
+// Lazy-loaded dashboard sub-views
+const ProjectDetailScreen = React.lazy(() => import('./components/ProjectDetailScreen'));
+const FindingsReportScreen = React.lazy(() => import('./components/FindingsReportScreen'));
+const TeamManagement = React.lazy(() => import('./components/TeamManagement'));
+const IntegrationsSettings = React.lazy(() => import('./components/IntegrationsSettings'));
+const SBOMViewer = React.lazy(() => import('./components/SBOMViewer'));
+const BillingDashboard = React.lazy(() => import('./components/BillingDashboard').then(m => ({ default: m.BillingDashboard })));
+const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
+const ThreatHunting = React.lazy(() => import('./components/ThreatHunting'));
+const VulnerabilityManagement = React.lazy(() => import('./components/VulnerabilityManagement').then(m => ({ default: m.VulnerabilityManagement })));
+const PhishingSimulator = React.lazy(() => import('./components/PhishingSimulator'));
+const DataLossPrevention = React.lazy(() => import('./components/DataLossPrevention'));
+const AttackSurfaceManagement = React.lazy(() => import('./components/AttackSurfaceManagement'));
+const AISecurityGuard = React.lazy(() => import('./components/AISecurityGuard'));
+const EDRPlatform = React.lazy(() => import('./components/EDRPlatform'));
+const UEBAPlatform = React.lazy(() => import('./components/UEBAPlatform'));
+const SOARPlatform = React.lazy(() => import('./components/SOARPlatform'));
+const NetworkTrafficAnalysis = React.lazy(() => import('./components/NetworkTrafficAnalysis'));
+const EmailSecurity = React.lazy(() => import('./components/EmailSecurity'));
+const BrowserIsolation = React.lazy(() => import('./components/BrowserIsolation'));
+const SecurityAutomation = React.lazy(() => import('./components/SecurityAutomation'));
+const IdentityGovernance = React.lazy(() => import('./components/IdentityGovernance'));
+const PasswordVault = React.lazy(() => import('./components/PasswordVault'));
+const CryptographyManager = React.lazy(() => import('./components/CryptographyManager'));
+const ContainerSecurity = React.lazy(() => import('./components/ContainerSecurity'));
+const NetworkSegmentation = React.lazy(() => import('./components/NetworkSegmentation'));
+const DeceptionTechnology = React.lazy(() => import('./components/DeceptionTechnology'));
+const ThreatModeling = React.lazy(() => import('./components/ThreatModeling'));
+const PenetrationTesting = React.lazy(() => import('./components/PenetrationTesting'));
+const PurpleTeam = React.lazy(() => import('./components/PurpleTeam'));
+const SecurityMetrics = React.lazy(() => import('./components/SecurityMetrics'));
+const RegulatoryIntelligence = React.lazy(() => import('./components/RegulatoryIntelligence'));
+const VendorRiskManagement = React.lazy(() => import('./components/VendorRiskManagement'));
+const AssetInventory = React.lazy(() => import('./components/AssetInventory'));
+const OTICSSecurity = React.lazy(() => import('./components/OTICSSecurity'));
+const ForensicsLab = React.lazy(() => import('./components/ForensicsLab'));
+const MalwareAnalysis = React.lazy(() => import('./components/MalwareAnalysis'));
+const SecurityTraining = React.lazy(() => import('./components/SecurityTraining'));
+const AutonomousSOC = React.lazy(() => import('./components/AutonomousSOC'));
+const DigitalTwinSecurity = React.lazy(() => import('./components/DigitalTwinSecurity'));
+const CyberInsuranceIntegration = React.lazy(() => import('./components/CyberInsuranceIntegration'));
+const NationalSecurityModule = React.lazy(() => import('./components/NationalSecurityModule'));
+const CriticalInfrastructureProtection = React.lazy(() => import('./components/CriticalInfrastructureProtection'));
+const SupplyChainAttestation = React.lazy(() => import('./components/SupplyChainAttestation'));
+
+// Loading spinner for lazy-loaded components
+const LazyFallback = () => (
+  <div className="min-h-[400px] flex items-center justify-center">
+    <div className="text-center">
+      <svg className="animate-spin h-10 w-10 mx-auto text-cyan-400 mb-3" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+      </svg>
+      <p className="text-slate-400 text-sm">Loading module...</p>
+    </div>
+  </div>
+);
 
 // Main navigation views
 export type AppView = 
@@ -277,6 +298,7 @@ const AppContent: React.FC = () => {
 
   // Render dashboard content based on sub-view
   const renderDashboardContent = () => {
+    const content = (() => {
     switch (dashboardView) {
       case 'projectDetail':
         return selectedProject ? (
@@ -438,6 +460,9 @@ const AppContent: React.FC = () => {
           />
         );
     }
+    })();
+
+    return <Suspense fallback={<LazyFallback />}>{content}</Suspense>;
   };
 
   // Main render based on current view
@@ -599,7 +624,9 @@ const AppContent: React.FC = () => {
             Loading live security data...
           </div>
         )}
-        {renderContent()}
+        <Suspense fallback={<LazyFallback />}>
+          {renderContent()}
+        </Suspense>
       </div>
     </div>
   );

@@ -31,15 +31,15 @@ export const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }
     }
 
     if (token) {
-      localStorage.setItem('token', token);
+      // Store token under the correct key that useAuth and apiClient expect
+      localStorage.setItem('anchor_auth_token', token);
       setStatus('success');
       setMessage(isNewUser ? 'Account created! Redirecting...' : 'Signed in! Redirecting...');
-      
-      // Clean URL and redirect
-      window.history.replaceState({}, '', '/');
-      
+
+      // Reload the page so AuthProvider picks up the token from localStorage
+      // and verifies it against /auth/me to get user data
       setTimeout(() => {
-        onSuccess();
+        window.location.href = '/';
       }, 1500);
     } else {
       setStatus('error');

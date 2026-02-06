@@ -10,7 +10,7 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 // BACKEND_URL is used for OAuth callbacks (where GitHub/Google redirects back)
 const BACKEND_URL = process.env.OAUTH_REDIRECT_BASE || process.env.BACKEND_URL || 'http://localhost:3001';
 // FRONTEND_URL is used for redirecting users after auth
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5174';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 interface GitHubUser {
   id: number;
@@ -281,7 +281,7 @@ async function findOrCreateOAuthUser({
   app: FastifyInstance;
 }): Promise<{ user: { id: string; email: string; orgId: string; role: string }; token: string; isNewUser: boolean }> {
   // Check if OAuth account already exists
-  let oauthAccount = await prisma.oAuthAccount.findUnique({
+  const oauthAccount = await prisma.oAuthAccount.findUnique({
     where: {
       provider_providerId: {
         provider,
