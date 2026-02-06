@@ -61,9 +61,8 @@ function validateEnvironment(): void {
 
   // In production, certain variables are required
   if (import.meta.env.VITE_APP_ENV === 'production') {
-    if (!import.meta.env.GEMINI_API_KEY) {
-      errors.push('GEMINI_API_KEY is required in production');
-    }
+    // Note: GEMINI_API_KEY is handled by the backend for security reasons
+    // Frontend should not have direct access to API keys
     if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
       errors.push('VITE_USE_MOCK_DATA must be false in production');
     }
@@ -86,8 +85,8 @@ export function loadEnvironmentConfig(): EnvironmentConfig {
   }
 
   const config: EnvironmentConfig = {
-    // API Keys
-    geminiApiKey: import.meta.env.GEMINI_API_KEY || '',
+    // API Keys (optional in frontend - backend handles actual API calls)
+    geminiApiKey: import.meta.env.VITE_GEMINI_API_KEY || '',
 
     // Application Settings
     appEnv: (import.meta.env.VITE_APP_ENV || 'development') as EnvironmentConfig['appEnv'],
