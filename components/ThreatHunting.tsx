@@ -59,6 +59,19 @@ interface BehavioralAnomaly {
 export const ThreatHunting: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'hunts' | 'ioc' | 'queries' | 'anomalies'>('hunts');
   const [searchIOC, setSearchIOC] = useState('');
+  const [anomalies, setAnomalies] = useState<BehavioralAnomaly[]>([
+    { id: 'a-1', timestamp: '2026-02-04T11:30:00Z', entity: 'john.smith', entityType: 'user', behavior: 'Accessed 150 files in 5 minutes', baseline: 'Average 10 files/hour', deviation: 85, riskScore: 92, investigated: false },
+    { id: 'a-2', timestamp: '2026-02-04T10:45:00Z', entity: 'WORKSTATION-042', entityType: 'host', behavior: 'Outbound traffic to 45 unique IPs', baseline: 'Average 8 unique IPs/day', deviation: 78, riskScore: 85, investigated: true },
+    { id: 'a-3', timestamp: '2026-02-04T09:15:00Z', entity: 'svc-backup', entityType: 'user', behavior: 'Interactive login at 2:00 AM', baseline: 'No interactive logins', deviation: 100, riskScore: 95, investigated: false },
+    { id: 'a-4', timestamp: '2026-02-04T08:00:00Z', entity: 'chrome.exe', entityType: 'process', behavior: 'Spawned cmd.exe child process', baseline: 'Browser rarely spawns shells', deviation: 72, riskScore: 78, investigated: true },
+    { id: 'a-5', timestamp: '2026-02-03T23:30:00Z', entity: '192.168.1.50', entityType: 'network', behavior: 'DNS queries to DGA-like domains', baseline: 'No DGA patterns observed', deviation: 95, riskScore: 98, investigated: false },
+  ]);
+
+  const handleInvestigate = (anomalyId: string) => {
+    setAnomalies(prev => prev.map(a => 
+      a.id === anomalyId ? { ...a, investigated: true } : a
+    ));
+  };
 
   const hunts: ThreatHunt[] = [
     { id: 'h-1', name: 'Lateral Movement Detection', hypothesis: 'Attackers may be using compromised credentials to move laterally via SMB/WMI', status: 'active', startDate: '2026-02-01', hunter: 'Sarah Chen', framework: 'mitre_attck', techniques: ['T1021', 'T1047', 'T1550'], findings: 5, criticalFindings: 1, dataSources: ['EDR', 'Network', 'AD Logs'] },
@@ -81,14 +94,6 @@ export const ThreatHunting: React.FC = () => {
     { id: 'q-3', name: 'Service Account Anomalies', description: 'Service accounts logging in interactively or from unusual locations', query: 'user.name:svc-* AND event.type:authentication AND authentication.interactive:true', dataSource: 'AD Logs', lastRun: '2026-02-04T10:00:00Z', results: 3, schedule: 'daily' },
     { id: 'q-4', name: 'LOLBins Execution', description: 'Living-off-the-land binary execution (certutil, mshta, etc.)', query: 'process.name IN (certutil.exe, mshta.exe, regsvr32.exe, rundll32.exe) AND process.args:*http*', dataSource: 'EDR', lastRun: '2026-02-04T11:00:00Z', results: 7, schedule: 'hourly' },
     { id: 'q-5', name: 'Data Archive Creation', description: 'Large archive files created that may indicate data staging', query: 'file.extension IN (zip, 7z, rar) AND file.size > 100MB', dataSource: 'EDR', lastRun: '2026-02-04T06:00:00Z', results: 2, schedule: 'daily' },
-  ];
-
-  const anomalies: BehavioralAnomaly[] = [
-    { id: 'a-1', timestamp: '2026-02-04T11:30:00Z', entity: 'john.smith', entityType: 'user', behavior: 'Accessed 150 files in 5 minutes', baseline: 'Average 10 files/hour', deviation: 85, riskScore: 92, investigated: false },
-    { id: 'a-2', timestamp: '2026-02-04T10:45:00Z', entity: 'WORKSTATION-042', entityType: 'host', behavior: 'Outbound traffic to 45 unique IPs', baseline: 'Average 8 unique IPs/day', deviation: 78, riskScore: 85, investigated: true },
-    { id: 'a-3', timestamp: '2026-02-04T09:15:00Z', entity: 'svc-backup', entityType: 'user', behavior: 'Interactive login at 2:00 AM', baseline: 'No interactive logins', deviation: 100, riskScore: 95, investigated: false },
-    { id: 'a-4', timestamp: '2026-02-04T08:00:00Z', entity: 'chrome.exe', entityType: 'process', behavior: 'Spawned cmd.exe child process', baseline: 'Browser rarely spawns shells', deviation: 72, riskScore: 78, investigated: true },
-    { id: 'a-5', timestamp: '2026-02-03T23:30:00Z', entity: '192.168.1.50', entityType: 'network', behavior: 'DNS queries to DGA-like domains', baseline: 'No DGA patterns observed', deviation: 95, riskScore: 98, investigated: false },
   ];
 
   const getStatusColor = (status: string) => {
@@ -378,7 +383,10 @@ export const ThreatHunting: React.FC = () => {
                 </div>
               </div>
               {!anomaly.investigated && (
-                <button className="mt-4 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
+                <button 
+                  onClick={() => handleInvestigate(anomaly.id)}
+                  className="mt-4 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400"
+                >
                   Investigate
                 </button>
               )}

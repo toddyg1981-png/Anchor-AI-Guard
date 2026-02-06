@@ -25,9 +25,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
     const oauthError = params.get('error');
     
     if (token) {
-      localStorage.setItem('token', token);
+      // Use the same key as useAuth hook
+      localStorage.setItem('anchor_auth_token', token);
       window.history.replaceState({}, '', window.location.pathname);
-      onSuccess();
+      // Force a page reload to ensure auth state is picked up correctly
+      window.location.href = '/';
+      return;
     }
     
     if (oauthError) {
