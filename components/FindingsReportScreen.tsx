@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { Finding, Severity } from '../types';
 import { useSecureFinding } from '../hooks/useSecurityHooks';
@@ -17,6 +17,7 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
   onSelectFinding,
 }) => {
   const secureSelectedFinding = useSecureFinding(selectedFinding);
+  const [resolvedIds, setResolvedIds] = useState<Set<string>>(new Set());
 
   const severityOrder: Record<Severity, number> = {
     [Severity.Critical]: 0,
@@ -449,8 +450,21 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
 
             {/* Actions */}
             <div className="flex gap-3 pt-4 border-t border-gray-700">
-              <button className="flex-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 py-2 rounded transition-colors">
-                Mark as Resolved
+              <button
+                onClick={() => {
+                  if (secureSelectedFinding) {
+                    setResolvedIds(prev => new Set(prev).add(secureSelectedFinding.id));
+                    onSelectFinding({ ...secureSelectedFinding, severity: Severity.Resolved });
+                  }
+                }}
+                disabled={secureSelectedFinding?.severity === Severity.Resolved || resolvedIds.has(secureSelectedFinding?.id ?? '')}
+                className={`flex-1 py-2 rounded transition-colors ${
+                  resolvedIds.has(secureSelectedFinding?.id ?? '') || secureSelectedFinding?.severity === Severity.Resolved
+                    ? 'bg-green-500/10 text-green-600 cursor-default'
+                    : 'bg-green-500/20 hover:bg-green-500/30 text-green-400'
+                }`}
+              >
+                {resolvedIds.has(secureSelectedFinding?.id ?? '') || secureSelectedFinding?.severity === Severity.Resolved ? '✓ Resolved' : 'Mark as Resolved'}
               </button>
               <button onClick={exportFindingPdf} className="flex-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 py-2 rounded transition-colors">
                 Download PDF

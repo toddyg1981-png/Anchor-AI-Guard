@@ -45,6 +45,7 @@ export const MobileSecurity: React.FC = () => {
   const [scanProgress, setScanProgress] = useState(0);
   const [uploadedApp, setUploadedApp] = useState<string | null>(null);
   const appFileInputRef = React.useRef<HTMLInputElement>(null);
+  const [expandedAppId, setExpandedAppId] = useState<string | null>(null);
 
   // Mock mobile apps
   const apps: MobileApp[] = [
@@ -303,10 +304,56 @@ export const MobileSecurity: React.FC = () => {
               </div>
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>Last scanned: {app.lastScan}</span>
-                <button className="px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500 rounded text-blue-400">
-                  View Report
+                <button
+                  onClick={() => setExpandedAppId(expandedAppId === app.id ? null : app.id)}
+                  className="px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500 rounded text-blue-400"
+                >
+                  {expandedAppId === app.id ? 'Hide Report' : 'View Report'}
                 </button>
               </div>
+
+              {expandedAppId === app.id && (
+                <div className="mt-4 p-4 bg-black/30 rounded-lg border border-gray-700 space-y-3">
+                  <h4 className="text-sm font-semibold text-cyan-400">Security Report: {app.name} ({app.platform})</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    <div className="p-2 bg-gray-800/50 rounded">
+                      <div className="text-gray-500">Bundle ID</div>
+                      <div className="font-mono text-xs">{app.bundleId}</div>
+                    </div>
+                    <div className="p-2 bg-gray-800/50 rounded">
+                      <div className="text-gray-500">Version</div>
+                      <div>{app.version}</div>
+                    </div>
+                    <div className="p-2 bg-gray-800/50 rounded">
+                      <div className="text-gray-500">Total Findings</div>
+                      <div className="text-orange-400 font-bold">{app.findings}</div>
+                    </div>
+                    <div className="p-2 bg-gray-800/50 rounded">
+                      <div className="text-gray-500">Critical</div>
+                      <div className="text-red-400 font-bold">{app.criticalFindings}</div>
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-gray-500 mb-2">Related Findings:</h5>
+                    {findings.filter(f => f.appId === app.id).length > 0 ? (
+                      <ul className="space-y-1">
+                        {findings.filter(f => f.appId === app.id).map(f => (
+                          <li key={f.id} className="flex items-center gap-2 text-sm">
+                            <span className={`w-2 h-2 rounded-full ${
+                              f.severity === 'critical' ? 'bg-red-500' :
+                              f.severity === 'high' ? 'bg-orange-500' : 'bg-yellow-500'
+                            }`} />
+                            <span>{f.title}</span>
+                            <span className="text-gray-600">({f.severity})</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 text-sm">No findings for this app.</p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

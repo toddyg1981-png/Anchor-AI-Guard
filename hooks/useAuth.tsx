@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
+import { useState, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
 import { env } from '../config/env';
 
 interface User {
@@ -88,19 +88,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   });
 
+  // Ref to abort verifyToken if login() is called while verify is in-flight
+  const verifyAbortRef = useRef<AbortController | null>(null);
+
   // Verify token on mount
   useEffect(() => {
     if (state.token) {
       verifyToken();
     }
+    return () => {
+      // Abort any pending verify on unmount
+      verifyAbortRef.current?.abort();
+    };
   }, []);
 
   const verifyToken = async () => {
+    const controller = new AbortController();
+    verifyAbortRef.current = controller;
+
     try {
       const response = await fetch(`${env.apiBaseUrl}/auth/me`, {
         headers: {
           Authorization: `Bearer ${state.token}`,
         },
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -108,14 +119,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       const data = await response.json();
+
+      // Bail out if login() was called while we were verifying
+      if (controller.signal.aborted) return;
+
       setState((prev) => ({
         ...prev,
         user: data.user,
         organization: data.organization,
+        isAuthenticated: true,
         isLoading: false,
       }));
       setStoredAuth(state.token, data.user, data.organization);
     } catch {
+      // Bail out if aborted (e.g. login() was called)
+      if (controller.signal.aborted) return;
+
       clearStoredAuth();
       setState({
         user: null,
@@ -128,6 +147,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = useCallback(async (email: string, password: string) => {
+    // Abort any in-flight token verification to prevent it from clobbering this login
+    verifyAbortRef.current?.abort();
+
     setState((prev) => ({ ...prev, isLoading: true }));
 
     try {

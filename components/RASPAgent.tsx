@@ -44,6 +44,8 @@ export const RASPAgent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'agents' | 'attacks' | 'rules' | 'analytics'>('agents');
   const [_selectedAgent, _setSelectedAgent] = useState<RASPAgent | null>(null);
   const [realtimeAttacks, setRealtimeAttacks] = useState<RuntimeAttack[]>([]);
+  const [showDeployForm, setShowDeployForm] = useState(false);
+  const [liveMode, setLiveMode] = useState(false);
 
   // Mock RASP agents
   const agents: RASPAgent[] = [
@@ -144,11 +146,11 @@ export const RASPAgent: React.FC = () => {
           <p className="text-gray-400">Runtime Application Self-Protection - Real-time attack prevention</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => { setShowDeployForm(!showDeployForm); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             📥 Deploy Agent
           </button>
-          <button className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-medium">
-            🔴 Live Mode
+          <button onClick={() => { setLiveMode(!liveMode); alert(liveMode ? 'Live mode disabled — switching to passive monitoring.' : 'Live mode enabled — all agents now actively blocking threats.'); }} className={`px-4 py-2 rounded-lg font-medium ${liveMode ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}>
+            {liveMode ? '🔴 Live Mode ON' : '🟢 Live Mode OFF'}
           </button>
         </div>
       </div>
@@ -165,6 +167,19 @@ export const RASPAgent: React.FC = () => {
               </span>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Deploy Agent Form */}
+      {showDeployForm && (
+        <div className="mb-6 p-4 bg-gray-900/80 border border-cyan-500/30 rounded-xl">
+          <h3 className="font-semibold mb-3">📥 Deploy New RASP Agent</h3>
+          <p className="text-sm text-gray-400 mb-3">Run the following command in your application environment to deploy the Anchor RASP agent:</p>
+          <div className="p-3 bg-black/50 rounded-lg font-mono text-sm text-cyan-400 mb-3 flex items-center justify-between">
+            <code>npx @anchor/rasp-agent deploy --env production --mode block</code>
+            <button onClick={() => { navigator.clipboard.writeText('npx @anchor/rasp-agent deploy --env production --mode block'); alert('Deploy command copied to clipboard!'); }} className="ml-3 px-2 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-xs text-cyan-400">Copy</button>
+          </div>
+          <button onClick={() => setShowDeployForm(false)} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">Close</button>
         </div>
       )}
 

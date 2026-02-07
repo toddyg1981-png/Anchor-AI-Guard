@@ -56,6 +56,13 @@ interface Badge {
 
 export const SecurityAwarenessTraining: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'modules' | 'employees' | 'leaderboard' | 'badges'>('dashboard');
+  const [showCreateCampaign, setShowCreateCampaign] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   const modules: TrainingModule[] = [
     { id: 'm-1', title: 'Phishing 101: Spotting the Bait', category: 'phishing', difficulty: 'beginner', duration: 15, points: 100, mandatory: true, completionRate: 92, averageScore: 85, description: 'Learn to identify common phishing tactics and protect yourself' },
@@ -129,15 +136,53 @@ export const SecurityAwarenessTraining: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+      {/* Notification Banner */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-green-500/20 border border-green-500 rounded-xl text-green-400 shadow-lg animate-pulse">
+          {notification}
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">🎓 Security Awareness Training</h1>
           <p className="text-gray-400">Gamified security training for the human firewall</p>
         </div>
-        <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
-          + Create Campaign
+        <button
+          onClick={() => setShowCreateCampaign(!showCreateCampaign)}
+          className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
+        >
+          {showCreateCampaign ? '✕ Cancel' : '+ Create Campaign'}
         </button>
       </div>
+
+      {showCreateCampaign && (
+        <div className="mb-6 bg-gray-900/50 border border-cyan-500/30 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-cyan-400 mb-4">Create Training Campaign</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Campaign Name</label>
+              <input type="text" placeholder="e.g., Q1 Phishing Awareness" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-cyan-500 focus:outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Target Department</label>
+              <select title="Target department" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-cyan-500 focus:outline-none">
+                <option>All Departments</option><option>Engineering</option><option>Sales</option><option>Finance</option><option>HR</option><option>Legal</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Due Date</label>
+              <input type="date" title="Campaign due date" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-cyan-500 focus:outline-none" />
+            </div>
+          </div>
+          <button
+            onClick={() => { setShowCreateCampaign(false); showNotification('✅ Training campaign created and notifications sent to employees!'); }}
+            className="px-6 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium"
+          >
+            🚀 Launch Campaign
+          </button>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
@@ -363,7 +408,10 @@ export const SecurityAwarenessTraining: React.FC = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    <button className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-xs text-cyan-400">
+                    <button
+                      onClick={() => showNotification(`📧 Training reminder sent to ${emp.name} (${emp.email})`)}
+                      className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-xs text-cyan-400"
+                    >
                       Send Reminder
                     </button>
                   </td>

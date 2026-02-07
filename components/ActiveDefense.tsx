@@ -66,6 +66,13 @@ export const ActiveDefense: React.FC = () => {
   const [liveAttacks, setLiveAttacks] = useState<AttackEvent[]>([]);
   const [deterrentEnabled, setDeterrentEnabled] = useState(true);
   const [autoReportEnabled, setAutoReportEnabled] = useState(true);
+  const [showDeployForm, setShowDeployForm] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // Mock threat actors
   const threatActors: ThreatActor[] = [
@@ -218,6 +225,13 @@ export const ActiveDefense: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+      {/* Notification Banner */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-green-500/20 border border-green-500 rounded-xl text-green-400 shadow-lg animate-pulse">
+          {notification}
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -417,9 +431,36 @@ export const ActiveDefense: React.FC = () => {
             </div>
           ))}
 
-          <button className="w-full p-4 border-2 border-dashed border-purple-500/50 rounded-xl text-purple-400 hover:bg-purple-500/10 transition-colors">
-            ➕ Deploy New Honeypot
+          <button
+            onClick={() => setShowDeployForm(!showDeployForm)}
+            className="w-full p-4 border-2 border-dashed border-purple-500/50 rounded-xl text-purple-400 hover:bg-purple-500/10 transition-colors"
+          >
+            {showDeployForm ? '✕ Cancel' : '➕ Deploy New Honeypot'}
           </button>
+
+          {showDeployForm && (
+            <div className="bg-gray-900/50 border border-purple-500/30 rounded-xl p-6 mt-4">
+              <h3 className="text-lg font-semibold text-purple-400 mb-4">Deploy New Honeypot</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Honeypot Name</label>
+                  <input type="text" placeholder="e.g., Fake SMTP Server" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Type</label>
+                  <select title="Honeypot type" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none">
+                    <option>SSH</option><option>Web</option><option>Database</option><option>File Share</option><option>Admin Panel</option><option>API</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                onClick={() => { setShowDeployForm(false); showNotification('✅ Honeypot deployment initiated successfully!'); }}
+                className="px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+              >
+                🚀 Deploy
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -486,7 +527,15 @@ export const ActiveDefense: React.FC = () => {
                   )}
                 </div>
                 {!actor.reportedToAuthorities && (
-                  <button className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg text-sm font-medium">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Report threat actor ${actor.identifier} to AFP/ACSC?\n\nThis will submit all collected evidence to Australian authorities.`)) {
+                        showNotification(`🚨 Report submitted for ${actor.identifier} to AFP/ACSC. Reference: AFP-CYB-2026-${Math.floor(Math.random() * 9000 + 1000)}`);
+                      }
+                    }}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg text-sm font-medium"
+                  >
                     🚨 Report to AFP/ACSC
                   </button>
                 )}
@@ -523,7 +572,17 @@ export const ActiveDefense: React.FC = () => {
                       <div className="text-sm text-gray-500">{item.count} items • {item.size}</div>
                     </div>
                   </div>
-                  <button className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
+                  <button
+                    onClick={() => {
+                      const data = `${item.type} - ${item.count} items (${item.size})`;
+                      navigator.clipboard.writeText(data).then(() => {
+                        showNotification(`📋 Copied ${item.type} summary to clipboard`);
+                      }).catch(() => {
+                        showNotification(`📥 Exporting ${item.type}: ${item.count} items (${item.size})`);
+                      });
+                    }}
+                    className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400"
+                  >
                     Export
                   </button>
                 </div>

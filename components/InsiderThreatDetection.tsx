@@ -50,11 +50,11 @@ export const InsiderThreatDetection: React.FC = () => {
   ];
 
   // Behavior anomalies
-  const anomalies: BehaviorAnomaly[] = [
+  const [anomalies, setAnomalies] = useState<BehaviorAnomaly[]>([
     { id: 'a1', timestamp: '2026-02-04T03:00:00Z', userId: 'u3', userName: 'CI/CD Service', type: 'time', severity: 'low', description: 'Unusual deployment at 3:00 AM - outside normal hours', resolved: false },
     { id: 'a2', timestamp: '2026-02-03T22:15:00Z', userId: 'test', userName: 'Unknown User', type: 'access_pattern', severity: 'high', description: 'Failed SSH attempt to production server', resolved: true },
     { id: 'a3', timestamp: '2026-02-02T14:30:00Z', userId: 'external', userName: 'External IP', type: 'privilege_escalation', severity: 'critical', description: 'Attempted privilege escalation via API endpoint', resolved: true }
-  ];
+  ]);
 
   // Normal access pattern for visualization
   const accessPattern: AccessPattern[] = Array.from({ length: 24 }, (_, hour) => ({
@@ -219,7 +219,7 @@ export const InsiderThreatDetection: React.FC = () => {
                 <div className="text-sm mb-1">{anomaly.description}</div>
                 <div className="text-xs text-gray-500">User: {anomaly.userName}</div>
                 {!anomaly.resolved && (
-                  <button className="mt-2 px-3 py-1 bg-green-500/20 hover:bg-green-500/30 border border-green-500 rounded text-sm text-green-400">
+                  <button onClick={() => { if (window.confirm(`Mark anomaly "${anomaly.description}" as resolved?`)) { setAnomalies(prev => prev.map(a => a.id === anomaly.id ? { ...a, resolved: true } : a)); } }} className="mt-2 px-3 py-1 bg-green-500/20 hover:bg-green-500/30 border border-green-500 rounded text-sm text-green-400">
                     Mark Resolved
                   </button>
                 )}

@@ -23,6 +23,7 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
   const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [selectedFindingId, _setSelectedFindingId] = useState<string | undefined>();
   const [showCollaboration, setShowCollaboration] = useState(true);
+  const [findingNotification, setFindingNotification] = useState<string | null>(null);
 
   const tabs: { id: DashboardTab; label: string; icon: string }[] = [
     { id: 'overview', label: 'Overview', icon: '📊' },
@@ -44,6 +45,13 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
 
   return (
     <div className="min-h-screen bg-transparent text-white">
+      {/* Finding Update Notification */}
+      {findingNotification && (
+        <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-cyan-500/20 border border-cyan-500 rounded-xl text-cyan-400 shadow-lg animate-pulse">
+          {findingNotification}
+        </div>
+      )}
+
       {/* Header - Glass Neon Style */}
       <header className="border-b border-cyan-500/20 bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl sticky top-0 z-50 shadow-[0_4px_30px_rgba(53,198,255,0.1)]">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -276,7 +284,8 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
                 userName={userName}
                 currentFindingId={selectedFindingId}
                 onFindingUpdate={(findingId, field, value) => {
-                  console.log('Finding updated:', findingId, field, value);
+                  setFindingNotification(`✅ Finding ${findingId} updated: ${field} → ${value}`);
+                  setTimeout(() => setFindingNotification(null), 3000);
                 }}
               />
             </div>

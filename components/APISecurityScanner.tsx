@@ -213,7 +213,7 @@ export const APISecurityScanner: React.FC = () => {
           <p className="text-gray-400">OWASP API Top 10 testing and comprehensive API security analysis</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json,.yaml,.yml'; input.onchange = () => alert('OpenAPI/Swagger specification imported! Endpoints will be scanned automatically.'); input.click(); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             📥 Import OpenAPI
           </button>
           <button
@@ -561,21 +561,21 @@ export const APISecurityScanner: React.FC = () => {
               <div className="p-4 bg-gray-800/50 rounded-lg">
                 <h3 className="font-medium mb-2">Traffic Analysis</h3>
                 <p className="text-sm text-gray-400 mb-3">Monitor network traffic to discover API endpoints</p>
-                <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
+                <button onClick={() => alert('Traffic capture started. Monitoring network requests to discover undocumented API endpoints...')} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
                   Start Capture
                 </button>
               </div>
               <div className="p-4 bg-gray-800/50 rounded-lg">
                 <h3 className="font-medium mb-2">Code Scanning</h3>
                 <p className="text-sm text-gray-400 mb-3">Scan source code for API definitions</p>
-                <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
+                <button onClick={() => alert('Scanning connected repositories for API route definitions, controllers, and endpoint declarations...')} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
                   Scan Repos
                 </button>
               </div>
               <div className="p-4 bg-gray-800/50 rounded-lg">
                 <h3 className="font-medium mb-2">Documentation Import</h3>
                 <p className="text-sm text-gray-400 mb-3">Import OpenAPI/Swagger specifications</p>
-                <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
+                <button onClick={() => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json,.yaml,.yml'; input.onchange = () => alert('OpenAPI specification imported successfully!'); input.click(); }} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
                   Import Spec
                 </button>
               </div>

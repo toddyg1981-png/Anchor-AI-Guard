@@ -287,7 +287,7 @@ export const PhishingSimulator: React.FC = () => {
                   </span>
                 ))}
               </div>
-              <button className="w-full py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded-lg text-sm text-cyan-400">
+              <button onClick={() => { setShowNewCampaign(true); setNewCampaignTemplate(template.name); }} className="w-full py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded-lg text-sm text-cyan-400">
                 Use Template
               </button>
             </div>
@@ -336,7 +336,7 @@ export const PhishingSimulator: React.FC = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    <button className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-xs text-cyan-400">
+                    <button onClick={() => alert(`Security awareness training assigned to ${emp.name} (${emp.email}).\n\nModules:\n• Phishing Identification\n• Social Engineering Awareness\n• Password Security\n• Reporting Procedures`)} className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-xs text-cyan-400">
                       Assign Training
                     </button>
                   </td>

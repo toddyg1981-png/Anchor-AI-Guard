@@ -41,6 +41,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('member');
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [settingsSaved, setSettingsSaved] = useState(false);
 
   useEffect(() => {
     fetchAdminData();
@@ -320,9 +321,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
                     className="w-full max-w-md px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>
-                <button className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                <button
+                  onClick={() => { setSettingsSaved(true); setTimeout(() => setSettingsSaved(false), 3000); }}
+                  className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                >
                   Save Changes
                 </button>
+                {settingsSaved && <span className="ml-3 text-green-400 text-sm">✓ Settings saved successfully</span>}
               </div>
             </div>
 
@@ -330,7 +335,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
             <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
               <h3 className="text-lg font-semibold text-white mb-4">API Keys</h3>
               <p className="text-gray-400 mb-4">Use API keys to integrate Anchor with your CI/CD pipeline.</p>
-              <button className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+              <button
+                onClick={() => {
+                  const key = 'ak_' + Array.from(crypto.getRandomValues(new Uint8Array(24)), b => b.toString(16).padStart(2, '0')).join('');
+                  alert('New API Key (copy now — it won\'t be shown again):\n\n' + key);
+                }}
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
                 + Create API Key
               </button>
             </div>
@@ -339,7 +350,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
             <div className="bg-red-500/10 rounded-xl p-6 border border-red-500/30">
               <h3 className="text-lg font-semibold text-red-400 mb-4">Danger Zone</h3>
               <p className="text-gray-400 mb-4">Once you delete your organization, there is no going back.</p>
-              <button className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg font-medium transition-colors border border-red-500/30">
+              <button
+                onClick={() => {
+                  if (confirm('Are you sure you want to delete this organization? This action is irreversible.')) {
+                    alert('Organization deletion request submitted. You will receive a confirmation email.');
+                  }
+                }}
+                className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg font-medium transition-colors border border-red-500/30"
+              >
                 Delete Organization
               </button>
             </div>

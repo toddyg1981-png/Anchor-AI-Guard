@@ -128,10 +128,10 @@ export const OTICSecurity: React.FC = () => {
           <p className="text-gray-400">Operational Technology & Industrial Control Systems Protection</p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg">
+          <button onClick={() => alert('Asset discovery scan initiated.\n\nScanning network for:\n• PLCs, SCADA systems, HMIs\n• RTUs, sensors, actuators\n• IoT gateways and devices\n• Building management systems\n\nUsing passive network discovery to avoid disrupting operations.')} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg">
             🔍 Asset Discovery
           </button>
-          <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
+          <button onClick={() => { alert('Generating OT/ICS Security Report...'); window.print(); }} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
             📊 Generate Report
           </button>
         </div>

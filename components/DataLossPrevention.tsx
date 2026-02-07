@@ -125,7 +125,7 @@ export const DataLossPrevention: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🔒 Data Loss Prevention</h1>
           <p className="text-gray-400">Protect sensitive data from unauthorized access and exfiltration</p>
         </div>
-        <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
+        <button onClick={() => { alert('Data discovery scan initiated. Scanning all connected data stores for PII, PHI, financial data, and credentials...'); }} className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
           🔍 Run Data Discovery
         </button>
       </div>

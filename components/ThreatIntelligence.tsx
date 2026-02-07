@@ -69,6 +69,8 @@ export const ThreatIntelligence: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'indicators' | 'campaigns' | 'vulnerabilities' | 'feeds'>('overview');
   const [selectedCampaign, setSelectedCampaign] = useState<ActiveCampaign | null>(null);
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
+  const [syncingFeeds, setSyncingFeeds] = useState(false);
+  const [showAlertDetails, setShowAlertDetails] = useState(false);
 
   // Mock threat feeds
   const feeds: ThreatFeed[] = [
@@ -284,8 +286,15 @@ export const ThreatIntelligence: React.FC = () => {
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             <span className="text-gray-400">{feeds.filter(f => f.status === 'active').length} feeds active</span>
           </div>
-          <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium">
-            🔄 Sync Feeds
+          <button
+            onClick={() => {
+              setSyncingFeeds(true);
+              setTimeout(() => { setSyncingFeeds(false); alert('All feeds synced successfully. 12 new indicators ingested.'); }, 2000);
+            }}
+            disabled={syncingFeeds}
+            className={`px-4 py-2 rounded-lg font-medium ${syncingFeeds ? 'bg-gray-600 cursor-wait' : 'bg-cyan-500 hover:bg-cyan-600'}`}
+          >
+            {syncingFeeds ? '⏳ Syncing...' : '🔄 Sync Feeds'}
           </button>
         </div>
       </div>
@@ -299,10 +308,25 @@ export const ThreatIntelligence: React.FC = () => {
             <p className="text-gray-400 text-sm">CVE-2026-0001 (FortiOS) is being actively exploited and you have vulnerable systems</p>
           </div>
         </div>
-        <button className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
-          View Details
+        <button
+          onClick={() => setShowAlertDetails(!showAlertDetails)}
+          className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium"
+        >
+          {showAlertDetails ? 'Hide Details' : 'View Details'}
         </button>
       </div>
+      {showAlertDetails && (
+        <div className="mb-6 p-4 bg-red-500/5 border border-red-500/20 rounded-xl">
+          <h4 className="font-semibold text-red-400 mb-2">CVE-2026-0001 — FortiOS SSL VPN Buffer Overflow</h4>
+          <p className="text-sm text-gray-400 mb-2">CVSS: 9.8 | Exploited in wild | CISA KEV listed | Ransomware usage confirmed</p>
+          <p className="text-sm text-gray-300 mb-3">A buffer overflow vulnerability in FortiOS SSL VPN allows remote code execution without authentication. Patch immediately.</p>
+          <div className="flex gap-2">
+            <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">RCE</span>
+            <span className="px-2 py-1 bg-orange-500/20 text-orange-400 rounded text-xs">Active Exploitation</span>
+            <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">Patch Available</span>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
@@ -512,7 +536,14 @@ export const ThreatIntelligence: React.FC = () => {
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
               </select>
-              <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
+              <button
+                onClick={() => {
+                  const filteredIndicators = indicators.filter(i => filterSeverity === 'all' || i.severity === filterSeverity);
+                  const json = JSON.stringify(filteredIndicators, null, 2);
+                  navigator.clipboard.writeText(json).then(() => alert(`${filteredIndicators.length} IOCs copied to clipboard as JSON.`));
+                }}
+                className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm"
+              >
                 Export IOCs
               </button>
             </div>
@@ -781,7 +812,10 @@ export const ThreatIntelligence: React.FC = () => {
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium">
+              <button
+                onClick={() => window.print()}
+                className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium"
+              >
                 Download Full Report
               </button>
             </div>

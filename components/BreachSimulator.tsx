@@ -251,10 +251,10 @@ export const BreachSimulator: React.FC = () => {
           <p className="text-gray-400">Automated red team attack simulation and penetration testing</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => { setActiveTab('results'); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             📊 View Reports
           </button>
-          <button className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
+          <button onClick={() => alert('Custom Attack Builder:\n\nSelect attack vector, target system, techniques (MITRE ATT&CK), and payload type to create a custom breach simulation scenario.')} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
             🎯 Custom Attack
           </button>
         </div>

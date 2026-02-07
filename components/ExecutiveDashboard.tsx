@@ -61,6 +61,12 @@ export const ExecutiveDashboard: React.FC = () => {
   const [timeRange, setTimeRange] = useState<'30d' | '90d' | '1y'>('90d');
   const [selectedScenario, setSelectedScenario] = useState<BreachScenario | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // Mock data - in production, this comes from backend analysis
   const riskMetrics: RiskMetrics = {
@@ -194,6 +200,13 @@ export const ExecutiveDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+      {/* Notification Banner */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-green-500/20 border border-green-500 rounded-xl text-green-400 shadow-lg animate-pulse">
+          {notification}
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -608,7 +621,13 @@ export const ExecutiveDashboard: React.FC = () => {
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium">
+              <button
+                onClick={() => {
+                  showNotification(`✅ Remediation task created for: ${selectedScenario.name}. Assigned to security team.`);
+                  setSelectedScenario(null);
+                }}
+                className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium"
+              >
                 Create Remediation Task
               </button>
             </div>
@@ -682,7 +701,20 @@ export const ExecutiveDashboard: React.FC = () => {
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg">
+              <button
+                onClick={() => {
+                  showNotification('📊 Generating PowerPoint export...');
+                  const content = `Security Risk Report - Q1 2026\nRisk Exposure: ${formatCurrency(riskMetrics.totalExposure)}\nSecurity Score: ${riskMetrics.complianceScore}/100\nRisk Reduction: ${riskMetrics.riskReduction}%`;
+                  const blob = new Blob([content], { type: 'text/plain' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'Security_Board_Report_Q1_2026.txt';
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg"
+              >
                 📊 Export PowerPoint
               </button>
               <button

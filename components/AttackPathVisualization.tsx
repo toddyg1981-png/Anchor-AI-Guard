@@ -324,7 +324,7 @@ const NodeDetailPanel: React.FC<{ node: AttackNode | null; onClose: () => void }
           <span className="text-xs text-gray-500 uppercase">Description</span>
           <p className="text-sm text-gray-300 mt-1">{node.description}</p>
         </div>
-        <button className="w-full mt-2 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors">
+        <button onClick={() => alert(`Remediation for ${node.label}:\n\nSeverity: ${node.severity}\n${node.cve ? 'CVE: ' + node.cve + '\n' : ''}Exploitability: ${node.exploitability}/10\n\nRecommended steps:\n1. Apply relevant security patches\n2. Restrict network access\n3. Enable monitoring and alerting\n4. Validate fix with penetration test`)} className="w-full mt-2 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors">
           View Remediation
         </button>
       </div>

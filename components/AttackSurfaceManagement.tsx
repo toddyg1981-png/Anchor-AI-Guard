@@ -262,10 +262,10 @@ export const AttackSurfaceManagement: React.FC = () => {
               </div>
               {asset.status !== 'remediated' && (
                 <div className="mt-4 flex gap-2">
-                  <button className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
+                  <button onClick={() => alert(`Investigation details for ${asset.identifier}:\n\nType: ${asset.type}\nExposure: ${asset.exposureType.replace('_', ' ')}\nFindings:\n${asset.findings.map(f => '• ' + f).join('\n')}\n\nRecommendation: Assess risk and apply appropriate remediation.`)} className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
                     Investigate
                   </button>
-                  <button className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500 rounded text-sm text-green-400">
+                  <button onClick={() => { if (window.confirm(`Mark "${asset.identifier}" as remediated?`)) { alert(`${asset.identifier} marked as remediated. It will be re-verified in the next scan.`); } }} className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500 rounded text-sm text-green-400">
                     Mark Remediated
                   </button>
                 </div>

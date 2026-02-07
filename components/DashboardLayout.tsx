@@ -261,7 +261,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     </div>
                   </div>
                   <div className="px-4 py-2 border-t border-slate-700/50">
-                    <button className="text-sm text-cyan-400 hover:text-cyan-300">View all notifications</button>
+                    <button onClick={() => setShowNotifications(false)} className="text-sm text-cyan-400 hover:text-cyan-300">View all notifications</button>
                   </div>
                 </div>
               )}

@@ -294,7 +294,7 @@ export const SupplyChainAI: React.FC = () => {
           <p className="text-gray-400">AI-powered dependency security, typosquatting detection, and maintainer risk analysis</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json,.xml,.spdx'; input.onchange = () => alert('SBOM file imported successfully! Analyzing dependencies...'); input.click(); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             📄 Import SBOM
           </button>
           <button
@@ -434,7 +434,7 @@ export const SupplyChainAI: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                  <button className="mt-3 px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
+                  <button onClick={() => { if (window.confirm(`Remove package "${pkg.name}@${pkg.version}" from your project?`)) { alert(`${pkg.name} has been flagged for removal. Run \`npm uninstall ${pkg.name}\` to complete removal.`); } }} className="mt-3 px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
                     Remove Package
                   </button>
                 </div>
@@ -647,7 +647,7 @@ export const SupplyChainAI: React.FC = () => {
                     <span className="text-sm text-gray-400">
                       Technique: <span className="text-purple-400">{alert.technique}</span>
                     </span>
-                    <button className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
+                    <button onClick={() => { if (window.confirm(`Block package "${alert.suspect}"? This will prevent it from being installed in any project.`)) { window.alert(`${alert.suspect} has been added to the blocklist.`); } }} className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
                       Block Package
                     </button>
                   </div>
@@ -748,10 +748,10 @@ export const SupplyChainAI: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">📋 Software Bill of Materials (SBOM)</h2>
               <div className="flex gap-2">
-                <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">
+                <button onClick={() => { const data = JSON.stringify({ spdxVersion: 'SPDX-2.3', packages: packages.map(p => ({ name: p.name, version: p.version, license: p.license })) }, null, 2); const blob = new Blob([data], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'sbom-spdx.json'; a.click(); URL.revokeObjectURL(url); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">
                   Export SPDX
                 </button>
-                <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">
+                <button onClick={() => { const data = JSON.stringify({ bomFormat: 'CycloneDX', specVersion: '1.5', components: packages.map(p => ({ name: p.name, version: p.version, type: 'library' })) }, null, 2); const blob = new Blob([data], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'sbom-cyclonedx.json'; a.click(); URL.revokeObjectURL(url); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm">
                   Export CycloneDX
                 </button>
               </div>

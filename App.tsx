@@ -195,7 +195,7 @@ const AppContent: React.FC = () => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
   
-    const { projects, findings, activeScans, loading, error, refetch } = useBackendData();
+    const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated);
 
   // Handle URL-based navigation (for OAuth callbacks, password reset links, etc.)
   useEffect(() => {
@@ -209,7 +209,12 @@ const AppContent: React.FC = () => {
     } else if (path === '/forgot-password') {
       setCurrentView('forgot-password');
     } else if (path === '/pricing') {
-      setCurrentView('pricing');
+      // Handle checkout=canceled return from Stripe
+      if (params.get('checkout') === 'canceled') {
+        setCurrentView('pricing');
+      } else {
+        setCurrentView('pricing');
+      }
     } else if (path === '/privacy') {
       setCurrentView('privacy');
     } else if (path === '/terms') {
@@ -222,6 +227,14 @@ const AppContent: React.FC = () => {
       setCurrentView('contact');
     } else if (path === '/login' || path === '/signup') {
       setCurrentView('auth');
+    }
+
+    // Handle Stripe checkout success redirect
+    if (params.get('checkout') === 'success' && path === '/dashboard') {
+      setCurrentView('dashboard');
+      setDashboardView('billing');
+      // Clean up URL
+      window.history.replaceState({}, '', '/');
     }
   }, []);
 
@@ -237,8 +250,13 @@ const AppContent: React.FC = () => {
         // Check if new user needs onboarding
         if (!hasCompletedOnboarding) {
           setCurrentView('onboarding');
-        } else {
+        } else if (currentView !== 'dashboard' && currentView !== 'purchase-terms') {
           setCurrentView('dashboard');
+        }
+      } else {
+        // Not authenticated — redirect protected views back to marketing
+        if (currentView === 'dashboard' || currentView === 'onboarding') {
+          setCurrentView('marketing');
         }
       }
     }

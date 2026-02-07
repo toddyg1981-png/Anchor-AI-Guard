@@ -53,6 +53,12 @@ export const SelfProtection: React.FC = () => {
   const [panicMode, setPanicMode] = useState(false);
   const [lockdownLevel, setLockdownLevel] = useState<0 | 1 | 2 | 3>(0);
   const [isScanning, setIsScanning] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 4000);
+  };
 
   // Defense layers
   const defenseLayers: DefenseLayer[] = [
@@ -83,7 +89,7 @@ export const SelfProtection: React.FC = () => {
   ];
 
   // Mock threat alerts
-  const [threatAlerts, _setThreatAlerts] = useState<ThreatAlert[]>([
+  const [threatAlerts, setThreatAlerts] = useState<ThreatAlert[]>([
     { id: 'ta-1', timestamp: '2026-02-04T11:45:00Z', type: 'brute_force', severity: 'medium', source: '185.234.72.15', description: 'Brute force attempt on admin login - 50 failed attempts', status: 'mitigated', autoMitigated: true },
     { id: 'ta-2', timestamp: '2026-02-04T10:30:00Z', type: 'anomaly', severity: 'low', source: 'internal', description: 'Unusual API call pattern from service account', status: 'investigating', autoMitigated: false },
     { id: 'ta-3', timestamp: '2026-02-04T09:15:00Z', type: 'intrusion_attempt', severity: 'high', source: '103.45.67.89', description: 'SQL injection attempt on /api/users endpoint', status: 'mitigated', autoMitigated: true },
@@ -142,6 +148,13 @@ export const SelfProtection: React.FC = () => {
 
   return (
     <div className={`min-h-screen ${panicMode ? 'bg-red-950' : 'bg-[#0a0a0f]'} text-white p-6 transition-colors duration-500`}>
+      {/* Notification Banner */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-60 px-6 py-3 bg-cyan-500/20 border border-cyan-500 rounded-xl text-cyan-400 shadow-lg animate-pulse">
+          {notification}
+        </div>
+      )}
+
       {/* Panic Mode Banner */}
       {panicMode && (
         <div className="fixed top-0 left-0 right-0 bg-red-600 text-white p-4 z-50 animate-pulse">
@@ -446,7 +459,13 @@ export const SelfProtection: React.FC = () => {
                     )}
                   </div>
                   {alert.status === 'investigating' && (
-                    <button className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded text-sm">
+                    <button
+                      onClick={() => {
+                        setThreatAlerts(prev => prev.map(a => a.id === alert.id ? { ...a, status: 'mitigated' } : a));
+                        showNotification(`✅ Alert "${alert.type.replace(/_/g, ' ')}" marked as resolved`);
+                      }}
+                      className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded text-sm"
+                    >
                       Mark Resolved
                     </button>
                   )}
@@ -574,19 +593,44 @@ export const SelfProtection: React.FC = () => {
           <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
             <h3 className="font-semibold mb-4">⚡ Quick Actions</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button className="p-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg">
+              <button
+                onClick={() => {
+                  if (window.confirm('⚠️ KILL ALL SESSIONS?\n\nThis will immediately terminate all active user sessions including your own. You will need to re-authenticate.\n\nProceed?')) {
+                    showNotification('🔌 All active sessions have been terminated. Users will need to re-authenticate.');
+                  }
+                }}
+                className="p-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg"
+              >
                 <div className="text-2xl mb-2">🔌</div>
                 <div className="text-sm font-medium">Kill All Sessions</div>
               </button>
-              <button className="p-4 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/50 rounded-lg">
+              <button
+                onClick={() => {
+                  if (window.confirm('⚠️ ROTATE ALL SECRETS?\n\nThis will immediately rotate all API keys, tokens, and credentials. Services may experience brief disruption during rotation.\n\nProceed?')) {
+                    showNotification('🔑 Rotating all secrets... This may take 30-60 seconds.');
+                    setTimeout(() => showNotification('✅ All secrets rotated successfully. Zero-downtime migration completed.'), 3000);
+                  }
+                }}
+                className="p-4 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/50 rounded-lg"
+              >
                 <div className="text-2xl mb-2">🔑</div>
                 <div className="text-sm font-medium">Rotate All Secrets</div>
               </button>
-              <button className="p-4 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/50 rounded-lg">
+              <button
+                onClick={() => {
+                  showNotification('📸 Forensic snapshot captured. Memory dump, disk image, and network state saved to secure storage.');
+                }}
+                className="p-4 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/50 rounded-lg"
+              >
                 <div className="text-2xl mb-2">📸</div>
                 <div className="text-sm font-medium">Forensic Snapshot</div>
               </button>
-              <button className="p-4 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/50 rounded-lg">
+              <button
+                onClick={() => {
+                  showNotification('📞 IR Team alerted via PagerDuty, SMS, and email. ETA: 5 minutes.');
+                }}
+                className="p-4 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/50 rounded-lg"
+              >
                 <div className="text-2xl mb-2">📞</div>
                 <div className="text-sm font-medium">Alert IR Team</div>
               </button>

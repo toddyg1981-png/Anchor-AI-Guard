@@ -279,7 +279,7 @@ const AlertCard: React.FC<{
                   </div>
                 ))}
                 {prediction.affectedFiles.length > 3 && (
-                  <button className="text-xs text-gray-500 hover:text-gray-400">
+                  <button onClick={() => alert(`All affected files:\n\n${prediction.affectedFiles.map(f => '• ' + f).join('\n')}`)} className="text-xs text-gray-500 hover:text-gray-400">
                     +{prediction.affectedFiles.length - 3} more files
                   </button>
                 )}
@@ -545,7 +545,7 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
         <p className="text-xs text-gray-500">
           Predictions are based on AI analysis of security signals. Confidence scores indicate likelihood of accuracy.
         </p>
-        <button className="text-sm text-cyan-400 hover:text-cyan-300 font-medium">
+        <button onClick={() => alert('Alert Configuration:\n\n• Critical alerts: Immediate notification\n• High alerts: Email + dashboard\n• Medium alerts: Dashboard only\n• Low alerts: Weekly digest\n\nChannels: Email, Slack, PagerDuty, Webhook')} className="text-sm text-cyan-400 hover:text-cyan-300 font-medium">
           Configure Alerts →
         </button>
       </div>

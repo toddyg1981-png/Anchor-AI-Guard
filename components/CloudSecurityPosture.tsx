@@ -140,10 +140,10 @@ export const CloudSecurityPosture: React.FC = () => {
               <option key={acc.id} value={acc.id}>{acc.name}</option>
             ))}
           </select>
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => alert('Connect a new cloud account:\n\n1. AWS — Provide IAM Role ARN\n2. Azure — App Registration credentials\n3. GCP — Service Account key\n\nSupported: AWS, Azure, GCP, Oracle Cloud')} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             ➕ Connect Account
           </button>
-          <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium">
+          <button onClick={() => { alert('Syncing configuration data from all connected cloud accounts... This may take a few minutes.'); }} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium">
             🔄 Sync All
           </button>
         </div>

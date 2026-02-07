@@ -59,6 +59,8 @@ interface BehavioralAnomaly {
 export const ThreatHunting: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'hunts' | 'ioc' | 'queries' | 'anomalies'>('hunts');
   const [searchIOC, setSearchIOC] = useState('');
+  const [showNewHuntForm, setShowNewHuntForm] = useState(false);
+  const [iocFilter, setIocFilter] = useState('');
   const [anomalies, setAnomalies] = useState<BehavioralAnomaly[]>([
     { id: 'a-1', timestamp: '2026-02-04T11:30:00Z', entity: 'john.smith', entityType: 'user', behavior: 'Accessed 150 files in 5 minutes', baseline: 'Average 10 files/hour', deviation: 85, riskScore: 92, investigated: false },
     { id: 'a-2', timestamp: '2026-02-04T10:45:00Z', entity: 'WORKSTATION-042', entityType: 'host', behavior: 'Outbound traffic to 45 unique IPs', baseline: 'Average 8 unique IPs/day', deviation: 78, riskScore: 85, investigated: true },
@@ -130,10 +132,45 @@ export const ThreatHunting: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🎯 Threat Hunting</h1>
           <p className="text-gray-400">Proactive threat detection - hunt before they strike</p>
         </div>
-        <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
-          + New Hunt
+        <button
+          onClick={() => setShowNewHuntForm(!showNewHuntForm)}
+          className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
+        >
+          {showNewHuntForm ? '✕ Cancel' : '+ New Hunt'}
         </button>
       </div>
+
+      {/* New Hunt Form */}
+      {showNewHuntForm && (
+        <div className="mb-6 bg-gray-900/50 border border-cyan-500/30 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-cyan-400 mb-4">Create New Threat Hunt</h3>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Hunt Name</label>
+              <input type="text" placeholder="e.g. Lateral Movement Detection" className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Framework</label>
+              <select className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500">
+                <option value="mitre_attck">MITRE ATT&CK</option>
+                <option value="diamond">Diamond Model</option>
+                <option value="kill_chain">Kill Chain</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-400 mb-1">Hypothesis</label>
+            <textarea placeholder="Describe your threat hypothesis..." className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 h-20" />
+          </div>
+          <button
+            onClick={() => { setShowNewHuntForm(false); alert('Threat hunt created and queued for execution.'); }}
+            className="px-6 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
+          >
+            Create Hunt
+          </button>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
@@ -251,9 +288,20 @@ export const ThreatHunting: React.FC = () => {
               placeholder="Enter IOC to search (IP, domain, hash, email...)"
               className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"
             />
-            <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
+            <button
+              onClick={() => setIocFilter(searchIOC.trim().toLowerCase())}
+              className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
+            >
               🔍 Search
             </button>
+            {iocFilter && (
+              <button
+                onClick={() => { setIocFilter(''); setSearchIOC(''); }}
+                className="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm"
+              >
+                Clear
+              </button>
+            )}
           </div>
 
           <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
@@ -270,7 +318,7 @@ export const ThreatHunting: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {iocSearches.map(ioc => (
+                {iocSearches.filter(ioc => !iocFilter || ioc.value.toLowerCase().includes(iocFilter) || ioc.type.toLowerCase().includes(iocFilter) || (ioc.associatedThreat?.toLowerCase().includes(iocFilter) ?? false)).map(ioc => (
                   <tr key={ioc.id} className="border-b border-gray-800/50 hover:bg-gray-800/30">
                     <td className="p-4">
                       <span className="flex items-center gap-2">

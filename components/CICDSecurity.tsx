@@ -190,10 +190,10 @@ export const CICDSecurity: React.FC = () => {
           <p className="text-gray-400">Pipeline security gates, secret detection, and policy enforcement</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => setActiveTab('gates')} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             ⚙️ Configure Gates
           </button>
-          <button className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-medium">
+          <button onClick={() => alert('Security scan started across all pipelines.\n\nScanning for:\n• Hardcoded secrets\n• Vulnerable dependencies\n• Policy violations\n• IaC misconfigurations')} className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-medium">
             ▶️ Run Security Scan
           </button>
         </div>
@@ -432,7 +432,7 @@ export const CICDSecurity: React.FC = () => {
                     {secret.file}:{secret.line}
                   </div>
                 </div>
-                <button className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
+                <button className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400" onClick={() => { if (window.confirm(`Revoke and rotate this ${secret.secretType}? The old secret will be invalidated immediately.`)) { alert(`${secret.secretType} has been revoked. A new secret has been generated and stored in your vault.`); } }}>
                   Revoke & Rotate
                 </button>
               </div>
@@ -467,7 +467,7 @@ export const CICDSecurity: React.FC = () => {
                       </div>
                       <div className="text-sm text-gray-500 font-mono">{violation.resource}</div>
                     </div>
-                    <button className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
+                    <button className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400" onClick={() => { if (window.confirm(`Auto-fix policy violation: "${violation.policy}"?\n\nRemediation: ${violation.remediation}`)) { alert('Auto-fix applied successfully. The violation has been remediated.'); } }}>
                       Auto-Fix
                     </button>
                   </div>

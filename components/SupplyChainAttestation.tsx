@@ -147,7 +147,7 @@ const SupplyChainAttestation: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🔗 Supply Chain Attestation</h1>
           <p className="text-gray-400 mt-1">Blockchain-verified software provenance — Trust but verify every dependency</p>
         </div>
-        <button className="px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity">
+        <button onClick={() => { alert('Generating SBOM Report...\n\nThis report includes:\n• Full dependency tree\n• License compliance status\n• SLSA provenance levels\n• Blockchain attestation verification\n• Vulnerability summary'); window.print(); }} className="px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           Generate SBOM Report
         </button>
       </div>

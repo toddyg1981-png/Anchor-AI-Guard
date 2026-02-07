@@ -287,9 +287,21 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       return;
     }
 
+    // For Enterprise/Government tiers, redirect to contact/sales
+    if (['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(tier)) {
+      window.location.href = 'mailto:sales@anchorsecurity.io?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier);
+      return;
+    }
+
     // If not authenticated, redirect to signup
     if (!isAuthenticated) {
       window.location.href = `/signup?plan=${tier}`;
+      return;
+    }
+
+    // Free tier - no checkout needed
+    if (tier === 'FREE') {
+      alert('You are already on the Free plan.');
       return;
     }
 
@@ -311,6 +323,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
+      }
+
       const data = await response.json();
 
       if (data.url) {
@@ -322,7 +339,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Failed to start checkout. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to start checkout. Please try again.');
     } finally {
       setCheckoutLoading(null);
     }
@@ -687,10 +704,16 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             Custom integrations, on-premise deployment, dedicated security engineer, and SOC 2 Type II compliance for large organizations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-pink-500/30">
+            <button 
+              onClick={() => window.location.href = 'mailto:sales@anchorsecurity.io?subject=Enterprise%20Security%20Inquiry'}
+              className="bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-pink-500/30"
+            >
               Talk to Sales
             </button>
-            <button className="bg-transparent border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 px-8 py-3 rounded-lg font-semibold transition-colors">
+            <button 
+              onClick={() => window.location.href = 'mailto:sales@anchorsecurity.io?subject=Schedule%20a%20Demo'}
+              className="bg-transparent border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 px-8 py-3 rounded-lg font-semibold transition-colors"
+            >
               Schedule Demo
             </button>
           </div>

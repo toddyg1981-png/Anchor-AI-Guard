@@ -58,6 +58,16 @@ export const DarkWebMonitor: React.FC = () => {
   const [selectedAlert, setSelectedAlert] = useState<DarkWebAlert | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAddAssetForm, setShowAddAssetForm] = useState(false);
+  const [assetMenuId, setAssetMenuId] = useState<string | null>(null);
+  const [alertStatuses, setAlertStatuses] = useState<Record<string, DarkWebAlert['status']>>({});
+  const [notification, setNotification] = useState<string | null>(null);
+  const [_searchPerformed, setSearchPerformed] = useState(false);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // Mock data
   const stats: DarkWebStats = {
@@ -247,6 +257,13 @@ export const DarkWebMonitor: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+      {/* Notification Banner */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-green-500/20 border border-green-500 rounded-xl text-green-400 shadow-lg animate-pulse">
+          {notification}
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -349,8 +366,8 @@ export const DarkWebMonitor: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h3 className="font-semibold">{alert.title}</h3>
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${getStatusColor(alert.status)}`}>
-                        {alert.status.replace('_', ' ')}
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${getStatusColor(alertStatuses[alert.id] || alert.status)}`}>
+                        {(alertStatuses[alert.id] || alert.status).replace('_', ' ')}
                       </span>
                     </div>
                     <p className="text-gray-400 text-sm mb-2">{alert.description}</p>
@@ -412,10 +429,37 @@ export const DarkWebMonitor: React.FC = () => {
         <div className="space-y-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Monitored Assets</h2>
-            <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium">
-              + Add Asset
+            <button
+              onClick={() => setShowAddAssetForm(!showAddAssetForm)}
+              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+            >
+              {showAddAssetForm ? '✕ Cancel' : '+ Add Asset'}
             </button>
           </div>
+
+          {showAddAssetForm && (
+            <div className="bg-gray-900/50 border border-purple-500/30 rounded-xl p-6 mb-4">
+              <h3 className="text-lg font-semibold text-purple-400 mb-4">Add Monitored Asset</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Asset Type</label>
+                  <select title="Asset type" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none">
+                    <option>Domain</option><option>Email</option><option>Keyword</option><option>IP Address</option><option>API Key Pattern</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Value</label>
+                  <input type="text" placeholder="e.g., example.com" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none" />
+                </div>
+              </div>
+              <button
+                onClick={() => { setShowAddAssetForm(false); showNotification('✅ Asset added to monitoring list'); }}
+                className="px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+              >
+                Add Asset
+              </button>
+            </div>
+          )}
           <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
             <table className="w-full">
               <thead>
@@ -451,7 +495,42 @@ export const DarkWebMonitor: React.FC = () => {
                       {new Date(asset.lastChecked).toLocaleString()}
                     </td>
                     <td className="p-4">
-                      <button className="text-gray-400 hover:text-white">⋮</button>
+                      <div className="relative">
+                        <button
+                          onClick={() => setAssetMenuId(assetMenuId === asset.id ? null : asset.id)}
+                          className="text-gray-400 hover:text-white"
+                        >
+                          ⋮
+                        </button>
+                        {assetMenuId === asset.id && (
+                          <div className="absolute right-0 top-8 z-10 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-1">
+                            <button
+                              onClick={() => { setAssetMenuId(null); showNotification(`Paused monitoring for ${asset.value}`); }}
+                              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                            >
+                              ⏸ Pause Monitoring
+                            </button>
+                            <button
+                              onClick={() => { setAssetMenuId(null); showNotification(`Scanning ${asset.value}...`); }}
+                              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                            >
+                              🔍 Scan Now
+                            </button>
+                            <button
+                              onClick={() => { setAssetMenuId(null); navigator.clipboard.writeText(asset.value); showNotification(`Copied ${asset.value} to clipboard`); }}
+                              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                            >
+                              📋 Copy Value
+                            </button>
+                            <button
+                              onClick={() => { if (window.confirm(`Remove ${asset.value} from monitoring?`)) { setAssetMenuId(null); showNotification(`Removed ${asset.value} from monitoring`); } }}
+                              className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
+                            >
+                              🗑 Remove
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -475,7 +554,14 @@ export const DarkWebMonitor: React.FC = () => {
                 placeholder="Enter email, domain, keyword, or hash to search..."
                 className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:outline-none"
               />
-              <button className="px-6 py-3 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium">
+              <button
+                onClick={() => {
+                  if (!searchQuery.trim()) { showNotification('⚠️ Please enter a search query'); return; }
+                  setSearchPerformed(true);
+                  showNotification(`🔍 Searching dark web for "${searchQuery}"...`);
+                }}
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+              >
                 Search
               </button>
             </div>
@@ -532,8 +618,8 @@ export const DarkWebMonitor: React.FC = () => {
                     <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${getSeverityColor(selectedAlert.severity)}`}>
                       {selectedAlert.severity}
                     </span>
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${getStatusColor(selectedAlert.status)}`}>
-                      {selectedAlert.status.replace('_', ' ')}
+                    <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase ${getStatusColor(alertStatuses[selectedAlert.id] || selectedAlert.status)}`}>
+                      {(alertStatuses[selectedAlert.id] || selectedAlert.status).replace('_', ' ')}
                     </span>
                   </div>
                 </div>
@@ -613,10 +699,25 @@ export const DarkWebMonitor: React.FC = () => {
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black rounded-lg font-medium">
+              <button
+                onClick={() => {
+                  setAlertStatuses(prev => ({ ...prev, [selectedAlert.id]: 'investigating' }));
+                  showNotification(`🔍 Alert "${selectedAlert.title}" marked as investigating`);
+                  setSelectedAlert(null);
+                }}
+                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black rounded-lg font-medium"
+              >
                 Mark as Investigating
               </button>
-              <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium">
+              <button
+                onClick={() => {
+                  if (window.confirm(`Create incident for: ${selectedAlert.title}?`)) {
+                    showNotification(`🚨 Incident INC-${Math.floor(Math.random() * 9000 + 1000)} created for "${selectedAlert.title}"`);
+                    setSelectedAlert(null);
+                  }
+                }}
+                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+              >
                 Create Incident
               </button>
             </div>

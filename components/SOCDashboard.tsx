@@ -40,6 +40,8 @@ export const SOCDashboard: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [alertSound, setAlertSound] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const [lockdownActive, setLockdownActive] = useState(false);
+  const [socNotification, setSocNotification] = useState<string | null>(null);
 
   // Update clock every second
   useEffect(() => {
@@ -48,7 +50,7 @@ export const SOCDashboard: React.FC = () => {
   }, []);
 
   // Security events
-  const [events, _setEvents] = useState<SecurityEvent[]>([
+  const [events, setEvents] = useState<SecurityEvent[]>([
     { id: 'evt-1', timestamp: '2026-02-04T11:59:30Z', category: 'attack', severity: 'high', source: 'WAF', title: 'SQL Injection Blocked', description: 'Attempted SQL injection on /api/users from 185.234.72.15', status: 'resolved', assignee: 'Auto' },
     { id: 'evt-2', timestamp: '2026-02-04T11:58:00Z', category: 'anomaly', severity: 'medium', source: 'UEBA', title: 'Unusual Login Time', description: 'Service account logged in outside business hours', status: 'investigating' },
     { id: 'evt-3', timestamp: '2026-02-04T11:55:00Z', category: 'intel', severity: 'info', source: 'ThreatFeed', title: 'New IOCs Published', description: 'ACSC published 45 new IOCs for LockBit 3.0', status: 'acknowledged' },
@@ -167,6 +169,14 @@ export const SOCDashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* SOC Notification Banner */}
+      {socNotification && (
+        <div className="mb-4 p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-xl flex items-center justify-between">
+          <span className="text-sm text-cyan-300">{socNotification}</span>
+          <button onClick={() => setSocNotification(null)} className="text-gray-400 hover:text-white">✕</button>
+        </div>
+      )}
+
       {/* Main Grid */}
       <div className="grid grid-cols-12 gap-4">
         {/* Left Panel - Event Feed */}
@@ -213,7 +223,13 @@ export const SOCDashboard: React.FC = () => {
                           Status: {event.status}
                         </span>
                         {event.status !== 'resolved' && (
-                          <button className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEvents(prev => prev.map(ev => ev.id === event.id ? { ...ev, status: 'resolved' as const } : ev));
+                            }}
+                            className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                          >
                             Resolve
                           </button>
                         )}
@@ -318,16 +334,32 @@ export const SOCDashboard: React.FC = () => {
           <div className="bg-gray-900/80 border border-cyan-500/30 rounded-xl p-4">
             <h2 className="text-lg font-semibold text-cyan-400 mb-4">⚡ Quick Actions</h2>
             <div className="grid grid-cols-2 gap-2">
-              <button className="p-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg text-xs">
+              <button
+                onClick={() => { if (confirm('🚨 TRIGGER PANIC MODE?\n\nThis will escalate all events to critical and notify the entire security team immediately.')) { alert('PANIC mode activated. All teams notified.'); } }}
+                className="p-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg text-xs"
+              >
                 🚨 PANIC
               </button>
-              <button className="p-3 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/50 rounded-lg text-xs">
-                🔒 Lockdown
+              <button
+                onClick={() => {
+                  setLockdownActive(!lockdownActive);
+                  setSocNotification(lockdownActive ? 'Lockdown lifted — normal operations resumed.' : '🔒 LOCKDOWN ACTIVE — All external access blocked.');
+                  setTimeout(() => setSocNotification(null), 5000);
+                }}
+                className={`p-3 border rounded-lg text-xs ${lockdownActive ? 'bg-yellow-500/30 border-yellow-500 text-yellow-300' : 'bg-yellow-500/10 hover:bg-yellow-500/20 border-yellow-500/50'}`}
+              >
+                {lockdownActive ? '🔓 Unlock' : '🔒 Lockdown'}
               </button>
-              <button className="p-3 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/50 rounded-lg text-xs">
+              <button
+                onClick={() => { setSocNotification('🔍 Full infrastructure scan initiated...'); setTimeout(() => setSocNotification('✅ Full scan complete — no new threats detected.'), 4000); setTimeout(() => setSocNotification(null), 7000); }}
+                className="p-3 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/50 rounded-lg text-xs"
+              >
                 🔍 Full Scan
               </button>
-              <button className="p-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/50 rounded-lg text-xs">
+              <button
+                onClick={() => { setSocNotification('📞 Alert sent to all SOC team members via SMS and email.'); setTimeout(() => setSocNotification(null), 5000); }}
+                className="p-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/50 rounded-lg text-xs"
+              >
                 📞 Alert Team
               </button>
             </div>

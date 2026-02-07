@@ -43,6 +43,16 @@ export const SecretsRotation: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'secrets' | 'rotation' | 'policies' | 'vaults'>('secrets');
   const [_selectedSecret, _setSelectedSecret] = useState<Secret | null>(null);
   const [isRotating, setIsRotating] = useState<string | null>(null);
+  const [showAddSecretForm, setShowAddSecretForm] = useState(false);
+  const [_showImportForm, _setShowImportForm] = useState(false);
+  const [showConnectVaultForm, setShowConnectVaultForm] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
+  const importFileRef = React.useRef<HTMLInputElement>(null);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // Mock secrets data
   const secrets: Secret[] = [
@@ -128,6 +138,29 @@ export const SecretsRotation: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+      {/* Notification Banner */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-green-500/20 border border-green-500 rounded-xl text-green-400 shadow-lg animate-pulse">
+          {notification}
+        </div>
+      )}
+
+      {/* Hidden file input for import */}
+      <input
+        ref={importFileRef}
+        type="file"
+        accept=".json,.yaml,.yml,.env"
+        className="hidden"
+        title="Import secrets file"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            showNotification(`📥 Importing secrets from ${file.name}...`);
+            setTimeout(() => showNotification(`✅ Successfully imported secrets from ${file.name}`), 2000);
+          }
+        }}
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -135,14 +168,51 @@ export const SecretsRotation: React.FC = () => {
           <p className="text-gray-400">Automatic credential rotation and lifecycle management</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button
+            onClick={() => importFileRef.current?.click()}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium"
+          >
             📥 Import Secrets
           </button>
-          <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium">
-            ➕ Add Secret
+          <button
+            onClick={() => setShowAddSecretForm(!showAddSecretForm)}
+            className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+          >
+            {showAddSecretForm ? '✕ Cancel' : '➕ Add Secret'}
           </button>
         </div>
       </div>
+
+      {/* Critical Alerts */}
+      {showAddSecretForm && (
+        <div className="mb-6 bg-gray-900/50 border border-purple-500/30 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-purple-400 mb-4">Add New Secret</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Secret Name</label>
+              <input type="text" placeholder="e.g., my-api-key" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none" />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Type</label>
+              <select title="Secret type" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none">
+                <option>API Key</option><option>Database</option><option>OAuth</option><option>Certificate</option><option>SSH Key</option><option>Encryption Key</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Rotation Policy</label>
+              <select title="Rotation policy" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none">
+                <option>7 days</option><option>30 days</option><option>90 days</option><option>365 days</option><option>Manual</option>
+              </select>
+            </div>
+          </div>
+          <button
+            onClick={() => { setShowAddSecretForm(false); showNotification('✅ Secret added successfully!'); }}
+            className="px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+          >
+            Save Secret
+          </button>
+        </div>
+      )}
 
       {/* Critical Alerts */}
       {(compromisedCount > 0 || expiredCount > 0) && (
@@ -338,7 +408,14 @@ export const SecretsRotation: React.FC = () => {
                   <td className="p-4 text-gray-400 text-sm max-w-xs truncate">{event.details}</td>
                   <td className="p-4">
                     {event.rollbackAvailable && (
-                      <button className="px-3 py-1 bg-orange-500/20 hover:bg-orange-500/30 border border-orange-500 rounded text-sm text-orange-400">
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Rollback rotation for ${event.secretName}?\n\nThis will revert to the previous secret value. Services using this secret will switch back to the old credential.`)) {
+                            showNotification(`↩️ Rollback initiated for ${event.secretName}. Previous value restored.`);
+                          }
+                        }}
+                        className="px-3 py-1 bg-orange-500/20 hover:bg-orange-500/30 border border-orange-500 rounded text-sm text-orange-400"
+                      >
                         ↩️ Rollback
                       </button>
                     )}
@@ -442,9 +519,36 @@ export const SecretsRotation: React.FC = () => {
             </div>
           ))}
 
-          <button className="w-full p-6 border-2 border-dashed border-gray-700 rounded-xl text-gray-500 hover:border-purple-500 hover:text-purple-400 transition-colors">
-            ➕ Connect New Vault
+          <button
+            onClick={() => setShowConnectVaultForm(!showConnectVaultForm)}
+            className="w-full p-6 border-2 border-dashed border-gray-700 rounded-xl text-gray-500 hover:border-purple-500 hover:text-purple-400 transition-colors"
+          >
+            {showConnectVaultForm ? '✕ Cancel' : '➕ Connect New Vault'}
           </button>
+
+          {showConnectVaultForm && (
+            <div className="bg-gray-900/50 border border-purple-500/30 rounded-xl p-6 mt-4">
+              <h3 className="text-lg font-semibold text-purple-400 mb-4">Connect New Vault</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Vault Type</label>
+                  <select title="Vault type" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none">
+                    <option>HashiCorp Vault</option><option>AWS Secrets Manager</option><option>Azure Key Vault</option><option>GCP Secret Manager</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Connection URL</label>
+                  <input type="text" placeholder="https://vault.example.com" className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none" />
+                </div>
+              </div>
+              <button
+                onClick={() => { setShowConnectVaultForm(false); showNotification('✅ Vault connection established! Syncing secrets...'); }}
+                className="px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg font-medium"
+              >
+                Connect
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

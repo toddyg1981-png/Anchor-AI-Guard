@@ -134,7 +134,7 @@ export const ForensicsInvestigation: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🔬 Forensics & Investigation</h1>
           <p className="text-gray-400">Digital forensics and incident investigation platform</p>
         </div>
-        <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
+        <button onClick={() => alert('New forensic case form would open here. Cases are created with priority, assigned investigator, and linked evidence.')} className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
           + New Case
         </button>
       </div>
