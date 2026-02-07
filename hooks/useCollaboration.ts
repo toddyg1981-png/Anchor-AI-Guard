@@ -125,42 +125,60 @@ export function useCollaboration(options: UseCollaborationOptions): [Collaborati
 
   // WebSocket connection
   useEffect(() => {
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 3;
+    let stopped = false;
+
     const connect = () => {
-      const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/collaboration`;
-      const ws = new WebSocket(`${wsUrl}?roomId=${roomId}&userId=${userId}&userName=${encodeURIComponent(userName)}`);
-      
-      ws.onopen = () => {
-        setState(prev => ({ ...prev, connected: true }));
-        console.log('🔗 Connected to collaboration room:', roomId);
-      };
+      // Skip WebSocket in production — no collaboration WS server on Vercel/Netlify
+      const isDeployed = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+      if (isDeployed || stopped || reconnectAttempts >= maxReconnectAttempts) {
+        return;
+      }
 
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          handleEvent(data);
-        } catch (error) {
-          console.error('Failed to parse collaboration event:', error);
-        }
-      };
-
-      ws.onclose = () => {
-        setState(prev => ({ ...prev, connected: false }));
-        console.log('🔌 Disconnected from collaboration room');
+      try {
+        const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/collaboration`;
+        const ws = new WebSocket(`${wsUrl}?roomId=${roomId}&userId=${userId}&userName=${encodeURIComponent(userName)}`);
         
-        // Reconnect after 3 seconds
-        reconnectTimeoutRef.current = setTimeout(connect, 3000);
-      };
+        ws.onopen = () => {
+          setState(prev => ({ ...prev, connected: true }));
+          reconnectAttempts = 0;
+        };
 
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-      };
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            handleEvent(data);
+          } catch {
+            // Silently ignore parse errors
+          }
+        };
 
-      wsRef.current = ws;
+        ws.onclose = () => {
+          setState(prev => ({ ...prev, connected: false }));
+          
+          // Reconnect with backoff, up to max attempts
+          if (!stopped && reconnectAttempts < maxReconnectAttempts) {
+            reconnectAttempts++;
+            const delay = Math.min(3000 * Math.pow(2, reconnectAttempts - 1), 30000);
+            reconnectTimeoutRef.current = setTimeout(connect, delay);
+          }
+        };
+
+        ws.onerror = () => {
+          // Suppress noisy WebSocket errors
+        };
+
+        wsRef.current = ws;
+      } catch {
+        stopped = true;
+      }
     };
 
     connect();
 
     return () => {
+      stopped = true;
       if (wsRef.current) {
         wsRef.current.close();
       }

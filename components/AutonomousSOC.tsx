@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 interface SOCAgent {
   id: string;
@@ -34,6 +36,34 @@ interface AutomatedResponse {
 }
 
 const AutonomousSOC: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [socDashboard, setSocDashboard] = useState<unknown>(null);
+  const [liveEvents, setLiveEvents] = useState<unknown[]>([]);
+  const [playbooks, setPlaybooks] = useState<unknown[]>([]);
+
+  // Fetch real data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dashboard, eventsResp, playbooksResp] = await Promise.all([
+          backendApi.soc.getDashboard(),
+          backendApi.soc.getEvents({ limit: 10 }),
+          backendApi.soc.getPlaybooks(),
+        ]);
+        setSocDashboard(dashboard);
+        setLiveEvents((eventsResp as { events: unknown[] })?.events || []);
+        setPlaybooks((playbooksResp as { playbooks: unknown[] })?.playbooks || []);
+        logger.info('SOC data loaded', { dashboard });
+      } catch (err) {
+        logger.error('Failed to load SOC data', { error: err });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   const [agents] = useState<SOCAgent[]>([
     {
       id: 'agent-1',

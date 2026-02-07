@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // ACTIVE DEFENSE - LEGAL COUNTER-INTELLIGENCE & ATTACKER DETERRENCE
@@ -68,6 +69,27 @@ export const ActiveDefense: React.FC = () => {
   const [autoReportEnabled, setAutoReportEnabled] = useState(true);
   const [showDeployForm, setShowDeployForm] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const [_loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('active-defense');
+        if (res) console.log('Dashboard loaded:', res); // eslint-disable-line no-console
+      } catch (e) { console.error(e); } finally { setLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('active-defense', 'Analyze active defense posture and recommend deception strategies and automated response improvements') as Record<string, unknown>;
+      if (res?.analysis) setAnalysisResult(res.analysis as string);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -237,6 +259,7 @@ export const ActiveDefense: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold mb-2">⚔️ Active Defense System</h1>
           <p className="text-gray-400">Legal counter-intelligence, honeypots, and attacker deterrence</p>
+          <button onClick={handleAIAnalysis} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm">{analyzing ? 'Analyzing...' : 'AI Analysis'}</button>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg">
@@ -677,6 +700,12 @@ export const ActiveDefense: React.FC = () => {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+      {analysisResult && (
+        <div className="bg-slate-800 border border-blue-500/30 rounded-xl p-4 mt-4">
+          <div className="flex justify-between items-center mb-2"><h3 className="font-semibold text-blue-400">AI Analysis</h3><button onClick={() => setAnalysisResult('')} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</div>
         </div>
       )}
     </div>

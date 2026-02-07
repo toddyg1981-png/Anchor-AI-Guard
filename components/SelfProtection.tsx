@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // ANCHOR SELF-PROTECTION SYSTEM
@@ -54,6 +55,24 @@ export const SelfProtection: React.FC = () => {
   const [lockdownLevel, setLockdownLevel] = useState<0 | 1 | 2 | 3>(0);
   const [isScanning, setIsScanning] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [systemHealth, setSystemHealth] = useState<any>(null);
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  const loadDashboard = async () => {
+    setLoading(true);
+    try {
+      const data = await backendApi.selfProtection.getDashboard() as any;
+      setSystemHealth(data);
+      if (data?.lockdownMode) {
+        setLockdownLevel(data.lockdownMode ? 1 : 0);
+      }
+    } catch (err) { console.error('Self-protection dashboard failed:', err); }
+    setLoading(false);
+  };
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -105,16 +124,27 @@ export const SelfProtection: React.FC = () => {
     { id: 'al-5', timestamp: '2026-02-04T11:40:00Z', user: 'admin@anchor.security', action: 'EXPORT_DATA', resource: '/api/export', ip: '203.45.67.89', location: 'Brisbane, AU', riskScore: 25, flagged: false }
   ];
 
-  // Simulate real-time scanning
-  const runFullScan = () => {
+  // Real scanning via backend
+  const runFullScan = async () => {
     setIsScanning(true);
-    setTimeout(() => setIsScanning(false), 5000);
+    try {
+      const result = await backendApi.selfProtection.verifyIntegrity() as any;
+      if (result) {
+        showNotification(`Integrity scan complete: ${result.allChecksPass ? 'ALL PASSED ✓' : 'ISSUES FOUND ⚠️'}`);
+        setSystemHealth((prev: any) => ({ ...prev, ...result }));
+      }
+    } catch (err) { showNotification('Scan failed - check backend connection'); }
+    setIsScanning(false);
   };
 
-  // Lockdown system
-  const activateLockdown = (level: 0 | 1 | 2 | 3) => {
+  // Lockdown system via backend
+  const activateLockdown = async (level: 0 | 1 | 2 | 3) => {
     setLockdownLevel(level);
     if (level === 3) setPanicMode(true);
+    try {
+      await backendApi.selfProtection.toggleLockdown(level > 0);
+      showNotification(`Lockdown level ${level} ${level > 0 ? 'ACTIVATED' : 'DEACTIVATED'}`);
+    } catch { showNotification('Failed to toggle lockdown mode'); }
   };
 
   const lockdownDescriptions = {

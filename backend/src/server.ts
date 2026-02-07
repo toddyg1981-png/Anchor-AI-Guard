@@ -21,6 +21,24 @@ import { oauthRoutes } from './routes/oauth';
 import { emailRoutes } from './routes/email';
 import { analyticsRoutes } from './routes/analytics';
 import { aiRoutes } from './routes/ai';
+import { threatIntelRoutes } from './routes/threat-intel';
+import { complianceRoutes } from './routes/compliance';
+import { socRoutes } from './routes/soc';
+import { attackSurfaceRoutes } from './routes/attack-surface';
+import { aiGuardrailsRoutes } from './routes/ai-guardrails';
+import { vulnerabilityIntelRoutes } from './routes/vuln-intel';
+import { digitalTwinRoutes } from './routes/digital-twin';
+import { quantumCryptoRoutes } from './routes/quantum-crypto';
+import { supplyChainRoutes } from './routes/supply-chain';
+import { breachSimRoutes } from './routes/breach-sim';
+import { selfProtectionRoutes } from './routes/self-protection';
+import { deceptionRoutes, regulatoryIntelRoutes, nationalSecurityRoutes } from './routes/deception-national';
+import { securityModulesRoutes } from './routes/security-modules';
+import { badgeRoutes } from './routes/badges';
+import { aiEvolutionRoutes, startEvolutionEngine } from './routes/ai-evolution';
+import endpointProtectionRoutes from './routes/endpoint-protection';
+import anchorIntelligenceRoutes from './routes/anchor-intelligence';
+import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
 import { wsManager } from './lib/websocket';
 
 async function main() {
@@ -52,9 +70,33 @@ async function main() {
 
   // Security headers
   await app.register(helmet, {
-    contentSecurityPolicy: false, // Allow frontend to load from different origin
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", env.frontendUrl],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+      },
+    },
     crossOriginEmbedderPolicy: false,
+    hsts: {
+      maxAge: 31536000, // 1 year
+      includeSubDomains: true,
+      preload: true,
+    },
   });
+
+  // IP blocking hook for blocked IPs
+  app.addHook('onRequest', ipBlockingMiddleware());
+  
+  // Security headers hook
+  app.addHook('onSend', securityHeaders());
 
   // Global rate limiting - 100 requests per minute per IP
   await app.register(rateLimit, {
@@ -111,6 +153,35 @@ async function main() {
   app.register(sbomRoutes, { prefix: '/api' });
   app.register(analyticsRoutes, { prefix: '/api' });
   app.register(aiRoutes, { prefix: '/api' });
+  
+  // World-first feature routes
+  app.register(threatIntelRoutes, { prefix: '/api' });
+  app.register(complianceRoutes, { prefix: '/api' });
+  app.register(socRoutes, { prefix: '/api' });
+  app.register(attackSurfaceRoutes, { prefix: '/api' });
+  app.register(aiGuardrailsRoutes, { prefix: '/api' });
+  app.register(vulnerabilityIntelRoutes, { prefix: '/api' });
+  app.register(digitalTwinRoutes, { prefix: '/api' });
+  app.register(quantumCryptoRoutes, { prefix: '/api' });
+  app.register(supplyChainRoutes, { prefix: '/api' });
+  app.register(breachSimRoutes, { prefix: '/api' });
+  app.register(selfProtectionRoutes, { prefix: '/api' });
+  app.register(deceptionRoutes, { prefix: '/api' });
+  app.register(regulatoryIntelRoutes, { prefix: '/api' });
+  app.register(nationalSecurityRoutes, { prefix: '/api' });
+  app.register(securityModulesRoutes, { prefix: '/api' });
+  
+  // Customer protection badge system
+  app.register(badgeRoutes, { prefix: '/api' });
+  
+  // AI Self-Evolution Engine - keeps Anchor ahead of threats
+  app.register(aiEvolutionRoutes, { prefix: '/api' });
+  
+  // Endpoint Detection & Response (EDR) - device protection
+  app.register(endpointProtectionRoutes, { prefix: '/api' });
+
+  // Anchor Intelligence — B2B AI-as-a-Service Platform
+  app.register(anchorIntelligenceRoutes, { prefix: '/api' });
 
   app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
 
@@ -159,8 +230,13 @@ async function main() {
   
   // Initialize WebSocket server
   wsManager.initialize(app.server);
+  
+  // Start AI Evolution Engine for continuous security updates
+  startEvolutionEngine();
+  
   app.log.info(`Anchor backend running on http://localhost:${env.port}`);
   app.log.info(`WebSocket server available at ws://localhost:${env.port}/ws`);
+  app.log.info(`AI Evolution Engine active - continuously monitoring threats`);
 }
 
 main().catch((err) => {

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // ============================================================================
 // THREAT INTELLIGENCE PLATFORM - REAL-TIME THREAT FEEDS & CORRELATION
@@ -71,8 +73,32 @@ export const ThreatIntelligence: React.FC = () => {
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
   const [syncingFeeds, setSyncingFeeds] = useState(false);
   const [showAlertDetails, setShowAlertDetails] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState<unknown>(null);
+  const [kevData, setKevData] = useState<unknown>(null);
 
-  // Mock threat feeds
+  // Fetch real data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dashboard, kev] = await Promise.all([
+          backendApi.threatIntel.getDashboard(),
+          backendApi.threatIntel.getKEV(),
+        ]);
+        setDashboardData(dashboard);
+        setKevData(kev);
+        logger.info('Threat intelligence data loaded', { dashboard, kev });
+      } catch (err) {
+        logger.error('Failed to load threat intelligence', { error: err });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Mock threat feeds (augmented with live data when available)
   const feeds: ThreatFeed[] = [
     { id: 'feed-1', name: 'MITRE ATT&CK', provider: 'MITRE', type: 'open_source', status: 'active', lastUpdate: '2026-02-04T10:00:00Z', indicatorCount: 15420, matchesFound: 23 },
     { id: 'feed-2', name: 'CISA Known Exploited Vulns', provider: 'CISA', type: 'government', status: 'active', lastUpdate: '2026-02-04T08:00:00Z', indicatorCount: 1089, matchesFound: 7 },

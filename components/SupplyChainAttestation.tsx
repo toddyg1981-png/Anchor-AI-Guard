@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 interface Attestation {
   id: string;
@@ -33,6 +34,28 @@ interface ProvenanceRecord {
 }
 
 const SupplyChainAttestation: React.FC = () => {
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('supply-chain-attestation');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('supply-chain-attestation', 'Analyze supply chain attestation for SLSA compliance, provenance verification, and build integrity');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
+
   const [attestations] = useState<Attestation[]>([
     {
       id: 'att-1',
@@ -147,9 +170,18 @@ const SupplyChainAttestation: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">🔗 Supply Chain Attestation</h1>
           <p className="text-gray-400 mt-1">Blockchain-verified software provenance — Trust but verify every dependency</p>
         </div>
+        <div className="flex items-center gap-3">
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 rounded-lg font-medium text-white flex items-center gap-2"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+        </button>
         <button onClick={() => { alert('Generating SBOM Report...\n\nThis report includes:\n• Full dependency tree\n• License compliance status\n• SLSA provenance levels\n• Blockchain attestation verification\n• Vulnerability summary'); window.print(); }} className="px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           Generate SBOM Report
         </button>
+        </div>
       </div>
 
       {/* SBOM Overview */}
@@ -312,6 +344,13 @@ const SupplyChainAttestation: React.FC = () => {
           </div>
         </div>
       </div>
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <h3 className="text-lg font-semibold text-purple-300 mb-2">🤖 AI Analysis Result</h3>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+          <button onClick={() => setAnalysisResult('')} className="mt-2 text-sm text-purple-400 hover:text-purple-300">Dismiss</button>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // Types
 export interface AttackNode {
@@ -346,6 +347,27 @@ export const AttackPathVisualization: React.FC<AttackPathVisualizationProps> = (
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [_loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('attack-path');
+        if (res) console.log('Dashboard loaded:', res); // eslint-disable-line no-console
+      } catch (e) { console.error(e); } finally { setLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('attack-path', 'Analyze attack paths for critical asset exposure and recommend segmentation improvements') as Record<string, unknown>;
+      if (res?.analysis) setAnalysisResult(res.analysis as string);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Mock data for demo
   const demoData: AttackPath[] = paths || [
@@ -486,6 +508,7 @@ export const AttackPathVisualization: React.FC<AttackPathVisualizationProps> = (
         <div>
           <h3 className="text-lg font-semibold text-white">Attack Path Visualization</h3>
           <p className="text-sm text-gray-400">Interactive visualization of potential attack chains</p>
+          <button onClick={handleAIAnalysis} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm">{analyzing ? 'Analyzing...' : 'AI Analysis'}</button>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -590,6 +613,12 @@ export const AttackPathVisualization: React.FC<AttackPathVisualizationProps> = (
           </div>
         </div>
       </div>
+      {analysisResult && (
+        <div className="bg-slate-800 border border-blue-500/30 rounded-xl p-4 mt-4">
+          <div className="flex justify-between items-center mb-2"><h3 className="font-semibold text-blue-400">AI Analysis</h3><button onClick={() => setAnalysisResult('')} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</div>
+        </div>
+      )}
     </div>
   );
 };

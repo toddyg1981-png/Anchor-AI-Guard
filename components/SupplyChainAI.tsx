@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // SUPPLY CHAIN AI - MALICIOUS PACKAGE & DEPENDENCY SECURITY
@@ -49,6 +50,34 @@ export const SupplyChainAI: React.FC = () => {
   const [_selectedPackage, _setSelectedPackage] = useState<DependencyPackage | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [backendStats, setBackendStats] = useState<any>(null);
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  const loadDashboard = async () => {
+    setLoading(true);
+    try {
+      const data = await backendApi.supplyChain.getDashboard() as any;
+      setBackendStats(data);
+    } catch (err) { console.error('Supply chain dashboard failed:', err); }
+    setLoading(false);
+  };
+
+  const handleScanPackage = async (pkgName: string, version?: string) => {
+    setIsScanning(true);
+    setScanProgress(0);
+    const interval = setInterval(() => setScanProgress(p => Math.min(p + 15, 90)), 500);
+    try {
+      const result = await backendApi.supplyChain.scan(pkgName, version) as any;
+      console.log('Scan result:', result);
+      setScanProgress(100);
+    } catch (err) { console.error('Package scan failed:', err); }
+    clearInterval(interval);
+    setIsScanning(false);
+  };
 
   // Mock packages data
   const packages: DependencyPackage[] = [

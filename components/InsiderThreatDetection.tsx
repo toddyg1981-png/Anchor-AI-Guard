@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // INSIDER THREAT DETECTION
@@ -40,6 +41,27 @@ interface AccessPattern {
 
 export const InsiderThreatDetection: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('insider-threat');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res: any = await backendApi.modules.analyze('insider-threat', 'Analyze insider threat indicators for behavioral anomalies, data exfiltration patterns, and policy violations');
+      if (res?.analysis) setAnalysisResult(res.analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Team members with risk scores
   const teamMembers: TeamMember[] = [
@@ -97,6 +119,9 @@ export const InsiderThreatDetection: React.FC = () => {
           <p className="text-gray-400">User behavior analytics & anomaly detection for Anchor team</p>
         </div>
         <div className="flex items-center gap-4">
+          <button onClick={handleAIAnalysis} disabled={analyzing || backendLoading} className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500 rounded-lg text-purple-400 font-medium disabled:opacity-50 transition-colors">
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
           <div className="px-4 py-2 bg-green-500/10 border border-green-500 rounded-lg">
             <span className="text-green-400 font-bold">ALL CLEAR</span>
             <span className="text-gray-400 text-sm ml-2">No active threats</span>
@@ -259,6 +284,17 @@ export const InsiderThreatDetection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-400 hover:text-white">✕</button>
+          </div>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+        </div>
+      )}
     </div>
   );
 };

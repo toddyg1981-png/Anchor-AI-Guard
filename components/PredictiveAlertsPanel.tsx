@@ -3,7 +3,8 @@
  * Shows AI-predicted CVEs before they're publicly disclosed
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // Types
 export interface PredictedVulnerability {
@@ -333,6 +334,27 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
 }) => {
   const [filter, setFilter] = useState<'all' | 'critical' | 'high' | 'medium' | 'low'>('all');
   const [sortBy, setSortBy] = useState<'confidence' | 'severity' | 'timeline'>('confidence');
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('predictive-alerts');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res: any = await backendApi.modules.analyze('predictive-alerts', 'Analyze alert patterns for prediction accuracy, false positive optimization, and emerging threat correlation');
+      if (res?.analysis) setAnalysisResult(res.analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Mock data for demo
   const demoData: PredictedVulnerability[] = predictions || [
@@ -461,6 +483,9 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
             <p className="text-sm text-gray-400">AI-predicted CVEs before public disclosure</p>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={handleAIAnalysis} disabled={analyzing || backendLoading} className="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500 rounded-lg text-purple-400 text-sm font-medium disabled:opacity-50 transition-colors">
+              {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+            </button>
             <span className="text-xs text-gray-500">Last updated: {new Date().toLocaleTimeString()}</span>
           </div>
         </div>
@@ -549,6 +574,17 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
           Configure Alerts →
         </button>
       </div>
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="m-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-400 hover:text-white">✕</button>
+          </div>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+        </div>
+      )}
     </div>
   );
 };

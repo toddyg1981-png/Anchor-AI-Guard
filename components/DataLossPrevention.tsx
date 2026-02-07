@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // DATA LOSS PREVENTION (DLP)
@@ -57,6 +58,28 @@ interface SensitiveDataType {
 
 export const DataLossPrevention: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'assets' | 'alerts' | 'policies' | 'discovery'>('dashboard');
+
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('dlp');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('dlp', 'Analyze DLP policies for data exfiltration risks, classification gaps, and policy effectiveness');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const dataAssets: DataAsset[] = [
     { id: 'da-1', name: 'Customer Database', type: 'database', classification: 'confidential', location: 'AWS RDS Sydney', recordCount: 2500000, sensitiveDataTypes: ['PII', 'Financial', 'Health'], encryptionStatus: 'encrypted', accessControls: 'strict', lastScan: '2026-02-04T06:00:00Z', riskScore: 35 },
@@ -127,6 +150,13 @@ export const DataLossPrevention: React.FC = () => {
         </div>
         <button onClick={() => { alert('Data discovery scan initiated. Scanning all connected data stores for PII, PHI, financial data, and credentials...'); }} className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
           🔍 Run Data Discovery
+        </button>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
         </button>
       </div>
 
@@ -440,6 +470,17 @@ export const DataLossPrevention: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-bold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-500 hover:text-white">✕</button>
+          </div>
+          <div className="text-gray-300 whitespace-pre-wrap">{analysisResult}</div>
         </div>
       )}
     </div>

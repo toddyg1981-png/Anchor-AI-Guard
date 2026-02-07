@@ -53,17 +53,27 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttempts = useRef(0);
-  const maxReconnectAttempts = 5;
+  const maxReconnectAttempts = 3;
+  const hasFailed = useRef(false);
 
   const connect = useCallback(() => {
-    // Stop if we've exceeded max reconnect attempts
-    if (reconnectAttempts.current >= maxReconnectAttempts) {
-      console.warn(`WebSocket: max reconnect attempts (${maxReconnectAttempts}) reached, stopping`);
+    // Don't attempt WebSocket on production/deployed environments where backend
+    // is on a different host — WS only works when frontend & backend share origin
+    // or when running locally (localhost)
+    const apiUrl = env.apiBaseUrl;
+    const isLocalhost = apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1');
+    if (!isLocalhost) {
+      // On deployed Vercel/Netlify, skip WebSocket — use REST polling instead
+      return;
+    }
+
+    // Stop if we've exceeded max reconnect attempts or previously failed completely
+    if (hasFailed.current || reconnectAttempts.current >= maxReconnectAttempts) {
       return;
     }
 
     // Build WebSocket URL from API base URL
-    const wsUrl = env.apiBaseUrl
+    const wsUrl = apiUrl
       .replace(/^http/, 'ws')
       .replace(/\/api$/, '/ws');
 
@@ -74,26 +84,30 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
       ws.onopen = () => {
         setIsConnected(true);
         reconnectAttempts.current = 0;
+        hasFailed.current = false;
         options.onConnected?.();
       };
 
       ws.onclose = () => {
         setIsConnected(false);
+        wsRef.current = null;
         options.onDisconnected?.();
 
         // Attempt to reconnect with exponential backoff, up to max attempts
-        if (reconnectAttempts.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
+        if (!hasFailed.current && reconnectAttempts.current < maxReconnectAttempts) {
+          const delay = Math.min(2000 * Math.pow(2, reconnectAttempts.current), 30000);
           reconnectAttempts.current++;
 
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
           }, delay);
+        } else {
+          hasFailed.current = true;
         }
       };
 
       ws.onerror = () => {
-        // Suppress noisy WebSocket error logging in production
+        // Suppress noisy WebSocket error logging
       };
 
       ws.onmessage = (event) => {
@@ -119,11 +133,11 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
               break;
           }
         } catch (err) {
-          console.error('Failed to parse WebSocket message:', err);
+          // Silently ignore parse errors
         }
       };
-    } catch (err) {
-      console.error('Failed to create WebSocket connection:', err);
+    } catch {
+      hasFailed.current = true;
     }
   }, [options]);
 

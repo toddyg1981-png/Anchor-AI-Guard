@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // BREACH SIMULATOR - AUTOMATED RED TEAM & ATTACK SIMULATION
@@ -59,98 +60,100 @@ export const BreachSimulator: React.FC = () => {
   const [_selectedScenario, setSelectedScenario] = useState<AttackScenario | null>(null);
   const [runningSimulation, setRunningSimulation] = useState<SimulationResult | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [simulating, setSimulating] = useState(false);
+  const [scenarios, setScenarios] = useState<AttackScenario[]>([]);
+  const [mockSimulationResult, setMockSimulationResult] = useState<SimulationResult | null>(null);
 
-  // Attack scenarios
-  const scenarios: AttackScenario[] = [
-    {
-      id: 'scen-1',
-      name: 'Phishing Campaign',
-      description: 'Simulate a targeted spear-phishing attack against employees with credential harvesting and lateral movement',
-      category: 'external',
-      difficulty: 'intermediate',
-      techniques: ['T1566.001', 'T1078', 'T1021.001', 'T1003.001'],
-      estimatedDuration: '15 min',
-      status: 'ready'
-    },
-    {
-      id: 'scen-2',
-      name: 'Ransomware Deployment',
-      description: 'Full ransomware attack chain from initial access to encryption, testing backup integrity and incident response',
-      category: 'ransomware',
-      difficulty: 'advanced',
-      techniques: ['T1486', 'T1490', 'T1489', 'T1529'],
-      estimatedDuration: '30 min',
-      status: 'ready'
-    },
-    {
-      id: 'scen-3',
-      name: 'Insider Threat',
-      description: 'Simulate malicious insider with legitimate access attempting data exfiltration',
-      category: 'insider',
-      difficulty: 'intermediate',
-      techniques: ['T1078', 'T1074', 'T1567', 'T1048'],
-      estimatedDuration: '20 min',
-      status: 'ready'
-    },
-    {
-      id: 'scen-4',
-      name: 'Supply Chain Attack',
-      description: 'Compromise through trusted third-party software or vendor access',
-      category: 'supply_chain',
-      difficulty: 'expert',
-      techniques: ['T1195.002', 'T1199', 'T1059.001', 'T1071.001'],
-      estimatedDuration: '45 min',
-      status: 'ready'
-    },
-    {
-      id: 'scen-5',
-      name: 'APT Persistence',
-      description: 'Advanced persistent threat establishing long-term presence with multiple persistence mechanisms',
-      category: 'apt',
-      difficulty: 'expert',
-      techniques: ['T1547.001', 'T1053.005', 'T1543.003', 'T1136.001'],
-      estimatedDuration: '60 min',
-      status: 'ready'
-    },
-    {
-      id: 'scen-6',
-      name: 'Credential Stuffing',
-      description: 'Automated credential stuffing attack against authentication endpoints using leaked credentials',
-      category: 'external',
-      difficulty: 'basic',
-      techniques: ['T1110.004', 'T1078.001', 'T1087.002'],
-      estimatedDuration: '10 min',
-      status: 'completed',
-      successRate: 23
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [dashData, scenData] = await Promise.all([
+        backendApi.breachSim.getDashboard() as Promise<any>,
+        backendApi.breachSim.getScenarios() as Promise<any>,
+      ]);
+      if (scenData?.scenarios) {
+        setScenarios(scenData.scenarios.map((s: any) => ({
+          id: s.id, name: s.name, description: s.description,
+          category: s.category || 'external', difficulty: s.difficulty || 'intermediate',
+          techniques: s.techniques || [], estimatedDuration: s.estimatedDuration || '15 min',
+          status: 'ready' as const,
+        })));
+      }
+      if (dashData?.recentResults?.[0]) {
+        const r = dashData.recentResults[0];
+        setMockSimulationResult({
+          id: r.id, scenarioId: r.scenarioId, scenarioName: r.scenario || 'Simulation',
+          startTime: r.startedAt, endTime: r.completedAt, status: 'completed',
+          attackPath: r.attackPath || [], findings: r.findings || [],
+          overallSuccess: r.overallSuccess || false, securityScore: r.securityScore || 0,
+          detectionRate: r.detectionRate || 0, meanTimeToDetect: r.meanTimeToDetect,
+        });
+      }
+    } catch (err) {
+      console.error('Failed to load breach sim:', err);
     }
+    // Fall back to defaults if empty
+    if (scenarios.length === 0) {
+      setScenarios(defaultScenarios);
+    }
+    if (!mockSimulationResult) {
+      setMockSimulationResult(defaultSimResult);
+    }
+    setLoading(false);
+  };
+
+  const handleRunSimulation = async (scenarioId: string) => {
+    setSimulating(true);
+    try {
+      const result = await backendApi.breachSim.runSimulation(scenarioId) as any;
+      if (result?.simulationId) {
+        // Poll for results
+        const checkResult = async () => {
+          const res = await backendApi.breachSim.getResults(result.simulationId) as any;
+          if (res?.status === 'completed') {
+            setMockSimulationResult({
+              id: res.id, scenarioId, scenarioName: res.scenario || scenarioId,
+              startTime: res.startedAt, endTime: res.completedAt, status: 'completed',
+              attackPath: res.attackPath || [], findings: res.findings || [],
+              overallSuccess: res.overallSuccess || false, securityScore: res.securityScore || 68,
+              detectionRate: res.detectionRate || 50, meanTimeToDetect: res.meanTimeToDetect,
+            });
+            setActiveTab('results');
+          }
+        };
+        setTimeout(checkResult, 3000);
+      }
+    } catch (err) { console.error('Simulation failed:', err); }
+    setSimulating(false);
+  };
+
+  const defaultScenarios: AttackScenario[] = [
+    { id: 'scen-1', name: 'Phishing Campaign', description: 'Simulate a targeted spear-phishing attack against employees with credential harvesting and lateral movement', category: 'external', difficulty: 'intermediate', techniques: ['T1566.001', 'T1078', 'T1021.001', 'T1003.001'], estimatedDuration: '15 min', status: 'ready' },
+    { id: 'scen-2', name: 'Ransomware Deployment', description: 'Full ransomware attack chain from initial access to encryption', category: 'ransomware', difficulty: 'advanced', techniques: ['T1486', 'T1490', 'T1489', 'T1529'], estimatedDuration: '30 min', status: 'ready' },
+    { id: 'scen-3', name: 'Insider Threat', description: 'Simulate malicious insider with legitimate access attempting data exfiltration', category: 'insider', difficulty: 'intermediate', techniques: ['T1078', 'T1074', 'T1567', 'T1048'], estimatedDuration: '20 min', status: 'ready' },
+    { id: 'scen-4', name: 'Supply Chain Attack', description: 'Compromise through trusted third-party software or vendor access', category: 'supply_chain', difficulty: 'expert', techniques: ['T1195.002', 'T1199', 'T1059.001', 'T1071.001'], estimatedDuration: '45 min', status: 'ready' },
+    { id: 'scen-5', name: 'APT Persistence', description: 'Advanced persistent threat establishing long-term presence with multiple persistence mechanisms', category: 'apt', difficulty: 'expert', techniques: ['T1547.001', 'T1053.005', 'T1543.003', 'T1136.001'], estimatedDuration: '60 min', status: 'ready' },
   ];
 
-  // Mock simulation result
-  const mockSimulationResult: SimulationResult = {
-    id: 'sim-1',
-    scenarioId: 'scen-1',
-    scenarioName: 'Phishing Campaign',
-    startTime: '2026-02-04T10:00:00Z',
-    endTime: '2026-02-04T10:18:00Z',
-    status: 'completed',
+  const defaultSimResult: SimulationResult = {
+    id: 'sim-1', scenarioId: 'scen-1', scenarioName: 'Phishing Campaign',
+    startTime: '2026-02-04T10:00:00Z', endTime: '2026-02-04T10:18:00Z', status: 'completed',
     attackPath: [
       { id: 'step-1', name: 'Reconnaissance', technique: 'OSINT gathering', mitreTactic: 'Reconnaissance', mitreId: 'T1589', status: 'success', timestamp: '10:00:15', details: 'Gathered employee emails from LinkedIn' },
-      { id: 'step-2', name: 'Weaponization', technique: 'Craft phishing email', mitreTactic: 'Resource Development', mitreId: 'T1566.001', status: 'success', timestamp: '10:02:30', details: 'Created convincing IT support email with malicious link' },
-      { id: 'step-3', name: 'Delivery', technique: 'Send phishing emails', mitreTactic: 'Initial Access', mitreId: 'T1566.001', status: 'success', timestamp: '10:05:00', details: 'Sent to 50 targets, 12 clicked link' },
-      { id: 'step-4', name: 'Credential Harvest', technique: 'Capture credentials', mitreTactic: 'Credential Access', mitreId: 'T1056.001', status: 'success', timestamp: '10:08:00', details: '8 users entered credentials' },
-      { id: 'step-5', name: 'Valid Account Access', technique: 'Use stolen credentials', mitreTactic: 'Persistence', mitreId: 'T1078', status: 'detected', timestamp: '10:12:00', details: 'Login attempt triggered anomaly detection' },
-      { id: 'step-6', name: 'Lateral Movement', technique: 'RDP to other systems', mitreTactic: 'Lateral Movement', mitreId: 'T1021.001', status: 'failed', timestamp: '10:15:00', details: 'Blocked by network segmentation' }
+      { id: 'step-2', name: 'Delivery', technique: 'Send phishing emails', mitreTactic: 'Initial Access', mitreId: 'T1566.001', status: 'success', timestamp: '10:05:00', details: 'Sent to 50 targets, 12 clicked link' },
+      { id: 'step-3', name: 'Credential Harvest', technique: 'Capture credentials', mitreTactic: 'Credential Access', mitreId: 'T1056.001', status: 'success', timestamp: '10:08:00', details: '8 users entered credentials' },
+      { id: 'step-4', name: 'Lateral Movement', technique: 'RDP to other systems', mitreTactic: 'Lateral Movement', mitreId: 'T1021.001', status: 'failed', timestamp: '10:15:00', details: 'Blocked by network segmentation' },
     ],
     findings: [
-      { id: 'find-1', title: 'No SPF/DKIM validation', severity: 'high', attackStep: 'Delivery', description: 'Email system accepted spoofed emails without proper validation', evidence: 'Phishing emails delivered to 50 users', recommendation: 'Implement strict SPF, DKIM, and DMARC policies', detected: false },
-      { id: 'find-2', title: '24% phishing click rate', severity: 'high', attackStep: 'Delivery', description: '12 out of 50 users clicked on phishing link', evidence: 'User click tracking data', recommendation: 'Implement security awareness training program', detected: false },
-      { id: 'find-3', title: 'Credential reuse detected', severity: 'critical', attackStep: 'Credential Harvest', description: '3 users entered their actual corporate credentials', evidence: 'Captured credentials validated against AD', recommendation: 'Implement MFA and password managers', detected: false },
-      { id: 'find-4', title: 'Anomalous login detected', severity: 'low', attackStep: 'Valid Account Access', description: 'SIEM detected unusual login pattern', evidence: 'Alert triggered within 4 minutes', recommendation: 'Continue monitoring, tune detection rules', detected: true, detectionTime: 240 }
+      { id: 'find-1', title: 'No SPF/DKIM validation', severity: 'high', attackStep: 'Delivery', description: 'Email system accepted spoofed emails', evidence: 'Phishing emails delivered to 50 users', recommendation: 'Implement strict SPF, DKIM, and DMARC policies', detected: false },
+      { id: 'find-2', title: '24% phishing click rate', severity: 'high', attackStep: 'Delivery', description: '12 out of 50 users clicked on phishing link', evidence: 'User click tracking data', recommendation: 'Implement security awareness training', detected: false },
     ],
-    overallSuccess: false,
-    securityScore: 68,
-    detectionRate: 50,
-    meanTimeToDetect: 240
+    overallSuccess: false, securityScore: 68, detectionRate: 50, meanTimeToDetect: 240,
   };
 
   // MITRE ATT&CK Tactics
@@ -171,27 +174,31 @@ export const BreachSimulator: React.FC = () => {
     { id: 'TA0040', name: 'Impact', techniques: 13, coverage: 90 }
   ];
 
-  const startSimulation = (scenario: AttackScenario) => {
+  const startSimulation = async (scenario: AttackScenario) => {
+    const simResult = mockSimulationResult || defaultSimResult;
     setSelectedScenario(scenario);
     setRunningSimulation({
-      ...mockSimulationResult,
+      ...simResult,
       scenarioId: scenario.id,
       scenarioName: scenario.name,
       status: 'running',
-      attackPath: mockSimulationResult.attackPath.map(s => ({ ...s, status: 'pending' as const }))
+      attackPath: simResult.attackPath.map(s => ({ ...s, status: 'pending' as const }))
     });
     setCurrentStep(0);
     setActiveTab('simulations');
+    // Also trigger real backend simulation
+    handleRunSimulation(scenario.id);
   };
 
   // Simulate attack progress
   useEffect(() => {
     if (runningSimulation?.status === 'running' && currentStep < runningSimulation.attackPath.length) {
+      const simResult = mockSimulationResult || defaultSimResult;
       const timer = setTimeout(() => {
         setRunningSimulation(prev => {
           if (!prev) return null;
           const newPath = [...prev.attackPath];
-          newPath[currentStep] = { ...newPath[currentStep], status: mockSimulationResult.attackPath[currentStep].status };
+          newPath[currentStep] = { ...newPath[currentStep], status: simResult.attackPath[currentStep]?.status || 'detected' };
           return { ...prev, attackPath: newPath };
         });
         setCurrentStep(prev => prev + 1);
@@ -453,7 +460,7 @@ export const BreachSimulator: React.FC = () => {
       )}
 
       {/* Results Tab */}
-      {activeTab === 'results' && (
+      {activeTab === 'results' && mockSimulationResult && (
         <div className="space-y-6">
           {/* Summary */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

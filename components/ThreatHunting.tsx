@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // THREAT HUNTING
@@ -61,6 +62,28 @@ export const ThreatHunting: React.FC = () => {
   const [searchIOC, setSearchIOC] = useState('');
   const [showNewHuntForm, setShowNewHuntForm] = useState(false);
   const [iocFilter, setIocFilter] = useState('');
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('threat-hunting');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('threat-hunting', 'Analyze threat hunting hypotheses, IOC correlation, and recommend new hunting methodologies');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
+
   const [anomalies, setAnomalies] = useState<BehavioralAnomaly[]>([
     { id: 'a-1', timestamp: '2026-02-04T11:30:00Z', entity: 'john.smith', entityType: 'user', behavior: 'Accessed 150 files in 5 minutes', baseline: 'Average 10 files/hour', deviation: 85, riskScore: 92, investigated: false },
     { id: 'a-2', timestamp: '2026-02-04T10:45:00Z', entity: 'WORKSTATION-042', entityType: 'host', behavior: 'Outbound traffic to 45 unique IPs', baseline: 'Average 8 unique IPs/day', deviation: 78, riskScore: 85, investigated: true },
@@ -132,6 +155,13 @@ export const ThreatHunting: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🎯 Threat Hunting</h1>
           <p className="text-gray-400">Proactive threat detection - hunt before they strike</p>
         </div>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 rounded-lg font-medium text-white flex items-center gap-2 mr-3"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+        </button>
         <button
           onClick={() => setShowNewHuntForm(!showNewHuntForm)}
           className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
@@ -440,6 +470,13 @@ export const ThreatHunting: React.FC = () => {
               )}
             </div>
           ))}
+        </div>
+      )}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <h3 className="text-lg font-semibold text-purple-300 mb-2">🤖 AI Analysis Result</h3>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+          <button onClick={() => setAnalysisResult('')} className="mt-2 text-sm text-purple-400 hover:text-purple-300">Dismiss</button>
         </div>
       )}
     </div>

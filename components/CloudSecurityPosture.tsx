@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // CLOUD SECURITY POSTURE MANAGEMENT (CSPM)
@@ -47,6 +48,27 @@ export const CloudSecurityPosture: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'findings' | 'compliance' | 'resources' | 'identity'>('overview');
   const [selectedAccount, setSelectedAccount] = useState<string>('all');
   const [isRemediating, setIsRemediating] = useState<string | null>(null);
+  const [_loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('cloud-security');
+        if (res) console.log('Dashboard loaded:', res); // eslint-disable-line no-console
+      } catch (e) { console.error(e); } finally { setLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('cloud-security', 'Analyze cloud security posture for misconfigurations, excessive permissions, and compliance gaps') as Record<string, unknown>;
+      if (res?.analysis) setAnalysisResult(res.analysis as string);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Mock cloud accounts
   const accounts: CloudAccount[] = [
@@ -128,6 +150,7 @@ export const CloudSecurityPosture: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold mb-2">☁️ Cloud Security Posture</h1>
           <p className="text-gray-400">Multi-cloud security configuration and compliance management</p>
+          <button onClick={handleAIAnalysis} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm">{analyzing ? 'Analyzing...' : 'AI Analysis'}</button>
         </div>
         <div className="flex items-center gap-4">
           <select 
@@ -495,6 +518,12 @@ export const CloudSecurityPosture: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {analysisResult && (
+        <div className="bg-slate-800 border border-blue-500/30 rounded-xl p-4 mt-4">
+          <div className="flex justify-between items-center mb-2"><h3 className="font-semibold text-blue-400">AI Analysis</h3><button onClick={() => setAnalysisResult('')} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</div>
         </div>
       )}
     </div>

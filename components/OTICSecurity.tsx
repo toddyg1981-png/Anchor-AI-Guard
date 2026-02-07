@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // IoT/OT/ICS SECURITY
@@ -55,6 +56,36 @@ interface Protocol {
 
 export const OTICSecurity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'devices' | 'network' | 'alerts' | 'protocols'>('dashboard');
+  const [loading, setLoading] = useState(true);
+  const [backendData, setBackendData] = useState<any>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const dashboard = await backendApi.modules.getDashboard('ot-security');
+        setBackendData(dashboard);
+      } catch (err) {
+        console.error('Failed to load OT/ICS data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const runOTAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const result = await backendApi.modules.analyze('ot-security', 'OT/ICS/SCADA environment', 'Assess industrial control system security posture including Purdue Model compliance');
+      setAiAnalysis(result);
+    } catch (err) {
+      console.error('OT analysis failed:', err);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   const otDevices: OTDevice[] = [
     { id: 'd-1', name: 'Main PLC Controller', type: 'plc', manufacturer: 'Siemens', model: 'S7-1500', firmware: 'V2.9.4', ipAddress: '10.100.1.10', protocol: 'Profinet', zone: 'Control Zone', criticality: 'critical', status: 'online', lastSeen: '2026-02-04T11:55:00Z', vulnerabilities: 2, compliance: 85 },
@@ -120,22 +151,56 @@ export const OTICSecurity: React.FC = () => {
   const criticalAlerts = alerts.filter(a => a.severity === 'critical' && a.status !== 'resolved').length;
   const totalVulns = otDevices.reduce((sum, d) => sum + d.vulnerabilities, 0);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Scanning OT/ICS infrastructure...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">🏭 OT/ICS Security</h1>
           <p className="text-gray-400">Operational Technology & Industrial Control Systems Protection</p>
+          {backendData?.stats && (
+            <p className="text-xs text-cyan-400 mt-1">
+              Findings: {backendData.stats.totalFindings} | Critical: {backendData.stats.criticalFindings}
+            </p>
+          )}
         </div>
         <div className="flex gap-2">
-          <button onClick={() => alert('Asset discovery scan initiated.\n\nScanning network for:\n• PLCs, SCADA systems, HMIs\n• RTUs, sensors, actuators\n• IoT gateways and devices\n• Building management systems\n\nUsing passive network discovery to avoid disrupting operations.')} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg">
+          <button onClick={runOTAnalysis} disabled={analyzing} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium disabled:opacity-50">
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
+          <button onClick={async () => { const r = await backendApi.modules.analyze('ot-security', 'OT asset discovery', 'Discover and categorize all OT/ICS assets'); setAiAnalysis(r); }} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg">
             🔍 Asset Discovery
           </button>
-          <button onClick={() => { alert('Generating OT/ICS Security Report...'); window.print(); }} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
+          <button onClick={() => window.print()} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
             📊 Generate Report
           </button>
         </div>
       </div>
+
+      {/* AI Analysis Results */}
+      {aiAnalysis && (
+        <div className="mb-6 p-4 bg-purple-900/20 border border-purple-500/30 rounded-xl">
+          <h3 className="text-lg font-semibold text-purple-400 mb-2">🤖 AI OT/ICS Assessment</h3>
+          <p className="text-gray-300 mb-2">{aiAnalysis.assessment || 'Analysis complete'}</p>
+          <div className="flex gap-4 text-sm">
+            <span className="text-cyan-400">Score: {aiAnalysis.score || 0}/100</span>
+            <span className="text-yellow-400">Risk: {aiAnalysis.riskLevel || 'medium'}</span>
+          </div>
+          {aiAnalysis.recommendations?.slice(0, 3).map((r: any, i: number) => (
+            <p key={i} className="text-sm text-gray-300 mt-1">• {r.action || r}</p>
+          ))}
+        </div>
+      )}
 
       {/* Alert Banner */}
       {criticalAlerts > 0 && (

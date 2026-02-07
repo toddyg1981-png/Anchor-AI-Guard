@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // SECURITY OPERATIONS CENTER (SOC) - 24/7 MONITORING
@@ -42,6 +43,27 @@ export const SOCDashboard: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [lockdownActive, setLockdownActive] = useState(false);
   const [socNotification, setSocNotification] = useState<string | null>(null);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('soc-dashboard');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('soc-dashboard', 'Analyze SOC operations for alert fatigue, analyst workload, and detection coverage gaps');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Update clock every second
   useEffect(() => {
@@ -136,6 +158,13 @@ export const SOCDashboard: React.FC = () => {
           <div className="ml-8 px-4 py-2 bg-green-500/10 border border-green-500 rounded-lg animate-pulse">
             <span className="text-green-400 font-mono">● OPERATIONAL</span>
           </div>
+          <button
+            onClick={handleAIAnalysis}
+            disabled={analyzing || backendLoading}
+            className="ml-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 rounded-lg font-medium text-white flex items-center gap-2"
+          >
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
         </div>
         
         <div className="flex items-center gap-6">
@@ -379,6 +408,13 @@ export const SOCDashboard: React.FC = () => {
           <span>Anchor SOC v1.0.0</span>
         </div>
       </div>
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <h3 className="text-lg font-semibold text-purple-300 mb-2">🤖 AI Analysis Result</h3>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+          <button onClick={() => setAnalysisResult('')} className="mt-2 text-sm text-purple-400 hover:text-purple-300">Dismiss</button>
+        </div>
+      )}
     </div>
   );
 };

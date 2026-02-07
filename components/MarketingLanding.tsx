@@ -11,6 +11,7 @@ interface MarketingLandingProps {
   onViewAbout?: () => void;
   onViewContact?: () => void;
   onViewPurchaseTerms?: () => void;
+  onViewIntelligence?: () => void;
 }
 
 // Use centralized env config - strip /api suffix for analytics endpoints
@@ -26,6 +27,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
   onViewAbout,
   onViewContact,
   onViewPurchaseTerms,
+  onViewIntelligence,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -142,13 +144,41 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       badge: 'ENTERPRISE',
       badgeColor: 'bg-indigo-500',
     },
+    {
+      icon: '🔧',
+      title: '1-Click AI Fix Button',
+      description: 'Found a vulnerability? Hit the Fix button and our AI instantly generates a secure, tested patch — complete with a pull request ready to merge. No manual coding required.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
+    {
+      icon: '🧬',
+      title: 'AI Self-Evolution Engine',
+      description: 'Anchor evolves itself. Our AI continuously monitors global threat feeds, generates new detection rules, and updates its own defenses — so you\'re always ahead of the next attack.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
+    {
+      icon: '💻',
+      title: 'Endpoint Detection & Response',
+      description: 'Full EDR/XDR protection for Windows, macOS, Linux, iOS & Android. AI-powered threat detection, automatic quarantine, device isolation, and compliance enforcement.',
+      badge: 'COMPLETE PLATFORM',
+      badgeColor: 'bg-cyan-500',
+    },
+    {
+      icon: '🌐',
+      title: 'Anchor Intelligence API',
+      description: 'Our self-evolving AI as a service. Threat intel feeds, detection rule generation in 6 formats, predictive modeling, IOC enrichment, and competitive intelligence — all via one REST API.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
   ];
 
   const stats = [
-    { value: '85+', label: 'Security Modules' },
-    { value: '12', label: 'World-First Features' },
+    { value: '86+', label: 'Security Modules' },
+    { value: '16', label: 'World-First Features' },
     { value: '16', label: 'Compliance Frameworks' },
-    { value: '24/7', label: 'Autonomous Protection' },
+    { value: '24/7', label: 'Self-Evolving Protection' },
   ];
 
   const testimonials = [
@@ -231,6 +261,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <a href="#faq" className="text-cyan-400 hover:text-pink-400 transition-colors">
                 FAQ
               </a>
+              <button onClick={onViewIntelligence} className="text-cyan-400 hover:text-pink-400 transition-colors font-semibold">
+                Anchor Intelligence
+              </button>
             </div>
             <div className="flex items-center gap-4">
               <button
@@ -266,7 +299,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <div className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
               <span className="text-cyan-400">✨</span>
               <span className="text-sm text-cyan-300">
-                85+ Security Modules • 12 World-First AI Features
+                86+ Security Modules • 15 World-First AI Features • Full EDR/XDR • Self-Evolving AI • B2B Intelligence API
               </span>
             </div>
 
@@ -282,8 +315,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             {/* Subheadline */}
             <p className="text-xl text-purple-300 mb-10 max-w-2xl mx-auto">
               <strong>Government-grade protection</strong> for enterprises and agencies worldwide. 
-              Featuring <strong>autonomous SOC</strong>, <strong>digital twin simulation</strong>, 
-              <strong>predictive CVE intelligence</strong>, and <strong>85+ integrated security modules</strong> in one unified platform.
+              Featuring <strong>full EDR/XDR endpoint protection</strong>, <strong>autonomous SOC</strong>, <strong>digital twin simulation</strong>, 
+              <strong>predictive CVE intelligence</strong>, <strong>1-click AI fix</strong>, 
+              <strong>self-evolving AI defenses</strong>, <strong>B2B AI-as-a-Service API platform</strong>, and <strong>86+ integrated security modules</strong> in one unified platform.
             </p>
 
             {/* CTA Buttons */}
@@ -430,6 +464,293 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
         </div>
       </section>
 
+      {/* AI Fix Button & Evolution Spotlight */}
+      <section className="py-24 px-4 bg-linear-to-b from-pink-500/5 to-purple-500/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-linear-to-r from-pink-500/10 to-cyan-500/10 border border-pink-500/20 rounded-full px-4 py-2 mb-6">
+              <span className="text-pink-400">🚀</span>
+              <span className="text-sm text-pink-300 font-semibold">GAME-CHANGING FEATURES</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Fix Vulnerabilities in
+              <br />
+              <span className="bg-linear-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                One Click. Stay Ahead Forever.
+              </span>
+            </h2>
+            <p className="text-xl text-purple-300 max-w-2xl mx-auto">
+              Two features that put Anchor in a league of its own — no other platform comes close.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Fix Button Spotlight */}
+            <div className="bg-linear-to-br from-pink-500/10 via-purple-500/10 to-cyan-500/10 backdrop-blur-sm rounded-3xl p-8 border border-pink-500/30 hover:border-pink-400 transition-all hover:shadow-2xl hover:shadow-pink-500/20 group">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-14 h-14 bg-linear-to-br from-pink-500 to-purple-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg shadow-pink-500/30">
+                  🔧
+                </div>
+                <div>
+                  <span className="bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">WORLD FIRST</span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-pink-400 mb-4">1-Click AI Fix Button</h3>
+              <p className="text-purple-300 mb-6 leading-relaxed">
+                Found a vulnerability? Don&apos;t waste hours writing patches manually. 
+                Hit the <strong className="text-pink-400">Fix</strong> button and Anchor&apos;s AI instantly:
+              </p>
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Analyses</strong> the vulnerability root cause and blast radius</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Generates</strong> a secure, tested patch matching your code style</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Creates</strong> a pull request ready to review and merge</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Verifies</strong> the fix doesn&apos;t break existing functionality</span>
+                </li>
+              </ul>
+              <div className="bg-black/30 border border-pink-500/30 rounded-xl p-4 text-center">
+                <span className="text-3xl font-bold text-white">94%</span>
+                <p className="text-sm text-purple-400 mt-1">Fix acceptance rate in production</p>
+              </div>
+            </div>
+
+            {/* AI Evolution Engine Spotlight */}
+            <div className="bg-linear-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-3xl p-8 border border-cyan-500/30 hover:border-cyan-400 transition-all hover:shadow-2xl hover:shadow-cyan-500/20 group">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-14 h-14 bg-linear-to-br from-cyan-500 to-purple-500 rounded-2xl flex items-center justify-center text-3xl shadow-lg shadow-cyan-500/30">
+                  🧬
+                </div>
+                <div>
+                  <span className="bg-cyan-500 text-black text-xs font-bold px-3 py-1 rounded-full">WORLD FIRST</span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-cyan-400 mb-4">AI Self-Evolution Engine</h3>
+              <p className="text-purple-300 mb-6 leading-relaxed">
+                Most security tools need manual updates. <strong className="text-cyan-400">Anchor evolves itself.</strong> 
+                Our AI continuously monitors the global threat landscape and autonomously upgrades its own defenses:
+              </p>
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-start gap-3">
+                  <span className="text-cyan-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Ingests</strong> real-time feeds from NVD, CISA KEV, MITRE ATT&amp;CK, and dark web sources</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-cyan-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Generates</strong> new detection rules and security modules automatically</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-cyan-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Monitors</strong> competitors like CrowdStrike, Palo Alto, SentinelOne to stay ahead</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-cyan-400 mt-0.5">✦</span>
+                  <span className="text-cyan-300"><strong>Predicts</strong> emerging threats before they become widespread attacks</span>
+                </li>
+              </ul>
+              <div className="bg-black/30 border border-cyan-500/30 rounded-xl p-4 text-center">
+                <span className="text-3xl font-bold text-white">24/7</span>
+                <p className="text-sm text-purple-400 mt-1">Autonomous evolution — zero manual updates</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-purple-400 text-lg mb-6">
+              These features are <strong className="text-pink-400">included on Pro plans and above</strong> — no add-ons, no hidden costs.
+            </p>
+            <button
+              onClick={onGetStarted}
+              className="bg-linear-to-r from-pink-500 via-purple-500 to-cyan-500 hover:from-cyan-500 hover:via-purple-500 hover:to-pink-500 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-purple-500/30"
+            >
+              Try It Free for 14 Days →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== ANCHOR INTELLIGENCE B2B SECTION ==================== */}
+      <section className="py-24 px-4 bg-linear-to-b from-gray-950 via-purple-900/10 to-gray-950 relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-linear-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-full px-6 py-2 mb-6">
+              <span className="text-purple-400 font-bold text-sm">NEW</span>
+              <span className="mx-2 text-gray-600">|</span>
+              <span className="text-sm text-purple-300 font-semibold">ANCHOR INTELLIGENCE — AI-AS-A-SERVICE</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+              <span className="bg-linear-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Sell Our AI
+              </span>
+              <br />
+              <span className="text-white">To The World</span>
+            </h2>
+            <p className="text-xl text-purple-300 max-w-3xl mx-auto">
+              The same self-evolving AI that powers Anchor — now available as a standalone B2B API.
+              Let other security companies, MSSPs, and SOC teams tap into our intelligence engine.
+              <strong className="text-cyan-400"> A new revenue stream worth $500M+.</strong>
+            </p>
+          </div>
+
+          {/* Products Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
+            {[
+              {
+                icon: '🔍',
+                title: 'Threat Intelligence API',
+                price: 'From $4,999/mo',
+                desc: 'Real-time aggregated feeds from NVD, CISA KEV, MITRE ATT&CK, AlienVault OTX — enriched and scored by AI.',
+                color: 'border-purple-500/30 hover:border-purple-400',
+              },
+              {
+                icon: '📋',
+                title: 'Detection Rule Generator',
+                price: 'From $4,999/mo',
+                desc: 'AI generates production-ready Sigma, YARA, Snort, Suricata, KQL & SPL rules. Bulk generation supported.',
+                color: 'border-blue-500/30 hover:border-blue-400',
+              },
+              {
+                icon: '🧠',
+                title: 'AI Threat Analysis',
+                price: 'From $24,999/mo',
+                desc: 'Deep analysis of malware, network traffic, logs, incidents, vulnerabilities, and IOCs. Instant verdicts.',
+                color: 'border-cyan-500/30 hover:border-cyan-400',
+              },
+              {
+                icon: '🔮',
+                title: 'Predictive Modeling',
+                price: 'From $24,999/mo',
+                desc: 'Industry-specific threat predictions with likelihood scores, attack vectors, and mitigation strategies.',
+                color: 'border-pink-500/30 hover:border-pink-400',
+              },
+              {
+                icon: '🔎',
+                title: 'IOC Enrichment',
+                price: 'From $4,999/mo',
+                desc: 'Instantly enrich IPs, domains, hashes, URLs, and emails with reputation, geolocation, and threat associations.',
+                color: 'border-amber-500/30 hover:border-amber-400',
+              },
+              {
+                icon: '📊',
+                title: 'Competitive Intelligence',
+                price: 'From $24,999/mo',
+                desc: 'AI analysis of competitor products, pricing trends, market gaps, and strategic positioning in cybersecurity.',
+                color: 'border-green-500/30 hover:border-green-400',
+              },
+            ].map((product, i) => (
+              <div key={i} className={`bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border ${product.color} transition-all hover:shadow-lg`}>
+                <div className="text-3xl mb-3">{product.icon}</div>
+                <h3 className="text-lg font-bold mb-1">{product.title}</h3>
+                <div className="text-sm text-purple-400 mb-3">{product.price}</div>
+                <p className="text-gray-400 text-sm">{product.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Revenue Potential Banner */}
+          <div className="bg-linear-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-10 mb-16">
+            <div className="grid md:grid-cols-4 gap-6 text-center">
+              <div>
+                <div className="text-3xl font-bold text-purple-400">$31M</div>
+                <div className="text-sm text-gray-400 mt-1">Year 1 Revenue Potential</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-blue-400">$216M</div>
+                <div className="text-sm text-gray-400 mt-1">Year 3 Projection</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-cyan-400">6</div>
+                <div className="text-sm text-gray-400 mt-1">API Products</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-pink-400">{'<100ms'}</div>
+                <div className="text-sm text-gray-400 mt-1">Average Response Time</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Who It's For + Code Example */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <div>
+              <h3 className="text-2xl font-bold mb-6 text-purple-400">Built For</h3>
+              <div className="space-y-4">
+                {[
+                  { icon: '🏢', title: 'MSSPs & MDR Providers', desc: 'White-label our AI to supercharge your managed security services.' },
+                  { icon: '🛡️', title: 'SOC Teams', desc: 'Reduce alert fatigue with AI triage and automated rule generation.' },
+                  { icon: '🔧', title: 'Security Vendors', desc: 'Embed our intelligence into your product with OEM licensing.' },
+                  { icon: '🔬', title: 'Threat Intel Teams', desc: 'Predictive modeling and competitive analysis to stay ahead.' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4 p-4 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-purple-500/30 transition-all">
+                    <div className="text-2xl flex-shrink-0">{item.icon}</div>
+                    <div>
+                      <h4 className="font-bold">{item.title}</h4>
+                      <p className="text-gray-400 text-sm">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-2xl font-bold mb-6 text-cyan-400">One API Call Away</h3>
+              <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2 bg-gray-800 border-b border-gray-700">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                  <span className="text-xs text-gray-500 ml-2">Python</span>
+                </div>
+                <pre className="p-4 text-sm text-gray-300 overflow-x-auto">
+                  <code>{`import requests
+
+API_KEY = "anc_your_key_here"
+BASE = "https://api.anchorsecurity.io/intelligence/v1"
+
+# Generate a YARA rule for a new threat
+rule = requests.post(f"{BASE}/rules/generate",
+  headers={"x-api-key": API_KEY},
+  json={
+    "threat": "Cobalt Strike beacon C2",
+    "format": "yara"
+  }
+).json()
+
+print(rule["rule"]["content"])
+# → Instant, production-ready YARA rule`}</code>
+                </pre>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <button
+              onClick={onViewIntelligence}
+              className="bg-linear-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-cyan-600 hover:via-blue-600 hover:to-purple-600 px-10 py-5 rounded-xl font-bold text-xl transition-all transform hover:scale-105 shadow-lg shadow-purple-500/30 hover:shadow-cyan-500/40"
+            >
+              Explore Anchor Intelligence →
+            </button>
+            <p className="text-purple-400 text-sm mt-4">
+              API access from $4,999/mo • Enterprise & OEM pricing available • 99.99% SLA
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <section id="testimonials" className="py-24 px-4 bg-linear-to-b from-purple-500/5 to-cyan-500/5">
         <div className="max-w-7xl mx-auto">
@@ -471,7 +792,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-purple-300">
-              86 security modules. 12 world-first features. One platform.
+              86 security modules. 16 world-first features. One platform.
             </p>
           </div>
 
@@ -610,7 +931,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <strong>Get a $345K+ security stack for a fraction of the price.</strong>
             </p>
             <p className="text-lg text-purple-400 mb-8">
-              86 modules. 12 world-first features. Starting at <span className="text-pink-400 font-bold">$199/month</span>.
+              86+ modules. 16 world-first features. Starting at <span className="text-pink-400 font-bold">$199/month</span>.
             </p>
             <button
               onClick={onGetStarted}
@@ -643,6 +964,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <ul className="space-y-2 text-purple-300">
                 <li><a href="#features" className="hover:text-pink-400 transition-colors">Features</a></li>
                 <li><button onClick={onViewPricing} className="hover:text-pink-400 transition-colors">Pricing</button></li>
+                <li><button onClick={onViewIntelligence} className="hover:text-pink-400 transition-colors text-left">Anchor Intelligence API</button></li>
                 <li><a href="https://docs.anchorsecurity.com/cli" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">CLI Tool</a></li>
                 <li><a href="#features" className="hover:text-pink-400 transition-colors">Integrations</a></li>
               </ul>

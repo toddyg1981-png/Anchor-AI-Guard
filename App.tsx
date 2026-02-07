@@ -86,6 +86,8 @@ const RASPAgent = React.lazy(() => import('./components/RASPAgent'));
 const MobileSecurity = React.lazy(() => import('./components/MobileSecurity'));
 const BackupDisasterRecovery = React.lazy(() => import('./components/BackupDisasterRecovery'));
 const SelfProtection = React.lazy(() => import('./components/SelfProtection'));
+const AnchorIntelligenceLanding = React.lazy(() => import('./components/AnchorIntelligenceLanding'));
+const AnchorIntelligenceDashboard = React.lazy(() => import('./components/AnchorIntelligenceDashboard'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -115,7 +117,9 @@ export type AppView =
   | 'security-info'  // Security page
   | 'about'          // About page
   | 'contact'        // Contact page
-  | 'purchase-terms'; // Purchase terms and conditions
+  | 'purchase-terms' // Purchase terms and conditions
+  | 'intelligence'     // Anchor Intelligence B2B Landing Page
+  | 'intelligence-dashboard'; // API Customer Dashboard
 
 // Dashboard sub-views
 export type DashboardView = 
@@ -182,7 +186,8 @@ export type DashboardView =
   | 'raspAgent'
   | 'mobileSecurity'
   | 'backupRecovery'
-  | 'selfProtection';
+  | 'selfProtection'
+  | 'intelligenceDashboard';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -227,6 +232,10 @@ const AppContent: React.FC = () => {
       setCurrentView('contact');
     } else if (path === '/login' || path === '/signup') {
       setCurrentView('auth');
+    } else if (path === '/intelligence' || path === '/anchor-intelligence') {
+      setCurrentView('intelligence');
+    } else if (path === '/intelligence/dashboard') {
+      setCurrentView('intelligence-dashboard');
     }
 
     // Handle Stripe checkout success redirect
@@ -242,7 +251,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     if (!authLoading) {
       // Don't override special routes
-      if (['auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact'].includes(currentView)) {
+      if (['auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard'].includes(currentView)) {
         return;
       }
       
@@ -320,6 +329,16 @@ const AppContent: React.FC = () => {
   const handleBackToMarketing = useCallback(() => {
     setCurrentView('marketing');
     window.history.pushState({}, '', '/');
+  }, []);
+
+  const handleViewIntelligence = useCallback(() => {
+    setCurrentView('intelligence');
+    window.history.pushState({}, '', '/intelligence');
+  }, []);
+
+  const handleViewIntelligenceDashboard = useCallback(() => {
+    setCurrentView('intelligence-dashboard');
+    window.history.pushState({}, '', '/intelligence/dashboard');
   }, []);
 
   const handleAuthSuccess = useCallback(() => {
@@ -561,6 +580,8 @@ const AppContent: React.FC = () => {
         return <BackupDisasterRecovery />;
       case 'selfProtection':
         return <SelfProtection />;
+      case 'intelligenceDashboard':
+        return <AnchorIntelligenceDashboard />;
       case 'overview':
       default:
         return (
@@ -603,8 +624,7 @@ const AppContent: React.FC = () => {
           <MarketingLanding 
             onGetStarted={handleGetStarted} 
             onLogin={handleLogin}
-            onViewPricing={handleViewPricing}
-          />
+            onViewPricing={handleViewPricing}            onViewIntelligence={handleViewIntelligence}          />
         );
       
       case 'pricing':
@@ -698,6 +718,12 @@ const AppContent: React.FC = () => {
       
       case 'purchase-terms':
         return <PurchaseTerms onBack={handleBackToMarketing} />;
+
+      case 'intelligence':
+        return <AnchorIntelligenceLanding />;
+
+      case 'intelligence-dashboard':
+        return <AnchorIntelligenceDashboard />;
       
       default:
         return (
@@ -711,6 +737,7 @@ const AppContent: React.FC = () => {
             onViewAbout={handleViewAbout}
             onViewContact={handleViewContact}
             onViewPurchaseTerms={handleViewPurchaseTerms}
+            onViewIntelligence={handleViewIntelligence}
           />
         );
     }

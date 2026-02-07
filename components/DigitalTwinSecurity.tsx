@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 interface DigitalTwin {
   id: string;
@@ -25,6 +27,34 @@ interface AttackSimulation {
 }
 
 const DigitalTwinSecurity: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState<unknown>(null);
+  const [liveEnvironments, setLiveEnvironments] = useState<unknown[]>([]);
+  const [liveSimulations, setLiveSimulations] = useState<unknown[]>([]);
+
+  // Fetch real data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dashboard, envResp, simResp] = await Promise.all([
+          backendApi.digitalTwin.getDashboard(),
+          backendApi.digitalTwin.getEnvironments(),
+          backendApi.digitalTwin.getSimulations(),
+        ]);
+        setDashboardData(dashboard);
+        setLiveEnvironments((envResp as { environments: unknown[] })?.environments || []);
+        setLiveSimulations((simResp as { simulations: unknown[] })?.simulations || []);
+        logger.info('Digital twin data loaded', { dashboard });
+      } catch (err) {
+        logger.error('Failed to load digital twin data', { error: err });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   const [twins, setTwins] = useState<DigitalTwin[]>([
     {
       id: 'twin-1',

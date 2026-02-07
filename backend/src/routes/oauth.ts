@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../lib/prisma';
-import { Roles } from '../lib/auth';
+import { Roles, authMiddleware } from '../lib/auth';
 import { notifyAdminNewSignup } from './email';
 import { env } from '../config/env';
 import crypto from 'crypto';
@@ -16,7 +16,12 @@ const BACKEND_URL = process.env.OAUTH_REDIRECT_BASE || env.backendUrl;
 const FRONTEND_URL = env.frontendUrl;
 
 // In-memory CSRF state store (short-lived, cleaned up periodically)
-const pendingStates = new Map<string, { createdAt: number }>();
+// Stores both anonymous states (for login) and authenticated states (for linking)
+const pendingStates = new Map<string, { 
+  createdAt: number; 
+  userId?: string;  // Only set for account linking flows
+  purpose: 'login' | 'link';
+}>();
 
 // Clean up expired states every 5 minutes
 setInterval(() => {
@@ -28,16 +33,17 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
-function generateAndStoreState(): string {
+function generateAndStoreState(purpose: 'login' | 'link' = 'login', userId?: string): string {
   const state = crypto.randomBytes(32).toString('hex');
-  pendingStates.set(state, { createdAt: Date.now() });
+  pendingStates.set(state, { createdAt: Date.now(), userId, purpose });
   return state;
 }
 
-function validateState(state: string | undefined): boolean {
-  if (!state || !pendingStates.has(state)) return false;
+function validateState(state: string | undefined): { valid: boolean; userId?: string; purpose?: string } {
+  if (!state || !pendingStates.has(state)) return { valid: false };
+  const data = pendingStates.get(state)!;
   pendingStates.delete(state); // Single-use
-  return true;
+  return { valid: true, userId: data.userId, purpose: data.purpose };
 }
 
 interface GitHubUser {
@@ -78,7 +84,8 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   app.get('/auth/github/callback', async (request: FastifyRequest, reply: FastifyReply) => {
     const { code, state } = request.query as { code?: string; state?: string };
 
-    if (!code || !validateState(state)) {
+    const stateValidation = validateState(state);
+    if (!code || !stateValidation.valid) {
       return reply.redirect(`${FRONTEND_URL}/login?error=github_auth_failed`);
     }
 
@@ -182,7 +189,8 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   app.get('/auth/google/callback', async (request: FastifyRequest, reply: FastifyReply) => {
     const { code, state } = request.query as { code?: string; state?: string };
 
-    if (!code || !validateState(state)) {
+    const stateValidation = validateState(state);
+    if (!code || !stateValidation.valid) {
       return reply.redirect(`${FRONTEND_URL}/login?error=google_auth_failed`);
     }
 
@@ -250,43 +258,167 @@ export async function oauthRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // ============================================
-  // LINK ADDITIONAL OAUTH ACCOUNTS
+  // LINK ADDITIONAL OAUTH ACCOUNTS (Secure)
   // ============================================
 
-  // Link GitHub to existing account
-  app.get('/auth/link/github', async (request: FastifyRequest, reply: FastifyReply) => {
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
+  // Link GitHub to existing account - REQUIRES AUTHENTICATION
+  app.get('/auth/link/github', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const user = (request as any).user;
+    if (!user?.id) {
       return reply.redirect(`${FRONTEND_URL}/settings?error=not_authenticated`);
     }
+
+    // Generate secure state with user ID (not JWT token!)
+    const state = generateAndStoreState('link', user.id);
 
     const params = new URLSearchParams({
       client_id: GITHUB_CLIENT_ID,
       redirect_uri: `${BACKEND_URL}/api/auth/link/github/callback`,
       scope: 'read:user user:email',
-      state: authHeader.replace('Bearer ', ''), // Pass token in state
+      state,
     });
 
     return reply.redirect(`https://github.com/login/oauth/authorize?${params}`);
   });
 
-  // Link Google to existing account
-  app.get('/auth/link/google', async (request: FastifyRequest, reply: FastifyReply) => {
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
+  // GitHub link callback
+  app.get('/auth/link/github/callback', async (request: FastifyRequest, reply: FastifyReply) => {
+    const { code, state } = request.query as { code?: string; state?: string };
+    
+    const stateValidation = validateState(state);
+    if (!code || !stateValidation.valid || stateValidation.purpose !== 'link' || !stateValidation.userId) {
+      return reply.redirect(`${FRONTEND_URL}/settings?error=invalid_state`);
+    }
+
+    try {
+      // Exchange code for token
+      const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          client_id: GITHUB_CLIENT_ID,
+          client_secret: GITHUB_CLIENT_SECRET,
+          code,
+        }),
+      });
+      
+      const tokenData = await tokenResponse.json();
+      if (!tokenData.access_token) {
+        return reply.redirect(`${FRONTEND_URL}/settings?error=github_token_failed`);
+      }
+
+      // Get GitHub user
+      const userResponse = await fetch('https://api.github.com/user', {
+        headers: { Authorization: `Bearer ${tokenData.access_token}`, Accept: 'application/vnd.github.v3+json' },
+      });
+      const githubUser = await userResponse.json() as GitHubUser;
+
+      // Link account
+      await prisma.oAuthAccount.upsert({
+        where: {
+          provider_providerId: { provider: 'github', providerId: String(githubUser.id) }
+        },
+        create: {
+          provider: 'github',
+          providerId: String(githubUser.id),
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          userId: stateValidation.userId,
+        },
+        update: {
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+        },
+      });
+
+      return reply.redirect(`${FRONTEND_URL}/settings?success=github_linked`);
+    } catch (error) {
+      console.error('GitHub link error:', error);
+      return reply.redirect(`${FRONTEND_URL}/settings?error=github_link_failed`);
+    }
+  });
+
+  // Link Google to existing account - REQUIRES AUTHENTICATION
+  app.get('/auth/link/google', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
+    const user = (request as any).user;
+    if (!user?.id) {
       return reply.redirect(`${FRONTEND_URL}/settings?error=not_authenticated`);
     }
+
+    // Generate secure state with user ID (not JWT token!)
+    const state = generateAndStoreState('link', user.id);
 
     const params = new URLSearchParams({
       client_id: GOOGLE_CLIENT_ID,
       redirect_uri: `${BACKEND_URL}/api/auth/link/google/callback`,
       response_type: 'code',
       scope: 'openid email profile',
-      state: authHeader.replace('Bearer ', ''),
+      state,
       access_type: 'offline',
     });
 
     return reply.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
+  });
+
+  // Google link callback
+  app.get('/auth/link/google/callback', async (request: FastifyRequest, reply: FastifyReply) => {
+    const { code, state } = request.query as { code?: string; state?: string };
+    
+    const stateValidation = validateState(state);
+    if (!code || !stateValidation.valid || stateValidation.purpose !== 'link' || !stateValidation.userId) {
+      return reply.redirect(`${FRONTEND_URL}/settings?error=invalid_state`);
+    }
+
+    try {
+      // Exchange code for token
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code,
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          redirect_uri: `${BACKEND_URL}/api/auth/link/google/callback`,
+          grant_type: 'authorization_code',
+        }),
+      });
+      
+      const tokenData = await tokenResponse.json();
+      if (!tokenData.access_token) {
+        return reply.redirect(`${FRONTEND_URL}/settings?error=google_token_failed`);
+      }
+
+      // Get Google user
+      const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      });
+      const googleUser = await userResponse.json() as GoogleUser;
+
+      // Link account
+      await prisma.oAuthAccount.upsert({
+        where: {
+          provider_providerId: { provider: 'google', providerId: googleUser.id }
+        },
+        create: {
+          provider: 'google',
+          providerId: googleUser.id,
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          expiresAt: tokenData.expires_in ? new Date(Date.now() + tokenData.expires_in * 1000) : null,
+          userId: stateValidation.userId,
+        },
+        update: {
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          expiresAt: tokenData.expires_in ? new Date(Date.now() + tokenData.expires_in * 1000) : null,
+        },
+      });
+
+      return reply.redirect(`${FRONTEND_URL}/settings?success=google_linked`);
+    } catch (error) {
+      console.error('Google link error:', error);
+      return reply.redirect(`${FRONTEND_URL}/settings?error=google_link_failed`);
+    }
   });
 }
 

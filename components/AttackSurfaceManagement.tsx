@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // ============================================================================
 // ATTACK SURFACE MANAGEMENT (ASM)
@@ -43,6 +45,30 @@ export const AttackSurfaceManagement: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'assets' | 'domains' | 'scans'>('overview');
   const [isScanning, setIsScanning] = useState(false);
   const [riskFilter, setRiskFilter] = useState<'all' | 'critical'>('all');
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState<unknown>(null);
+  const [liveAssets, setLiveAssets] = useState<unknown[]>([]);
+
+  // Fetch real data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dashboard, assetsResp] = await Promise.all([
+          backendApi.attackSurface.getDashboard(),
+          backendApi.attackSurface.getAssets(),
+        ]);
+        setDashboardData(dashboard);
+        setLiveAssets((assetsResp as { assets: unknown[] })?.assets || []);
+        logger.info('Attack surface data loaded', { dashboard });
+      } catch (err) {
+        logger.error('Failed to load attack surface data', { error: err });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const exposedAssets: ExposedAsset[] = [
     { id: 'ea-1', type: 'subdomain', identifier: 'dev.anchor.security', discovered: '2026-02-04', riskLevel: 'critical', status: 'new', findings: ['Exposed admin panel', 'Default credentials', 'Debug mode enabled'], exposureType: 'misconfiguration' },

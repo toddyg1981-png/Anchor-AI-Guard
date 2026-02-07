@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // CI/CD SECURITY PIPELINE - SECURE DEVOPS GATES & POLICY ENGINE
@@ -60,6 +61,27 @@ interface PolicyViolation {
 export const CICDSecurity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'pipelines' | 'gates' | 'secrets' | 'policies' | 'iac'>('pipelines');
   const [_selectedPipeline, _setSelectedPipeline] = useState<string | null>(null);
+  const [_loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('cicd-security');
+        if (res) console.log('Dashboard loaded:', res); // eslint-disable-line no-console
+      } catch (e) { console.error(e); } finally { setLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('cicd-security', 'Analyze CI/CD pipeline security for supply chain risks, secret exposure, and policy violations') as Record<string, unknown>;
+      if (res?.analysis) setAnalysisResult(res.analysis as string);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Mock pipelines
   const pipelines: Pipeline[] = [
@@ -188,6 +210,7 @@ export const CICDSecurity: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold mb-2">🔄 CI/CD Security</h1>
           <p className="text-gray-400">Pipeline security gates, secret detection, and policy enforcement</p>
+          <button onClick={handleAIAnalysis} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm">{analyzing ? 'Analyzing...' : 'AI Analysis'}</button>
         </div>
         <div className="flex items-center gap-4">
           <button onClick={() => setActiveTab('gates')} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
@@ -548,6 +571,12 @@ export const CICDSecurity: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {analysisResult && (
+        <div className="bg-slate-800 border border-blue-500/30 rounded-xl p-4 mt-4">
+          <div className="flex justify-between items-center mb-2"><h3 className="font-semibold text-blue-400">AI Analysis</h3><button onClick={() => setAnalysisResult('')} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</div>
         </div>
       )}
     </div>

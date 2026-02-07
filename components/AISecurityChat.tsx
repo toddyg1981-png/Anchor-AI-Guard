@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // Types
 export interface ChatMessage {
@@ -292,148 +293,42 @@ export const AISecurityChat: React.FC<AISecurityChatProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Simulate AI response (in production, this would call the actual AI service)
+  // Real AI response via backend Claude API
   const simulateResponse = useCallback(async (query: string): Promise<ChatMessage> => {
-    // Simulate intent classification
-    const detectIntent = (q: string): QueryIntent => {
-      const lowerQ = q.toLowerCase();
+    try {
+      const result = await backendApi.aiChat.sendMessage(query) as any;
       
-      if (lowerQ.includes('show') || lowerQ.includes('find') || lowerQ.includes('list')) {
-        return { type: 'search', confidence: 0.92, entities: { severities: ['critical', 'high'] } };
-      }
-      if (lowerQ.includes('explain') || lowerQ.includes('what is') || lowerQ.includes('how does')) {
-        return { type: 'explain', confidence: 0.88, entities: {} };
-      }
-      if (lowerQ.includes('fix') || lowerQ.includes('remediate') || lowerQ.includes('solve')) {
-        return { type: 'fix', confidence: 0.91, entities: {} };
-      }
-      if (lowerQ.includes('report') || lowerQ.includes('summary') || lowerQ.includes('generate')) {
-        return { type: 'report', confidence: 0.89, entities: {} };
-      }
-      if (lowerQ.includes('compare') || lowerQ.includes('difference')) {
-        return { type: 'compare', confidence: 0.87, entities: {} };
-      }
-      
-      return { type: 'general', confidence: 0.75, entities: {} };
-    };
+      // Detect intent from query for UI display
+      const lowerQ = query.toLowerCase();
+      let intentType: string = 'general';
+      if (lowerQ.includes('show') || lowerQ.includes('find') || lowerQ.includes('list')) intentType = 'search';
+      else if (lowerQ.includes('explain') || lowerQ.includes('what is')) intentType = 'explain';
+      else if (lowerQ.includes('fix') || lowerQ.includes('remediate')) intentType = 'fix';
+      else if (lowerQ.includes('report') || lowerQ.includes('summary')) intentType = 'report';
 
-    const intent = detectIntent(query);
-
-    // Generate response based on intent
-    let content = '';
-    let results: QueryResult[] = [];
-    let suggestions: string[] = [];
-
-    switch (intent.type) {
-      case 'search':
-        content = "I found several vulnerabilities matching your query. Here are the most relevant findings:";
-        results = [
-          {
-            type: 'finding',
-            id: 'f1',
-            title: 'SQL Injection in user authentication',
-            description: 'Unsanitized user input passed directly to database query in auth.ts line 45',
-            severity: 'critical',
-            codeSnippet: 'const query = `SELECT * FROM users WHERE id = ${userId}`;',
-          },
-          {
-            type: 'finding',
-            id: 'f2',
-            title: 'Hardcoded AWS credentials',
-            description: 'AWS access key exposed in configuration file config/aws.ts',
-            severity: 'critical',
-          },
-          {
-            type: 'finding',
-            id: 'f3',
-            title: 'Cross-Site Scripting (XSS) vulnerability',
-            description: 'User input rendered without sanitization in CommentComponent.tsx',
-            severity: 'high',
-          },
-        ];
-        suggestions = ['Show fixes for these', 'Export to report', 'Assign to team'];
-        break;
-
-      case 'explain':
-        content = `**SQL Injection** is a code injection technique that exploits security vulnerabilities in an application's database layer.
-
-**How it works:**
-1. Attacker inserts malicious SQL code through user input
-2. The application includes this input in SQL queries without proper sanitization
-3. The database executes the malicious code
-
-**Impact:**
-- Unauthorized data access
-- Data modification or deletion
-- Authentication bypass
-- Complete database takeover
-
-**Prevention:**
-- Use parameterized queries (prepared statements)
-- Implement input validation
-- Use ORM frameworks properly
-- Apply principle of least privilege`;
-        suggestions = ['Show SQL injection in my code', 'How to fix it?', 'More examples'];
-        break;
-
-      case 'fix':
-        content = "Here's how to fix the SQL injection vulnerability:";
-        results = [
-          {
-            type: 'code',
-            title: 'Recommended Fix',
-            description: 'Replace string interpolation with parameterized query',
-            codeSnippet: `// Before (vulnerable)
-const query = \`SELECT * FROM users WHERE id = \${userId}\`;
-
-// After (secure)
-const query = 'SELECT * FROM users WHERE id = $1';
-const result = await db.query(query, [userId]);`,
-            language: 'typescript',
-          },
-        ];
-        suggestions = ['Apply this fix', 'Show more fixes', 'Create PR with fix'];
-        break;
-
-      case 'report':
-        content = `📊 **Security Report Summary**
-
-**Time Period:** Last 7 days
-
-**Findings:**
-- 🔴 Critical: 3
-- 🟠 High: 12
-- 🟡 Medium: 28
-- 🟢 Low: 45
-
-**Top Issues:**
-1. Dependency vulnerabilities (18)
-2. Hardcoded secrets (8)
-3. Input validation (15)
-
-**Trend:** ↑ 15% improvement from last week
-
-**Recommendations:**
-1. Update lodash to version 4.17.21
-2. Rotate exposed AWS credentials
-3. Implement CSP headers`;
-        suggestions = ['Export as PDF', 'Send to team', 'View detailed breakdown'];
-        break;
-
-      default:
-        content = "I understand you're asking about security. Could you be more specific? For example:\n\n- \"Show me critical vulnerabilities\"\n- \"Explain how XSS works\"\n- \"How do I fix hardcoded secrets?\"\n- \"Generate a security report\"";
-        suggestions = SUGGESTED_QUERIES.slice(0, 4);
+      return {
+        id: `msg-${Date.now()}`,
+        role: 'assistant',
+        content: result?.response || 'I received your question but couldn\'t generate a response. Please try again.',
+        timestamp: Date.now(),
+        intent: { type: intentType as any, confidence: 0.95, entities: {} },
+        suggestions: [
+          'Show critical vulnerabilities',
+          'Explain this further',
+          'How should I fix this?',
+          'Generate a report',
+        ],
+      };
+    } catch (err) {
+      console.error('AI chat error:', err);
+      return {
+        id: `msg-${Date.now()}`,
+        role: 'assistant',
+        content: 'I apologize, but I\'m having trouble connecting to the AI service right now. Please ensure the backend is running and the Anthropic API key is configured. You can try again in a moment.',
+        timestamp: Date.now(),
+        suggestions: SUGGESTED_QUERIES.slice(0, 4),
+      };
     }
-
-    return {
-      id: `msg-${Date.now()}`,
-      role: 'assistant',
-      content,
-      timestamp: Date.now(),
-      intent,
-      results,
-      suggestions,
-    };
   }, []);
 
   const handleSubmit = async () => {

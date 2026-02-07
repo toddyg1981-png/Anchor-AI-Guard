@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // Types
 export interface SecurityScoreData {
@@ -234,6 +235,28 @@ export const SecurityScoreWidget: React.FC<SecurityScoreWidgetProps> = ({
   compact = false,
   onViewDetails 
 }) => {
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('security-score');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('security-score', 'Analyze overall security score trends, contributing factors, and improvement recommendations');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
+
   // Mock data for demo
   const [scoreData, _setScoreData] = useState<SecurityScoreData>(data || {
     overall: 724,
@@ -323,6 +346,13 @@ export const SecurityScoreWidget: React.FC<SecurityScoreWidgetProps> = ({
           <h3 className="text-lg font-semibold text-white">Developer Security Score</h3>
           <p className="text-sm text-gray-400">Your personal security performance rating</p>
         </div>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 rounded-lg font-medium text-white text-sm flex items-center gap-1 mr-2"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+        </button>
         <div className="flex items-center gap-2">
           <Sparkline data={scoreData.history} />
           <span className={`text-sm font-medium ${scoreData.trend === 'up' ? 'text-green-400' : scoreData.trend === 'down' ? 'text-red-400' : 'text-gray-400'}`}>
@@ -382,6 +412,13 @@ export const SecurityScoreWidget: React.FC<SecurityScoreWidgetProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
+        </div>
+      )}
+      {analysisResult && (
+        <div className="mt-4 mx-6 mb-4 p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <h3 className="text-lg font-semibold text-purple-300 mb-2">🤖 AI Analysis Result</h3>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+          <button onClick={() => setAnalysisResult('')} className="mt-2 text-sm text-purple-400 hover:text-purple-300">Dismiss</button>
         </div>
       )}
     </div>

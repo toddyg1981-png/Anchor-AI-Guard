@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // ============================================================================
 // COMPLIANCE HUB - WORLD'S MOST COMPREHENSIVE COMPLIANCE AUTOMATION
@@ -381,6 +383,28 @@ export const ComplianceHub: React.FC = () => {
   const [essentialEight, setEssentialEight] = useState<EssentialEightControl[]>(ESSENTIAL_EIGHT_STRATEGIES);
   const [isAssessing, setIsAssessing] = useState(false);
   const [showReport, setShowReport] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [complianceData, setComplianceData] = useState<unknown>(null);
+
+  // Fetch real compliance data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dashboard, frameworks] = await Promise.all([
+          backendApi.compliance.getDashboard(),
+          backendApi.compliance.getFrameworks(),
+        ]);
+        setComplianceData({ dashboard, frameworks });
+        logger.info('Compliance data loaded', { dashboard });
+      } catch (err) {
+        logger.error('Failed to load compliance data', { error: err });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Framework metadata
   const frameworks: Record<ComplianceFramework, { name: string; icon: string; region: string }> = {

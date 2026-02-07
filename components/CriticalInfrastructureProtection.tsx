@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 interface Sector {
   id: string;
@@ -141,6 +142,28 @@ const CriticalInfrastructureProtection: React.FC = () => {
   const [threatLevel, _setThreatLevel] = useState<'low' | 'guarded' | 'elevated' | 'high' | 'severe'>('elevated');
   const [liveMetric, setLiveMetric] = useState(0);
 
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('critical-infrastructure');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('critical-infrastructure', 'Analyze critical infrastructure protection for SCADA/ICS vulnerabilities and recommend hardening measures');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLiveMetric((prev) => prev + Math.floor(Math.random() * 100) + 50);
@@ -177,6 +200,13 @@ const CriticalInfrastructureProtection: React.FC = () => {
           <p className="text-gray-400 mt-1">16 Critical Sectors — Real-time monitoring and compliance</p>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={handleAIAnalysis}
+            disabled={analyzing || backendLoading}
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+          >
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
           <div className="text-right">
             <div className="text-xs text-gray-500">National Threat Level</div>
             <div className={`px-4 py-2 rounded-lg text-white font-bold ${getThreatLevelColor(threatLevel)}`}>
@@ -337,6 +367,17 @@ const CriticalInfrastructureProtection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-bold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-500 hover:text-white">✕</button>
+          </div>
+          <div className="text-gray-300 whitespace-pre-wrap">{analysisResult}</div>
+        </div>
+      )}
     </div>
   );
 };

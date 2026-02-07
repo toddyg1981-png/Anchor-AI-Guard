@@ -217,6 +217,13 @@ class APIClient {
   }
 
   /**
+   * PATCH request
+   */
+  async patch<T>(url: string, body: unknown, config?: Omit<RequestConfig, 'method'>): Promise<T> {
+    return this.request<T>(url, { ...config, method: 'PATCH', body, cache: false });
+  }
+
+  /**
    * Generate cache key
    */
   private getCacheKey(url: string, method: string, body?: unknown): string {

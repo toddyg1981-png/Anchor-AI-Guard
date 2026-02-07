@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // RASP AGENT - RUNTIME APPLICATION SELF-PROTECTION
@@ -46,6 +47,27 @@ export const RASPAgent: React.FC = () => {
   const [realtimeAttacks, setRealtimeAttacks] = useState<RuntimeAttack[]>([]);
   const [showDeployForm, setShowDeployForm] = useState(false);
   const [liveMode, setLiveMode] = useState(false);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('rasp');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res: any = await backendApi.modules.analyze('rasp', 'Analyze RASP agent deployment for runtime protection coverage and attack pattern detection');
+      if (res?.analysis) setAnalysisResult(res.analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Mock RASP agents
   const agents: RASPAgent[] = [
@@ -146,6 +168,9 @@ export const RASPAgent: React.FC = () => {
           <p className="text-gray-400">Runtime Application Self-Protection - Real-time attack prevention</p>
         </div>
         <div className="flex items-center gap-4">
+          <button onClick={handleAIAnalysis} disabled={analyzing || backendLoading} className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500 rounded-lg text-purple-400 font-medium disabled:opacity-50 transition-colors">
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
           <button onClick={() => { setShowDeployForm(!showDeployForm); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             📥 Deploy Agent
           </button>
@@ -433,6 +458,17 @@ export const RASPAgent: React.FC = () => {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-400 hover:text-white">✕</button>
+          </div>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
         </div>
       )}
     </div>

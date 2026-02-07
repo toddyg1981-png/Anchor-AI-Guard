@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // ZERO TRUST SECURITY MODEL
@@ -37,6 +38,39 @@ interface TrustScore {
 
 export const ZeroTrustSecurity: React.FC = () => {
   const [selectedPolicy, setSelectedPolicy] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [backendPosture, setBackendPosture] = useState<any>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [posture, dashboard] = await Promise.all([
+          backendApi.zeroTrust.getPosture(),
+          backendApi.modules.getDashboard('zero-trust'),
+        ]);
+        setBackendPosture(posture);
+      } catch (err) {
+        console.error('Failed to load zero trust data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const runAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const result = await backendApi.modules.analyze('zero-trust', 'Zero Trust Architecture posture assessment', 'Evaluate our zero trust implementation maturity and provide recommendations');
+      setAiAnalysis(result);
+    } catch (err) {
+      console.error('AI analysis failed:', err);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   // Zero Trust Policies
   const policies: ZeroTrustPolicy[] = [
@@ -113,7 +147,19 @@ export const ZeroTrustSecurity: React.FC = () => {
     }
   };
 
-  const overallScore = Math.round(trustScores.reduce((sum, t) => sum + t.score, 0) / trustScores.length);
+  const overallScore = backendPosture?.overallScore || Math.round(trustScores.reduce((sum, t) => sum + t.score, 0) / trustScores.length);
+  const maturityLevel = backendPosture?.maturityLevel || 'Advancing';
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading Zero Trust posture data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
@@ -123,12 +169,39 @@ export const ZeroTrustSecurity: React.FC = () => {
           <p className="text-gray-400">&quot;Never trust, always verify&quot; - Continuous authentication & authorization</p>
         </div>
         <div className="flex items-center gap-4">
+          <button onClick={runAIAnalysis} disabled={analyzing} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors disabled:opacity-50">
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Assessment'}
+          </button>
+          <div className="text-center px-4 py-2 bg-blue-500/10 border border-blue-500 rounded-xl">
+            <div className="text-lg font-bold text-blue-400">{maturityLevel}</div>
+            <div className="text-xs text-gray-400">Maturity</div>
+          </div>
           <div className="text-center px-6 py-3 bg-green-500/10 border border-green-500 rounded-xl">
             <div className="text-3xl font-bold text-green-400">{overallScore}%</div>
             <div className="text-xs text-gray-400">Zero Trust Score</div>
           </div>
         </div>
       </div>
+
+      {aiAnalysis && (
+        <div className="mb-6 p-4 bg-purple-900/20 border border-purple-500/30 rounded-xl">
+          <h3 className="text-lg font-semibold text-purple-400 mb-2">🤖 AI Zero Trust Assessment</h3>
+          <p className="text-gray-300 mb-2">{aiAnalysis.assessment || 'Analysis complete'}</p>
+          <div className="flex gap-4 text-sm">
+            <span className="text-cyan-400">Score: {aiAnalysis.score || overallScore}/100</span>
+            <span className="text-yellow-400">Risk: {aiAnalysis.riskLevel || 'medium'}</span>
+            <span className="text-green-400">Source: {aiAnalysis.source || 'AI'}</span>
+          </div>
+          {aiAnalysis.recommendations?.length > 0 && (
+            <div className="mt-3">
+              <p className="text-sm font-medium text-gray-400 mb-1">Recommendations:</p>
+              {aiAnalysis.recommendations.slice(0, 3).map((r: any, i: number) => (
+                <p key={i} className="text-sm text-gray-300">• {r.action || r}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Trust Pillars */}
       <div className="grid grid-cols-5 gap-4 mb-8">

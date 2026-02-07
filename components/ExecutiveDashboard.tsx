@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // EXECUTIVE RISK DASHBOARD - BOARD-LEVEL SECURITY REPORTING
@@ -62,19 +63,49 @@ export const ExecutiveDashboard: React.FC = () => {
   const [selectedScenario, setSelectedScenario] = useState<BreachScenario | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [kpiData, setKpiData] = useState<any>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const kpis = await backendApi.securityMetrics.getKPIs();
+        setKpiData(kpis);
+      } catch (err) {
+        console.error('Failed to load executive metrics:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const runExecutiveAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const result = await backendApi.modules.analyze('security-metrics', 'Board-level security posture', 'Provide an executive summary of our security posture, risk exposure, and recommendations for the board');
+      setAiAnalysis(result);
+    } catch (err) {
+      console.error('Executive analysis failed:', err);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   const showNotification = (msg: string) => {
     setNotification(msg);
     setTimeout(() => setNotification(null), 3000);
   };
 
-  // Mock data - in production, this comes from backend analysis
+  // Mock data - enriched with backend KPIs when available
   const riskMetrics: RiskMetrics = {
     totalExposure: 4200000,
     potentialLoss: 12500000,
-    riskReduction: 68,
-    complianceScore: 72,
-    securityPosture: 'medium'
+    riskReduction: kpiData?.kpis?.remediationRate || 68,
+    complianceScore: kpiData?.kpis?.patchCompliance || 72,
+    securityPosture: (kpiData?.kpis?.securityScore || 0) >= 80 ? 'excellent' : (kpiData?.kpis?.securityScore || 0) >= 60 ? 'medium' : 'high'
   };
 
   const riskTrends: RiskTrend[] = [
@@ -207,13 +238,59 @@ export const ExecutiveDashboard: React.FC = () => {
         </div>
       )}
 
+      {loading && (
+        <div className="mb-6 p-4 bg-cyan-900/20 border border-cyan-500/30 rounded-xl animate-pulse">
+          <p className="text-cyan-400">Loading real-time security metrics from backend...</p>
+        </div>
+      )}
+
+      {/* AI Executive Analysis */}
+      {aiAnalysis && (
+        <div className="mb-6 p-4 bg-purple-900/20 border border-purple-500/30 rounded-xl">
+          <h3 className="text-lg font-semibold text-purple-400 mb-2">🤖 AI Executive Brief</h3>
+          <p className="text-gray-300 mb-2">{aiAnalysis.assessment || 'Analysis complete'}</p>
+          <div className="flex gap-4 text-sm">
+            <span className="text-cyan-400">Security Score: {aiAnalysis.score || kpiData?.kpis?.securityScore || 0}/100</span>
+            <span className="text-yellow-400">Risk Level: {aiAnalysis.riskLevel || 'medium'}</span>
+          </div>
+          {aiAnalysis.recommendations?.slice(0, 3).map((r: any, i: number) => (
+            <p key={i} className="text-sm text-gray-300 mt-1">• {r.action || r}</p>
+          ))}
+        </div>
+      )}
+
+      {/* KPI Banner from Backend */}
+      {kpiData?.kpis && (
+        <div className="mb-6 grid grid-cols-4 gap-4">
+          <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-cyan-400">{kpiData.kpis.securityScore}</div>
+            <div className="text-xs text-gray-400">Security Score</div>
+          </div>
+          <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-green-400">{kpiData.kpis.remediationRate}%</div>
+            <div className="text-xs text-gray-400">Remediation Rate</div>
+          </div>
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-yellow-400">{kpiData.kpis.mttrDays}d</div>
+            <div className="text-xs text-gray-400">MTTR</div>
+          </div>
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-red-400">{kpiData.kpis.criticalExposure}</div>
+            <div className="text-xs text-gray-400">Critical Exposure</div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">📊 Executive Security Dashboard</h1>
-          <p className="text-gray-400">Board-level risk quantification and reporting</p>
+          <p className="text-gray-400">Board-level risk quantification and reporting {kpiData ? '(Live Data)' : ''}</p>
         </div>
         <div className="flex items-center gap-4">
+          <button onClick={runExecutiveAnalysis} disabled={analyzing} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium disabled:opacity-50">
+            {analyzing ? '⏳ Generating...' : '🤖 AI Executive Brief'}
+          </button>
           {/* Time Range Selector */}
           <div className="flex bg-gray-800 rounded-lg p-1">
             {(['30d', '90d', '1y'] as const).map(range => (

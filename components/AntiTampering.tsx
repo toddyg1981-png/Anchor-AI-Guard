@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // ANTI-TAMPERING & CODE INTEGRITY VERIFICATION
@@ -37,6 +38,29 @@ interface DependencyIntegrity {
 export const AntiTampering: React.FC = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [lastFullVerification, setLastFullVerification] = useState('2026-02-04T11:50:00Z');
+  const [loading, setLoading] = useState(true);
+  const [backendData, setBackendData] = useState<any>(null);
+  const [aiResult, setAiResult] = useState<any>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [dashboard, integrity] = await Promise.all([
+          backendApi.modules.getDashboard('anti-tampering'),
+          backendApi.selfProtection.verifyIntegrity(),
+        ]);
+        setBackendData({ dashboard, integrity });
+        if ((integrity as any)?.verified) {
+          setLastFullVerification(new Date().toISOString());
+        }
+      } catch (err) {
+        console.error('Failed to load anti-tampering data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
   // Core file integrity checks
   const coreFiles: FileIntegrity[] = [
@@ -75,13 +99,33 @@ export const AntiTampering: React.FC = () => {
   const verifiedFiles = coreFiles.filter(f => f.status === 'verified').length;
   const passedChecks = runtimeChecks.filter(c => c.status === 'passed').length;
 
-  const runVerification = () => {
+  const runVerification = async () => {
     setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
+    try {
+      const [integrity, analysis] = await Promise.all([
+        backendApi.selfProtection.verifyIntegrity(),
+        backendApi.modules.analyze('anti-tampering', 'Code integrity verification', 'Verify all critical files and runtime integrity'),
+      ]);
+      setBackendData((prev: any) => ({ ...prev, integrity }));
+      setAiResult(analysis);
       setLastFullVerification(new Date().toISOString());
-    }, 3000);
+    } catch (err) {
+      console.error('Verification failed:', err);
+    } finally {
+      setIsVerifying(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Verifying system integrity...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
@@ -89,6 +133,12 @@ export const AntiTampering: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold mb-2">🔒 Anti-Tampering System</h1>
           <p className="text-gray-400">Code integrity verification & runtime protection</p>
+          {backendData?.integrity && (
+            <p className="text-xs text-green-400 mt-1">
+              Backend integrity: {(backendData.integrity as any)?.verified ? '✅ Verified' : '⚠️ Check needed'} | 
+              Uptime: {Math.round(((backendData.integrity as any)?.systemHealth?.uptimeHours || 0))}h
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right text-sm">

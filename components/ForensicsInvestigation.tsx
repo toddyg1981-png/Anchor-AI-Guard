@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // FORENSICS & INCIDENT INVESTIGATION
@@ -59,6 +60,28 @@ interface ArtifactAnalysis {
 export const ForensicsInvestigation: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'cases' | 'evidence' | 'timeline' | 'artifacts'>('cases');
   const [_selectedCase, _setSelectedCase] = useState<string | null>(null);
+
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('forensics');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('forensics', 'Analyze forensics investigation data for evidence chain integrity and recommend examination procedures');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const cases: ForensicCase[] = [
     { id: 'c-1', caseNumber: 'CASE-2026-0042', title: 'Suspected APT Intrusion', type: 'breach', status: 'analysis', priority: 'critical', assignedTo: 'Sarah Chen', createdDate: '2026-02-01', lastActivity: '2026-02-04T11:30:00Z', evidenceCount: 15, findings: ['Cobalt Strike beacon identified', 'Lateral movement via WMI', 'Data staging in temp folder'] },
@@ -136,6 +159,13 @@ export const ForensicsInvestigation: React.FC = () => {
         </div>
         <button onClick={() => alert('New forensic case form would open here. Cases are created with priority, assigned investigator, and linked evidence.')} className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
           + New Case
+        </button>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
         </button>
       </div>
 
@@ -364,6 +394,17 @@ export const ForensicsInvestigation: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-bold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-500 hover:text-white">✕</button>
+          </div>
+          <div className="text-gray-300 whitespace-pre-wrap">{analysisResult}</div>
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // MOBILE SECURITY - iOS & ANDROID APP SECURITY SCANNING
@@ -46,6 +47,27 @@ export const MobileSecurity: React.FC = () => {
   const [uploadedApp, setUploadedApp] = useState<string | null>(null);
   const appFileInputRef = React.useRef<HTMLInputElement>(null);
   const [expandedAppId, setExpandedAppId] = useState<string | null>(null);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('mobile-security');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res: any = await backendApi.modules.analyze('mobile-security', 'Analyze mobile device fleet security for MDM compliance, app vulnerabilities, and jailbreak detection');
+      if (res?.analysis) setAnalysisResult(res.analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   // Mock mobile apps
   const apps: MobileApp[] = [
@@ -137,6 +159,9 @@ export const MobileSecurity: React.FC = () => {
           <p className="text-gray-400">iOS and Android application security scanning and analysis</p>
         </div>
         <div className="flex items-center gap-4">
+          <button onClick={handleAIAnalysis} disabled={analyzing || backendLoading} className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500 rounded-lg text-purple-400 font-medium disabled:opacity-50 transition-colors">
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
           <input
             ref={appFileInputRef}
             type="file"
@@ -479,6 +504,17 @@ export const MobileSecurity: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-400 hover:text-white">✕</button>
+          </div>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
         </div>
       )}
     </div>

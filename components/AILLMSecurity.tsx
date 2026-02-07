@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // ============================================================================
 // AI/LLM SECURITY
@@ -58,6 +60,33 @@ interface AuditLog {
 export const AILLMSecurity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'models' | 'threats' | 'policies' | 'audit'>('dashboard');
   const [shieldEnabled, setShieldEnabled] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState<unknown>(null);
+  const [auditLog, setAuditLog] = useState<unknown[]>([]);
+  const [guardrailConfig, setGuardrailConfig] = useState<unknown>(null);
+
+  // Fetch real data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dashboard, config, audit] = await Promise.all([
+          backendApi.aiGuardrails.getDashboard(),
+          backendApi.aiGuardrails.getConfig(),
+          backendApi.aiGuardrails.getAuditLog(),
+        ]);
+        setDashboardData(dashboard);
+        setGuardrailConfig(config);
+        setAuditLog((audit as { entries: unknown[] })?.entries || []);
+        logger.info('AI guardrails data loaded', { dashboard });
+      } catch (err) {
+        logger.error('Failed to load AI guardrails data', { error: err });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const aiModels: AIModel[] = [
     { id: 'm-1', name: 'GPT-4 Production', provider: 'openai', type: 'llm', status: 'secured', promptInjectionProtection: true, outputFiltering: true, dataSanitization: true, auditLogging: true, riskScore: 15, requestsToday: 45032, blockedThreats: 127 },

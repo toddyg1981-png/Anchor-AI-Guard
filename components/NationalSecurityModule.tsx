@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 interface ClassificationLevel {
   id: string;
@@ -28,12 +29,46 @@ interface ThreatBriefing {
 }
 
 const NationalSecurityModule: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [backendData, setBackendData] = useState<any>(null);
+  const [briefingResult, setBriefingResult] = useState<string | null>(null);
+  const [generatingBriefing, setGeneratingBriefing] = useState(false);
+
   const [_classificationLevels] = useState<ClassificationLevel[]>([
     { id: 'ts-sci', name: 'TS/SCI', color: 'yellow', description: 'Top Secret / Sensitive Compartmented Information' },
     { id: 'ts', name: 'TOP SECRET', color: 'orange', description: 'Top Secret' },
     { id: 'secret', name: 'SECRET', color: 'red', description: 'Secret' },
     { id: 'cui', name: 'CUI', color: 'green', description: 'Controlled Unclassified Information' },
   ]);
+
+  useEffect(() => { loadDashboard(); }, []);
+
+  const loadDashboard = async () => {
+    setLoading(true);
+    try {
+      const data = await backendApi.nationalSecurity.getDashboard() as any;
+      setBackendData(data);
+      if (data?.threatActors) {
+        // Map to briefings
+        setThreatBriefings(data.threatActors.slice(0, 3).map((a: any, i: number) => ({
+          id: `brief-${i}`, classification: 'CUI', title: `${a.name} - ${a.type} Activity`,
+          source: 'Anchor AI', timestamp: new Date().toISOString(),
+          priority: a.dangerLevel >= 9 ? 'immediate' : 'priority',
+          summary: a.targets?.join(', ') || 'Multiple sectors targeted',
+        })));
+      }
+    } catch (err) { console.error('National security dashboard failed:', err); }
+    setLoading(false);
+  };
+
+  const generateBriefing = async () => {
+    setGeneratingBriefing(true);
+    try {
+      const result = await backendApi.nationalSecurity.getThreatBriefing() as any;
+      setBriefingResult(result?.briefing || result?.analysis || 'Briefing generated');
+    } catch { setBriefingResult('Failed to generate briefing'); }
+    setGeneratingBriefing(false);
+  };
 
   const [enclaves] = useState<SecureEnclave[]>([
     {
@@ -65,7 +100,7 @@ const NationalSecurityModule: React.FC = () => {
     },
   ]);
 
-  const [threatBriefings] = useState<ThreatBriefing[]>([
+  const [threatBriefings, setThreatBriefings] = useState<ThreatBriefing[]>([
     {
       id: 'brief-1',
       classification: 'SECRET',
@@ -136,10 +171,28 @@ const NationalSecurityModule: React.FC = () => {
           <p className="text-gray-400 mt-1">Classified environment management — SCIF-ready security operations</p>
         </div>
         <div className="flex items-center gap-3">
+          <button onClick={generateBriefing} disabled={generatingBriefing}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-lg text-sm text-white font-medium">
+            {generatingBriefing ? '⏳ Generating...' : '🤖 AI Threat Briefing'}
+          </button>
           <span className="px-3 py-1 bg-green-600 text-white rounded text-sm font-bold">JWICS READY</span>
           <span className="px-3 py-1 bg-red-600 text-white rounded text-sm font-bold">SIPRNet READY</span>
         </div>
       </div>
+
+      {briefingResult && (
+        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+          <div className="font-bold text-blue-400 mb-2">🤖 AI-Generated Threat Briefing</div>
+          <div className="text-sm text-gray-300 whitespace-pre-wrap">{briefingResult}</div>
+        </div>
+      )}
+
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mr-3"></div>
+          <span className="text-gray-400">Loading national security module...</span>
+        </div>
+      )}
 
       {/* Secure Enclaves */}
       <div className="bg-gray-900/60 border border-gray-700/50 rounded-xl p-6">

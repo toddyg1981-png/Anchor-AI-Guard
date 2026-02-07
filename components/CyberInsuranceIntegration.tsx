@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 interface RiskScore {
   overall: number;
@@ -136,6 +137,28 @@ const CyberInsuranceIntegration: React.FC = () => {
     },
   ]);
 
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('cyber-insurance');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('cyber-insurance', 'Analyze cyber insurance posture, coverage gaps, and risk factors affecting premiums');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-400';
     if (score >= 60) return 'text-yellow-400';
@@ -192,6 +215,13 @@ const CyberInsuranceIntegration: React.FC = () => {
         </div>
         <button onClick={exportRiskReport} className="px-4 py-2 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:opacity-90 transition-opacity">
           Export Risk Report
+        </button>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
         </button>
       </div>
 
@@ -340,6 +370,17 @@ const CyberInsuranceIntegration: React.FC = () => {
           Anchor shares verified security posture data with insurers via secure API, enabling dynamic premium adjustments based on your actual security controls.
         </p>
       </div>
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-bold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-500 hover:text-white">✕</button>
+          </div>
+          <div className="text-gray-300 whitespace-pre-wrap">{analysisResult}</div>
+        </div>
+      )}
     </div>
   );
 };

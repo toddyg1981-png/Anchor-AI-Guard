@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // DARK WEB MONITOR - CREDENTIAL & DATA LEAK DETECTION
@@ -63,6 +64,28 @@ export const DarkWebMonitor: React.FC = () => {
   const [alertStatuses, setAlertStatuses] = useState<Record<string, DarkWebAlert['status']>>({});
   const [notification, setNotification] = useState<string | null>(null);
   const [_searchPerformed, setSearchPerformed] = useState(false);
+
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('dark-web');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('dark-web', 'Analyze dark web monitoring findings for credential exposure, data leaks, and threat actor activity');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -271,6 +294,13 @@ export const DarkWebMonitor: React.FC = () => {
           <p className="text-gray-400">Real-time detection of leaked credentials, code, and data</p>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={handleAIAnalysis}
+            disabled={analyzing || backendLoading}
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+          >
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
           <div className="text-sm text-gray-400">
             Last scan: {new Date(stats.lastScanTime).toLocaleTimeString()}
           </div>
@@ -722,6 +752,17 @@ export const DarkWebMonitor: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-bold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-500 hover:text-white">✕</button>
+          </div>
+          <div className="text-gray-300 whitespace-pre-wrap">{analysisResult}</div>
         </div>
       )}
     </div>

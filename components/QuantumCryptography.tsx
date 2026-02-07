@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // QUANTUM-SAFE CRYPTOGRAPHY
@@ -41,25 +42,82 @@ interface QuantumThreatLevel {
 
 export const QuantumCryptography: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'inventory' | 'migration' | 'timeline'>('dashboard');
+  const [loading, setLoading] = useState(true);
+  const [scanning, setScanning] = useState(false);
+  const [scanResults, setScanResults] = useState<any>(null);
 
-  const cryptoAssets: CryptoAsset[] = [
-    { id: 'ca-1', name: 'Production TLS Certificate', type: 'tls_cert', algorithm: 'RSA-2048', keySize: 2048, quantumSafe: false, location: 'Cloudflare', expiryDate: '2026-08-15', riskLevel: 'critical', migrationStatus: 'planning' },
-    { id: 'ca-2', name: 'API Authentication Keys', type: 'api_key', algorithm: 'ECDSA P-256', keySize: 256, quantumSafe: false, location: 'AWS KMS', riskLevel: 'critical', migrationStatus: 'not_started' },
-    { id: 'ca-3', name: 'Database Encryption', type: 'encryption', algorithm: 'AES-256-GCM', keySize: 256, quantumSafe: true, location: 'PostgreSQL', riskLevel: 'low', migrationStatus: 'completed' },
-    { id: 'ca-4', name: 'SSH Server Keys', type: 'ssh_key', algorithm: 'RSA-4096', keySize: 4096, quantumSafe: false, location: 'Production Servers', riskLevel: 'high', migrationStatus: 'in_progress' },
-    { id: 'ca-5', name: 'Code Signing Certificate', type: 'signing', algorithm: 'ECDSA P-384', keySize: 384, quantumSafe: false, location: 'DigiCert', expiryDate: '2027-03-01', riskLevel: 'high', migrationStatus: 'planning' },
-    { id: 'ca-6', name: 'VPN Gateway', type: 'vpn', algorithm: 'RSA-2048 + AES-256', keySize: 2048, quantumSafe: false, location: 'Corporate Network', riskLevel: 'critical', migrationStatus: 'not_started' },
-    { id: 'ca-7', name: 'Key Management Service', type: 'kms', algorithm: 'AES-256 + RSA-2048', keySize: 256, quantumSafe: false, location: 'AWS KMS', riskLevel: 'critical', migrationStatus: 'planning' },
-    { id: 'ca-8', name: 'Document Signing (Hybrid)', type: 'signing', algorithm: 'CRYSTALS-Dilithium + RSA', keySize: 0, quantumSafe: true, location: 'Internal PKI', riskLevel: 'low', migrationStatus: 'hybrid' },
-  ];
+  const [cryptoAssets, setCryptoAssets] = useState<CryptoAsset[]>([]);
+  const [migrationPlans, setMigrationPlans] = useState<MigrationPlan[]>([]);
+  const [dashboardData, setDashboardData] = useState<any>(null);
 
-  const migrationPlans: MigrationPlan[] = [
-    { id: 'mp-1', assetType: 'TLS Certificates', currentAlgorithm: 'RSA-2048', targetAlgorithm: 'CRYSTALS-Kyber + X25519 (Hybrid)', targetDate: '2026-12-31', progress: 25, status: 'in_progress', owner: 'Infrastructure Team' },
-    { id: 'mp-2', assetType: 'SSH Keys', currentAlgorithm: 'RSA/ECDSA', targetAlgorithm: 'CRYSTALS-Dilithium', targetDate: '2026-09-30', progress: 60, status: 'in_progress', owner: 'Security Team' },
-    { id: 'mp-3', assetType: 'Code Signing', currentAlgorithm: 'ECDSA P-384', targetAlgorithm: 'SPHINCS+', targetDate: '2027-06-30', progress: 10, status: 'planned', owner: 'DevOps Team' },
-    { id: 'mp-4', assetType: 'VPN', currentAlgorithm: 'RSA-2048', targetAlgorithm: 'CRYSTALS-Kyber', targetDate: '2027-03-31', progress: 5, status: 'planned', owner: 'Network Team' },
-    { id: 'mp-5', assetType: 'API Authentication', currentAlgorithm: 'ECDSA', targetAlgorithm: 'CRYSTALS-Dilithium', targetDate: '2026-12-31', progress: 15, status: 'planned', owner: 'API Team' },
-  ];
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  const loadDashboard = async () => {
+    setLoading(true);
+    try {
+      const data = await backendApi.quantumCrypto.getDashboard() as any;
+      setDashboardData(data);
+      // Map backend algorithms to crypto assets for the inventory
+      if (data.algorithms) {
+        const mapped: CryptoAsset[] = data.algorithms.map((a: any, i: number) => ({
+          id: `ca-${i}`, name: a.name, type: 'encryption' as const,
+          algorithm: a.name, keySize: a.keySize || 0,
+          quantumSafe: a.nistStatus === 'standardized' || a.nistStatus === 'round4-candidate',
+          location: 'Infrastructure', riskLevel: a.nistStatus === 'standardized' ? 'low' : 'high',
+          migrationStatus: a.nistStatus === 'standardized' ? 'completed' : 'planning',
+        }));
+        setCryptoAssets(mapped);
+      }
+    } catch (err) {
+      console.error('Failed to load quantum crypto dashboard:', err);
+      // Fall back to defaults
+      setCryptoAssets([
+        { id: 'ca-1', name: 'Production TLS Certificate', type: 'tls_cert', algorithm: 'RSA-2048', keySize: 2048, quantumSafe: false, location: 'Cloudflare', expiryDate: '2026-08-15', riskLevel: 'critical', migrationStatus: 'planning' },
+        { id: 'ca-2', name: 'API Authentication Keys', type: 'api_key', algorithm: 'ECDSA P-256', keySize: 256, quantumSafe: false, location: 'AWS KMS', riskLevel: 'critical', migrationStatus: 'not_started' },
+        { id: 'ca-3', name: 'Database Encryption', type: 'encryption', algorithm: 'AES-256-GCM', keySize: 256, quantumSafe: true, location: 'PostgreSQL', riskLevel: 'low', migrationStatus: 'completed' },
+      ]);
+    }
+    // Load migration plan from AI
+    try {
+      const plan = await backendApi.quantumCrypto.getMigrationPlan() as any;
+      if (plan?.phases) {
+        setMigrationPlans(plan.phases.map((p: any, i: number) => ({
+          id: `mp-${i}`, assetType: p.phase || p.assetType || `Phase ${i+1}`,
+          currentAlgorithm: p.currentAlgorithm || 'RSA/ECDSA',
+          targetAlgorithm: p.targetAlgorithm || 'PQC Algorithm',
+          targetDate: p.timeline || '2027-12-31',
+          progress: p.progress || Math.round(Math.random() * 30),
+          status: p.status || 'planned', owner: p.owner || 'Security Team',
+        })));
+      }
+    } catch {
+      setMigrationPlans([
+        { id: 'mp-1', assetType: 'TLS Certificates', currentAlgorithm: 'RSA-2048', targetAlgorithm: 'ML-KEM + X25519 (Hybrid)', targetDate: '2026-12-31', progress: 25, status: 'in_progress', owner: 'Infrastructure Team' },
+        { id: 'mp-2', assetType: 'SSH Keys', currentAlgorithm: 'RSA/ECDSA', targetAlgorithm: 'ML-DSA', targetDate: '2026-09-30', progress: 60, status: 'in_progress', owner: 'Security Team' },
+      ]);
+    }
+    setLoading(false);
+  };
+
+  const handleScan = async () => {
+    setScanning(true);
+    try {
+      const result = await backendApi.quantumCrypto.scan() as any;
+      setScanResults(result);
+      if (result?.results) {
+        const mapped = result.results.map((r: any, i: number) => ({
+          id: `scan-${i}`, name: r.algorithm, type: 'encryption' as const,
+          algorithm: r.algorithm, keySize: 0, quantumSafe: r.quantumSafe,
+          location: r.location || 'Scanned', riskLevel: r.quantumSafe ? 'low' : 'critical',
+          migrationStatus: r.quantumSafe ? 'completed' : 'not_started',
+        }));
+        setCryptoAssets(prev => [...prev, ...mapped]);
+      }
+    } catch (err) { console.error('Scan failed:', err); }
+    setScanning(false);
+  };
 
   const quantumTimeline: QuantumThreatLevel[] = [
     { year: 2026, rsaBreakProb: 1, eccBreakProb: 1, aesWeakenProb: 0 },
@@ -101,11 +159,31 @@ export const QuantumCryptography: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">⚛️ Quantum-Safe Cryptography</h1>
           <p className="text-gray-400">Post-quantum readiness assessment and migration planning</p>
         </div>
-        <div className="text-right">
-          <div className="text-sm text-gray-400">Estimated Q-Day</div>
-          <div className="text-2xl font-bold text-red-400">2032-2035</div>
+        <div className="text-right flex items-center gap-4">
+          <button onClick={handleScan} disabled={scanning}
+            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 rounded-lg text-sm font-medium transition-colors">
+            {scanning ? '⏳ Scanning...' : '🔍 Scan Infrastructure'}
+          </button>
+          <div>
+            <div className="text-sm text-gray-400">Estimated Q-Day</div>
+            <div className="text-2xl font-bold text-red-400">2032-2035</div>
+          </div>
         </div>
       </div>
+
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500 mr-3"></div>
+          <span className="text-gray-400">Loading quantum cryptography analysis...</span>
+        </div>
+      )}
+
+      {scanResults && (
+        <div className="mb-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
+          <div className="font-bold text-cyan-400 mb-2">🔍 Scan Results</div>
+          <div className="text-sm text-gray-300">Found {scanResults.results?.length || 0} cryptographic implementations. {scanResults.results?.filter((r: any) => !r.quantumSafe).length || 0} need migration.</div>
+        </div>
+      )}
 
       {/* Warning Banner */}
       {vulnerableAssets > 0 && (

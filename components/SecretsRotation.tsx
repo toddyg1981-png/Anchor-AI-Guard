@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // SECRETS ROTATION - AUTOMATIC CREDENTIAL & KEY ROTATION
@@ -48,6 +49,27 @@ export const SecretsRotation: React.FC = () => {
   const [showConnectVaultForm, setShowConnectVaultForm] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const importFileRef = React.useRef<HTMLInputElement>(null);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('secrets-rotation');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('secrets-rotation', 'Analyze secrets rotation posture for stale credentials, rotation compliance, and vault security');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -167,6 +189,13 @@ export const SecretsRotation: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🔄 Secrets Rotation</h1>
           <p className="text-gray-400">Automatic credential rotation and lifecycle management</p>
         </div>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 rounded-lg font-medium text-white flex items-center gap-2"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+        </button>
         <div className="flex items-center gap-4">
           <button
             onClick={() => importFileRef.current?.click()}
@@ -549,6 +578,13 @@ export const SecretsRotation: React.FC = () => {
               </button>
             </div>
           )}
+        </div>
+      )}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <h3 className="text-lg font-semibold text-purple-300 mb-2">🤖 AI Analysis Result</h3>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+          <button onClick={() => setAnalysisResult('')} className="mt-2 text-sm text-purple-400 hover:text-purple-300">Dismiss</button>
         </div>
       )}
     </div>

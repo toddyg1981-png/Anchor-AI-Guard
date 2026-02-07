@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // BACKUP & DISASTER RECOVERY
@@ -47,6 +48,27 @@ export const BackupDisasterRecovery: React.FC = () => {
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [selectedBackup, setSelectedBackup] = useState<string | null>(null);
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'restoring' | 'success'>('idle');
+  const [_loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('backup-dr');
+        if (res) console.log('Dashboard loaded:', res); // eslint-disable-line no-console
+      } catch (e) { console.error(e); } finally { setLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('backup-dr', 'Analyze backup and disaster recovery posture for gaps in RPO/RTO compliance') as Record<string, unknown>;
+      if (res?.analysis) setAnalysisResult(res.analysis as string);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const handleRestore = (_rpId: string) => {
     if (!window.confirm('Are you sure you want to restore from this recovery point? This will overwrite current data.')) return;
@@ -101,6 +123,7 @@ export const BackupDisasterRecovery: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold mb-2">💾 Backup & Disaster Recovery</h1>
           <p className="text-gray-400">Immutable backups, geo-redundancy, and tested recovery procedures</p>
+          <button onClick={handleAIAnalysis} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm">{analyzing ? 'Analyzing...' : 'AI Analysis'}</button>
         </div>
         <div className="flex items-center gap-4">
           <button
@@ -283,6 +306,12 @@ export const BackupDisasterRecovery: React.FC = () => {
           </tbody>
         </table>
       </div>
+      {analysisResult && (
+        <div className="bg-slate-800 border border-blue-500/30 rounded-xl p-4 mt-4">
+          <div className="flex justify-between items-center mb-2"><h3 className="font-semibold text-blue-400">AI Analysis</h3><button onClick={() => setAnalysisResult('')} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</div>
+        </div>
+      )}
     </div>
   );
 };

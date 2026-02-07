@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // SECURITY AWARENESS TRAINING
@@ -58,6 +59,27 @@ export const SecurityAwarenessTraining: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'modules' | 'employees' | 'leaderboard' | 'badges'>('dashboard');
   const [showCreateCampaign, setShowCreateCampaign] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('security-training');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await backendApi.modules.analyze('security-training', 'Analyze security awareness training effectiveness, completion rates, and knowledge retention gaps');
+      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -148,6 +170,13 @@ export const SecurityAwarenessTraining: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🎓 Security Awareness Training</h1>
           <p className="text-gray-400">Gamified security training for the human firewall</p>
         </div>
+        <button
+          onClick={handleAIAnalysis}
+          disabled={analyzing || backendLoading}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 rounded-lg font-medium text-white flex items-center gap-2 mr-3"
+        >
+          {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+        </button>
         <button
           onClick={() => setShowCreateCampaign(!showCreateCampaign)}
           className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
@@ -475,6 +504,13 @@ export const SecurityAwarenessTraining: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-900/30 border border-purple-500/30 rounded-lg">
+          <h3 className="text-lg font-semibold text-purple-300 mb-2">🤖 AI Analysis Result</h3>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
+          <button onClick={() => setAnalysisResult('')} className="mt-2 text-sm text-purple-400 hover:text-purple-300">Dismiss</button>
         </div>
       )}
     </div>

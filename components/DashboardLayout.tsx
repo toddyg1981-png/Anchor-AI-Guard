@@ -102,6 +102,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     { id: 'mobile', label: 'Mobile Security', icon: '📱', view: 'mobileSecurity', description: 'Mobile app and device security' },
     { id: 'backup', label: 'Backup & DR', icon: '💾', view: 'backupRecovery', description: 'Disaster recovery management' },
     { id: 'self-protect', label: 'Self-Protection', icon: '🔰', view: 'selfProtection', description: 'Platform self-defense' },
+    { id: 'intelligence', label: 'Intelligence API', icon: '🌐', view: 'intelligenceDashboard', description: 'B2B AI-as-a-Service platform' },
   ];
 
   const manageItems: Array<{ id: string; label: string; icon: string; view: DashboardView; action?: () => void; description?: string; }> = [

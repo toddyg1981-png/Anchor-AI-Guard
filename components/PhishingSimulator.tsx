@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
 // PHISHING SIMULATOR - SECURITY AWARENESS TRAINING
@@ -54,6 +55,27 @@ export const PhishingSimulator: React.FC = () => {
   const [newCampaignTemplate, setNewCampaignTemplate] = useState('');
   const [newCampaignTarget, setNewCampaignTarget] = useState('All Employees');
   const [localCampaigns, setLocalCampaigns] = useState<PhishingCampaign[]>([]);
+  const [backendLoading, setBackendLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      setBackendLoading(true);
+      try {
+        const res = await backendApi.modules.getDashboard('phishing-sim');
+        if (res) console.log('Dashboard loaded:', res);
+      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+    })();
+  }, []);
+
+  const handleAIAnalysis = async () => {
+    setAnalyzing(true);
+    try {
+      const res: any = await backendApi.modules.analyze('phishing-sim', 'Analyze phishing simulation results for click-through trends, repeat offenders, and training effectiveness');
+      if (res?.analysis) setAnalysisResult(res.analysis);
+    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+  };
 
   const campaigns: PhishingCampaign[] = [
     { id: 'pc-1', name: 'Q1 2026 Baseline Test', template: 'Password Reset', difficulty: 'easy', status: 'completed', targetGroup: 'All Employees', targetCount: 150, sentCount: 150, openedCount: 120, clickedCount: 23, reportedCount: 45, credentialsEnteredCount: 8, completedDate: '2026-01-31' },
@@ -148,12 +170,17 @@ export const PhishingSimulator: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🎣 Phishing Simulator</h1>
           <p className="text-gray-400">Train employees with realistic phishing simulations</p>
         </div>
-        <button
-          onClick={() => setShowNewCampaign(true)}
-          className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
-        >
-          + New Campaign
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={handleAIAnalysis} disabled={analyzing || backendLoading} className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500 rounded-lg text-purple-400 font-medium disabled:opacity-50 transition-colors">
+            {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
+          </button>
+          <button
+            onClick={() => setShowNewCampaign(true)}
+            className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold"
+          >
+            + New Campaign
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -429,6 +456,17 @@ export const PhishingSimulator: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* AI Analysis Result */}
+      {analysisResult && (
+        <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-purple-400">🤖 AI Analysis Result</h3>
+            <button onClick={() => setAnalysisResult('')} className="text-gray-400 hover:text-white">✕</button>
+          </div>
+          <p className="text-gray-300 whitespace-pre-wrap">{analysisResult}</p>
         </div>
       )}
     </div>
