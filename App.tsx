@@ -195,7 +195,7 @@ const AppContent: React.FC = () => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
   
-    const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated);
+    const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
 
   // Handle URL-based navigation (for OAuth callbacks, password reset links, etc.)
   useEffect(() => {

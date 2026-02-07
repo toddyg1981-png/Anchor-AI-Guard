@@ -22,7 +22,7 @@ const initialState: Omit<BackendDataState, 'refetch'> = {
   error: null,
 };
 
-export function useBackendData(isAuthenticated = false): BackendDataState {
+export function useBackendData(isAuthenticated = false, authLoading = false): BackendDataState {
   const [state, setState] = useState<Omit<BackendDataState, 'refetch'>>(initialState);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
 
@@ -31,8 +31,8 @@ export function useBackendData(isAuthenticated = false): BackendDataState {
   }, []);
 
   useEffect(() => {
-    // Don't fetch if user is not authenticated — avoids 401 errors on mount
-    if (!isAuthenticated) {
+    // Don't fetch if auth is still loading (verifying token) or user is not authenticated
+    if (authLoading || !isAuthenticated) {
       setState({ ...initialState, loading: false });
       return;
     }
@@ -87,7 +87,7 @@ export function useBackendData(isAuthenticated = false): BackendDataState {
     return () => {
       isMounted = false;
     };
-  }, [refetchTrigger, isAuthenticated]);
+  }, [refetchTrigger, isAuthenticated, authLoading]);
 
   return { ...state, refetch };
 }
