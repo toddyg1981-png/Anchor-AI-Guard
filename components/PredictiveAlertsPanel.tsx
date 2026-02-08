@@ -343,7 +343,7 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('predictive-alerts');
-        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 

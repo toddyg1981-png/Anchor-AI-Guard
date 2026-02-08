@@ -43,7 +43,7 @@ const SupplyChainAttestation: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('supply-chain-attestation');
-        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 

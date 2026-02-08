@@ -717,7 +717,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
               Talk to Sales
             </button>
             <button 
-              onClick={() => window.location.href = 'mailto:sales@anchoraiguard.com?subject=Schedule%20a%20Demo'}}
+              onClick={() => window.location.href = 'mailto:sales@anchoraiguard.com?subject=Schedule%20a%20Demo'}
               className="bg-transparent border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 px-8 py-3 rounded-lg font-semibold transition-colors"
             >
               Schedule Demo

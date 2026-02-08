@@ -50,7 +50,7 @@ export const InsiderThreatDetection: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('insider-threat');
-        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 

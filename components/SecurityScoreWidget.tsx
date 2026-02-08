@@ -244,7 +244,7 @@ export const SecurityScoreWidget: React.FC<SecurityScoreWidgetProps> = ({
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('security-score');
-        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 

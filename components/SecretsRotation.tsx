@@ -58,7 +58,7 @@ export const SecretsRotation: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('secrets-rotation');
-        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
