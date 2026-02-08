@@ -81,10 +81,10 @@ export default function AIEvolutionDashboard() {
 
   // SSE connection for real-time streaming
   useEffect(() => {
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-    // Only connect SSE on localhost (backend must be reachable)
-    const isLocalhost = apiBase.includes('localhost') || apiBase.includes('127.0.0.1');
-    if (!isLocalhost) return;
+    const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+    // SSE requires same-origin or proper CORS. Skip on production deployments using different origins.
+    const isLocalDev = apiBase.includes('localhost') || apiBase.includes('127.0.0.1');
+    if (!isLocalDev) return;
 
     const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
     

@@ -63,6 +63,10 @@ function validateEnvironment(): void {
     if (import.meta.env.VITE_USE_MOCK_DATA === 'true') {
       errors.push('VITE_USE_MOCK_DATA must be false in production');
     }
+    // API URL must be set in production - no localhost fallbacks allowed
+    if (!import.meta.env.VITE_API_BASE_URL) {
+      errors.push('VITE_API_BASE_URL must be set in production');
+    }
   }
 
   if (errors.length > 0) {
@@ -85,7 +89,8 @@ export function loadEnvironmentConfig(): EnvironmentConfig {
     // Application Settings
     appEnv: (import.meta.env.VITE_APP_ENV || 'development') as EnvironmentConfig['appEnv'],
     appName: import.meta.env.VITE_APP_NAME || 'Anchor Security Dashboard',
-    apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api',
+    // In production, VITE_API_BASE_URL is required (validated above). In dev, fallback to localhost.
+    apiBaseUrl: import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:3001/api'),
 
     // Feature Flags
     enableAIAnalysis: parseBoolean(import.meta.env.VITE_ENABLE_AI_ANALYSIS, true),
