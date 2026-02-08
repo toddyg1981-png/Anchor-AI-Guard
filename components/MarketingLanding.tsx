@@ -439,7 +439,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               </span>
             </h2>
             <p className="text-xl text-purple-300 max-w-2xl mx-auto">
-              <strong>We built the security tools we wished existed.</strong> Twelve world-first innovations 
+              <strong>We built the security tools we wished existed.</strong> Fifteen world-first innovations 
               that fundamentally change how organisations protect their critical assets and code.
             </p>
           </div>
