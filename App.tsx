@@ -211,7 +211,7 @@ const AppContent: React.FC = () => {
     // Guard: If an OAuth callback accidentally lands on the frontend
     // (e.g. old BACKEND_URL pointed here), redirect to the backend
     if (path.startsWith('/api/auth/')) {
-      const backendBase = env.apiBaseUrl.replace('/api', '');
+      const backendBase = env.apiBaseUrl.replace(/\/api\/?$/, '');
       window.location.href = `${backendBase}${path}${window.location.search}`;
       return;
     }

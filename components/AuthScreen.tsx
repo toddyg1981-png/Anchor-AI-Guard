@@ -70,7 +70,8 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
 
   const handleOAuthLogin = (provider: 'github' | 'google') => {
     // Use backend URL for OAuth flow (backend handles the OAuth dance)
-    const backendUrl = env.apiBaseUrl.replace('/api', '');
+    // Remove trailing /api path but not /api in the domain (api.anchoraiguard.com)
+    const backendUrl = env.apiBaseUrl.replace(/\/api\/?$/, '');
     window.location.href = `${backendUrl}/api/auth/${provider}`;
   };
 
