@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { env } from '../config/env';
 
 interface AuthCallbackProps {
   onSuccess: () => void;
@@ -31,16 +32,30 @@ export const AuthCallback: React.FC<AuthCallbackProps> = ({ onSuccess, onError }
     }
 
     if (token) {
-      // Store token under the correct key that useAuth and apiClient expect
+      // Store token first
       localStorage.setItem('anchor_auth_token', token);
       setStatus('success');
       setMessage(isNewUser ? 'Account created! Redirecting...' : 'Signed in! Redirecting...');
 
-      // Reload the page so AuthProvider picks up the token from localStorage
-      // and verifies it against /auth/me to get user data
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1500);
+      // Verify the token and store user data BEFORE redirecting
+      // This prevents the race condition where the page loads at / with no user data
+      fetch(`${env.apiBaseUrl}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Token invalid');
+          return res.json();
+        })
+        .then(data => {
+          // Store user and org data so AuthProvider finds them immediately on reload
+          if (data.user) localStorage.setItem('anchor_auth_user', JSON.stringify(data.user));
+          if (data.organization) localStorage.setItem('anchor_auth_org', JSON.stringify(data.organization));
+          setTimeout(() => { window.location.href = '/'; }, 500);
+        })
+        .catch(() => {
+          // Even if verify fails, still redirect — AuthProvider will handle it
+          setTimeout(() => { window.location.href = '/'; }, 500);
+        });
     } else {
       setStatus('error');
       setMessage('No authentication token received');

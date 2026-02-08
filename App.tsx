@@ -271,11 +271,11 @@ const AppContent: React.FC = () => {
         } else if (currentView !== 'dashboard' && currentView !== 'purchase-terms') {
           setCurrentView('dashboard');
         }
-      } else {
-        // Not authenticated — redirect protected views back to marketing
-        if (currentView === 'dashboard' || currentView === 'onboarding') {
-          setCurrentView('marketing');
-        }
+      }
+      // If not authenticated, stay on whatever view we're on (marketing, auth, etc.)
+      // Only force back to marketing if they're on a protected view
+      else if (currentView === 'dashboard' || currentView === 'onboarding') {
+        setCurrentView('marketing');
       }
     }
   }, [isAuthenticated, authLoading, hasCompletedOnboarding, currentView]);
