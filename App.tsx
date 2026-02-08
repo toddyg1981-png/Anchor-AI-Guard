@@ -206,6 +206,14 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
+
+    // Guard: If an OAuth callback accidentally lands on the frontend
+    // (e.g. old BACKEND_URL pointed here), redirect to the backend
+    if (path.startsWith('/api/auth/')) {
+      const backendBase = env.apiBaseUrl.replace('/api', '');
+      window.location.href = `${backendBase}${path}${window.location.search}`;
+      return;
+    }
     
     if (path === '/auth/callback' || params.has('token')) {
       setCurrentView('auth-callback');
@@ -603,8 +611,8 @@ const AppContent: React.FC = () => {
 
   // Main render based on current view
   const renderContent = () => {
-    // Show loading while checking auth
-    if (authLoading) {
+    // Show loading while checking auth OR if we just authenticated but view hasn't updated yet
+    if (authLoading || (isAuthenticated && currentView === 'marketing')) {
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
