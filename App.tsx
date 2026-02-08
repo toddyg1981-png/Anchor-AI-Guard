@@ -260,7 +260,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     if (!authLoading) {
       // Don't override special routes
-      if (['auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard'].includes(currentView)) {
+      if (['auth', 'auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard'].includes(currentView)) {
         return;
       }
       

@@ -244,6 +244,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           {/* OAuth Buttons */}
           <div className="space-y-3 mb-6">
             <button
+              type="button"
               onClick={() => handleOAuthLogin('github')}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg bg-slate-900 border border-slate-600 text-white hover:bg-slate-700 transition-all"
             >
@@ -254,6 +255,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
             </button>
             
             <button
+              type="button"
               onClick={() => handleOAuthLogin('google')}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg bg-white text-gray-700 hover:bg-gray-100 transition-all"
             >
