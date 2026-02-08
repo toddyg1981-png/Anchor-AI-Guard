@@ -56,18 +56,171 @@ interface EvolutionLogEntry {
   aiGenerated: boolean;
 }
 
+interface MetricsData {
+  threats: Array<{ timestamp: number; value: number }>;
+  rules: Array<{ timestamp: number; value: number }>;
+  analyses: Array<{ timestamp: number; value: number }>;
+  competitiveScore: Array<{ timestamp: number; value: number }>;
+  currentTotals: {
+    threats: number;
+    rules: number;
+    analyses: number;
+    score: number;
+  };
+}
+
+// Simple animated line chart component
+function LiveChart({ 
+  data, 
+  color, 
+  label,
+  height = 120 
+}: { 
+  data: Array<{ timestamp: number; value: number }>; 
+  color: string; 
+  label: string;
+  height?: number;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>(0);
+  const [animatedData, setAnimatedData] = useState<Array<{ timestamp: number; value: number }>>([]);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      // Animate data points appearing
+      let currentIndex = 0;
+      const animate = () => {
+        if (currentIndex < data.length) {
+          setAnimatedData(data.slice(0, currentIndex + 1));
+          currentIndex++;
+          animationRef.current = requestAnimationFrame(animate);
+        }
+      };
+      animationRef.current = requestAnimationFrame(animate);
+    }
+    return () => cancelAnimationFrame(animationRef.current);
+  }, [data]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || animatedData.length < 2) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * 2;
+    canvas.height = rect.height * 2;
+    ctx.scale(2, 2);
+
+    const width = rect.width;
+    const chartHeight = rect.height;
+    const padding = 10;
+    const chartWidth = width - padding * 2;
+    const chartArea = chartHeight - padding * 2;
+
+    // Clear
+    ctx.clearRect(0, 0, width, chartHeight);
+
+    // Find min/max
+    const values = animatedData.map(d => d.value);
+    const maxVal = Math.max(...values, 1);
+    const minVal = Math.min(...values, 0);
+    const range = maxVal - minVal || 1;
+
+    // Draw gradient fill
+    const gradient = ctx.createLinearGradient(0, padding, 0, chartHeight - padding);
+    gradient.addColorStop(0, color + '40');
+    gradient.addColorStop(1, color + '00');
+
+    ctx.beginPath();
+    ctx.moveTo(padding, chartHeight - padding);
+    
+    animatedData.forEach((point, i) => {
+      const x = padding + (i / (animatedData.length - 1)) * chartWidth;
+      const y = chartHeight - padding - ((point.value - minVal) / range) * chartArea;
+      if (i === 0) {
+        ctx.lineTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    });
+    
+    ctx.lineTo(padding + chartWidth, chartHeight - padding);
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Draw line
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    
+    animatedData.forEach((point, i) => {
+      const x = padding + (i / (animatedData.length - 1)) * chartWidth;
+      const y = chartHeight - padding - ((point.value - minVal) / range) * chartArea;
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    });
+    ctx.stroke();
+
+    // Draw current value dot with glow
+    if (animatedData.length > 0) {
+      const lastPoint = animatedData[animatedData.length - 1];
+      const x = padding + chartWidth;
+      const y = chartHeight - padding - ((lastPoint.value - minVal) / range) * chartArea;
+      
+      // Glow effect
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = color + '30';
+      ctx.fill();
+      
+      // Dot
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  }, [animatedData, color]);
+
+  const currentValue = animatedData.length > 0 ? animatedData[animatedData.length - 1].value : 0;
+
+  return (
+    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm text-slate-400">{label}</span>
+        <span className="text-lg font-bold" style={{ color }}>{currentValue.toLocaleString()}</span>
+      </div>
+      <canvas 
+        ref={canvasRef} 
+        className="w-full" 
+        style={{ height: `${height}px` }}
+      />
+    </div>
+  );
+}
+
 export default function AIEvolutionDashboard() {
-  const [activeTab, setActiveTab] = useState<'live' | 'overview' | 'threats' | 'rules' | 'feeds' | 'generate'>('live');
+  const [activeTab, setActiveTab] = useState<'live' | 'overview' | 'threats' | 'rules' | 'feeds' | 'generate' | 'charts'>('live');
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState<EvolutionStatus | null>(null);
   const [threats, setThreats] = useState<ThreatIntel[]>([]);
   const [rules, setRules] = useState<DetectionRule[]>([]);
   const [evolutionLog, setEvolutionLog] = useState<EvolutionLogEntry[]>([]);
   const [isEvolving, setIsEvolving] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isRepairing, setIsRepairing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [moduleRequirement, setModuleRequirement] = useState('');
   const [generatedModule, setGeneratedModule] = useState<any>(null);
   const [competitiveAnalysis, setCompetitiveAnalysis] = useState<any>(null);
+  const [metrics, setMetrics] = useState<MetricsData | null>(null);
   
   // Real-time live feed
   const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([]);
@@ -159,6 +312,10 @@ export default function AIEvolutionDashboard() {
 
   useEffect(() => {
     loadData();
+    loadMetrics();
+    // Refresh metrics every 30 seconds
+    const metricsInterval = setInterval(loadMetrics, 30000);
+    return () => clearInterval(metricsInterval);
   }, []);
 
   const loadData = async () => {
@@ -179,6 +336,162 @@ export default function AIEvolutionDashboard() {
       console.error('Failed to load AI Evolution data:', error);
     }
     setLoading(false);
+  };
+
+  const loadMetrics = async () => {
+    try {
+      const metricsRes = await backendApi.aiEvolution.getMetrics();
+      setMetrics(metricsRes as MetricsData);
+    } catch (error) {
+      console.error('Failed to load metrics:', error);
+    }
+  };
+
+  const runScan = async () => {
+    setIsScanning(true);
+    try {
+      const result = await backendApi.aiEvolution.scan();
+      const data = result as any;
+      alert(`Scan complete in ${(data.results.duration / 1000).toFixed(1)}s:\n${data.results.newThreats} new threats\n${data.results.newRules} new rules`);
+      loadData();
+      loadMetrics();
+    } catch (error) {
+      console.error('Scan failed:', error);
+      alert('Scan failed - check console for details');
+    }
+    setIsScanning(false);
+  };
+
+  const runRepair = async (mode: 'soft' | 'hard') => {
+    if (mode === 'hard' && !confirm('WARNING: Hard repair will clear ALL data and reseed from scratch. Continue?')) {
+      return;
+    }
+    setIsRepairing(true);
+    try {
+      const result = await backendApi.aiEvolution.repair(mode);
+      const data = result as any;
+      alert(`${mode === 'hard' ? 'Hard' : 'Soft'} repair completed:\n${data.message}`);
+      loadData();
+      loadMetrics();
+    } catch (error) {
+      console.error('Repair failed:', error);
+      alert('Repair failed - check console for details');
+    }
+    setIsRepairing(false);
+  };
+
+  const exportToPDF = async () => {
+    try {
+      // Generate HTML for PDF
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>AI Evolution Engine Report - ${new Date().toLocaleDateString()}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
+            h1 { color: #6366f1; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
+            h2 { color: #8b5cf6; margin-top: 30px; }
+            .stats { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+            .stat-card { background: #f3f4f6; padding: 15px 25px; border-radius: 8px; }
+            .stat-value { font-size: 24px; font-weight: bold; color: #6366f1; }
+            .stat-label { color: #6b7280; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+            th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
+            th { background: #f9fafb; }
+            .severity-critical { color: #ef4444; }
+            .severity-high { color: #f97316; }
+            .severity-medium { color: #eab308; }
+            .severity-low { color: #3b82f6; }
+            .footer { margin-top: 40px; text-align: center; color: #9ca3af; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <h1>🧠 AI Evolution Engine Report</h1>
+          <p>Generated: ${new Date().toLocaleString()}</p>
+          
+          <h2>Current Status</h2>
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-value">${liveStats.totalThreats}</div>
+              <div class="stat-label">Total Threats</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${liveStats.totalRules}</div>
+              <div class="stat-label">Detection Rules</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${liveStats.aiAnalysisCount}</div>
+              <div class="stat-label">AI Analyses</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${liveStats.competitiveScore}%</div>
+              <div class="stat-label">Competitive Score</div>
+            </div>
+          </div>
+          
+          <h2>Processed Threats (Top 20)</h2>
+          <table>
+            <tr><th>Severity</th><th>Source</th><th>Title</th><th>Date</th></tr>
+            ${threats.slice(0, 20).map(t => `
+              <tr>
+                <td class="severity-${t.severity}">${t.severity.toUpperCase()}</td>
+                <td>${t.source}</td>
+                <td>${t.title}</td>
+                <td>${new Date(t.timestamp).toLocaleDateString()}</td>
+              </tr>
+            `).join('')}
+          </table>
+          
+          <h2>Detection Rules (Top 20)</h2>
+          <table>
+            <tr><th>Name</th><th>Type</th><th>Severity</th><th>Status</th></tr>
+            ${rules.slice(0, 20).map(r => `
+              <tr>
+                <td>${r.name}</td>
+                <td>${r.type}</td>
+                <td class="severity-${r.severity}">${r.severity.toUpperCase()}</td>
+                <td>${r.enabled ? '✓ Enabled' : '✗ Disabled'}</td>
+              </tr>
+            `).join('')}
+          </table>
+          
+          <h2>Recent Activity</h2>
+          <table>
+            <tr><th>Time</th><th>Action</th><th>Details</th></tr>
+            ${evolutionLog.slice(0, 10).map(l => `
+              <tr>
+                <td>${new Date(l.timestamp).toLocaleString()}</td>
+                <td>${l.aiGenerated ? '🤖 ' : ''}${l.action}</td>
+                <td>${l.details.substring(0, 100)}...</td>
+              </tr>
+            `).join('')}
+          </table>
+          
+          <div class="footer">
+            <p>ANCHOR SECURITY PLATFORM - AI Evolution Engine</p>
+            <p>Confidential Report - Do Not Distribute</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Create blob and download
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ai-evolution-report-${new Date().toISOString().split('T')[0]}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('Report exported successfully! Open the HTML file in a browser and print to PDF if needed.');
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Export failed');
+    }
   };
 
   const triggerEvolution = async () => {
@@ -318,11 +631,94 @@ export default function AIEvolutionDashboard() {
             Autonomous security updates keeping Anchor ahead of threats
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 flex-wrap">
+          {/* Export PDF Button */}
+          <button
+            onClick={exportToPDF}
+            className="px-4 py-2.5 rounded-lg font-semibold transition-all bg-slate-700 hover:bg-slate-600 text-slate-200 shadow-lg flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export
+          </button>
+          
+          {/* Scan Button */}
+          <button
+            onClick={runScan}
+            disabled={isScanning || isEvolving || isBootstrapping || isRepairing}
+            className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
+              isScanning
+                ? 'bg-gray-600 cursor-not-allowed'
+                : 'bg-gradient-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400'
+            } text-white shadow-lg flex items-center gap-2`}
+          >
+            {isScanning ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Scanning...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Scan Feeds
+              </>
+            )}
+          </button>
+          
+          {/* Repair Button */}
+          <div className="relative group">
+            <button
+              onClick={() => runRepair('soft')}
+              disabled={isRepairing || isEvolving || isBootstrapping || isScanning}
+              className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
+                isRepairing
+                  ? 'bg-gray-600 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-yellow-600 to-amber-500 hover:from-yellow-500 hover:to-amber-400'
+              } text-white shadow-lg flex items-center gap-2`}
+            >
+              {isRepairing ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Repairing...
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Repair
+                </>
+              )}
+            </button>
+            {/* Dropdown for hard repair */}
+            <div className="absolute right-0 mt-1 w-48 bg-slate-800 rounded-lg shadow-xl border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+              <button
+                onClick={() => runRepair('soft')}
+                disabled={isRepairing}
+                className="w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-slate-700 rounded-t-lg"
+              >
+                🔧 Soft Repair
+                <span className="block text-xs text-slate-500">Fix minor issues</span>
+              </button>
+              <button
+                onClick={() => runRepair('hard')}
+                disabled={isRepairing}
+                className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-slate-700 rounded-b-lg"
+              >
+                💥 Hard Reset
+                <span className="block text-xs text-slate-500">Clear all &amp; reseed</span>
+              </button>
+            </div>
+          </div>
+
           <button
             onClick={bootstrapEngine}
-            disabled={isBootstrapping || isEvolving}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+            disabled={isBootstrapping || isEvolving || isScanning || isRepairing}
+            className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
               isBootstrapping
                 ? 'bg-gray-600 cursor-not-allowed'
                 : 'bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400'
@@ -334,13 +730,13 @@ export default function AIEvolutionDashboard() {
                 Bootstrapping...
               </span>
             ) : (
-              'Bootstrap (Nuclear)'
+              'Bootstrap'
             )}
           </button>
           <button
             onClick={triggerEvolution}
-            disabled={isEvolving || isBootstrapping}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+            disabled={isEvolving || isBootstrapping || isScanning || isRepairing}
+            className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
               isEvolving
                 ? 'bg-gray-600 cursor-not-allowed'
                 : 'bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400'
@@ -352,7 +748,7 @@ export default function AIEvolutionDashboard() {
                 Evolving...
               </span>
             ) : (
-              'Trigger Evolution Cycle'
+              'Evolve'
             )}
           </button>
         </div>
@@ -417,18 +813,21 @@ export default function AIEvolutionDashboard() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-slate-700 pb-2">
-        {(['live', 'overview', 'threats', 'rules', 'feeds', 'generate'] as const).map(tab => (
+      <div className="flex gap-2 border-b border-slate-700 pb-2 overflow-x-auto">
+        {(['live', 'charts', 'overview', 'threats', 'rules', 'feeds', 'generate'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
               activeTab === tab
-                ? tab === 'live' ? 'bg-green-600 text-white' : 'bg-purple-600 text-white'
+                ? tab === 'live' ? 'bg-green-600 text-white' 
+                  : tab === 'charts' ? 'bg-cyan-600 text-white'
+                  : 'bg-purple-600 text-white'
                 : 'text-slate-400 hover:text-white hover:bg-slate-700'
             }`}
           >
-            {tab === 'live' && 'Live Feed'}
+            {tab === 'live' && '📡 Live Feed'}
+            {tab === 'charts' && '📊 Live Charts'}
             {tab === 'overview' && 'Overview'}
             {tab === 'threats' && 'Threats'}
             {tab === 'rules' && 'Rules'}
@@ -490,6 +889,100 @@ export default function AIEvolutionDashboard() {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {/* LIVE CHARTS TAB */}
+        {activeTab === 'charts' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
+                Real-Time Metrics
+              </h3>
+              <button
+                onClick={loadMetrics}
+                className="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-all flex items-center gap-1"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh
+              </button>
+            </div>
+            
+            {metrics ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <LiveChart
+                  data={metrics.threats}
+                  color="#06b6d4"
+                  label="Threats Processed"
+                  height={150}
+                />
+                <LiveChart
+                  data={metrics.rules}
+                  color="#a855f7"
+                  label="Detection Rules"
+                  height={150}
+                />
+                <LiveChart
+                  data={metrics.analyses}
+                  color="#22c55e"
+                  label="AI Analyses"
+                  height={150}
+                />
+                <LiveChart
+                  data={metrics.competitiveScore}
+                  color="#eab308"
+                  label="Competitive Score"
+                  height={150}
+                />
+              </div>
+            ) : (
+              <div className="text-slate-500 text-center py-16">
+                <div className="text-4xl mb-3">📊</div>
+                <div className="text-lg">Loading metrics...</div>
+                <div className="text-sm mt-2">Charts will appear here with live data</div>
+              </div>
+            )}
+
+            {/* Summary Stats */}
+            {metrics?.currentTotals && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div className="bg-gradient-to-br from-cyan-900/30 to-cyan-800/10 rounded-xl p-4 border border-cyan-700/30">
+                  <div className="text-3xl font-bold text-cyan-400">{metrics.currentTotals.threats.toLocaleString()}</div>
+                  <div className="text-sm text-slate-400">Total Threats</div>
+                  <div className="text-xs text-cyan-500 mt-1 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse"></span>
+                    Live updating
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/10 rounded-xl p-4 border border-purple-700/30">
+                  <div className="text-3xl font-bold text-purple-400">{metrics.currentTotals.rules.toLocaleString()}</div>
+                  <div className="text-sm text-slate-400">Active Rules</div>
+                  <div className="text-xs text-purple-500 mt-1 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+                    Live updating
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-green-900/30 to-green-800/10 rounded-xl p-4 border border-green-700/30">
+                  <div className="text-3xl font-bold text-green-400">{metrics.currentTotals.analyses.toLocaleString()}</div>
+                  <div className="text-sm text-slate-400">AI Analyses</div>
+                  <div className="text-xs text-green-500 mt-1 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    Live updating
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/10 rounded-xl p-4 border border-yellow-700/30">
+                  <div className="text-3xl font-bold text-yellow-400">{metrics.currentTotals.score}%</div>
+                  <div className="text-sm text-slate-400">Competitive Score</div>
+                  <div className="text-xs text-yellow-500 mt-1 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                    Live updating
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

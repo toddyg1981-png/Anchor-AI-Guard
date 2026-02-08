@@ -987,6 +987,51 @@ export const backendApi = {
         confidence: number;
       }>(`${baseUrl}/ai-evolution/predict`, params);
     },
+
+    async scan() {
+      const baseUrl = env.apiBaseUrl;
+      return apiClient.post<{
+        success: boolean;
+        message: string;
+        results: {
+          newThreats: number;
+          newRules: number;
+          updates: string[];
+          sources: string[];
+          duration: number;
+          timestamp: string;
+        };
+      }>(`${baseUrl}/ai-evolution/scan`, {});
+    },
+
+    async repair(mode: 'soft' | 'hard' = 'soft') {
+      const baseUrl = env.apiBaseUrl;
+      return apiClient.post<{
+        success: boolean;
+        message: string;
+        itemsRepaired?: number;
+        before?: { threats: number; rules: number; updates: number };
+        after?: { threats: number; rules: number; updates: number };
+        reseedResults?: { newThreats: number; newRules: number };
+        currentStats?: { threats: number; rules: number; updates: number; activeFeeds: number };
+      }>(`${baseUrl}/ai-evolution/repair`, { mode });
+    },
+
+    async getMetrics() {
+      const baseUrl = env.apiBaseUrl;
+      return apiClient.get<{
+        threats: Array<{ timestamp: number; value: number }>;
+        rules: Array<{ timestamp: number; value: number }>;
+        analyses: Array<{ timestamp: number; value: number }>;
+        competitiveScore: Array<{ timestamp: number; value: number }>;
+        currentTotals: {
+          threats: number;
+          rules: number;
+          analyses: number;
+          score: number;
+        };
+      }>(`${baseUrl}/ai-evolution/metrics`);
+    },
   },
 
   // Endpoint Detection & Response (EDR) - PC, Mac, Linux, Mobile protection

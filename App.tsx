@@ -89,6 +89,7 @@ const BackupDisasterRecovery = React.lazy(() => import('./components/BackupDisas
 const SelfProtection = React.lazy(() => import('./components/SelfProtection'));
 const AnchorIntelligenceLanding = React.lazy(() => import('./components/AnchorIntelligenceLanding'));
 const AnchorIntelligenceDashboard = React.lazy(() => import('./components/AnchorIntelligenceDashboard'));
+const AIEvolutionDashboard = React.lazy(() => import('./components/AIEvolutionDashboard'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -188,7 +189,8 @@ export type DashboardView =
   | 'mobileSecurity'
   | 'backupRecovery'
   | 'selfProtection'
-  | 'intelligenceDashboard';
+  | 'intelligenceDashboard'
+  | 'aiEvolution';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -200,6 +202,7 @@ const AppContent: React.FC = () => {
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
+  const [currentPlan, setCurrentPlan] = useState<string | undefined>(undefined);
   
     const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
 
@@ -254,7 +257,34 @@ const AppContent: React.FC = () => {
       // Clean up URL
       window.history.replaceState({}, '', '/');
     }
+
+    // Handle checkout canceled
+    if (params.get('checkout') === 'canceled' && path === '/pricing') {
+      setCurrentView('pricing');
+      window.history.replaceState({}, '', '/pricing');
+    }
   }, []);
+
+  // Fetch current plan when authenticated
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      const fetchCurrentPlan = async () => {
+        try {
+          const token = localStorage.getItem('anchor_auth_token');
+          const response = await fetch(`${env.apiBaseUrl}/billing/subscription`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setCurrentPlan(data.subscription?.planTier || 'FREE');
+          }
+        } catch {
+          // Billing data not available, don't block
+        }
+      };
+      fetchCurrentPlan();
+    }
+  }, [isAuthenticated, authLoading]);
 
   // Determine initial view based on auth state
   useEffect(() => {
@@ -459,7 +489,7 @@ const AppContent: React.FC = () => {
               </svg>
               Back to Dashboard
             </button>
-            <BillingDashboard onUpgrade={handleViewPricing} />
+            <BillingDashboard onUpgrade={handleViewPricing} onManageBilling={handleViewPricing} />
           </div>
         );
       case 'admin':
@@ -591,6 +621,8 @@ const AppContent: React.FC = () => {
         return <SelfProtection />;
       case 'intelligenceDashboard':
         return <AnchorIntelligenceDashboard />;
+      case 'aiEvolution':
+        return <AIEvolutionDashboard />;
       case 'overview':
       default:
         return (
@@ -651,6 +683,16 @@ const AppContent: React.FC = () => {
               setCurrentView(isAuthenticated ? 'dashboard' : 'marketing');
               window.history.pushState({}, '', '/');
             }}
+            onSelectPlan={(tier) => {
+              if (['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(tier)) {
+                window.open('mailto:sales@anchoraiguard.com?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier), '_blank');
+              } else if (!isAuthenticated) {
+                setCurrentView('auth');
+                window.history.pushState({}, '', `/signup?plan=${tier}`);
+              }
+              // For authenticated users, PricingPage handles checkout internally
+            }}
+            currentPlan={currentPlan}
             isAuthenticated={isAuthenticated}
           />
         );

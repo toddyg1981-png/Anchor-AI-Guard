@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppView, DashboardView } from '../App';
 import { useDebouncedSearch } from '../hooks/useSecurityHooks';
+import AIStatusWidget from './AIStatusWidget';
 
 interface User {
   id?: string;
@@ -103,6 +104,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     { id: 'backup', label: 'Backup & DR', icon: '💾', view: 'backupRecovery', description: 'Disaster recovery management' },
     { id: 'self-protect', label: 'Self-Protection', icon: '🔰', view: 'selfProtection', description: 'Platform self-defense' },
     { id: 'intelligence', label: 'Intelligence API', icon: '🌐', view: 'intelligenceDashboard', description: 'B2B AI-as-a-Service platform' },
+    { id: 'ai-evolution', label: 'AI Evolution', icon: '🧬', view: 'aiEvolution', description: 'Self-evolving threat detection engine' },
   ];
 
   const manageItems: Array<{ id: string; label: string; icon: string; view: DashboardView; action?: () => void; description?: string; }> = [
@@ -335,6 +337,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           {children}
         </div>
       </main>
+
+      {/* Global AI Status Widget - Always Visible */}
+      <AIStatusWidget 
+        onOpenDashboard={() => {
+          setActiveNav('ai-evolution');
+          setDashboardView('aiEvolution');
+        }}
+      />
     </div>
   );
 };

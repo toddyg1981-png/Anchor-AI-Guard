@@ -36,6 +36,12 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [referralCode, setReferralCode] = useState('');
   const [showReferral, setShowReferral] = useState(false);
+  const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+
+  const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
 
   useEffect(() => {
     fetchPlans();
@@ -289,19 +295,39 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
     // For Enterprise/Government tiers, redirect to contact/sales
     if (['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(tier)) {
-      window.location.href = 'mailto:sales@anchoraiguard.com?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier);
+      const mailtoUrl = 'mailto:sales@anchoraiguard.com?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier);
+      window.open(mailtoUrl, '_blank');
+      showNotification('info', 'Opening email client to contact our sales team...');
       return;
     }
 
     // If not authenticated, redirect to signup
     if (!isAuthenticated) {
-      window.location.href = `/signup?plan=${tier}`;
+      const signupUrl = `/signup?plan=${tier}`;
+      // Use pushState for SPA-compatible navigation
+      window.history.pushState({}, '', signupUrl);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      // Fallback: reload if SPA routing doesn't handle it
+      setTimeout(() => {
+        if (window.location.pathname === signupUrl.split('?')[0]) return;
+        window.location.href = signupUrl;
+      }, 100);
       return;
     }
 
     // Free tier - no checkout needed
     if (tier === 'FREE') {
-      alert('You are already on the Free plan.');
+      if (currentPlan === 'FREE') {
+        showNotification('info', 'You are already on the Free plan.');
+      } else {
+        showNotification('info', 'To downgrade to Free, please manage your subscription from the billing dashboard.');
+      }
+      return;
+    }
+
+    // Current plan - no action needed
+    if (currentPlan === tier) {
+      showNotification('info', 'You are already on this plan.');
       return;
     }
 
@@ -309,6 +335,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     setCheckoutLoading(tier);
     try {
       const token = localStorage.getItem('anchor_auth_token');
+      if (!token) {
+        showNotification('error', 'Please log in to upgrade your plan.');
+        return;
+      }
+
       const response = await fetch(`${env.apiBaseUrl}/billing/checkout`, {
         method: 'POST',
         headers: {
@@ -332,14 +363,15 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
       if (data.url) {
         // Redirect to Stripe checkout
-        window.location.href = data.url;
+        showNotification('success', 'Redirecting to secure checkout...');
+        setTimeout(() => { window.location.href = data.url; }, 500);
       } else {
-        console.error('No checkout URL returned');
-        alert('Failed to start checkout. Please try again.');
+        throw new Error('No checkout URL returned from server');
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      alert(error instanceof Error ? error.message : 'Failed to start checkout. Please try again.');
+      const message = error instanceof Error ? error.message : 'Failed to start checkout';
+      showNotification('error', `${message}. Please try again or contact support.`);
     } finally {
       setCheckoutLoading(null);
     }
@@ -357,8 +389,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
   const copyReferralLink = () => {
     const link = `${window.location.origin}/signup?ref=${referralCode || 'YOUR_CODE'}`;
-    navigator.clipboard.writeText(link);
-    alert('Referral link copied!');
+    navigator.clipboard.writeText(link).then(() => {
+      showNotification('success', 'Referral link copied to clipboard!');
+    }).catch(() => {
+      showNotification('info', 'Referral link: ' + link);
+    });
   };
 
   if (loading) {
@@ -371,6 +406,41 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
   return (
     <div className="min-h-screen bg-transparent py-16 px-4">
+      {/* Notification Toast */}
+      {notification && (
+        <div className={`fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg border ${
+          notification.type === 'error' ? 'bg-red-900/90 border-red-500/50 text-red-200' :
+          notification.type === 'success' ? 'bg-green-900/90 border-green-500/50 text-green-200' :
+          'bg-blue-900/90 border-blue-500/50 text-blue-200'
+        }`}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              {notification.type === 'error' && (
+                <svg className="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+              {notification.type === 'success' && (
+                <svg className="w-5 h-5 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+              {notification.type === 'info' && (
+                <svg className="w-5 h-5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+              <p className="text-sm">{notification.message}</p>
+            </div>
+            <button onClick={() => setNotification(null)} className="text-gray-400 hover:text-white" title="Dismiss notification">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         {onBack && (
