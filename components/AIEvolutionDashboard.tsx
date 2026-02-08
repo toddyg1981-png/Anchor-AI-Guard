@@ -5,7 +5,7 @@
  * controls to manage Anchor's autonomous security updates.
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { backendApi } from '../utils/backendApi';
 
 // Real-time event from SSE stream
@@ -76,9 +76,16 @@ export default function AIEvolutionDashboard() {
   const eventSourceRef = useRef<EventSource | null>(null);
   const liveLogRef = useRef<HTMLDivElement>(null);
 
+
+  const [isBootstrapping, setIsBootstrapping] = useState(false);
+
   // SSE connection for real-time streaming
   useEffect(() => {
     const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    // Only connect SSE on localhost (backend must be reachable)
+    const isLocalhost = apiBase.includes('localhost') || apiBase.includes('127.0.0.1');
+    if (!isLocalhost) return;
+
     const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
     
     const connectSSE = () => {
@@ -118,7 +125,7 @@ export default function AIEvolutionDashboard() {
               // Refresh full data after a cycle
               loadData();
             }
-          } catch (e) {
+          } catch {
             // ignore parse errors
           }
         };
@@ -129,7 +136,7 @@ export default function AIEvolutionDashboard() {
           // Reconnect after 5 seconds
           setTimeout(connectSSE, 5000);
         };
-      } catch (e) {
+      } catch {
         // SSE not available, fall back to polling
         setIsConnected(false);
       }
@@ -187,15 +194,13 @@ export default function AIEvolutionDashboard() {
     setIsEvolving(false);
   };
 
-  const [isBootstrapping, setIsBootstrapping] = useState(false);
-
   const bootstrapEngine = async () => {
-    if (!confirm('🚀 BOOTSTRAP MODE: This will aggressively seed the AI with data from ALL 6 threat feeds, generate detection rules, and switch to 15-minute evolution cycles for 24 hours. Continue?')) return;
+    if (!confirm('BOOTSTRAP MODE: This will aggressively seed the AI with data from ALL 6 threat feeds, generate detection rules, and switch to 15-minute evolution cycles for 24 hours. Continue?')) return;
     setIsBootstrapping(true);
     try {
       const result = await backendApi.aiEvolution.bootstrap();
       const data = result as any;
-      alert(`🚀 BOOTSTRAP COMPLETE!\n\n` +
+      alert(`BOOTSTRAP COMPLETE!\n\n` +
         `Threats ingested: ${data.results.phase1_feeds.threats}\n` +
         `Rules generated: ${data.results.phase2_rules.generated}\n` +
         `Sources: ${data.results.phase1_feeds.sources.join(', ')}\n` +
@@ -237,31 +242,7 @@ export default function AIEvolutionDashboard() {
     }
   };
 
-  const toLive Stats Bar */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 border border-purple-500/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
-              <span className={`text-sm font-medium ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
-                {isConnected ? 'LIVE' : 'OFFLINE'}
-              </span>
-            </div>
-            <div className="h-6 w-px bg-slate-600"></div>
-            <div className="flex gap-6 text-sm">
-              <span className="text-slate-400">Threats: <span className="text-cyan-400 font-bold">{liveStats.totalThreats}</span></span>
-              <span className="text-slate-400">Rules: <span className="text-purple-400 font-bold">{liveStats.totalRules}</span></span>
-              <span className="text-slate-400">AI Analyses: <span className="text-green-400 font-bold">{liveStats.aiAnalysisCount}</span></span>
-              <span className="text-slate-400">Score: <span className="text-yellow-400 font-bold">{liveStats.competitiveScore}%</span></span>
-            </div>
-          </div>
-          <div className="text-xs text-slate-500 font-mono">
-            {liveEvents[0]?.timestamp ? new Date(liveEvents[0].timestamp).toLocaleTimeString() : '--:--:--'}
-          </div>
-        </div>
-      </div>
-
-      {/* ggleRule = async (ruleId: string, enabled: boolean) => {
+  const toggleRule = async (ruleId: string, enabled: boolean) => {
     try {
       await backendApi.aiEvolution.toggleRule(ruleId, !enabled);
       setRules(rules.map(r => r.id === ruleId ? { ...r, enabled: !enabled } : r));
@@ -353,7 +334,7 @@ export default function AIEvolutionDashboard() {
                 Bootstrapping...
               </span>
             ) : (
-              '🚀 Bootstrap (Nuclear)'
+              'Bootstrap (Nuclear)'
             )}
           </button>
           <button
@@ -371,9 +352,33 @@ export default function AIEvolutionDashboard() {
                 Evolving...
               </span>
             ) : (
-              '⚡ Trigger Evolution Cycle'
+              'Trigger Evolution Cycle'
             )}
           </button>
+        </div>
+      </div>
+
+      {/* Live Stats Bar */}
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 border border-purple-500/30">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+              <span className={`text-sm font-medium ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
+                {isConnected ? 'LIVE' : 'OFFLINE'}
+              </span>
+            </div>
+            <div className="h-6 w-px bg-slate-600"></div>
+            <div className="flex gap-6 text-sm">
+              <span className="text-slate-400">Threats: <span className="text-cyan-400 font-bold">{liveStats.totalThreats}</span></span>
+              <span className="text-slate-400">Rules: <span className="text-purple-400 font-bold">{liveStats.totalRules}</span></span>
+              <span className="text-slate-400">AI Analyses: <span className="text-green-400 font-bold">{liveStats.aiAnalysisCount}</span></span>
+              <span className="text-slate-400">Score: <span className="text-yellow-400 font-bold">{liveStats.competitiveScore}%</span></span>
+            </div>
+          </div>
+          <div className="text-xs text-slate-500 font-mono">
+            {liveEvents[0]?.timestamp ? new Date(liveEvents[0].timestamp).toLocaleTimeString() : '--:--:--'}
+          </div>
         </div>
       </div>
 
@@ -389,17 +394,16 @@ export default function AIEvolutionDashboard() {
             <div className="text-sm text-slate-400">Rules Generated</div>
           </div>
           <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            live', 'overview', 'threats', 'rules', 'feeds', 'generate'] as const).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
-              activeTab === tab
-                ? tab === 'live' ? 'bg-green-600 text-white' : 'bg-purple-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700'
-            }`}
-          >
-            {tab === 'live' && '🔴 Live Feed'}   {new Date(status.lastUpdate).toLocaleTimeString()}
+            <div className="text-2xl font-bold text-green-400">{status.updatesApplied}</div>
+            <div className="text-sm text-slate-400">Updates Applied</div>
+          </div>
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+            <div className="text-2xl font-bold text-yellow-400">{status.competitiveScore}%</div>
+            <div className="text-sm text-slate-400">Competitive Score</div>
+          </div>
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+            <div className="text-sm font-mono text-slate-300">
+              {new Date(status.lastUpdate).toLocaleTimeString()}
             </div>
             <div className="text-sm text-slate-400">Last Update</div>
           </div>
@@ -410,7 +414,33 @@ export default function AIEvolutionDashboard() {
             <div className="text-sm text-slate-400">Next Update</div>
           </div>
         </div>
-      )}/* LIVE FEED TAB */}
+      )}
+
+      {/* Tabs */}
+      <div className="flex gap-2 border-b border-slate-700 pb-2">
+        {(['live', 'overview', 'threats', 'rules', 'feeds', 'generate'] as const).map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              activeTab === tab
+                ? tab === 'live' ? 'bg-green-600 text-white' : 'bg-purple-600 text-white'
+                : 'text-slate-400 hover:text-white hover:bg-slate-700'
+            }`}
+          >
+            {tab === 'live' && 'Live Feed'}
+            {tab === 'overview' && 'Overview'}
+            {tab === 'threats' && 'Threats'}
+            {tab === 'rules' && 'Rules'}
+            {tab === 'feeds' && 'Feeds'}
+            {tab === 'generate' && 'Generate'}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
+        {/* LIVE FEED TAB */}
         {activeTab === 'live' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -463,37 +493,13 @@ export default function AIEvolutionDashboard() {
           </div>
         )}
 
-        {
-
-      {/* Tabs */}
-      <div className="flex gap-2 border-b border-slate-700 pb-2">
-        {(['overview', 'threats', 'rules', 'feeds', 'generate'] as const).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
-              activeTab === tab
-                ? 'bg-purple-600 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700'
-            }`}
-          >
-            {tab === 'overview' && '📊 Overview'}
-            {tab === 'threats' && '🎯 Threats'}
-            {tab === 'rules' && '🛡️ Rules'}
-            {tab === 'feeds' && '📡 Feeds'}
-            {tab === 'generate' && '🔧 Generate'}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700">
+        {/* OVERVIEW TAB */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Evolution Log */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-4">📜 Evolution Activity</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Evolution Activity</h3>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {evolutionLog.slice(0, 10).map((entry, i) => (
                     <div key={i} className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
@@ -520,7 +526,7 @@ export default function AIEvolutionDashboard() {
               {/* Competitive Analysis */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">🏆 Competitive Analysis</h3>
+                  <h3 className="text-lg font-semibold text-white">Competitive Analysis</h3>
                   <button
                     onClick={loadCompetitiveAnalysis}
                     className="px-3 py-1 text-sm bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 rounded-lg transition-all"
@@ -553,7 +559,7 @@ export default function AIEvolutionDashboard() {
                   </div>
                 ) : (
                   <div className="text-slate-500 text-center py-8">
-                    Click "Analyze Market" to see competitive landscape
+                    Click &quot;Analyze Market&quot; to see competitive landscape
                   </div>
                 )}
               </div>
@@ -561,7 +567,7 @@ export default function AIEvolutionDashboard() {
 
             {/* AI Query */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">🔮 AI Security Analysis</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">AI Security Analysis</h3>
               <div className="flex gap-3">
                 <input
                   type="text"
@@ -594,9 +600,10 @@ export default function AIEvolutionDashboard() {
           </div>
         )}
 
+        {/* THREATS TAB */}
         {activeTab === 'threats' && (
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">🎯 Processed Threats ({threats.length})</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Processed Threats ({threats.length})</h3>
             <div className="space-y-3 max-h-[500px] overflow-y-auto">
               {threats.map(threat => (
                 <div key={threat.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600">
@@ -617,12 +624,12 @@ export default function AIEvolutionDashboard() {
                     <div className="flex items-center gap-2">
                       {threat.processed && (
                         <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs">
-                          ✓ Processed
+                          Processed
                         </span>
                       )}
                       {threat.aiAnalysis && (
                         <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
-                          🤖 AI Analyzed
+                          AI Analyzed
                         </span>
                       )}
                     </div>
@@ -644,10 +651,11 @@ export default function AIEvolutionDashboard() {
           </div>
         )}
 
+        {/* RULES TAB */}
         {activeTab === 'rules' && (
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">
-              🛡️ Auto-Generated Detection Rules ({rules.filter(r => r.autoGenerated).length} / {rules.length})
+              Auto-Generated Detection Rules ({rules.filter(r => r.autoGenerated).length} / {rules.length})
             </h3>
             <div className="space-y-3 max-h-[500px] overflow-y-auto">
               {rules.map(rule => (
@@ -661,7 +669,7 @@ export default function AIEvolutionDashboard() {
                         <span className="text-sm text-slate-400">{rule.type}</span>
                         {rule.autoGenerated && (
                           <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
-                            🤖 AI Generated
+                            AI Generated
                           </span>
                         )}
                       </div>
@@ -684,7 +692,7 @@ export default function AIEvolutionDashboard() {
                           : 'bg-slate-600/30 text-slate-400 hover:bg-slate-600/50'
                       }`}
                     >
-                      {rule.enabled ? '✓ Enabled' : 'Disabled'}
+                      {rule.enabled ? 'Enabled' : 'Disabled'}
                     </button>
                   </div>
                 </div>
@@ -698,9 +706,10 @@ export default function AIEvolutionDashboard() {
           </div>
         )}
 
+        {/* FEEDS TAB */}
         {activeTab === 'feeds' && (
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">📡 Threat Intelligence Feeds</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Threat Intelligence Feeds</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { id: 'nvd', name: 'NVD CVE Feed', type: 'CVE', status: 'active', icon: '🏛️' },
@@ -724,7 +733,7 @@ export default function AIEvolutionDashboard() {
                         ? 'bg-green-500/20 text-green-300' 
                         : 'bg-red-500/20 text-red-300'
                     }`}>
-                      {feed.status === 'active' ? '● Active' : '○ Inactive'}
+                      {feed.status === 'active' ? 'Active' : 'Inactive'}
                     </span>
                     <span className="text-xs text-slate-500">Auto-updating</span>
                   </div>
@@ -734,10 +743,11 @@ export default function AIEvolutionDashboard() {
           </div>
         )}
 
+        {/* GENERATE TAB */}
         {activeTab === 'generate' && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">🔧 Generate New Security Module</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Generate New Security Module</h3>
               <p className="text-slate-400 mb-4">
                 Describe a security capability you need, and the AI will generate the module specification.
               </p>
