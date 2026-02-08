@@ -624,7 +624,15 @@ const AppContent: React.FC = () => {
           <MarketingLanding 
             onGetStarted={handleGetStarted} 
             onLogin={handleLogin}
-            onViewPricing={handleViewPricing}            onViewIntelligence={handleViewIntelligence}          />
+            onViewPricing={handleViewPricing}
+            onViewPrivacy={handleViewPrivacy}
+            onViewTerms={handleViewTerms}
+            onViewSecurity={handleViewSecurityInfo}
+            onViewAbout={handleViewAbout}
+            onViewContact={handleViewContact}
+            onViewPurchaseTerms={handleViewPurchaseTerms}
+            onViewIntelligence={handleViewIntelligence}
+          />
         );
       
       case 'pricing':
