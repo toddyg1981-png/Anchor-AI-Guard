@@ -780,8 +780,22 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
    * GET /ai-evolution/stream - Server-Sent Events for real-time evolution monitoring
    * This endpoint streams live events as the evolution engine processes threats,
    * generates rules, and updates its intelligence.
+   * 
+   * Note: EventSource API cannot send custom headers, so auth token is passed via query param.
    */
-  app.get('/ai-evolution/stream', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/ai-evolution/stream', async (request: FastifyRequest, reply: FastifyReply) => {
+    // Manual auth: EventSource can't set Authorization header, so we accept token as query param
+    const { token } = request.query as { token?: string };
+    if (!token) {
+      return reply.status(401).send({ error: 'Unauthorized — token query parameter required' });
+    }
+    try {
+      // Verify JWT manually
+      await request.server.jwt.verify(token);
+    } catch {
+      return reply.status(401).send({ error: 'Unauthorized — invalid token' });
+    }
+
     // Set SSE headers
     reply.raw.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -836,10 +850,6 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
     });
   });
 
-  /**
-   * GET /ai-evolution/st
-export async function aiEvolutionRoutes(app: FastifyInstance) {
-  
   /**
    * GET /ai-evolution/status - Get evolution engine status
    */

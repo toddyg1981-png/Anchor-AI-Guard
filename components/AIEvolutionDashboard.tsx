@@ -235,15 +235,21 @@ export default function AIEvolutionDashboard() {
   // SSE connection for real-time streaming
   useEffect(() => {
     const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
-    // SSE requires same-origin or proper CORS. Skip on production deployments using different origins.
-    const isLocalDev = apiBase.includes('localhost') || apiBase.includes('127.0.0.1');
-    if (!isLocalDev) return;
-
-    const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
+    const token = localStorage.getItem('anchor_auth_token') || '';
     
+    if (!token) {
+      setIsConnected(false);
+      return;
+    }
+
+    let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
+    let isCancelled = false;
+
     const connectSSE = () => {
+      if (isCancelled) return;
+
       try {
-        const es = new EventSource(`${apiBase}/ai-evolution/stream?token=${token}`);
+        const es = new EventSource(`${apiBase}/ai-evolution/stream?token=${encodeURIComponent(token)}`);
         eventSourceRef.current = es;
 
         es.onopen = () => {
@@ -286,8 +292,11 @@ export default function AIEvolutionDashboard() {
         es.onerror = () => {
           setIsConnected(false);
           es.close();
+          eventSourceRef.current = null;
           // Reconnect after 5 seconds
-          setTimeout(connectSSE, 5000);
+          if (!isCancelled) {
+            reconnectTimeout = setTimeout(connectSSE, 5000);
+          }
         };
       } catch {
         // SSE not available, fall back to polling
@@ -298,7 +307,10 @@ export default function AIEvolutionDashboard() {
     connectSSE();
 
     return () => {
+      isCancelled = true;
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
       eventSourceRef.current?.close();
+      eventSourceRef.current = null;
     };
   }, []);
 
