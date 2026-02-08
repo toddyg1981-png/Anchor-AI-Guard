@@ -594,15 +594,15 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             </div>
             <h2 className="text-4xl md:text-6xl font-bold mb-6">
               <span className="bg-linear-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Sell Our AI
+                Anchor Intelligence
               </span>
               <br />
-              <span className="text-white">To The World</span>
+              <span className="text-white">API Platform</span>
             </h2>
             <p className="text-xl text-purple-300 max-w-3xl mx-auto">
-              The same self-evolving AI that powers Anchor — now available as a standalone B2B API.
-              Let other security companies, MSSPs, and SOC teams tap into our intelligence engine.
-              <strong className="text-cyan-400"> A new revenue stream worth $500M+.</strong>
+              The same self-evolving AI that powers Anchor — now available as a standalone API.
+              Integrate world-class threat intelligence, detection rules, and predictive analysis
+              <strong className="text-cyan-400"> directly into your security stack.</strong>
             </p>
           </div>
 
@@ -661,24 +661,24 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             ))}
           </div>
 
-          {/* Revenue Potential Banner */}
+          {/* Platform Stats Banner */}
           <div className="bg-linear-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-10 mb-16">
             <div className="grid md:grid-cols-4 gap-6 text-center">
               <div>
-                <div className="text-3xl font-bold text-purple-400">$31M</div>
-                <div className="text-sm text-gray-400 mt-1">Year 1 Revenue Potential</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-blue-400">$216M</div>
-                <div className="text-sm text-gray-400 mt-1">Year 3 Projection</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-cyan-400">6</div>
+                <div className="text-3xl font-bold text-purple-400">6</div>
                 <div className="text-sm text-gray-400 mt-1">API Products</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-pink-400">{'<100ms'}</div>
+                <div className="text-3xl font-bold text-blue-400">99.99%</div>
+                <div className="text-sm text-gray-400 mt-1">Uptime SLA</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-cyan-400">{'<100ms'}</div>
                 <div className="text-sm text-gray-400 mt-1">Average Response Time</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-pink-400">24/7</div>
+                <div className="text-sm text-gray-400 mt-1">Real-Time Threat Feeds</div>
               </div>
             </div>
           </div>
@@ -718,7 +718,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                   <code>{`import requests
 
 API_KEY = "anc_your_key_here"
-BASE = "https://api.anchorsecurity.io/intelligence/v1"
+BASE = "https://api.anchoraiguard.com/intelligence/v1"
 
 # Generate a YARA rule for a new threat
 rule = requests.post(f"{BASE}/rules/generate",
