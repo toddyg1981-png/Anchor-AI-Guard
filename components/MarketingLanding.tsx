@@ -142,7 +142,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       title: 'Automated Incident Response',
       description: 'SOAR-powered playbooks that automatically contain, investigate, and remediate security incidents in minutes, not hours.',
       badge: 'ENTERPRISE',
-      badgeColor: 'bg-indigo-500',
+      badgeColor: 'bg-pink-500',
     },
     {
       icon: '🔧',
@@ -299,7 +299,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <div className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
               <span className="text-cyan-400">✨</span>
               <span className="text-sm text-cyan-300">
-                86+ Security Modules • 15 World-First AI Features • Full EDR/XDR • Self-Evolving AI • B2B Intelligence API
+                86+ Security Modules • 16 World-First Features • Full EDR/XDR • Self-Evolving AI • B2B Intelligence API
               </span>
             </div>
 
