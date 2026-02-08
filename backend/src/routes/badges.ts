@@ -228,7 +228,7 @@ export async function badgeRoutes(app: FastifyInstance) {
       details: { type }
     });
     
-    const backendUrl = process.env.BACKEND_URL || 'https://api.anchorsecurity.io';
+    const backendUrl = process.env.BACKEND_URL || 'https://api.anchoraiguard.com';
     
     return {
       success: true,

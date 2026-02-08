@@ -72,8 +72,7 @@ export const SupplyChainAI: React.FC = () => {
     const interval = setInterval(() => setScanProgress(p => Math.min(p + 15, 90)), 500);
     try {
       const result = await backendApi.supplyChain.scan(pkgName, version) as any;
-      console.log('Scan result:', result);
-      setScanProgress(100);
+            setScanProgress(100);
     } catch (err) { console.error('Package scan failed:', err); }
     clearInterval(interval);
     setIsScanning(false);

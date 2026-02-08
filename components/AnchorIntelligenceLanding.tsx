@@ -52,17 +52,17 @@ export default function AnchorIntelligenceLanding() {
 
   const codeExamples = {
     curl: `# Get threat intelligence feed
-curl -X GET https://api.anchorsecurity.io/intelligence/v1/threats \\
+curl -X GET https://api.anchoraiguard.com/intelligence/v1/threats \\
   -H "x-api-key: anc_your_api_key_here"
 
 # Generate a YARA detection rule
-curl -X POST https://api.anchorsecurity.io/intelligence/v1/rules/generate \\
+curl -X POST https://api.anchoraiguard.com/intelligence/v1/rules/generate \\
   -H "x-api-key: anc_your_api_key_here" \\
   -H "Content-Type: application/json" \\
   -d '{"threat": "Cobalt Strike beacon", "format": "yara"}'
 
 # Analyze suspicious file hash
-curl -X POST https://api.anchorsecurity.io/intelligence/v1/analyze \\
+curl -X POST https://api.anchoraiguard.com/intelligence/v1/analyze \\
   -H "x-api-key: anc_your_api_key_here" \\
   -H "Content-Type: application/json" \\
   -d '{"type": "malware", "data": "hash:abc123..."}'`,
@@ -70,7 +70,7 @@ curl -X POST https://api.anchorsecurity.io/intelligence/v1/analyze \\
     python: `import requests
 
 API_KEY = "anc_your_api_key_here"
-BASE_URL = "https://api.anchorsecurity.io/intelligence/v1"
+BASE_URL = "https://api.anchoraiguard.com/intelligence/v1"
 HEADERS = {"x-api-key": API_KEY, "Content-Type": "application/json"}
 
 # Get real-time threat feed
@@ -90,7 +90,7 @@ predictions = requests.post(f"{BASE_URL}/predict", headers=HEADERS,
 print(f"Risk score: {predictions.get('overallRiskScore', 'N/A')}/100")`,
 
     javascript: `const API_KEY = 'anc_your_api_key_here';
-const BASE = 'https://api.anchorsecurity.io/intelligence/v1';
+const BASE = 'https://api.anchoraiguard.com/intelligence/v1';
 
 // Fetch latest threats
 const threats = await fetch(\`\${BASE}/threats?severity=critical\`, {
@@ -596,13 +596,13 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
                   <p className="text-gray-400 text-sm mb-2">All API requests require an API key in the <code className="bg-gray-800 px-2 py-0.5 rounded text-purple-300">x-api-key</code> header.</p>
                   <pre className="bg-gray-800 p-4 rounded-lg text-sm text-gray-300">
 {`curl -H "x-api-key: anc_your_key_here" \\
-  https://api.anchorsecurity.io/intelligence/v1/status`}
+  https://api.anchoraiguard.com/intelligence/v1/status`}
                   </pre>
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-purple-400 mb-2">2. Base URL</h4>
                   <pre className="bg-gray-800 p-4 rounded-lg text-sm text-gray-300">
-                    https://api.anchorsecurity.io/intelligence/v1
+                    https://api.anchoraiguard.com/intelligence/v1
                   </pre>
                 </div>
                 <div>
@@ -747,7 +747,7 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
                 <li>Security</li>
                 <li>Privacy Policy</li>
                 <li>Terms of Service</li>
-                <li>Contact: api@anchorsecurity.io</li>
+                <li>Contact: api@anchoraiguard.com</li>
               </ul>
             </div>
           </div>

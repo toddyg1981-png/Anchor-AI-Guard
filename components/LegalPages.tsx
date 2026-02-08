@@ -82,7 +82,7 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">5. Data Retention</h2>
             <p>
               We retain your data only as long as necessary to provide our services. 
-              You can request deletion of your data at any time by contacting support@anchorsecurity.com.
+              You can request deletion of your data at any time by contacting support@anchoraiguard.com.
             </p>
           </section>
 
@@ -103,8 +103,8 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
             <p>
               For privacy-related inquiries, contact us at:
               <br />
-              <a href="mailto:privacy@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                privacy@anchorsecurity.com
+              <a href="mailto:privacy@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                privacy@anchoraiguard.com
               </a>
             </p>
           </section>
@@ -218,8 +218,8 @@ export const TermsOfService: React.FC<LegalPageProps> = ({ onBack }) => {
             <p>
               For questions about these terms, contact us at:
               <br />
-              <a href="mailto:legal@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                legal@anchorsecurity.com
+              <a href="mailto:legal@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                legal@anchoraiguard.com
               </a>
             </p>
           </section>
@@ -347,7 +347,7 @@ export const SecurityPage: React.FC<LegalPageProps> = ({ onBack }) => {
               Found a security issue? We appreciate responsible disclosure.
             </p>
             <a 
-              href="mailto:security@anchorsecurity.com" 
+              href="mailto:security@anchoraiguard.com" 
               className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg transition-colors"
             >
               Contact Security Team
@@ -437,13 +437,13 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
             </p>
             <div className="flex gap-4">
               <a 
-                href="mailto:hello@anchorsecurity.com" 
+                href="mailto:hello@anchoraiguard.com" 
                 className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg transition-colors"
               >
                 Contact Us
               </a>
               <a 
-                href="mailto:careers@anchorsecurity.com" 
+                href="mailto:careers@anchoraiguard.com" 
                 className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-colors"
               >
                 Careers
@@ -573,8 +573,8 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
             </ul>
             <p className="mt-4 text-sm text-purple-400">
               To cancel, go to Settings → Billing → Cancel Subscription, or email{' '}
-              <a href="mailto:billing@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                billing@anchorsecurity.com
+              <a href="mailto:billing@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                billing@anchoraiguard.com
               </a>
             </p>
           </section>
@@ -659,7 +659,7 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
               Questions about your subscription or billing?
             </p>
             <a 
-              href="mailto:billing@anchorsecurity.com" 
+              href="mailto:billing@anchoraiguard.com" 
               className="inline-flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg transition-colors"
             >
               Contact Billing Support
@@ -696,29 +696,29 @@ export const ContactPage: React.FC<LegalPageProps> = ({ onBack }) => {
             <div className="space-y-6">
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
                 <h3 className="font-semibold text-pink-400 mb-2">📧 General Inquiries</h3>
-                <a href="mailto:hello@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                  hello@anchorsecurity.com
+                <a href="mailto:hello@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                  hello@anchoraiguard.com
                 </a>
               </div>
               
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
                 <h3 className="font-semibold text-pink-400 mb-2">💼 Sales</h3>
-                <a href="mailto:sales@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                  sales@anchorsecurity.com
+                <a href="mailto:sales@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                  sales@anchoraiguard.com
                 </a>
               </div>
               
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
                 <h3 className="font-semibold text-pink-400 mb-2">🛠️ Support</h3>
-                <a href="mailto:support@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                  support@anchorsecurity.com
+                <a href="mailto:support@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                  support@anchoraiguard.com
                 </a>
               </div>
               
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
                 <h3 className="font-semibold text-pink-400 mb-2">🔐 Security</h3>
-                <a href="mailto:security@anchorsecurity.com" className="text-cyan-400 hover:text-pink-400">
-                  security@anchorsecurity.com
+                <a href="mailto:security@anchoraiguard.com" className="text-cyan-400 hover:text-pink-400">
+                  security@anchoraiguard.com
                 </a>
               </div>
             </div>

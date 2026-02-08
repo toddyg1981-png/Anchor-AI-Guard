@@ -46,8 +46,7 @@ export const SBOMViewer: React.FC<SBOMViewerProps> = ({ projectId, projectName, 
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('sbom');
-        if (res) console.log('Dashboard loaded:', res);
-      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 

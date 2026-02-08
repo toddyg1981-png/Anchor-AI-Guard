@@ -1027,7 +1027,7 @@ Respond in JSON:
       ruleFormats: ['sigma', 'yara', 'snort', 'suricata', 'kql', 'spl'],
       analysisTypes: ['malware', 'network', 'log', 'incident', 'vulnerability', 'ioc'],
       webhookEvents: ['threat.new', 'rule.generated', 'analysis.complete', 'prediction.alert'],
-      contact: 'api@anchorsecurity.io',
+      contact: 'api@anchoraiguard.com',
     });
   });
 

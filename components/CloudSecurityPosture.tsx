@@ -57,7 +57,7 @@ export const CloudSecurityPosture: React.FC = () => {
       setLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('cloud-security');
-        if (res) console.log('Dashboard loaded:', res); // eslint-disable-line no-console
+        // eslint-disable-line no-console
       } catch (e) { console.error(e); } finally { setLoading(false); }
     })();
   }, []);

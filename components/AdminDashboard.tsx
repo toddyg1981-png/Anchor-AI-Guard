@@ -80,8 +80,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
 
   const handleInvite = async () => {
     // TODO: Implement actual invite API call
-    console.log('Inviting:', inviteEmail, inviteRole);
-    setShowInviteModal(false);
+        setShowInviteModal(false);
     setInviteEmail('');
     setInviteRole('member');
   };

@@ -289,7 +289,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
     // For Enterprise/Government tiers, redirect to contact/sales
     if (['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(tier)) {
-      window.location.href = 'mailto:sales@anchorsecurity.io?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier);
+      window.location.href = 'mailto:sales@anchoraiguard.com?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier);
       return;
     }
 
@@ -711,13 +711,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={() => window.location.href = 'mailto:sales@anchorsecurity.io?subject=Enterprise%20Security%20Inquiry'}
+              onClick={() => window.location.href = 'mailto:sales@anchoraiguard.com?subject=Enterprise%20Security%20Inquiry'}
               className="bg-linear-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-purple-500 hover:to-cyan-500 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg shadow-pink-500/30"
             >
               Talk to Sales
             </button>
             <button 
-              onClick={() => window.location.href = 'mailto:sales@anchorsecurity.io?subject=Schedule%20a%20Demo'}
+              onClick={() => window.location.href = 'mailto:sales@anchoraiguard.com?subject=Schedule%20a%20Demo'}}
               className="bg-transparent border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 px-8 py-3 rounded-lg font-semibold transition-colors"
             >
               Schedule Demo

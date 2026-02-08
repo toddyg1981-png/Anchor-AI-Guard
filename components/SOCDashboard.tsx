@@ -52,8 +52,7 @@ export const SOCDashboard: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('soc-dashboard');
-        if (res) console.log('Dashboard loaded:', res);
-      } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        if (res)       } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 

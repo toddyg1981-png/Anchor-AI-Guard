@@ -357,7 +357,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
-                <span className="text-sm text-cyan-400 ml-4">app.anchorsecurity.io/dashboard</span>
+                <span className="text-sm text-cyan-400 ml-4">www.anchoraiguard.com/dashboard</span>
               </div>
               <video
                 controls
@@ -965,7 +965,7 @@ print(rule["rule"]["content"])
                 <li><a href="#features" className="hover:text-pink-400 transition-colors">Features</a></li>
                 <li><button onClick={onViewPricing} className="hover:text-pink-400 transition-colors">Pricing</button></li>
                 <li><button onClick={onViewIntelligence} className="hover:text-pink-400 transition-colors text-left">Anchor Intelligence API</button></li>
-                <li><a href="https://docs.anchorsecurity.com/cli" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">CLI Tool</a></li>
+                <li><a href="https://docs.anchoraiguard.com/cli" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">CLI Tool</a></li>
                 <li><a href="#features" className="hover:text-pink-400 transition-colors">Integrations</a></li>
               </ul>
             </div>
@@ -974,7 +974,7 @@ print(rule["rule"]["content"])
               <ul className="space-y-2 text-purple-300">
                 <li><button onClick={onViewAbout} className="hover:text-pink-400 transition-colors text-left">About</button></li>
                 <li><button onClick={onViewContact} className="hover:text-pink-400 transition-colors text-left">Blog</button></li>
-                <li><a href="mailto:careers@anchorsecurity.com" className="hover:text-pink-400 transition-colors">Careers</a></li>
+                <li><a href="mailto:careers@anchoraiguard.com" className="hover:text-pink-400 transition-colors">Careers</a></li>
                 <li><button onClick={onViewContact} className="hover:text-pink-400 transition-colors text-left">Contact</button></li>
               </ul>
             </div>
@@ -985,7 +985,7 @@ print(rule["rule"]["content"])
                 <li><button onClick={onViewTerms} className="hover:text-pink-400 transition-colors text-left">Terms of Service</button></li>
                 <li><button onClick={onViewPurchaseTerms} className="hover:text-pink-400 transition-colors text-left">Purchase Terms</button></li>
                 <li><button onClick={onViewSecurity} className="hover:text-pink-400 transition-colors text-left">Security</button></li>
-                <li><a href="mailto:compliance@anchorsecurity.com" className="hover:text-pink-400 transition-colors">SOC 2 Report</a></li>
+                <li><a href="mailto:compliance@anchoraiguard.com" className="hover:text-pink-400 transition-colors">SOC 2 Report</a></li>
               </ul>
             </div>
           </div>
@@ -994,8 +994,8 @@ print(rule["rule"]["content"])
               © 2026 Anchor Security. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="https://youtube.com/@anchorsecurity" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">YouTube</a>
-              <a href="https://linkedin.com/company/anchorsecurity" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">LinkedIn</a>
+              <a href="https://youtube.com/@anchoraiguard" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">YouTube</a>
+              <a href="https://linkedin.com/company/anchoraiguard" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">LinkedIn</a>
             </div>
           </div>
         </div>
