@@ -7,6 +7,7 @@ import { useBackendData } from './hooks/useBackendData';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useWebSocket } from './hooks/useWebSocket';
 import LoginSuccessOverlay from './components/LoginSuccessOverlay';
+import { env } from './config/env';
 
 // Lazy-loaded views (only loaded when navigated to)
 const AuthScreen = React.lazy(() => import('./components/AuthScreen'));
