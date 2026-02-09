@@ -112,6 +112,13 @@ const NationalTelemetryLayer = React.lazy(() => import('./components/NationalTel
 const ArchitectureDrift = React.lazy(() => import('./components/ArchitectureDrift'));
 const AutonomousRedTeam = React.lazy(() => import('./components/AutonomousRedTeam'));
 
+// Newly-wired orphaned features
+const AIDashboard = React.lazy(() => import('./components/AIDashboard'));
+const AILLMSecurity = React.lazy(() => import('./components/AILLMSecurity'));
+const AntiTampering = React.lazy(() => import('./components/AntiTampering'));
+const ForensicsInvestigation = React.lazy(() => import('./components/ForensicsInvestigation'));
+const SecurityAwarenessTraining = React.lazy(() => import('./components/SecurityAwarenessTraining'));
+
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
   <div className="min-h-100 flex items-center justify-center">
@@ -229,7 +236,12 @@ export type DashboardView =
   | 'nationalTelemetry'
   | 'architectureDrift'
   | 'autonomousRedTeam'
-  | 'endpointProtection';
+  | 'endpointProtection'
+  | 'aiCommandCenter'
+  | 'aiLLMSecurity'
+  | 'antiTampering'
+  | 'forensicsInvestigation'
+  | 'securityAwarenessTraining';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -767,6 +779,16 @@ const AppContent: React.FC = () => {
         return <ArchitectureDrift />;
       case 'autonomousRedTeam':
         return <AutonomousRedTeam />;
+      case 'aiCommandCenter':
+        return <AIDashboard projectId="default" userId={user?.id || 'user'} userName={user?.email?.split('@')[0] || 'User'} />;
+      case 'aiLLMSecurity':
+        return <AILLMSecurity />;
+      case 'antiTampering':
+        return <AntiTampering />;
+      case 'forensicsInvestigation':
+        return <ForensicsInvestigation />;
+      case 'securityAwarenessTraining':
+        return <SecurityAwarenessTraining />;
       case 'overview':
       default:
         return (
