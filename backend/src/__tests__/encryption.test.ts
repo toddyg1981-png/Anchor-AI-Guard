@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // Set env var before importing
 process.env.ENCRYPTION_KEY = 'a'.repeat(64); // 32 bytes in hex
@@ -21,8 +21,8 @@ describe('Encryption Module', () => {
   });
 
   it('handles null/undefined gracefully', () => {
-    expect(encrypt(null as any)).toBe(null);
-    expect(decrypt(null as any)).toBe(null);
+    expect(encrypt(null as unknown as string)).toBe(null);
+    expect(decrypt(null as unknown as string)).toBe(null);
   });
 
   it('does not double-encrypt', () => {

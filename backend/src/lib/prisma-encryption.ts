@@ -18,7 +18,7 @@ const ENCRYPTED_FIELDS: Record<string, string[]> = {
  * Encrypt the specified fields in a data object.
  * Skips null/undefined values and already-encrypted values.
  */
-function encryptFields(data: Record<string, any> | undefined, fields: string[]): void {
+function encryptFields(data: Record<string, unknown> | undefined, fields: string[]): void {
   if (!data) return;
 
   for (const field of fields) {
@@ -34,7 +34,7 @@ function encryptFields(data: Record<string, any> | undefined, fields: string[]):
  * Decrypt the specified fields in a single result object.
  * Skips null/undefined values.
  */
-function decryptFields(record: Record<string, any> | null | undefined, fields: string[]): void {
+function decryptFields(record: Record<string, unknown> | null | undefined, fields: string[]): void {
   if (!record) return;
 
   for (const field of fields) {
@@ -47,15 +47,15 @@ function decryptFields(record: Record<string, any> | null | undefined, fields: s
 /**
  * Decrypt fields in a result that may be a single object or an array.
  */
-function decryptResult(result: any, fields: string[]): void {
+function decryptResult(result: unknown, fields: string[]): void {
   if (result == null) return;
 
   if (Array.isArray(result)) {
     for (const record of result) {
-      decryptFields(record, fields);
+      decryptFields(record as Record<string, unknown>, fields);
     }
   } else if (typeof result === 'object') {
-    decryptFields(result, fields);
+    decryptFields(result as Record<string, unknown>, fields);
   }
 }
 
@@ -72,7 +72,7 @@ const READ_ACTIONS: Prisma.PrismaAction[] = ['findUnique', 'findFirst', 'findMan
  * - On find*: decrypts sensitive fields after reading from the database
  */
 export function applyEncryptionMiddleware(prisma: PrismaClient): void {
-  prisma.$use(async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>) => {
+  prisma.$use(async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<unknown>) => {
     const model = params.model as string | undefined;
     if (!model || !ENCRYPTED_FIELDS[model]) {
       return next(params);

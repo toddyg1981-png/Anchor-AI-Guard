@@ -21,7 +21,7 @@ function base32Encode(buffer: Buffer): string {
   return result;
 }
 
-function generateTOTP(secret: string, timeStep: number = 30, digits: number = 6): string {
+function _generateTOTP(secret: string, timeStep: number = 30, digits: number = 6): string {
   const time = Math.floor(Date.now() / 1000 / timeStep);
   const timeBuffer = Buffer.alloc(8);
   timeBuffer.writeBigInt64BE(BigInt(time));
@@ -52,14 +52,14 @@ function verifyTOTP(secret: string, code: string, window: number = 1): boolean {
 export async function mfaRoutes(app: FastifyInstance): Promise<void> {
   // GET /mfa/status - Check if MFA is enabled for current user
   app.get('/mfa/status', { preHandler: authMiddleware() }, async (request, reply) => {
-    const { userId } = (request as any).user;
+    const { userId } = (request as unknown as Record<string, unknown>).user as { userId: string };
     const totp = await prisma.totpSecret.findUnique({ where: { userId } });
     return reply.send({ enabled: !!totp?.verified, configured: !!totp });
   });
 
   // POST /mfa/setup - Generate TOTP secret and return QR code URI
   app.post('/mfa/setup', { preHandler: authMiddleware() }, async (request, reply) => {
-    const { userId, email } = (request as any).user;
+    const { userId, email } = (request as Record<string, unknown>).user as { userId: string; email: string };
 
     // Delete any existing unverified setup
     await prisma.totpSecret.deleteMany({ where: { userId, verified: false } });
@@ -79,7 +79,7 @@ export async function mfaRoutes(app: FastifyInstance): Promise<void> {
 
   // POST /mfa/verify - Verify TOTP code to complete setup
   app.post('/mfa/verify', { preHandler: authMiddleware() }, async (request, reply) => {
-    const { userId } = (request as any).user;
+    const { userId } = (request as unknown as Record<string, unknown>).user as { userId: string };
     const { code } = request.body as { code: string };
 
     if (!code || code.length !== 6) {
@@ -133,7 +133,7 @@ export async function mfaRoutes(app: FastifyInstance): Promise<void> {
 
   // DELETE /mfa/disable - Disable MFA for current user
   app.delete('/mfa/disable', { preHandler: authMiddleware() }, async (request, reply) => {
-    const { userId } = (request as any).user;
+    const { userId } = (request as unknown as Record<string, unknown>).user as { userId: string };
     const { code } = request.body as { code: string };
 
     // Require valid TOTP code to disable

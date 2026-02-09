@@ -804,7 +804,7 @@ export default function AIEvolutionDashboard() {
               <span className="text-slate-400">Threats: <span className="text-cyan-400 font-bold">{liveStats.totalThreats}</span></span>
               <span className="text-slate-400">Rules: <span className="text-purple-400 font-bold">{liveStats.totalRules}</span></span>
               <span className="text-slate-400">AI Analyses: <span className="text-green-400 font-bold">{liveStats.aiAnalysisCount}</span></span>
-              <span className="text-slate-400">Score: <span className="text-yellow-400 font-bold">{liveStats.competitiveScore}%</span></span>
+              <span className="text-slate-400">Score: <span className="text-yellow-400 font-bold" title="Competitive Score — how far ahead Anchor's AI engine is vs industry-standard detection baselines">{liveStats.competitiveScore}%</span></span>
             </div>
           </div>
           <div className="text-xs text-slate-500 font-mono">
@@ -828,9 +828,14 @@ export default function AIEvolutionDashboard() {
             <div className="text-2xl font-bold text-green-400">{status.updatesApplied}</div>
             <div className="text-sm text-slate-400">Updates Applied</div>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-yellow-700/30 relative group">
             <div className="text-2xl font-bold text-yellow-400">{status.competitiveScore}%</div>
-            <div className="text-sm text-slate-400">Competitive Score</div>
+            <div className="text-sm text-slate-400 flex items-center gap-1">Competitive Score
+              <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's AI engine is compared to industry-standard detection baselines">ⓘ</span>
+            </div>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-900 border border-yellow-700/40 rounded-lg p-3 text-xs text-slate-300 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+              <span className="text-yellow-400 font-semibold">Competitive Score</span> measures how far ahead Anchor&apos;s AI engine is compared to industry-standard detection baselines (MITRE ATT&CK, NIST, CIS). A score of 95% means Anchor detects 95% more threats than baseline tools.
+            </div>
           </div>
           <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
             <div className="text-sm font-mono text-slate-300">
@@ -966,12 +971,15 @@ export default function AIEvolutionDashboard() {
                   label="AI Analyses"
                   height={150}
                 />
-                <LiveChart
-                  data={metrics.competitiveScore}
-                  color="#eab308"
-                  label="Competitive Score"
-                  height={150}
-                />
+                <div>
+                  <LiveChart
+                    data={metrics.competitiveScore}
+                    color="#eab308"
+                    label="Competitive Score"
+                    height={150}
+                  />
+                  <p className="text-xs text-slate-500 mt-1 px-1">How far ahead Anchor&apos;s AI engine is vs industry-standard detection baselines</p>
+                </div>
               </div>
             ) : (
               <div className="text-slate-500 text-center py-16">
@@ -1008,12 +1016,17 @@ export default function AIEvolutionDashboard() {
                     Live updating
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/10 rounded-xl p-4 border border-yellow-700/30">
+                <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/10 rounded-xl p-4 border border-yellow-700/30 relative group">
                   <div className="text-3xl font-bold text-yellow-400">{metrics.currentTotals.score}%</div>
-                  <div className="text-sm text-slate-400">Competitive Score</div>
+                  <div className="text-sm text-slate-400 flex items-center gap-1">Competitive Score
+                    <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's AI engine is compared to industry-standard detection baselines">ⓘ</span>
+                  </div>
                   <div className="text-xs text-yellow-500 mt-1 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
                     Live updating
+                  </div>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-900 border border-yellow-700/40 rounded-lg p-3 text-xs text-slate-300 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                    <span className="text-yellow-400 font-semibold">Competitive Score</span> = how far ahead Anchor&apos;s AI engine is compared to industry-standard detection baselines (MITRE ATT&CK, NIST, CIS benchmarks).
                   </div>
                 </div>
               </div>

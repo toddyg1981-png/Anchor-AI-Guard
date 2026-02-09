@@ -6,7 +6,7 @@
  * DO NOT MODIFY without security team review.
  */
 
-import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import crypto from 'crypto';
 import * as store from './security-store';
 
@@ -65,7 +65,7 @@ export function csrfProtection() {
     
     // For API clients, check CSRF token in header
     const csrfToken = request.headers['x-csrf-token'] as string;
-    const user = (request as any).user;
+    const user = (request as unknown as Record<string, unknown>).user as { id: string } | undefined;
     
     // If we have a user context and a CSRF token, validate it
     if (user && csrfToken) {
@@ -106,7 +106,7 @@ export function sanitizeInput(input: string): string {
 /**
  * Deep sanitize object
  */
-export function sanitizeObject(obj: any): any {
+export function sanitizeObject(obj: unknown): unknown {
   if (typeof obj === 'string') {
     return sanitizeInput(obj);
   }
@@ -114,7 +114,7 @@ export function sanitizeObject(obj: any): any {
     return obj.map(sanitizeObject);
   }
   if (obj && typeof obj === 'object') {
-    const sanitized: any = {};
+    const sanitized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(obj)) {
       sanitized[sanitizeInput(key)] = sanitizeObject(value);
     }
@@ -210,7 +210,7 @@ export interface AuditLogEntry {
   ip: string;
   userAgent?: string;
   success: boolean;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 /**
@@ -263,8 +263,8 @@ export function validateAndSanitize<T>(data: T, allowedFields: string[]): Partia
   const sanitized: Partial<T> = {};
   for (const field of allowedFields) {
     if (field in data) {
-      const value = (data as any)[field];
-      (sanitized as any)[field] = typeof value === 'string' ? sanitizeInput(value) : value;
+      const value = (data as Record<string, unknown>)[field];
+      (sanitized as Record<string, unknown>)[field] = typeof value === 'string' ? sanitizeInput(value) : value;
     }
   }
   return sanitized;

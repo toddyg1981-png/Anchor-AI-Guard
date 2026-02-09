@@ -68,7 +68,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
   const [devices, setDevices] = useState<Device[]>([]);
   const [threats, setThreats] = useState<Threat[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const [_selectedDevice, _setSelectedDevice] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showPolicyForm, setShowPolicyForm] = useState(false);
   const [policyStates, setPolicyStates] = useState<Record<string, boolean>>({});
@@ -177,7 +177,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">🛡️</span>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Endpoint Detection & Response
             </h1>
             <span className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-xs font-bold">
@@ -191,7 +191,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
 
         {/* Protection Score Banner */}
         {stats && (
-          <div className="mb-8 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-500/30 rounded-2xl p-6">
+          <div className="mb-8 bg-linear-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-500/30 rounded-2xl p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-cyan-400 mb-1">Overall Protection Score</h3>
@@ -253,7 +253,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
                 activeTab === tab
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
+                  ? 'bg-linear-to-r from-cyan-500 to-purple-500 text-white'
                   : 'bg-black/40 border border-purple-500/30 text-purple-400 hover:border-cyan-500/50'
               }`}
             >
@@ -278,9 +278,10 @@ export const EndpointProtectionDashboard: React.FC = () => {
                   <span className="text-purple-300">Online</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      {/* Dynamic width based on data */}
                       <div 
                         className="h-full bg-green-500 rounded-full"
-                        style={{ width: `${stats.devices.total ? (stats.devices.online / stats.devices.total) * 100 : 0}%` }}
+                        style={{ width: `${stats.devices.total ? (stats.devices.online / stats.devices.total) * 100 : 0}%` }} // eslint-disable-line
                       />
                     </div>
                     <span className="text-green-400 w-12 text-right">{stats.devices.online}</span>
@@ -290,9 +291,10 @@ export const EndpointProtectionDashboard: React.FC = () => {
                   <span className="text-purple-300">Offline</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      {/* Dynamic width based on data */}
                       <div 
                         className="h-full bg-gray-500 rounded-full"
-                        style={{ width: `${stats.devices.total ? (stats.devices.offline / stats.devices.total) * 100 : 0}%` }}
+                        style={{ width: `${stats.devices.total ? (stats.devices.offline / stats.devices.total) * 100 : 0}%` }} // eslint-disable-line
                       />
                     </div>
                     <span className="text-gray-400 w-12 text-right">{stats.devices.offline}</span>
@@ -302,9 +304,10 @@ export const EndpointProtectionDashboard: React.FC = () => {
                   <span className="text-purple-300">Compromised</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      {/* Dynamic width based on data */}
                       <div 
                         className="h-full bg-red-500 rounded-full"
-                        style={{ width: `${stats.devices.total ? (stats.devices.compromised / stats.devices.total) * 100 : 0}%` }}
+                        style={{ width: `${stats.devices.total ? (stats.devices.compromised / stats.devices.total) * 100 : 0}%` }} // eslint-disable-line
                       />
                     </div>
                     <span className="text-red-400 w-12 text-right">{stats.devices.compromised}</span>
@@ -314,9 +317,10 @@ export const EndpointProtectionDashboard: React.FC = () => {
                   <span className="text-purple-300">Isolated</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      {/* Dynamic width based on data */}
                       <div 
                         className="h-full bg-yellow-500 rounded-full"
-                        style={{ width: `${stats.devices.total ? (stats.devices.isolated / stats.devices.total) * 100 : 0}%` }}
+                        style={{ width: `${stats.devices.total ? (stats.devices.isolated / stats.devices.total) * 100 : 0}%` }} // eslint-disable-line
                       />
                     </div>
                     <span className="text-yellow-400 w-12 text-right">{stats.devices.isolated}</span>
@@ -428,12 +432,13 @@ export const EndpointProtectionDashboard: React.FC = () => {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="w-16 h-2 bg-gray-700 rounded-full overflow-hidden">
+                              {/* Dynamic risk bar */}
                               <div 
                                 className={`h-full rounded-full ${
                                   device.riskScore > 70 ? 'bg-red-500' :
                                   device.riskScore > 40 ? 'bg-yellow-500' : 'bg-green-500'
                                 }`}
-                                style={{ width: `${device.riskScore}%` }}
+                                style={{ width: `${device.riskScore}%` }} // eslint-disable-line
                               />
                             </div>
                             <span className={`text-sm ${
@@ -544,7 +549,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
           <div className="bg-black/40 border border-purple-500/30 rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-purple-400">Protection Policies</h3>
-              <button onClick={() => setShowPolicyForm(!showPolicyForm)} className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-medium hover:from-purple-500 hover:to-cyan-500 transition-all">
+              <button onClick={() => setShowPolicyForm(!showPolicyForm)} className="px-4 py-2 bg-linear-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-medium hover:from-purple-500 hover:to-cyan-500 transition-all">
                 + Create Policy
               </button>
             </div>
@@ -553,7 +558,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
                 <h4 className="text-white font-medium mb-3">New Security Policy</h4>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <input type="text" placeholder="Policy name" className="bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
-                  <select className="bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+                  <select title="Policy category" className="bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
                     <option>Endpoint Protection</option><option>Network Security</option><option>Access Control</option>
                   </select>
                 </div>
@@ -579,7 +584,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
                     <p className="text-sm text-purple-400">{policy.description}</p>
                     <span className="text-xs text-gray-500">{policy.type}</span>
                   </div>
-                  <button onClick={() => setPolicyStates(prev => ({ ...prev, [policy.name]: !(prev[policy.name] ?? policy.enabled) }))} className={`w-12 h-6 rounded-full transition-all ${
+                  <button onClick={() => setPolicyStates(prev => ({ ...prev, [policy.name]: !(prev[policy.name] ?? policy.enabled) }))} title={`Toggle ${policy.name}`} className={`w-12 h-6 rounded-full transition-all ${
                     (policyStates[policy.name] ?? policy.enabled) ? 'bg-green-500' : 'bg-gray-600'
                   }`}>
                     <div className={`w-5 h-5 rounded-full bg-white shadow transition-all ${
@@ -604,7 +609,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
         )}
 
         {/* Platform Support Banner */}
-        <div className="mt-8 bg-gradient-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5 border border-cyan-500/20 rounded-xl p-6">
+        <div className="mt-8 bg-linear-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5 border border-cyan-500/20 rounded-xl p-6">
           <h3 className="text-lg font-semibold text-cyan-400 mb-4 text-center">Supported Platforms</h3>
           <div className="flex justify-center gap-8 flex-wrap">
             <div className="text-center">

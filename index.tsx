@@ -27,8 +27,8 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <ErrorBoundary>
-      <QueRouterryProvider>
-        <App />
+      <QueryProvider>
+        <AppRouter />
       </QueryProvider>
     </ErrorBoundary>
   </React.StrictMode>

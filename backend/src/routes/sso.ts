@@ -17,7 +17,7 @@ const ssoConfigSchema = z.object({
 export async function ssoRoutes(app: FastifyInstance): Promise<void> {
   // GET /sso/config - Get SSO configuration for org
   app.get('/sso/config', { preHandler: authMiddleware([Roles.OWNER, Roles.ADMIN]) }, async (request, reply) => {
-    const { orgId } = (request as any).user;
+    const { orgId } = (request as unknown as Record<string, unknown>).user as { orgId: string };
     // Check org has Enterprise tier
     const sub = await prisma.subscription.findUnique({ where: { orgId } });
     if (!sub || !['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(sub.planTier)) {
@@ -32,7 +32,7 @@ export async function ssoRoutes(app: FastifyInstance): Promise<void> {
 
   // POST /sso/config - Configure SSO for org
   app.post('/sso/config', { preHandler: authMiddleware([Roles.OWNER]) }, async (request, reply) => {
-    const { orgId } = (request as any).user;
+    const { orgId } = (request as unknown as Record<string, unknown>).user as { orgId: string };
     const parsed = ssoConfigSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid SSO configuration', details: parsed.error.flatten() });
@@ -40,10 +40,10 @@ export async function ssoRoutes(app: FastifyInstance): Promise<void> {
     // Upsert SSO integration
     const existing = await prisma.integration.findFirst({ where: { orgId, type: 'sso' } });
     if (existing) {
-      await prisma.integration.update({ where: { id: existing.id }, data: { config: parsed.data as any } });
+      await prisma.integration.update({ where: { id: existing.id }, data: { config: JSON.parse(JSON.stringify(parsed.data)) } });
     } else {
       await prisma.integration.create({
-        data: { type: 'sso', name: `${parsed.data.provider.toUpperCase()} SSO`, orgId, config: parsed.data as any },
+        data: { type: 'sso', name: `${parsed.data.provider.toUpperCase()} SSO`, orgId, config: JSON.parse(JSON.stringify(parsed.data)) },
       });
     }
     return reply.send({ success: true, message: 'SSO configuration saved' });
@@ -58,7 +58,7 @@ export async function ssoRoutes(app: FastifyInstance): Promise<void> {
     if (!ssoIntegration) {
       return reply.status(404).send({ error: 'SSO not configured for this organization' });
     }
-    const config = ssoIntegration.config as any;
+    const config = ssoIntegration.config as Record<string, unknown>;
     // For SAML, redirect to IdP SSO URL with SAMLRequest
     if (config.provider === 'saml') {
       const relayState = Buffer.from(JSON.stringify({ orgId, timestamp: Date.now() })).toString('base64');
@@ -97,7 +97,7 @@ export async function ssoRoutes(app: FastifyInstance): Promise<void> {
 
   // DELETE /sso/config - Remove SSO configuration
   app.delete('/sso/config', { preHandler: authMiddleware([Roles.OWNER]) }, async (request, reply) => {
-    const { orgId } = (request as any).user;
+    const { orgId } = (request as unknown as Record<string, unknown>).user as { orgId: string };
     await prisma.integration.deleteMany({ where: { orgId, type: 'sso' } });
     return reply.send({ success: true, message: 'SSO configuration removed' });
   });

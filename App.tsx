@@ -472,7 +472,7 @@ const AppContent: React.FC = () => {
     window.history.pushState({}, '', '/government');
   }, []);
 
-  const handleViewIntelligenceDashboard = useCallback(() => {
+  const _handleViewIntelligenceDashboard = useCallback(() => {
     setCurrentView('intelligence-dashboard');
     window.history.pushState({}, '', '/intelligence/dashboard');
   }, []);
