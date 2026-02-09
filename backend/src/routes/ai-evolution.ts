@@ -601,6 +601,7 @@ export function getEvolutionStatus() {
 
 interface EvolutionStatus {
   engineStartTime: Date;  // When the AI engine was initialized
+  isRunning: boolean;     // Whether the engine is actively running
   lastUpdate: Date;
   threatsProcessed: number;
   rulesGenerated: number;
@@ -608,17 +609,22 @@ interface EvolutionStatus {
   nextScheduledUpdate: Date;
   aiAnalysisCount: number;
   competitiveScore: number; // 0-100 vs competitors
+  lastCycleStatus: 'success' | 'partial' | 'error' | 'idle';
+  consecutiveFailures: number;
 }
 
 const evolutionStatus: EvolutionStatus = {
   engineStartTime: new Date(),  // Track when the engine started
+  isRunning: false,
   lastUpdate: new Date(),
   threatsProcessed: 0,
   rulesGenerated: 0,
   updatesApplied: 0,
-  nextScheduledUpdate: new Date(Date.now() + 60 * 60 * 1000),
+  nextScheduledUpdate: new Date(Date.now() + 5 * 60 * 1000), // First micro-cycle in 5 min
   aiAnalysisCount: 0,
-  competitiveScore: 95
+  competitiveScore: 95,
+  lastCycleStatus: 'idle',
+  consecutiveFailures: 0
 };
 
 /**
@@ -1524,38 +1530,139 @@ Predict:
   });
 }
 
-// Background evolution scheduler (would be cron in production)
-let evolutionInterval: NodeJS.Timeout | null = null;
+// Background evolution scheduler — ALWAYS-ON continuous collection
+let microCycleInterval: NodeJS.Timeout | null = null;   // Fast cycle: quick feeds every 5 min
+let fullCycleInterval: NodeJS.Timeout | null = null;     // Full cycle: all feeds + AI every 30 min
+let healthCheckInterval: NodeJS.Timeout | null = null;   // Self-heal check every 2 min
+
+/**
+ * Micro-cycle: lightweight, runs every 5 minutes
+ * Only fetches fast feeds (Abuse.ch, FIRST EPSS, AlienVault OTX)
+ * Does NOT call AI analysis to conserve API quota
+ */
+async function runMicroCycle(): Promise<void> {
+  try {
+    const [abuseThreats, epssThreats, otxThreats] = await Promise.allSettled([
+      fetchAbuseCh(),
+      fetchFIRSTEPSS(),
+      fetchAlienVaultOTX(),
+    ]);
+
+    let newCount = 0;
+    const feeds = [
+      { name: 'Abuse.ch', result: abuseThreats },
+      { name: 'FIRST EPSS', result: epssThreats },
+      { name: 'AlienVault OTX', result: otxThreats },
+    ];
+
+    for (const feed of feeds) {
+      if (feed.result.status === 'fulfilled') {
+        for (const threat of feed.result.value) {
+          if (!threatIntelStore.has(threat.id)) {
+            threatIntelStore.set(threat.id, threat);
+            newCount++;
+            emitEvolutionEvent('threat_ingested', {
+              id: threat.id, source: threat.source, severity: threat.severity,
+              title: threat.title.substring(0, 150),
+              description: threat.description?.substring(0, 300) || '',
+              type: threat.type, total: threatIntelStore.size,
+              timestamp: new Date().toISOString(), isNew: true
+            });
+          }
+        }
+      }
+    }
+
+    if (newCount > 0) {
+      evolutionStatus.threatsProcessed += newCount;
+      evolutionStatus.lastUpdate = new Date();
+      emitEvolutionEvent('micro_cycle_complete', {
+        newThreats: newCount, totalThreats: threatIntelStore.size, totalRules: detectionRules.size
+      });
+      console.log(`🧠 Micro-cycle: +${newCount} threats (total: ${threatIntelStore.size})`);
+    }
+    evolutionStatus.lastCycleStatus = 'success';
+    evolutionStatus.consecutiveFailures = 0;
+  } catch (err) {
+    evolutionStatus.consecutiveFailures++;
+    evolutionStatus.lastCycleStatus = 'error';
+    console.error('🧠 Micro-cycle error:', err);
+  }
+  evolutionStatus.nextScheduledUpdate = new Date(Date.now() + 5 * 60 * 1000);
+}
 
 export function startEvolutionEngine() {
-  if (evolutionInterval) return;
+  if (evolutionStatus.isRunning) return;
+  evolutionStatus.isRunning = true;
   
-  console.log('🧠 AI Evolution Engine starting — FULL POWER MODE...');
+  console.log('🧠 AI Evolution Engine starting — ALWAYS-ON MODE...');
   console.log('🧠 Connected feeds: NVD, CISA KEV, Abuse.ch, MITRE ATT&CK, FIRST EPSS, AlienVault OTX');
+  console.log('🧠 Schedule: micro-cycle every 5 min, full cycle every 30 min, health check every 2 min');
   
-  // Run aggressive initial cycle (all 6 feeds, AI analysis, competitive monitoring)
+  emitEvolutionEvent('engine_started', { message: 'AI Evolution Engine is now ONLINE and continuously collecting data' });
+
+  // Run aggressive initial cycle immediately (all 6 feeds, AI analysis, competitive monitoring)
   runEvolutionCycle(true).then(results => {
     console.log(`🧠 Initial evolution COMPLETE:`);
     console.log(`   📊 ${results.newThreats} threats ingested`);
     console.log(`   🛡️ ${results.newRules} detection rules generated`);
     console.log(`   📡 Sources: ${results.sources.join(' | ')}`);
     console.log(`   💾 Total in store: ${threatIntelStore.size} threats, ${detectionRules.size} rules`);
+    evolutionStatus.lastCycleStatus = 'success';
+    evolutionStatus.consecutiveFailures = 0;
   }).catch(err => {
     console.error('🧠 Initial evolution cycle error:', err);
+    evolutionStatus.lastCycleStatus = 'error';
+    evolutionStatus.consecutiveFailures++;
   });
   
-  // Schedule hourly updates (all 6 feeds)
-  evolutionInterval = setInterval(async () => {
-    console.log('🧠 Running scheduled evolution cycle (all feeds)...');
-    const results = await runEvolutionCycle(false);
-    console.log(`🧠 Evolution complete: ${results.newThreats} threats, ${results.newRules} rules from ${results.sources.length} sources`);
-  }, 60 * 60 * 1000); // Every hour
+  // Micro-cycle every 5 minutes — lightweight, fast feed collection
+  microCycleInterval = setInterval(() => {
+    runMicroCycle();
+  }, 5 * 60 * 1000);
+  
+  // Full cycle every 30 minutes — all feeds + AI analysis + competitive monitoring
+  fullCycleInterval = setInterval(async () => {
+    try {
+      console.log('🧠 Running full evolution cycle (all feeds + AI)...');
+      const results = await runEvolutionCycle(false);
+      console.log(`🧠 Full cycle complete: ${results.newThreats} threats, ${results.newRules} rules from ${results.sources.length} sources`);
+      evolutionStatus.lastCycleStatus = 'success';
+      evolutionStatus.consecutiveFailures = 0;
+    } catch (err) {
+      console.error('🧠 Full cycle error:', err);
+      evolutionStatus.lastCycleStatus = 'error';
+      evolutionStatus.consecutiveFailures++;
+    }
+  }, 30 * 60 * 1000);
+  
+  // Health check every 2 minutes — self-heal if engine is stuck
+  healthCheckInterval = setInterval(() => {
+    if (evolutionStatus.consecutiveFailures >= 5) {
+      console.warn('🧠 SELF-HEAL: Engine has 5+ consecutive failures, restarting cycles...');
+      emitEvolutionEvent('self_heal', { message: 'Engine auto-recovering from failures', failures: evolutionStatus.consecutiveFailures });
+      evolutionStatus.consecutiveFailures = 0;
+      // Trigger a fresh micro-cycle to recover
+      runMicroCycle();
+    }
+    // Emit a status event so frontends know the engine is alive
+    emitEvolutionEvent('engine_heartbeat', {
+      isRunning: evolutionStatus.isRunning,
+      totalThreats: threatIntelStore.size,
+      totalRules: detectionRules.size,
+      lastUpdate: evolutionStatus.lastUpdate,
+      nextUpdate: evolutionStatus.nextScheduledUpdate,
+      lastCycleStatus: evolutionStatus.lastCycleStatus,
+      uptime: Date.now() - evolutionStatus.engineStartTime.getTime()
+    });
+  }, 2 * 60 * 1000);
 }
 
 export function stopEvolutionEngine() {
-  if (evolutionInterval) {
-    clearInterval(evolutionInterval);
-    evolutionInterval = null;
-    console.log('🧠 AI Evolution Engine stopped');
-  }
+  if (microCycleInterval) { clearInterval(microCycleInterval); microCycleInterval = null; }
+  if (fullCycleInterval) { clearInterval(fullCycleInterval); fullCycleInterval = null; }
+  if (healthCheckInterval) { clearInterval(healthCheckInterval); healthCheckInterval = null; }
+  evolutionStatus.isRunning = false;
+  emitEvolutionEvent('engine_stopped', { message: 'AI Evolution Engine stopped' });
+  console.log('🧠 AI Evolution Engine stopped');
 }

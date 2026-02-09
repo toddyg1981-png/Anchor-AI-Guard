@@ -1,5 +1,5 @@
 
-import { Project, ActiveScan, Finding, Severity } from './types';
+import { Project, ActiveScan, Finding, Severity, ScanRun } from './types';
 
 export const mockProjects: Project[] = [
   {
@@ -76,7 +76,7 @@ export const mockFindings: Finding[] = [
     type: 'Cross-Site Scripting (XSS)',
     description: 'Search functionality reflects user input without encoding, leading to stored XSS vulnerabilities.',
     guidance: 'Ensure all user-supplied input is properly encoded before being rendered in the browser.',
-    reproduction: '1. Use search bar. 2. Enter `<script>alert("XSS")</script>`. 3. See alert pop up on search results page.',
+    reproduction: '1. Use search bar. 2. Enter `<script>alert(\"XSS\")</script>`. 3. See alert pop up on search results page.',
     project: 'Helios Web App'
   },
   {

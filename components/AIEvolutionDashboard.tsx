@@ -16,6 +16,7 @@ interface LiveEvent {
 }
 
 interface EvolutionStatus {
+  isRunning: boolean;
   lastUpdate: string;
   threatsProcessed: number;
   rulesGenerated: number;
@@ -23,6 +24,8 @@ interface EvolutionStatus {
   nextScheduledUpdate: string;
   aiAnalysisCount: number;
   competitiveScore: number;
+  lastCycleStatus: 'success' | 'partial' | 'error' | 'idle';
+  consecutiveFailures: number;
 }
 
 interface ThreatIntel {
@@ -225,6 +228,7 @@ export default function AIEvolutionDashboard() {
   // Real-time live feed
   const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [engineRunning, setEngineRunning] = useState(false);
   const [liveStats, setLiveStats] = useState({ totalThreats: 0, totalRules: 0, aiAnalysisCount: 0, competitiveScore: 95 });
   const eventSourceRef = useRef<EventSource | null>(null);
   const liveLogRef = useRef<HTMLDivElement>(null);
@@ -263,8 +267,9 @@ export default function AIEvolutionDashboard() {
             addLiveEvent(parsed);
             
             // Update live stats from heartbeats
-            if (parsed.type === 'heartbeat' || parsed.type === 'connected') {
+            if (parsed.type === 'heartbeat' || parsed.type === 'connected' || parsed.type === 'engine_heartbeat') {
               const d = parsed.data as any;
+              if (d.isRunning !== undefined) setEngineRunning(d.isRunning);
               setLiveStats({
                 totalThreats: d.totalThreats ?? d.status?.threatsProcessed ?? liveStats.totalThreats,
                 totalRules: d.totalRules ?? liveStats.totalRules,
@@ -273,8 +278,15 @@ export default function AIEvolutionDashboard() {
               });
             }
             
-            // Update stats from cycle events
-            if (parsed.type === 'cycle_complete') {
+            // Engine start/stop events
+            if (parsed.type === 'engine_started') {
+              setEngineRunning(true);
+            } else if (parsed.type === 'engine_stopped') {
+              setEngineRunning(false);
+            }
+            
+            // Update stats from cycle events (full or micro)
+            if (parsed.type === 'cycle_complete' || parsed.type === 'micro_cycle_complete') {
               const d = parsed.data as any;
               setLiveStats(prev => ({
                 ...prev,
@@ -325,9 +337,13 @@ export default function AIEvolutionDashboard() {
   useEffect(() => {
     loadData();
     loadMetrics();
-    // Refresh metrics every 30 seconds
+    // Refresh metrics every 30 seconds and status every 60 seconds
     const metricsInterval = setInterval(loadMetrics, 30000);
-    return () => clearInterval(metricsInterval);
+    const statusInterval = setInterval(loadData, 60000);
+    return () => {
+      clearInterval(metricsInterval);
+      clearInterval(statusInterval);
+    };
   }, []);
 
   const loadData = async () => {
@@ -340,7 +356,9 @@ export default function AIEvolutionDashboard() {
         backendApi.aiEvolution.getEvolutionLog(50)
       ]);
 
-      setStatus((statusRes as any)?.status || null);
+      const statusData = (statusRes as any)?.status || null;
+      setStatus(statusData);
+      if (statusData) setEngineRunning(!!statusData.isRunning);
       setThreats((threatsRes as any)?.threats || []);
       setRules((rulesRes as any)?.rules || []);
       setEvolutionLog((logRes as any)?.log || []);
@@ -771,9 +789,9 @@ export default function AIEvolutionDashboard() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
-              <span className={`text-sm font-medium ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
-                {isConnected ? 'LIVE' : 'OFFLINE'}
+              <span className={`w-3 h-3 rounded-full ${engineRunning || isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+              <span className={`text-sm font-medium ${engineRunning || isConnected ? 'text-green-400' : 'text-red-400'}`}>
+                {engineRunning ? (isConnected ? 'LIVE' : 'ONLINE') : 'OFFLINE'}
               </span>
             </div>
             <div className="h-6 w-px bg-slate-600"></div>
@@ -856,7 +874,7 @@ export default function AIEvolutionDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+                <span className={`w-2.5 h-2.5 rounded-full ${engineRunning || isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
                 Real-Time Evolution Feed
               </h3>
               <div className="flex items-center gap-3">
