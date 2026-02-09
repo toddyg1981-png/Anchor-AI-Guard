@@ -94,6 +94,7 @@ const AIEvolutionDashboard = React.lazy(() => import('./components/AIEvolutionDa
 const UserProfileSettings = React.lazy(() => import('./components/UserProfileSettings'));
 const AIHelpDesk = React.lazy(() => import('./components/AIHelpDesk'));
 const HowToGuide = React.lazy(() => import('./components/HowToGuide'));
+const SDKSecurity = React.lazy(() => import('./components/SDKSecurity'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -198,7 +199,8 @@ export type DashboardView =
   | 'aiEvolution'
   | 'profile'
   | 'helpDesk'
-  | 'howToGuide';
+  | 'howToGuide'
+  | 'sdkSecurity';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -692,6 +694,8 @@ const AppContent: React.FC = () => {
         return <AIHelpDesk />;
       case 'howToGuide':
         return <HowToGuide />;
+      case 'sdkSecurity':
+        return <SDKSecurity />;
       case 'overview':
       default:
         return (

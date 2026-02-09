@@ -174,6 +174,13 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       badge: 'WORLD FIRST',
       badgeColor: 'bg-purple-500',
     },
+    {
+      icon: '📦',
+      title: 'SDK Security Suite',
+      description: 'Official SDKs for Python, Node.js, Go, Java, C#, and Ruby — with built-in dependency scanning, supply chain verification, and security best practices baked into every integration.',
+      badge: 'NEW',
+      badgeColor: 'bg-cyan-500',
+    },
   ];
 
   const stats = [
@@ -741,6 +748,48 @@ print(rule["rule"]["content"])
             </div>
           </div>
 
+          {/* Official SDKs */}
+          <div className="bg-gray-900/80 backdrop-blur-sm rounded-3xl border border-purple-500/20 p-10 mb-16">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl md:text-3xl font-bold mb-3">
+                <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Official SDKs — Ready to Use</span>
+              </h3>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Install our official SDK in your language of choice and start integrating Anchor Intelligence in minutes. All SDKs include built-in security scanning, dependency verification, and TLS pinning.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+              {[
+                { lang: 'Python', icon: '🐍', cmd: 'pip install anchor-security-sdk', score: 96 },
+                { lang: 'Node.js', icon: '🟢', cmd: 'npm install @anchor/security-sdk', score: 94 },
+                { lang: 'Go', icon: '🔷', cmd: 'go get github.com/anchor/security-sdk-go', score: 98 },
+                { lang: 'Java', icon: '☕', cmd: 'com.anchoraiguard:security-sdk', score: 95 },
+                { lang: 'C#', icon: '💜', cmd: 'dotnet add package Anchor.SecuritySDK', score: 97 },
+                { lang: 'Ruby', icon: '💎', cmd: 'gem install anchor-security-sdk', score: 93 },
+              ].map(sdk => (
+                <div key={sdk.lang} className="bg-gray-800/80 rounded-xl p-4 text-center border border-gray-700 hover:border-cyan-500/40 transition-all group cursor-default" title={sdk.cmd}>
+                  <div className="text-3xl mb-2">{sdk.icon}</div>
+                  <div className="font-bold text-sm group-hover:text-cyan-400 transition-colors">{sdk.lang}</div>
+                  <div className="text-xs text-green-400 mt-1">{sdk.score}/100 secure</div>
+                </div>
+              ))}
+            </div>
+            <div className="grid md:grid-cols-3 gap-4 text-center text-sm">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+                <div className="text-lg font-bold text-purple-400">SLSA Level 3</div>
+                <div className="text-gray-400 text-xs mt-1">Supply chain integrity verified</div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+                <div className="text-lg font-bold text-blue-400">1M+ Downloads</div>
+                <div className="text-gray-400 text-xs mt-1">Across all official SDKs</div>
+              </div>
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+                <div className="text-lg font-bold text-cyan-400">0 Critical CVEs</div>
+                <div className="text-gray-400 text-xs mt-1">Continuously scanned &amp; verified</div>
+              </div>
+            </div>
+          </div>
+
           {/* CTA */}
           <div className="text-center">
             <button
@@ -750,7 +799,7 @@ print(rule["rule"]["content"])
               Explore Anchor Intelligence →
             </button>
             <p className="text-purple-400 text-sm mt-4">
-              API access from $99,990/mo • Enterprise & OEM pricing available • 99.99% SLA
+              API access from $99,990/mo • Official SDKs for 6 languages • Enterprise & OEM pricing available • 99.99% SLA
             </p>
           </div>
         </div>

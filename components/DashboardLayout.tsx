@@ -162,6 +162,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         { id: 'ai-evolution', label: 'AI Evolution', icon: '🧬', view: 'aiEvolution', description: 'Self-evolving threat detection engine' },
         { id: 'security-automation', label: 'Automation', icon: '⚡', view: 'securityAutomation', description: 'No-code security workflows' },
         { id: 'intelligence', label: 'Intelligence API', icon: '🌐', view: 'intelligenceDashboard', description: 'B2B AI-as-a-Service platform' },
+        { id: 'sdk-security', label: 'SDK Security', icon: '📦', view: 'sdkSecurity', description: 'SDK management and security scanning' },
         { id: 'supply-ai', label: 'Supply Chain AI', icon: '🤖', view: 'supplyChainAI', description: 'AI-powered supply chain analysis' },
         { id: 'digital-twin', label: 'Digital Twin', icon: '🪞', view: 'digitalTwin', description: 'Attack simulation on virtual replicas' },
       ],

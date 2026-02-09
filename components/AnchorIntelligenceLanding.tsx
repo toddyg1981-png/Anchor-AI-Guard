@@ -702,15 +702,23 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
 
             {/* SDKs */}
             <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-2xl border border-purple-500/20 p-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">SDKs Coming Soon</h3>
+              <h3 className="text-2xl font-bold mb-4">Official SDKs Available</h3>
               <p className="text-gray-400 mb-6">
-                Official SDKs for Python, JavaScript/TypeScript, Go, and Java are in development.
-                In the meantime, our REST API works with any HTTP client.
+                Official SDKs for Python, JavaScript/TypeScript, Go, Java, C#, and Ruby are ready to use.
+                Install via your package manager and start integrating in minutes.
               </p>
               <div className="flex justify-center gap-4 flex-wrap">
-                {['Python', 'Node.js', 'Go', 'Java', 'C#', 'Ruby'].map(lang => (
-                  <div key={lang} className="px-4 py-2 bg-gray-800 rounded-lg text-gray-400 text-sm">
-                    {lang}
+                {[
+                  { lang: 'Python', icon: '🐍', cmd: 'pip install anchor-security-sdk' },
+                  { lang: 'Node.js', icon: '🟢', cmd: 'npm install @anchor/security-sdk' },
+                  { lang: 'Go', icon: '🔷', cmd: 'go get github.com/anchor/security-sdk-go' },
+                  { lang: 'Java', icon: '☕', cmd: 'com.anchoraiguard:security-sdk' },
+                  { lang: 'C#', icon: '💜', cmd: 'dotnet add package Anchor.SecuritySDK' },
+                  { lang: 'Ruby', icon: '💎', cmd: 'gem install anchor-security-sdk' },
+                ].map(sdk => (
+                  <div key={sdk.lang} className="px-4 py-2 bg-gray-800 rounded-lg text-sm group hover:bg-cyan-600/20 hover:border-cyan-500/30 border border-transparent transition-colors cursor-default" title={sdk.cmd}>
+                    <span className="mr-1">{sdk.icon}</span>
+                    <span className="text-gray-200 group-hover:text-cyan-300">{sdk.lang}</span>
                   </div>
                 ))}
               </div>
