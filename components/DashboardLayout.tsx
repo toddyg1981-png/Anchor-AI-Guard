@@ -178,6 +178,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       ],
     },
     {
+      category: '🌍 World-First Layers',
+      icon: '🏆',
+      items: [
+        { id: 'hardware-integrity', label: 'Hardware Integrity', icon: '🔩', view: 'hardwareIntegrity', description: '🏆 WORLD FIRST — Hardware trust verification' },
+        { id: 'firmware-security', label: 'Firmware Security', icon: '💾', view: 'firmwareSecurity', description: '🏆 WORLD FIRST — Firmware & microcode scanner' },
+        { id: 'identity-drift', label: 'Identity Drift', icon: '🪪', view: 'identityDrift', description: '🏆 WORLD FIRST — AI identity integrity engine' },
+        { id: 'data-trust', label: 'Data Trust Engine', icon: '🧬', view: 'dataTrustEngine', description: '🏆 WORLD FIRST — Data integrity verification' },
+        { id: 'ai-runtime', label: 'AI Runtime Security', icon: '🤖', view: 'aiRuntimeSecurity', description: '🏆 WORLD FIRST — AI model runtime protection' },
+        { id: 'human-behaviour', label: 'Human Behaviour', icon: '🧠', view: 'humanBehaviour', description: '🏆 WORLD FIRST — Behavioural risk engine' },
+        { id: 'national-telemetry', label: 'National Telemetry', icon: '🌐', view: 'nationalTelemetry', description: '🏆 WORLD FIRST — Sovereign cyber intelligence' },
+        { id: 'architecture-drift', label: 'Architecture Drift', icon: '🏗️', view: 'architectureDrift', description: '🏆 WORLD FIRST — Continuous drift detection' },
+        { id: 'autonomous-redteam', label: 'Autonomous Red Team', icon: '⚔️', view: 'autonomousRedTeam', description: '🏆 WORLD FIRST — Self-attacking security engine' },
+      ],
+    },
+    {
       category: 'Infrastructure & Assets',
       icon: '🏗️',
       items: [

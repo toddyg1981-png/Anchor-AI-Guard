@@ -64,7 +64,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       setPlans(data.plans);
     } catch (error) {
       console.error('Failed to fetch plans:', error);
-      // WORLD-FIRST PRICING - Premium for 86 modules & 12 world-first features
+      // WORLD-FIRST PRICING - Premium for 95+ modules & 25 world-first features
       setPlans([
         {
           tier: 'FREE',
@@ -133,6 +133,8 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '🔧 AI Auto-Fix with 1-click PRs',
             '🗺️ Attack Path Visualization',
             '🛡️ Threat Hunting Module',
+            '🏗️ Architecture Drift Detection (WORLD FIRST)',
+            '🪪 Identity Drift Detection (WORLD FIRST)',
             'API access',
             'Priority email support',
             'Slack integration',
@@ -159,6 +161,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '👥 Real-time Collaboration (WORLD FIRST)',
             '🪞 Digital Twin Security (WORLD FIRST)',
             '🤖 Autonomous SOC Access',
+            '🧬 Data Trust Engine (WORLD FIRST)',
+            '🧠 Human Behaviour Risk Engine (WORLD FIRST)',
+            '🤖 AI Runtime Security (WORLD FIRST)',
             'All Pro features included',
             'Team dashboard & analytics',
             'Role-based access control',
@@ -185,17 +190,21 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '10,000 scans/month',
             '50,000 AI queries/month',
             '75 team members',
-            '📊 All 86 Security Modules',
+            '📊 All 95+ Security Modules',
             '🔐 SSO/SAML authentication',
             '🏥 Cyber Insurance Integration (WORLD FIRST)',
             '⛓️ Supply Chain Attestation (WORLD FIRST)',
+            '🔩 Hardware Integrity Layer (WORLD FIRST)',
+            '💾 Firmware & Microcode Scanner (WORLD FIRST)',
+            '⚔️ Autonomous Red Team (WORLD FIRST)',
+            '🌐 National-Scale Telemetry (WORLD FIRST)',
             'Custom security rules',
             'Advanced threat analytics',
             'Dedicated CSM',
             'Phone & Slack support',
             '99.9% SLA',
           ],
-          highlight: 'Complete security platform',
+          highlight: 'Complete security platform — All 25 World-Firsts',
         },
         {
           tier: 'ENTERPRISE',
@@ -212,7 +221,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           features: [
             '💰 $5,000,000 - $10,000,000/year',
             '🏢 For 100-500 developers',
-            'Unlimited everything',
+            'All 95+ modules + 25 World-Firsts',
             'On-premise deployment option',
             'Custom AI model training',
             'Dedicated security engineer',
@@ -240,6 +249,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '💰 $10,000,000 - $25,000,000/year',
             '🏢 For 500-2000+ developers',
             'Everything in Enterprise',
+            'All 95+ modules + all World-Firsts',
             'Multi-region deployment',
             'Custom AI model fine-tuning',
             'White-label licensing available',
@@ -269,6 +279,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '🏛️ Federal, State & Defense',
             '🛡️ National Security Module (WORLD FIRST)',
             '🏭 Critical Infrastructure Protection (WORLD FIRST)',
+            '🌐 National-Scale Telemetry (WORLD FIRST)',
+            '⚔️ Autonomous Red Team (WORLD FIRST)',
+            '🔩 Hardware & Firmware Integrity (WORLD FIRST)',
             '🔒 FedRAMP High Ready',
             '🛡️ NIST 800-53 / CMMC Compliant',
             '🇺🇸 ITAR/EAR Compliant',
@@ -458,13 +471,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-block px-4 py-1 bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-medium mb-4">
-            🚀 WORLD-FIRST PREDICTIVE CVE INTELLIGENCE
+            🏆 95+ MODULES • 25 WORLD-FIRST FEATURES • 9 UNPROTECTED LAYERS
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-purple-300 max-w-2xl mx-auto">
-            The future of security starts here. Get predictive CVE intelligence before vulnerabilities go public.
+            The world&apos;s most complete security platform. 25 world-first features that don&apos;t exist anywhere else. You&apos;re not buying a tool — you&apos;re buying a monopoly.
           </p>
         </div>
 
@@ -705,30 +718,54 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* World-First Features Banner */}
         <div className="mb-16 max-w-5xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-cyan-400 mb-2">🌟 World-First Features Included</h2>
-            <p className="text-purple-300">Technology that doesn&apos;t exist anywhere else</p>
+            <h2 className="text-2xl font-bold text-cyan-400 mb-2">🏆 25 World-First Features — No Other Vendor Has These</h2>
+            <p className="text-purple-300">Technology that doesn&apos;t exist anywhere else. You&apos;re buying a monopoly.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-black/30 border border-cyan-500/30 rounded-xl p-4 text-center">
-              <div className="text-2xl mb-2">🔮</div>
-              <h3 className="font-bold text-cyan-400 mb-1">Predictive CVE Intelligence</h3>
-              <p className="text-sm text-purple-300">Know about vulnerabilities before they&apos;re public</p>
-            </div>
-            <div className="bg-black/30 border border-pink-500/30 rounded-xl p-4 text-center">
-              <div className="text-2xl mb-2">🔧</div>
-              <h3 className="font-bold text-pink-400 mb-1">1-Click AI Fix Button</h3>
-              <p className="text-sm text-purple-300">Hit Fix and get a tested, merge-ready patch instantly</p>
-            </div>
-            <div className="bg-black/30 border border-purple-500/30 rounded-xl p-4 text-center">
-              <div className="text-2xl mb-2">🧬</div>
-              <h3 className="font-bold text-purple-400 mb-1">AI Self-Evolution Engine</h3>
-              <p className="text-sm text-purple-300">Anchor evolves its own defenses autonomously 24/7</p>
-            </div>
-            <div className="bg-black/30 border border-cyan-500/30 rounded-xl p-4 text-center">
-              <div className="text-2xl mb-2">🗺️</div>
-              <h3 className="font-bold text-cyan-400 mb-1">Attack Path Visualization</h3>
-              <p className="text-sm text-purple-300">See exactly how hackers can reach your data</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
+            {[
+              { icon: '🔮', name: 'Predictive CVE Intelligence', tier: 'Pro+', desc: 'Know about vulnerabilities before they\u2019re public' },
+              { icon: '🔧', name: '1-Click AI Fix Button', tier: 'Pro+', desc: 'Tested, merge-ready patches instantly' },
+              { icon: '🧬', name: 'AI Self-Evolution Engine', tier: 'Pro+', desc: 'Anchor evolves its own defenses 24/7' },
+              { icon: '🗺️', name: 'Attack Path Visualization', tier: 'Pro+', desc: 'See how hackers reach your data' },
+              { icon: '🪞', name: 'Digital Twin Security', tier: 'Team+', desc: 'Virtual replicas for safe attack simulation' },
+              { icon: '🤖', name: 'Autonomous SOC', tier: 'Team+', desc: 'AI-powered 24/7 security operations' },
+              { icon: '🏗️', name: 'Critical Infrastructure', tier: 'Team+', desc: '16 sectors, NERC CIP, real-time OT/ICS' },
+              { icon: '🔗', name: 'Supply Chain Attestation', tier: 'Business+', desc: 'Blockchain-verified software provenance' },
+              { icon: '🌐', name: 'Anchor Intelligence API', tier: 'Business+', desc: 'Self-evolving AI-as-a-Service' },
+              { icon: '🪪', name: 'Identity Drift Detection', tier: 'Pro+', desc: 'Privilege creep, shadow accounts, session hijacking' },
+              { icon: '🏗️', name: 'Architecture Drift Engine', tier: 'Pro+', desc: 'Forgotten services, exposed ports, dependency drift' },
+              { icon: '🧬', name: 'Data Trust Engine', tier: 'Team+', desc: 'Poisoned datasets, corrupted logs, tampered backups' },
+              { icon: '🧠', name: 'Human Behaviour Risk', tier: 'Team+', desc: 'Insider threats, social engineering detection' },
+              { icon: '🤖', name: 'AI Runtime Security', tier: 'Team+', desc: 'Prompt injection, model hijacking, inference poisoning' },
+              { icon: '🔩', name: 'Hardware Integrity Layer', tier: 'Business+', desc: 'TPM, BIOS/UEFI, rogue USB, implant detection' },
+              { icon: '💾', name: 'Firmware & Microcode', tier: 'Business+', desc: 'Firmware implants, supply-chain poisoning' },
+              { icon: '🌐', name: 'National-Scale Telemetry', tier: 'Business+', desc: 'Sovereign-grade cross-industry threat correlation' },
+              { icon: '⚔️', name: 'Autonomous Red Team', tier: 'Business+', desc: 'Self-attacking exploit & lateral movement sim' },
+            ].map((f, i) => (
+              <div key={i} className="bg-black/30 border border-purple-500/20 rounded-xl p-4 hover:border-cyan-500/50 transition-all">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">{f.icon}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-bold text-white text-sm">{f.name}</h3>
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                        f.tier === 'Pro+' ? 'bg-pink-500/20 text-pink-400 border border-pink-500/30' :
+                        f.tier === 'Team+' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
+                        'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                      }`}>{f.tier}</span>
+                    </div>
+                    <p className="text-xs text-purple-400">{f.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <p className="text-sm text-purple-400">
+              <span className="text-pink-400 font-semibold">Pro+</span> = Available from Pro tier &nbsp;|&nbsp;
+              <span className="text-purple-400 font-semibold">Team+</span> = Available from Team tier &nbsp;|&nbsp;
+              <span className="text-cyan-400 font-semibold">Business+</span> = Available from Business tier
+            </p>
           </div>
         </div>
 

@@ -96,6 +96,17 @@ const AIHelpDesk = React.lazy(() => import('./components/AIHelpDesk'));
 const HowToGuide = React.lazy(() => import('./components/HowToGuide'));
 const SDKSecurity = React.lazy(() => import('./components/SDKSecurity'));
 
+// World-First Security Layers
+const HardwareIntegrity = React.lazy(() => import('./components/HardwareIntegrity'));
+const FirmwareSecurity = React.lazy(() => import('./components/FirmwareSecurity'));
+const IdentityDrift = React.lazy(() => import('./components/IdentityDrift'));
+const DataTrustEngine = React.lazy(() => import('./components/DataTrustEngine'));
+const AIRuntimeSecurity = React.lazy(() => import('./components/AIRuntimeSecurity'));
+const HumanBehaviourEngine = React.lazy(() => import('./components/HumanBehaviourEngine'));
+const NationalTelemetryLayer = React.lazy(() => import('./components/NationalTelemetryLayer'));
+const ArchitectureDrift = React.lazy(() => import('./components/ArchitectureDrift'));
+const AutonomousRedTeam = React.lazy(() => import('./components/AutonomousRedTeam'));
+
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
   <div className="min-h-100 flex items-center justify-center">
@@ -200,7 +211,16 @@ export type DashboardView =
   | 'profile'
   | 'helpDesk'
   | 'howToGuide'
-  | 'sdkSecurity';
+  | 'sdkSecurity'
+  | 'hardwareIntegrity'
+  | 'firmwareSecurity'
+  | 'identityDrift'
+  | 'dataTrustEngine'
+  | 'aiRuntimeSecurity'
+  | 'humanBehaviour'
+  | 'nationalTelemetry'
+  | 'architectureDrift'
+  | 'autonomousRedTeam';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -696,6 +716,24 @@ const AppContent: React.FC = () => {
         return <HowToGuide />;
       case 'sdkSecurity':
         return <SDKSecurity />;
+      case 'hardwareIntegrity':
+        return <HardwareIntegrity />;
+      case 'firmwareSecurity':
+        return <FirmwareSecurity />;
+      case 'identityDrift':
+        return <IdentityDrift />;
+      case 'dataTrustEngine':
+        return <DataTrustEngine />;
+      case 'aiRuntimeSecurity':
+        return <AIRuntimeSecurity />;
+      case 'humanBehaviour':
+        return <HumanBehaviourEngine />;
+      case 'nationalTelemetry':
+        return <NationalTelemetryLayer />;
+      case 'architectureDrift':
+        return <ArchitectureDrift />;
+      case 'autonomousRedTeam':
+        return <AutonomousRedTeam />;
       case 'overview':
       default:
         return (
