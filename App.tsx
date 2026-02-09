@@ -97,6 +97,9 @@ const UserProfileSettings = React.lazy(() => import('./components/UserProfileSet
 const AIHelpDesk = React.lazy(() => import('./components/AIHelpDesk'));
 const HowToGuide = React.lazy(() => import('./components/HowToGuide'));
 const SDKSecurity = React.lazy(() => import('./components/SDKSecurity'));
+const PillarPricing = React.lazy(() => import('./components/PillarPricing'));
+const ProductNarratives = React.lazy(() => import('./components/ProductNarratives'));
+const InvestorSlides = React.lazy(() => import('./components/InvestorSlides'));
 
 // World-First Security Layers
 const HardwareIntegrity = React.lazy(() => import('./components/HardwareIntegrity'));
@@ -140,7 +143,10 @@ export type AppView =
   | 'purchase-terms' // Purchase terms and conditions
   | 'intelligence'     // Anchor Intelligence B2B Landing Page
   | 'intelligence-dashboard' // API Customer Dashboard
-  | 'government';      // Government & Sovereign Defense Landing Page
+  | 'government'      // Government & Sovereign Defense Landing Page
+  | 'pillar-pricing'   // 5-Pillar pricing page
+  | 'product-narratives' // Product deep-dive pages
+  | 'investor-slides';  // Investor pitch deck
 
 // Dashboard sub-views
 export type DashboardView = 
@@ -284,6 +290,12 @@ const AppContent: React.FC = () => {
       setCurrentView('intelligence-dashboard');
     } else if (path === '/government' || path === '/sovereign') {
       setCurrentView('government');
+    } else if (path === '/pricing/pillars') {
+      setCurrentView('pillar-pricing');
+    } else if (path === '/products') {
+      setCurrentView('product-narratives');
+    } else if (path === '/investors') {
+      setCurrentView('investor-slides');
     }
 
     // Handle Stripe checkout success redirect
@@ -463,6 +475,21 @@ const AppContent: React.FC = () => {
   const handleViewIntelligenceDashboard = useCallback(() => {
     setCurrentView('intelligence-dashboard');
     window.history.pushState({}, '', '/intelligence/dashboard');
+  }, []);
+
+  const handleViewPillarPricing = useCallback(() => {
+    setCurrentView('pillar-pricing');
+    window.history.pushState({}, '', '/pricing/pillars');
+  }, []);
+
+  const handleViewProductNarratives = useCallback(() => {
+    setCurrentView('product-narratives');
+    window.history.pushState({}, '', '/products');
+  }, []);
+
+  const handleViewInvestorSlides = useCallback(() => {
+    setCurrentView('investor-slides');
+    window.history.pushState({}, '', '/investors');
   }, []);
 
   const handleAuthSuccess = useCallback(() => {
@@ -793,6 +820,9 @@ const AppContent: React.FC = () => {
             onViewPurchaseTerms={handleViewPurchaseTerms}
             onViewIntelligence={handleViewIntelligence}
             onViewGovernment={handleViewGovernment}
+            onViewPillarPricing={handleViewPillarPricing}
+            onViewProducts={handleViewProductNarratives}
+            onViewInvestors={handleViewInvestorSlides}
           />
         );
       
@@ -907,6 +937,26 @@ const AppContent: React.FC = () => {
 
       case 'intelligence-dashboard':
         return <AnchorIntelligenceDashboard />;
+
+      case 'pillar-pricing':
+        return (
+          <PillarPricing
+            onBack={handleBackToMarketing}
+            onGetStarted={handleGetStarted}
+          />
+        );
+
+      case 'product-narratives':
+        return (
+          <ProductNarratives
+            onBack={handleBackToMarketing}
+            onGetStarted={handleGetStarted}
+            onViewPricing={handleViewPillarPricing}
+          />
+        );
+
+      case 'investor-slides':
+        return <InvestorSlides onBack={handleBackToMarketing} />;
       
       default:
         return (
@@ -922,6 +972,9 @@ const AppContent: React.FC = () => {
             onViewPurchaseTerms={handleViewPurchaseTerms}
             onViewIntelligence={handleViewIntelligence}
             onViewGovernment={handleViewGovernment}
+            onViewPillarPricing={handleViewPillarPricing}
+            onViewProducts={handleViewProductNarratives}
+            onViewInvestors={handleViewInvestorSlides}
           />
         );
     }

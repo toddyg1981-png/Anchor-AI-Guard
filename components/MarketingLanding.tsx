@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { env } from '../config/env';
+import PillarLandingSections from './PillarLandingSections';
 
 interface MarketingLandingProps {
   onGetStarted: () => void;
@@ -13,6 +14,9 @@ interface MarketingLandingProps {
   onViewPurchaseTerms?: () => void;
   onViewIntelligence?: () => void;
   onViewGovernment?: () => void;
+  onViewPillarPricing?: () => void;
+  onViewProducts?: () => void;
+  onViewInvestors?: () => void;
 }
 
 // Use centralized env config - strip /api suffix for analytics endpoints
@@ -30,6 +34,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
   onViewPurchaseTerms,
   onViewIntelligence,
   onViewGovernment,
+  onViewPillarPricing,
+  onViewProducts,
+  onViewInvestors,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -61,7 +68,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       .catch(() => setVideoViews(prev => prev + 1));
   };
 
-  const features = [
+  const _features = [
     {
       icon: '🤖',
       title: 'Autonomous SOC',
@@ -344,23 +351,26 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="h-12 w-auto object-contain select-none pointer-events-none" />
             </div>
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-cyan-400 hover:text-pink-400 transition-colors">
-                Features
+              <a href="#pillars" className="text-cyan-400 hover:text-pink-400 transition-colors">
+                Pillars
               </a>
-              <a href="#testimonials" className="text-cyan-400 hover:text-pink-400 transition-colors">
-                Testimonials
-              </a>
-              <button onClick={onViewPricing} className="text-cyan-400 hover:text-pink-400 transition-colors">
+              <button onClick={onViewProducts} className="text-cyan-400 hover:text-pink-400 transition-colors">
+                Products
+              </button>
+              <button onClick={onViewPillarPricing || onViewPricing} className="text-cyan-400 hover:text-pink-400 transition-colors">
                 Pricing
               </button>
               <a href="#faq" className="text-cyan-400 hover:text-pink-400 transition-colors">
                 FAQ
               </a>
               <button onClick={onViewIntelligence} className="text-cyan-400 hover:text-pink-400 transition-colors font-semibold">
-                Anchor Intelligence
+                Intelligence
               </button>
               <button onClick={onViewGovernment} className="text-cyan-400 hover:text-pink-400 transition-colors font-semibold">
                 Government
+              </button>
+              <button onClick={onViewInvestors} className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">
+                Investors
               </button>
             </div>
             <div className="flex items-center gap-4">
@@ -560,41 +570,30 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-24 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <strong>25 World-First Features</strong> That
-              <br />
-              <span className="bg-linear-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                Don&apos;t Exist Anywhere Else
-              </span>
-            </h2>
-            <p className="text-xl text-purple-300 max-w-2xl mx-auto">
-              <strong>Every feature below is technology that no other vendor has built.</strong> 25 world-first innovations
-              covering 9 unprotected layers &mdash; from self-attacking red teams to national-scale threat correlation.
-              The industry gap ends here.
-            </p>
-          </div>
+      {/* 5 Product Pillars Section — Replaces flat feature grid */}
+      <PillarLandingSections onViewPricing={onViewPillarPricing || onViewPricing} onGetStarted={onGetStarted} />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="bg-linear-to-br from-cyan-500/5 to-purple-500/5 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/20 hover:border-pink-500/50 transition-all group hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/20"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-4xl">{feature.icon}</span>
-                  <span className={`${feature.badgeColor} text-white text-xs font-bold px-2 py-1 rounded-full`}>
-                    {feature.badge}
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-cyan-400 mb-2">{feature.title}</h3>
-                <p className="text-purple-300">{feature.description}</p>
-              </div>
-            ))}
-          </div>
+      {/* Quick Links to Deep-Dive Pages */}
+      <section className="py-12 px-4">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button
+            onClick={onViewProducts}
+            className="px-6 py-3 rounded-xl bg-slate-800/50 border border-purple-500/30 text-purple-300 hover:text-white hover:border-purple-400 transition-all"
+          >
+            📖 Product Deep Dive  →
+          </button>
+          <button
+            onClick={onViewPillarPricing || onViewPricing}
+            className="px-6 py-3 rounded-xl bg-slate-800/50 border border-cyan-500/30 text-cyan-300 hover:text-white hover:border-cyan-400 transition-all"
+          >
+            💰 Pricing by Pillar  →
+          </button>
+          <button
+            onClick={onViewInvestors}
+            className="px-6 py-3 rounded-xl bg-slate-800/50 border border-amber-500/30 text-amber-300 hover:text-white hover:border-amber-400 transition-all"
+          >
+            📊 Investor Deck  →
+          </button>
         </div>
       </section>
 
@@ -716,7 +715,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       <section className="py-24 px-4 bg-linear-to-b from-gray-950 via-purple-900/10 to-gray-950 relative overflow-hidden">
         {/* Background glow */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-150 h-150 bg-purple-500/10 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto relative">
@@ -829,7 +828,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                   { icon: '🔬', title: 'Threat Intel Teams', desc: 'Predictive modeling and competitive analysis to stay ahead.' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4 p-4 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-purple-500/30 transition-all">
-                    <div className="text-2xl flex-shrink-0">{item.icon}</div>
+                    <div className="text-2xl shrink-0">{item.icon}</div>
                     <div>
                       <h4 className="font-bold">{item.title}</h4>
                       <p className="text-gray-400 text-sm">{item.desc}</p>
@@ -1240,12 +1239,12 @@ print(rule["rule"]["content"])
             <div>
               <h4 className="font-semibold text-cyan-400 mb-4">Product</h4>
               <ul className="space-y-2 text-purple-300">
-                <li><a href="#features" className="hover:text-pink-400 transition-colors">Features</a></li>
-                <li><button onClick={onViewPricing} className="hover:text-pink-400 transition-colors">Pricing</button></li>
-                <li><button onClick={onViewIntelligence} className="hover:text-pink-400 transition-colors text-left">Anchor Intelligence API</button></li>
+                <li><a href="#pillars" className="hover:text-pink-400 transition-colors">5 Product Pillars</a></li>
+                <li><button onClick={onViewProducts} className="hover:text-pink-400 transition-colors text-left">Product Deep Dive</button></li>
+                <li><button onClick={onViewPillarPricing || onViewPricing} className="hover:text-pink-400 transition-colors text-left">Pricing by Pillar</button></li>
+                <li><button onClick={onViewIntelligence} className="hover:text-pink-400 transition-colors text-left">Intelligence API</button></li>
                 <li><button onClick={onViewGovernment} className="hover:text-pink-400 transition-colors text-left">Government & Sovereign</button></li>
-                <li><a href="https://docs.anchoraiguard.com/cli" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">CLI Tool</a></li>
-                <li><a href="#features" className="hover:text-pink-400 transition-colors">Integrations</a></li>
+                <li><button onClick={onViewInvestors} className="hover:text-pink-400 transition-colors text-left">Investor Deck</button></li>
               </ul>
             </div>
             <div>
