@@ -155,7 +155,7 @@ export default function AIStatusWidget({ onOpenDashboard }: AIStatusWidgetProps)
       return () => clearInterval(pollInterval);
     }
 
-    const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || '';
+    const token = localStorage.getItem('anchor_auth_token') || sessionStorage.getItem('anchor_auth_token') || '';
     
     const connectSSE = () => {
       try {

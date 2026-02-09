@@ -100,7 +100,7 @@ export function csrfProtection() {
     if (user && csrfToken) {
       if (!validateCSRFToken(csrfToken, user.id)) {
         request.log.warn({ userId: user.id }, 'CSRF: Invalid or expired token');
-        // Don't fail yet - origin check passed, this is additional protection
+        return reply.status(403).send({ error: 'Invalid or expired CSRF token' });
       }
     }
   };

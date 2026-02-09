@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { env } from '../config/env';
 
 interface AdminDashboardProps {
   orgId?: string;
@@ -6,7 +7,7 @@ interface AdminDashboardProps {
 
 interface TeamMember {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
   role: string;
   avatarUrl?: string;
@@ -42,6 +43,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
   const [inviteRole, setInviteRole] = useState('member');
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [settingsSaved, setSettingsSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const token = localStorage.getItem('anchor_auth_token');
 
   useEffect(() => {
     fetchAdminData();
@@ -49,52 +53,117 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
 
   const fetchAdminData = async () => {
     try {
-      // Mock data for now - replace with actual API calls
-      setStats({
-        totalProjects: 12,
-        totalScans: 156,
-        totalFindings: 89,
-        criticalFindings: 5,
-        fixedFindings: 67,
-        teamMembers: 8,
-      });
-
-      setTeamMembers([
-        { id: '1', name: 'John Doe', email: 'john@example.com', role: 'owner', createdAt: '2024-01-15', lastActiveAt: '2024-02-01' },
-        { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'admin', createdAt: '2024-01-20', lastActiveAt: '2024-01-31' },
-        { id: '3', name: 'Bob Wilson', email: 'bob@example.com', role: 'member', createdAt: '2024-01-25', lastActiveAt: '2024-01-30' },
+      setError(null);
+      // Fetch real data from backend APIs
+      const [statsRes, teamRes, logsRes] = await Promise.all([
+        fetch(`${env.apiBaseUrl}/admin/stats`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch(`${env.apiBaseUrl}/team`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch(`${env.apiBaseUrl}/admin/audit-logs?limit=50`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ]);
 
-      setAuditLogs([
-        { id: '1', action: 'user.login', actor: 'john@example.com', createdAt: '2024-02-01T10:30:00Z' },
-        { id: '2', action: 'project.create', actor: 'jane@example.com', target: 'API Service', createdAt: '2024-02-01T09:15:00Z' },
-        { id: '3', action: 'scan.start', actor: 'system', target: 'Frontend App', createdAt: '2024-02-01T08:00:00Z' },
-        { id: '4', action: 'finding.fix', actor: 'bob@example.com', target: 'SQL Injection', createdAt: '2024-01-31T16:45:00Z' },
-      ]);
-    } catch (error) {
-      console.error('Failed to fetch admin data:', error);
+      if (statsRes.ok) {
+        const statsData = await statsRes.json();
+        setStats(statsData.stats);
+      } else {
+        // Fallback to zeros if stats endpoint fails
+        setStats({
+          totalProjects: 0,
+          totalScans: 0,
+          totalFindings: 0,
+          criticalFindings: 0,
+          fixedFindings: 0,
+          teamMembers: 0,
+        });
+      }
+
+      if (teamRes.ok) {
+        const teamData = await teamRes.json();
+        setTeamMembers(teamData.members || []);
+      }
+
+      if (logsRes.ok) {
+        const logsData = await logsRes.json();
+        setAuditLogs(logsData.logs || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch admin data:', err);
+      setError('Failed to load admin data. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleInvite = async () => {
-    // TODO: Implement actual invite API call
-        setShowInviteModal(false);
-    setInviteEmail('');
-    setInviteRole('member');
+    try {
+      const res = await fetch(`${env.apiBaseUrl}/team/invite`, {
+        method: 'POST',
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to send invite');
+      }
+      setShowInviteModal(false);
+      setInviteEmail('');
+      setInviteRole('member');
+      fetchAdminData(); // Refresh team list
+    } catch (err) {
+      console.error('Failed to invite:', err);
+      alert(err instanceof Error ? err.message : 'Failed to send invite');
+    }
   };
 
   const handleRemoveMember = async (memberId: string) => {
-    // TODO: Implement actual remove API call
-    setTeamMembers(teamMembers.filter(m => m.id !== memberId));
+    if (!confirm('Are you sure you want to remove this team member?')) return;
+    
+    try {
+      const res = await fetch(`${env.apiBaseUrl}/team/${memberId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to remove member');
+      }
+      setTeamMembers(teamMembers.filter(m => m.id !== memberId));
+    } catch (err) {
+      console.error('Failed to remove member:', err);
+      alert(err instanceof Error ? err.message : 'Failed to remove member');
+    }
   };
 
   const handleChangeRole = async (memberId: string, newRole: string) => {
-    // TODO: Implement actual role change API call
-    setTeamMembers(teamMembers.map(m => 
-      m.id === memberId ? { ...m, role: newRole } : m
-    ));
+    try {
+      const res = await fetch(`${env.apiBaseUrl}/team/${memberId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to change role');
+      }
+      setTeamMembers(teamMembers.map(m => 
+        m.id === memberId ? { ...m, role: newRole } : m
+      ));
+    } catch (err) {
+      console.error('Failed to change role:', err);
+      alert(err instanceof Error ? err.message : 'Failed to change role');
+      fetchAdminData(); // Refresh to restore correct state
+    }
   };
 
   const getRoleBadgeColor = (role: string) => {
@@ -169,6 +238,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-red-400">⚠️</span>
+              <p className="text-red-300">{error}</p>
+            </div>
+            <button
+              onClick={fetchAdminData}
+              className="text-red-400 hover:text-red-300 text-sm font-medium"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Overview Tab */}
         {activeTab === 'overview' && stats && (
           <div className="space-y-6">
@@ -255,15 +340,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700">
-                  {teamMembers.map((member) => (
+                  {teamMembers.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
+                        <p className="text-lg mb-2">No team members yet</p>
+                        <p className="text-sm">Invite team members to collaborate on security projects</p>
+                      </td>
+                    </tr>
+                  ) : teamMembers.map((member) => (
                     <tr key={member.id} className="hover:bg-gray-700/50">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-linear-to-r from-cyan-500 to-purple-500 flex items-center justify-center text-white font-semibold">
-                            {member.name.charAt(0)}
+                            {(member.name || member.email)?.[0]?.toUpperCase() || '?'}
                           </div>
                           <div>
-                            <p className="text-white font-medium">{member.name}</p>
+                            <p className="text-white font-medium">{member.name || member.email?.split('@')[0] || 'Unknown'}</p>
                             <p className="text-gray-400 text-sm">{member.email}</p>
                           </div>
                         </div>
@@ -369,7 +461,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
             <h2 className="text-xl font-semibold">Audit Log</h2>
             <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
               <div className="divide-y divide-gray-700">
-                {auditLogs.map((log) => (
+                {auditLogs.length === 0 ? (
+                  <div className="px-6 py-12 text-center text-gray-400">
+                    <p className="text-lg mb-2">No audit logs yet</p>
+                    <p className="text-sm">Activity in your organization will appear here</p>
+                  </div>
+                ) : auditLogs.map((log) => (
                   <div key={log.id} className="px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <span className="text-lg">{getActionLabel(log.action).split(' ')[0]}</span>

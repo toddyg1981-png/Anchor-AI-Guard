@@ -91,6 +91,8 @@ const AnchorIntelligenceLanding = React.lazy(() => import('./components/AnchorIn
 const AnchorIntelligenceDashboard = React.lazy(() => import('./components/AnchorIntelligenceDashboard'));
 const AIEvolutionDashboard = React.lazy(() => import('./components/AIEvolutionDashboard'));
 const UserProfileSettings = React.lazy(() => import('./components/UserProfileSettings'));
+const AIHelpDesk = React.lazy(() => import('./components/AIHelpDesk'));
+const HowToGuide = React.lazy(() => import('./components/HowToGuide'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -192,7 +194,9 @@ export type DashboardView =
   | 'selfProtection'
   | 'intelligenceDashboard'
   | 'aiEvolution'
-  | 'profile';
+  | 'profile'
+  | 'helpDesk'
+  | 'howToGuide';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -489,6 +493,8 @@ const AppContent: React.FC = () => {
               loading={loading}
               error={error}
               onRefetch={refetch}
+              onNavigate={handleNavigate}
+              onNewScan={handleNewScan}
             />
         );
       case 'findingsReport':
@@ -519,6 +525,8 @@ const AppContent: React.FC = () => {
               loading={loading}
               error={error}
               onRefetch={refetch}
+              onNavigate={handleNavigate}
+              onNewScan={handleNewScan}
           />
         );
       case 'billing':
@@ -669,6 +677,10 @@ const AppContent: React.FC = () => {
         return <AIEvolutionDashboard />;
       case 'profile':
         return <UserProfileSettings />;
+      case 'helpDesk':
+        return <AIHelpDesk />;
+      case 'howToGuide':
+        return <HowToGuide />;
       case 'overview':
       default:
         return (
@@ -680,6 +692,8 @@ const AppContent: React.FC = () => {
               loading={loading}
               error={error}
               onRefetch={refetch}
+              onNavigate={handleNavigate}
+              onNewScan={handleNewScan}
           />
         );
     }

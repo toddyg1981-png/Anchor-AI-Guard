@@ -21,6 +21,7 @@ const profileUpdateSchema = z.object({
   bankName: z.string().max(200).optional().nullable(),
   bankAccountName: z.string().max(200).optional().nullable(),
   bankAccountNumber: z.string().max(50).optional().nullable(),
+  bankBsb: z.string().max(20).optional().nullable(),
   bankRoutingNumber: z.string().max(50).optional().nullable(),
   bankSwiftCode: z.string().max(20).optional().nullable(),
   bankIban: z.string().max(50).optional().nullable(),
@@ -67,6 +68,9 @@ export async function profileRoutes(app: FastifyInstance): Promise<void> {
       ...user.profile,
       bankAccountNumber: user.profile.bankAccountNumber
         ? '****' + user.profile.bankAccountNumber.slice(-4)
+        : null,
+      bankBsb: user.profile.bankBsb
+        ? '****' + user.profile.bankBsb.slice(-2)
         : null,
       bankRoutingNumber: user.profile.bankRoutingNumber
         ? '****' + user.profile.bankRoutingNumber.slice(-4)
@@ -124,7 +128,7 @@ export async function profileRoutes(app: FastifyInstance): Promise<void> {
     const data: any = { ...parsed.data };
 
     // For sensitive fields sent as masked values (starting with ****), skip updating them
-    const sensitiveFields = ['bankAccountNumber', 'bankRoutingNumber', 'bankIban', 'taxId'];
+    const sensitiveFields = ['bankAccountNumber', 'bankBsb', 'bankRoutingNumber', 'bankIban', 'taxId'];
     for (const field of sensitiveFields) {
       if (data[field] && data[field].startsWith('****')) {
         delete data[field]; // Don't overwrite with masked value
@@ -145,6 +149,9 @@ export async function profileRoutes(app: FastifyInstance): Promise<void> {
       ...profile,
       bankAccountNumber: profile.bankAccountNumber
         ? '****' + profile.bankAccountNumber.slice(-4)
+        : null,
+      bankBsb: profile.bankBsb
+        ? '****' + profile.bankBsb.slice(-2)
         : null,
       bankRoutingNumber: profile.bankRoutingNumber
         ? '****' + profile.bankRoutingNumber.slice(-4)
@@ -170,6 +177,7 @@ export async function profileRoutes(app: FastifyInstance): Promise<void> {
         bankName: null,
         bankAccountName: null,
         bankAccountNumber: null,
+        bankBsb: null,
         bankRoutingNumber: null,
         bankSwiftCode: null,
         bankIban: null,

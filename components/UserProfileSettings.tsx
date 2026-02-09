@@ -27,6 +27,7 @@ interface ProfileData {
   bankName: string | null;
   bankAccountName: string | null;
   bankAccountNumber: string | null;
+  bankBsb: string | null;
   bankRoutingNumber: string | null;
   bankSwiftCode: string | null;
   bankIban: string | null;
@@ -74,7 +75,7 @@ interface BadgeData {
 const emptyProfile: ProfileData = {
   firstName: null, lastName: null, phone: null, jobTitle: null, department: null, timezone: null,
   address: null, city: null, state: null, postalCode: null, country: null,
-  bankName: null, bankAccountName: null, bankAccountNumber: null, bankRoutingNumber: null,
+  bankName: null, bankAccountName: null, bankAccountNumber: null, bankBsb: null, bankRoutingNumber: null,
   bankSwiftCode: null, bankIban: null, bankCurrency: 'USD', bankCountry: null,
   taxId: null, taxCountry: null,
 };
@@ -187,12 +188,15 @@ const UserProfileSettings: React.FC = () => {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(profile),
       });
-      if (!res.ok) throw new Error('Failed to save profile');
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'Failed to save profile');
+      }
       setProfile(data.profile);
       showNotif('success', 'Profile saved successfully');
-    } catch {
-      showNotif('error', 'Failed to save profile');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to save profile';
+      showNotif('error', msg);
     } finally {
       setSaving(false);
     }
@@ -209,7 +213,7 @@ const UserProfileSettings: React.FC = () => {
       setProfile(prev => ({
         ...prev,
         bankName: null, bankAccountName: null, bankAccountNumber: null,
-        bankRoutingNumber: null, bankSwiftCode: null, bankIban: null,
+        bankBsb: null, bankRoutingNumber: null, bankSwiftCode: null, bankIban: null,
         bankCurrency: 'USD', bankCountry: null,
       }));
       setShowDeleteBankConfirm(false);
@@ -489,6 +493,7 @@ const UserProfileSettings: React.FC = () => {
               <InputField label="Bank Name" value={profile.bankName} onChange={v => updateField('bankName', v)} placeholder="Chase, HSBC, Barclays..." />
               <InputField label="Account Holder Name" value={profile.bankAccountName} onChange={v => updateField('bankAccountName', v)} placeholder="John Doe" />
               <InputField label="Account Number" value={profile.bankAccountNumber} onChange={v => updateField('bankAccountNumber', v)} placeholder="Enter account number" sensitive />
+              <InputField label="BSB (AU/NZ)" value={profile.bankBsb} onChange={v => updateField('bankBsb', v)} placeholder="000-000" sensitive />
               <InputField label="Routing Number (ABA)" value={profile.bankRoutingNumber} onChange={v => updateField('bankRoutingNumber', v)} placeholder="Enter routing number" sensitive />
               <InputField label="SWIFT / BIC Code" value={profile.bankSwiftCode} onChange={v => updateField('bankSwiftCode', v)} placeholder="CHASUS33" />
               <InputField label="IBAN" value={profile.bankIban} onChange={v => updateField('bankIban', v)} placeholder="Enter IBAN" sensitive />

@@ -82,6 +82,7 @@ model UserProfile {
   bankName        String?
   bankAccountName String?
   bankAccountNumber String?  // Should be encrypted
+  bankBsb         String?    // BSB number (AU/NZ)
   bankRoutingNumber String?  // Should be encrypted
   bankSwiftCode   String?
   bankIban        String?    // Should be encrypted

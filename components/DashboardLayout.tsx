@@ -197,6 +197,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         { id: 'security-training', label: 'Security Training', icon: '🎓', view: 'securityTraining', description: 'Awareness and gamified learning' },
       ],
     },
+    {
+      category: 'Help & Support',
+      icon: '💬',
+      items: [
+        { id: 'help-desk', label: 'AI Help Desk', icon: '🤖', view: 'helpDesk', description: 'Get instant help with setup and usage' },
+        { id: 'how-to-guide', label: 'How-To Guide', icon: '📚', view: 'howToGuide', description: 'Learn how to use all features' },
+      ],
+    },
   ];
 
   // Flat list for lookups (activeMeta, etc.)
@@ -318,15 +326,31 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         {/* User Profile in Sidebar Footer */}
         <div className="p-4 border-t border-cyan-500/20 bg-linear-to-r from-cyan-500/5 to-pink-500/5">
-          <div className="flex items-center gap-3 px-2">
+          <button
+            onClick={() => { setActiveNav('profile'); setDashboardView('profile' as DashboardView); onViewProfile?.(); }}
+            className="w-full flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-800/50 transition-colors group"
+          >
             <div className="w-10 h-10 bg-linear-to-br from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] rounded-full flex items-center justify-center text-white font-semibold shadow-lg shadow-pink-500/25">
               {user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{user?.name || 'User'}</p>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-sm font-medium text-white truncate group-hover:text-cyan-300">{user?.name || 'User'}</p>
               <p className="text-xs text-slate-400 truncate">{user?.email || ''}</p>
             </div>
-          </div>
+            <svg className="w-4 h-4 text-slate-500 group-hover:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Sign Out
+          </button>
         </div>
       </aside>
 
@@ -360,7 +384,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               
               {showNotifications && (
@@ -368,22 +391,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   <div className="px-4 py-2 border-b border-slate-700/50">
                     <p className="text-sm font-semibold text-white">Notifications</p>
                   </div>
-                  <div className="max-h-64 overflow-y-auto">
-                    <div className="px-4 py-3 hover:bg-slate-700/50 border-l-2 border-red-500">
-                      <p className="text-sm text-white">Critical vulnerability found</p>
-                      <p className="text-xs text-slate-400 mt-1">SQL Injection in auth module • 5 min ago</p>
+                  <div className="px-6 py-8 text-center">
+                    <div className="w-12 h-12 mx-auto bg-slate-700/50 rounded-full flex items-center justify-center mb-3">
+                      <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                      </svg>
                     </div>
-                    <div className="px-4 py-3 hover:bg-slate-700/50 border-l-2 border-yellow-500">
-                      <p className="text-sm text-white">Scan completed</p>
-                      <p className="text-xs text-slate-400 mt-1">Project &quot;API Gateway&quot; • 1 hour ago</p>
-                    </div>
-                    <div className="px-4 py-3 hover:bg-slate-700/50 border-l-2 border-cyan-500">
-                      <p className="text-sm text-white">New team member joined</p>
-                      <p className="text-xs text-slate-400 mt-1">john@example.com • 2 hours ago</p>
-                    </div>
+                    <p className="text-sm text-white font-medium">No notifications</p>
+                    <p className="text-xs text-slate-400 mt-1">Security alerts and updates will appear here</p>
                   </div>
                   <div className="px-4 py-2 border-t border-slate-700/50">
-                    <button onClick={() => setShowNotifications(false)} className="text-sm text-cyan-400 hover:text-cyan-300">View all notifications</button>
+                    <button onClick={() => setShowNotifications(false)} className="text-sm text-cyan-400 hover:text-cyan-300">Close</button>
                   </div>
                 </div>
               )}

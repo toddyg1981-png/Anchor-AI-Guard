@@ -238,7 +238,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({ onBack }) => {
                   onChange={(e) => setInviteName(e.target.value)}
                   required
                   className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600/50 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
-                  placeholder="John Doe"
+                  placeholder="Full name"
                 />
               </div>
               <div>
@@ -249,7 +249,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({ onBack }) => {
                   onChange={(e) => setInviteEmail(e.target.value)}
                   required
                   className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600/50 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
-                  placeholder="john@company.com"
+                  placeholder="email@company.com"
                 />
               </div>
               <div>

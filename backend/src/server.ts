@@ -40,6 +40,8 @@ import endpointProtectionRoutes from './routes/endpoint-protection';
 import anchorIntelligenceRoutes from './routes/anchor-intelligence';
 import { profileRoutes } from './routes/profile';
 import { verificationRoutes } from './routes/verification';
+import { adminRoutes } from './routes/admin';
+import { aiChatRoutes } from './routes/ai-chat';
 import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
 import { wsManager } from './lib/websocket';
 
@@ -155,6 +157,9 @@ async function main() {
   app.register(sbomRoutes, { prefix: '/api' });
   app.register(analyticsRoutes, { prefix: '/api' });
   app.register(aiRoutes, { prefix: '/api' });
+
+  // AI Chat & Help Desk
+  app.register(aiChatRoutes, { prefix: '/api' });
   
   // World-first feature routes
   app.register(threatIntelRoutes, { prefix: '/api' });
@@ -190,6 +195,9 @@ async function main() {
 
   // Business Verification & Customer Badges
   app.register(verificationRoutes, { prefix: '/api' });
+
+  // Admin Stats & Audit Logs
+  app.register(adminRoutes, { prefix: '/api' });
 
   app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
 
