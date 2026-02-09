@@ -265,6 +265,48 @@ const AppContent: React.FC = () => {
     }
   }, []);
 
+  // Handle browser back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path === '/auth/callback') {
+        setCurrentView('auth-callback');
+      } else if (path === '/reset-password' || path.startsWith('/reset-password/')) {
+        setCurrentView('reset-password');
+      } else if (path === '/forgot-password') {
+        setCurrentView('forgot-password');
+      } else if (path === '/pricing') {
+        setCurrentView('pricing');
+      } else if (path === '/privacy') {
+        setCurrentView('privacy');
+      } else if (path === '/terms') {
+        setCurrentView('terms');
+      } else if (path === '/security') {
+        setCurrentView('security-info');
+      } else if (path === '/about') {
+        setCurrentView('about');
+      } else if (path === '/contact') {
+        setCurrentView('contact');
+      } else if (path === '/login' || path === '/signup') {
+        setCurrentView('auth');
+      } else if (path === '/intelligence' || path === '/anchor-intelligence') {
+        setCurrentView('intelligence');
+      } else if (path === '/intelligence/dashboard') {
+        setCurrentView('intelligence-dashboard');
+      } else if (path === '/dashboard') {
+        setCurrentView('dashboard');
+      } else if (path === '/') {
+        if (isAuthenticated) {
+          setCurrentView('dashboard');
+        } else {
+          setCurrentView('marketing');
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isAuthenticated]);
+
   // Fetch current plan when authenticated
   useEffect(() => {
     if (isAuthenticated && !authLoading) {

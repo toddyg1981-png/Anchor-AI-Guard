@@ -98,7 +98,7 @@ export class ErrorBoundary extends Component<Props, State> {
               We encountered an unexpected error. The error has been logged and we&apos;ll look into it.
             </p>
 
-            {this.state.error && (
+            {this.state.error && import.meta.env.DEV && (
               <div className="bg-black/30 rounded p-3 mb-6">
                 <p className="text-red-400 text-sm font-mono break-words">
                   {this.state.error.message}

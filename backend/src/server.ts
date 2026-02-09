@@ -35,7 +35,7 @@ import { selfProtectionRoutes } from './routes/self-protection';
 import { deceptionRoutes, regulatoryIntelRoutes, nationalSecurityRoutes } from './routes/deception-national';
 import { securityModulesRoutes } from './routes/security-modules';
 import { badgeRoutes } from './routes/badges';
-import { aiEvolutionRoutes, startEvolutionEngine } from './routes/ai-evolution';
+import { aiEvolutionRoutes, startEvolutionEngine, stopEvolutionEngine } from './routes/ai-evolution';
 import endpointProtectionRoutes from './routes/endpoint-protection';
 import anchorIntelligenceRoutes from './routes/anchor-intelligence';
 import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
@@ -237,6 +237,22 @@ async function main() {
   app.log.info(`Anchor backend running on http://localhost:${env.port}`);
   app.log.info(`WebSocket server available at ws://localhost:${env.port}/ws`);
   app.log.info(`AI Evolution Engine active - continuously monitoring threats`);
+
+  // Graceful shutdown on SIGTERM/SIGINT (container restarts, deploys)
+  const gracefulShutdown = async (signal: string) => {
+    app.log.info(`Received ${signal}, shutting down gracefully...`);
+    try {
+      stopEvolutionEngine();
+      wsManager.shutdown?.();
+      await app.close();
+      app.log.info('Server closed successfully');
+    } catch (err) {
+      app.log.error('Error during shutdown:', err);
+    }
+    process.exit(0);
+  };
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 }
 
 main().catch((err) => {

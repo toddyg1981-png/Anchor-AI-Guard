@@ -15,10 +15,15 @@ export default defineConfig(({ mode }) => {
       build: {
         // Remove sensitive information from build output
         sourcemap: mode !== 'production',
+        chunkSizeWarningLimit: 500,
         rollupOptions: {
           output: {
             // Prevent sensitive data in chunk names
-            sanitizeFileName: (name) => name.replace(/\[hash\]/g, '[hash]')
+            sanitizeFileName: (name) => name.replace(/\[hash\]/g, '[hash]'),
+            manualChunks: {
+              'vendor-react': ['react', 'react-dom'],
+              'vendor-pdf': ['jspdf'],
+            },
           }
         }
       },

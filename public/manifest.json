@@ -1,0 +1,21 @@
+{
+  "name": "Anchor AI Guard",
+  "short_name": "Anchor",
+  "description": "World's First AI Security Platform — Predictive CVE intelligence, attack path visualization, and AI-powered vulnerability fixes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#35c6ff",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
