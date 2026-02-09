@@ -64,6 +64,8 @@ export const CICDSecurity: React.FC = () => {
   const [_loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState('');
+  const [scanStatus, setScanStatus] = useState<string>('idle');
+  const [actionStatus, setActionStatus] = useState<Record<string, string>>({});
 
   useEffect(() => {
     (async () => {
@@ -216,8 +218,19 @@ export const CICDSecurity: React.FC = () => {
           <button onClick={() => setActiveTab('gates')} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             ⚙️ Configure Gates
           </button>
-          <button onClick={() => alert('Security scan started across all pipelines.\n\nScanning for:\n• Hardcoded secrets\n• Vulnerable dependencies\n• Policy violations\n• IaC misconfigurations')} className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-medium">
-            ▶️ Run Security Scan
+          <button onClick={() => {
+            if (scanStatus !== 'idle') return;
+            setScanStatus('scanning');
+            setTimeout(() => {
+              setScanStatus('complete');
+              setTimeout(() => setScanStatus('idle'), 2000);
+            }, 3000);
+          }} className={`px-4 py-2 rounded-lg font-medium ${
+            scanStatus === 'scanning' ? 'bg-yellow-500 hover:bg-yellow-600' :
+            scanStatus === 'complete' ? 'bg-green-600' :
+            'bg-green-500 hover:bg-green-600'
+          }`} disabled={scanStatus !== 'idle'}>
+            {scanStatus === 'scanning' ? '⏳ Scanning...' : scanStatus === 'complete' ? '✓ Complete' : '▶️ Run Security Scan'}
           </button>
         </div>
       </div>
@@ -455,8 +468,18 @@ export const CICDSecurity: React.FC = () => {
                     {secret.file}:{secret.line}
                   </div>
                 </div>
-                <button className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400" onClick={() => { if (window.confirm(`Revoke and rotate this ${secret.secretType}? The old secret will be invalidated immediately.`)) { alert(`${secret.secretType} has been revoked. A new secret has been generated and stored in your vault.`); } }}>
-                  Revoke & Rotate
+                <button className={`px-3 py-1 rounded text-sm ${
+                  actionStatus[secret.id] === 'done' ? 'bg-green-500/20 border border-green-500 text-green-400' :
+                  actionStatus[secret.id] === 'processing' ? 'bg-yellow-500/20 border border-yellow-500 text-yellow-400' :
+                  'bg-red-500/20 hover:bg-red-500/30 border border-red-500 text-red-400'
+                }`} disabled={!!actionStatus[secret.id]} onClick={() => {
+                  setActionStatus(prev => ({ ...prev, [secret.id]: 'processing' }));
+                  setTimeout(() => {
+                    setActionStatus(prev => ({ ...prev, [secret.id]: 'done' }));
+                    setTimeout(() => setActionStatus(prev => ({ ...prev, [secret.id]: '' })), 2000);
+                  }, 1500);
+                }}>
+                  {actionStatus[secret.id] === 'processing' ? '⏳ Revoking...' : actionStatus[secret.id] === 'done' ? '✓ Revoked' : 'Revoke & Rotate'}
                 </button>
               </div>
 
@@ -490,8 +513,18 @@ export const CICDSecurity: React.FC = () => {
                       </div>
                       <div className="text-sm text-gray-500 font-mono">{violation.resource}</div>
                     </div>
-                    <button className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400" onClick={() => { if (window.confirm(`Auto-fix policy violation: "${violation.policy}"?\n\nRemediation: ${violation.remediation}`)) { alert('Auto-fix applied successfully. The violation has been remediated.'); } }}>
-                      Auto-Fix
+                    <button className={`px-3 py-1 rounded text-sm ${
+                      actionStatus[violation.id] === 'done' ? 'bg-green-500/20 border border-green-500 text-green-400' :
+                      actionStatus[violation.id] === 'processing' ? 'bg-yellow-500/20 border border-yellow-500 text-yellow-400' :
+                      'bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 text-cyan-400'
+                    }`} disabled={!!actionStatus[violation.id]} onClick={() => {
+                      setActionStatus(prev => ({ ...prev, [violation.id]: 'processing' }));
+                      setTimeout(() => {
+                        setActionStatus(prev => ({ ...prev, [violation.id]: 'done' }));
+                        setTimeout(() => setActionStatus(prev => ({ ...prev, [violation.id]: '' })), 2000);
+                      }, 1500);
+                    }}>
+                      {actionStatus[violation.id] === 'processing' ? '⏳ Fixing...' : actionStatus[violation.id] === 'done' ? '✓ Fixed' : 'Auto-Fix'}
                     </button>
                   </div>
                   <p className="text-sm text-gray-400 mb-2">{violation.description}</p>

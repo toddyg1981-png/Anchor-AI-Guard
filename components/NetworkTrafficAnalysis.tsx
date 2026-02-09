@@ -74,6 +74,16 @@ const NetworkTrafficAnalysis: React.FC = () => {
     );
   }
 
+  const handleDownload = (captureId: string) => {
+    const blob = new Blob(['PCAP capture data'], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `capture-${captureId}.pcap`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const sevColor = (s: string) => s === 'Critical' ? 'bg-red-500/20 text-red-300' : s === 'High' ? 'bg-orange-500/20 text-orange-300' : 'bg-yellow-500/20 text-yellow-200';
 
   return (
@@ -184,7 +194,7 @@ const NetworkTrafficAnalysis: React.FC = () => {
             <div key={c.id} className="bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm">
               <div className="flex items-center justify-between">
                 <span className="font-semibold font-mono">{c.name}</span>
-                <button className="px-3 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-xs font-medium">Download</button>
+                <button onClick={() => handleDownload(c.id || 'latest')} className="px-3 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-xs font-medium">Download</button>
               </div>
               <div className="flex items-center gap-4 text-slate-400 mt-1 text-xs">
                 <span>Size: {c.size}</span>

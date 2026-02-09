@@ -60,6 +60,7 @@ interface ArtifactAnalysis {
 export const ForensicsInvestigation: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'cases' | 'evidence' | 'timeline' | 'artifacts'>('cases');
   const [_selectedCase, _setSelectedCase] = useState<string | null>(null);
+  const [showNewCase, setShowNewCase] = useState(false);
 
   const [backendLoading, setBackendLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
@@ -156,7 +157,7 @@ export const ForensicsInvestigation: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2">🔬 Forensics & Investigation</h1>
           <p className="text-gray-400">Digital forensics and incident investigation platform</p>
         </div>
-        <button onClick={() => alert('New forensic case form would open here. Cases are created with priority, assigned investigator, and linked evidence.')} className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
+        <button onClick={() => setShowNewCase(!showNewCase)} className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-bold">
           + New Case
         </button>
         <button
@@ -167,6 +168,23 @@ export const ForensicsInvestigation: React.FC = () => {
           {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
         </button>
       </div>
+
+      {showNewCase && (
+        <div className="mt-4 bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 mb-6">
+          <h4 className="text-white font-medium mb-3">New Forensic Case</h4>
+          <div className="space-y-3">
+            <input type="text" placeholder="Case title" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
+            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+              <option>Incident Response</option><option>Malware Analysis</option><option>Data Breach</option><option>Insider Threat</option>
+            </select>
+            <textarea placeholder="Case description and initial findings..." className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm h-20 resize-none" />
+            <div className="flex gap-2">
+              <button onClick={() => setShowNewCase(false)} className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg">Create Case</button>
+              <button onClick={() => setShowNewCase(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">

@@ -6,6 +6,16 @@ const EmailSecurity: React.FC = () => {
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'threats' | 'policies' | 'quarantine' | 'analytics'>('threats');
+  const [emailActions, setEmailActions] = useState<Record<string, string>>({});
+
+  const handleEmailAction = (emailId: string, action: string) => {
+    if (action === 'delete' && !window.confirm('Permanently delete this email?')) return;
+    setEmailActions(prev => ({ ...prev, [`${emailId}-${action}`]: 'processing' }));
+    setTimeout(() => {
+      setEmailActions(prev => ({ ...prev, [`${emailId}-${action}`]: 'done' }));
+      setTimeout(() => setEmailActions(prev => ({ ...prev, [`${emailId}-${action}`]: '' })), 2000);
+    }, 1000);
+  };
 
   const tabs = [
     { key: 'threats' as const, label: 'Threats' },
@@ -182,8 +192,20 @@ const EmailSecurity: React.FC = () => {
                 </div>
                 <div className="text-xs text-slate-500 mt-1">From: {item.sender} · {item.received}</div>
                 <div className="flex gap-2 mt-2">
-                  <button className="px-3 py-1 text-xs bg-green-600/20 text-green-300 border border-green-600/30 rounded hover:bg-green-600/30 transition-colors">Release</button>
-                  <button className="px-3 py-1 text-xs bg-red-600/20 text-red-300 border border-red-600/30 rounded hover:bg-red-600/30 transition-colors">Delete</button>
+                  <button
+                    onClick={() => handleEmailAction(item.id, 'release')}
+                    disabled={!!emailActions[`${item.id}-release`]}
+                    className="px-3 py-1 text-xs bg-green-600/20 text-green-300 border border-green-600/30 rounded hover:bg-green-600/30 transition-colors disabled:opacity-50"
+                  >
+                    {emailActions[`${item.id}-release`] === 'processing' ? '⏳ Releasing...' : emailActions[`${item.id}-release`] === 'done' ? '✓ Released' : 'Release'}
+                  </button>
+                  <button
+                    onClick={() => handleEmailAction(item.id, 'delete')}
+                    disabled={!!emailActions[`${item.id}-delete`]}
+                    className="px-3 py-1 text-xs bg-red-600/20 text-red-300 border border-red-600/30 rounded hover:bg-red-600/30 transition-colors disabled:opacity-50"
+                  >
+                    {emailActions[`${item.id}-delete`] === 'processing' ? '⏳ Deleting...' : emailActions[`${item.id}-delete`] === 'done' ? '✓ Deleted' : 'Delete'}
+                  </button>
                 </div>
               </div>
             ))}

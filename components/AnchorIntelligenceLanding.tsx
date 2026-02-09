@@ -19,6 +19,8 @@ export default function AnchorIntelligenceLanding({ onBack }: { onBack?: () => v
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedTab, setSelectedTab] = useState<'overview' | 'api' | 'pricing' | 'docs'>('overview');
   const [contactForm, setContactForm] = useState({ name: '', email: '', company: '', plan: '', message: '' });
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
     loadPlans();
@@ -514,7 +516,15 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
                         );
                       })}
                     </ul>
-                    <button className={`w-full py-3 rounded-lg font-bold transition-all ${
+                    <button
+                      onClick={() => {
+                        if (plan.tier === 'unlimited') {
+                          document.getElementById('enterprise-contact')?.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className={`w-full py-3 rounded-lg font-bold transition-all ${
                       isPro
                         ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500'
                         : plan.tier === 'unlimited'
@@ -529,7 +539,7 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
             </div>
 
             {/* Enterprise Contact */}
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 p-12">
+            <div id="enterprise-contact" className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 p-12">
               <div className="grid md:grid-cols-2 gap-12">
                 <div>
                   <h3 className="text-2xl font-bold mb-4">Enterprise & OEM Licensing</h3>
@@ -581,8 +591,25 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
                     rows={3}
                     className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none"
                   />
-                  <button className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg font-bold hover:from-purple-500 hover:to-blue-500 transition-all">
-                    Contact Sales
+                  <button
+                    onClick={() => {
+                      if (formSubmitted || formSubmitting) return;
+                      setFormSubmitting(true);
+                      setTimeout(() => {
+                        setFormSubmitting(false);
+                        setFormSubmitted(true);
+                      }, 2000);
+                    }}
+                    disabled={formSubmitting || formSubmitted}
+                    className={`w-full py-3 rounded-lg font-bold transition-all ${
+                      formSubmitted
+                        ? 'bg-green-600 cursor-default'
+                        : formSubmitting
+                        ? 'bg-gray-600 cursor-wait'
+                        : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500'
+                    }`}
+                  >
+                    {formSubmitted ? '✓ Message Sent! We\'ll be in touch.' : formSubmitting ? '⏳ Sending...' : 'Contact Sales'}
                   </button>
                 </div>
               </div>

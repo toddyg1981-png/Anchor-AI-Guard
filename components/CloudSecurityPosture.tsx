@@ -51,6 +51,7 @@ export const CloudSecurityPosture: React.FC = () => {
   const [_loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState('');
+  const [showConnectForm, setShowConnectForm] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -163,7 +164,7 @@ export const CloudSecurityPosture: React.FC = () => {
               <option key={acc.id} value={acc.id}>{acc.name}</option>
             ))}
           </select>
-          <button onClick={() => alert('Connect a new cloud account:\n\n1. AWS — Provide IAM Role ARN\n2. Azure — App Registration credentials\n3. GCP — Service Account key\n\nSupported: AWS, Azure, GCP, Oracle Cloud')} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
+          <button onClick={() => setShowConnectForm(!showConnectForm)} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             ➕ Connect Account
           </button>
           <button onClick={() => { alert('Syncing configuration data from all connected cloud accounts... This may take a few minutes.'); }} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg font-medium">
@@ -171,6 +172,26 @@ export const CloudSecurityPosture: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {showConnectForm && (
+        <div className="mb-6 bg-slate-800/50 rounded-xl border border-slate-700/50 p-4">
+          <h4 className="text-white font-medium mb-3">Connect Cloud Account</h4>
+          <div className="space-y-3">
+            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+              <option>AWS — IAM Role ARN</option>
+              <option>Azure — App Registration</option>
+              <option>GCP — Service Account</option>
+              <option>Oracle Cloud</option>
+            </select>
+            <input type="text" placeholder="Account ID / Project ID" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
+            <input type="text" placeholder="Role ARN / Credentials path" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
+            <div className="flex gap-2">
+              <button onClick={() => setShowConnectForm(false)} className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg">Connect</button>
+              <button onClick={() => setShowConnectForm(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Critical Alert */}
       {criticalFindings > 0 && (

@@ -58,6 +58,7 @@ export const PhishingSimulator: React.FC = () => {
   const [backendLoading, setBackendLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState('');
+  const [trainingStatus, setTrainingStatus] = useState<Record<string, string>>({});
 
   useEffect(() => {
     (async () => {
@@ -362,8 +363,26 @@ export const PhishingSimulator: React.FC = () => {
                     </span>
                   </td>
                   <td className="p-4">
-                    <button onClick={() => alert(`Security awareness training assigned to ${emp.name} (${emp.email}).\n\nModules:\n• Phishing Identification\n• Social Engineering Awareness\n• Password Security\n• Reporting Procedures`)} className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-xs text-cyan-400">
-                      Assign Training
+                    <button
+                      onClick={() => {
+                        setTrainingStatus(prev => ({ ...prev, [emp.email]: '⏳ Assigning...' }));
+                        setTimeout(() => {
+                          setTrainingStatus(prev => ({ ...prev, [emp.email]: '✓ Assigned' }));
+                          setTimeout(() => {
+                            setTrainingStatus(prev => { const next = { ...prev }; delete next[emp.email]; return next; });
+                          }, 2000);
+                        }, 1200);
+                      }}
+                      disabled={!!trainingStatus[emp.email]}
+                      className={`px-3 py-1 rounded text-xs border ${
+                        trainingStatus[emp.email] === '✓ Assigned'
+                          ? 'bg-green-500/20 border-green-500 text-green-400'
+                          : trainingStatus[emp.email]
+                            ? 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
+                            : 'bg-cyan-500/20 hover:bg-cyan-500/30 border-cyan-500 text-cyan-400'
+                      }`}
+                    >
+                      {trainingStatus[emp.email] || 'Assign Training'}
                     </button>
                   </td>
                 </tr>

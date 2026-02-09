@@ -70,6 +70,8 @@ export const EndpointProtectionDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [showPolicyForm, setShowPolicyForm] = useState(false);
+  const [policyStates, setPolicyStates] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     loadData();
@@ -542,10 +544,25 @@ export const EndpointProtectionDashboard: React.FC = () => {
           <div className="bg-black/40 border border-purple-500/30 rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-purple-400">Protection Policies</h3>
-              <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-medium hover:from-purple-500 hover:to-cyan-500 transition-all">
+              <button onClick={() => setShowPolicyForm(!showPolicyForm)} className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg text-white font-medium hover:from-purple-500 hover:to-cyan-500 transition-all">
                 + Create Policy
               </button>
             </div>
+            {showPolicyForm && (
+              <div className="mt-4 bg-slate-800/50 rounded-xl border border-slate-700/50 p-4">
+                <h4 className="text-white font-medium mb-3">New Security Policy</h4>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <input type="text" placeholder="Policy name" className="bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
+                  <select className="bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+                    <option>Endpoint Protection</option><option>Network Security</option><option>Access Control</option>
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => { setShowPolicyForm(false); }} className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg">Create</button>
+                  <button onClick={() => setShowPolicyForm(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg">Cancel</button>
+                </div>
+              </div>
+            )}
             <div className="grid md:grid-cols-2 gap-4">
               {/* Default Policies */}
               {[
@@ -562,11 +579,11 @@ export const EndpointProtectionDashboard: React.FC = () => {
                     <p className="text-sm text-purple-400">{policy.description}</p>
                     <span className="text-xs text-gray-500">{policy.type}</span>
                   </div>
-                  <button className={`w-12 h-6 rounded-full transition-all ${
-                    policy.enabled ? 'bg-green-500' : 'bg-gray-600'
+                  <button onClick={() => setPolicyStates(prev => ({ ...prev, [policy.name]: !(prev[policy.name] ?? policy.enabled) }))} className={`w-12 h-6 rounded-full transition-all ${
+                    (policyStates[policy.name] ?? policy.enabled) ? 'bg-green-500' : 'bg-gray-600'
                   }`}>
                     <div className={`w-5 h-5 rounded-full bg-white shadow transition-all ${
-                      policy.enabled ? 'translate-x-6' : 'translate-x-0.5'
+                      (policyStates[policy.name] ?? policy.enabled) ? 'translate-x-6' : 'translate-x-0.5'
                     }`} />
                   </button>
                 </div>

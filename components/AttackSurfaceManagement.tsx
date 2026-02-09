@@ -48,6 +48,8 @@ export const AttackSurfaceManagement: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState<unknown>(null);
   const [liveAssets, setLiveAssets] = useState<unknown[]>([]);
+  const [investigateOpen, setInvestigateOpen] = useState<Record<string, boolean>>({});
+  const [actionStatus, setActionStatus] = useState<Record<string, string>>({});
 
   // Fetch real data from backend
   useEffect(() => {
@@ -287,13 +289,36 @@ export const AttackSurfaceManagement: React.FC = () => {
                 ))}
               </div>
               {asset.status !== 'remediated' && (
-                <div className="mt-4 flex gap-2">
-                  <button onClick={() => alert(`Investigation details for ${asset.identifier}:\n\nType: ${asset.type}\nExposure: ${asset.exposureType.replace('_', ' ')}\nFindings:\n${asset.findings.map(f => '• ' + f).join('\n')}\n\nRecommendation: Assess risk and apply appropriate remediation.`)} className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
-                    Investigate
-                  </button>
-                  <button onClick={() => { if (window.confirm(`Mark "${asset.identifier}" as remediated?`)) { alert(`${asset.identifier} marked as remediated. It will be re-verified in the next scan.`); } }} className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 border border-green-500 rounded text-sm text-green-400">
-                    Mark Remediated
-                  </button>
+                <div className="mt-4 space-y-2">
+                  <div className="flex gap-2">
+                    <button onClick={() => setInvestigateOpen(prev => ({ ...prev, [asset.id]: !prev[asset.id] }))} className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500 rounded text-sm text-cyan-400">
+                      {investigateOpen[asset.id] ? 'Hide Details' : 'Investigate'}
+                    </button>
+                    <button onClick={() => {
+                      setActionStatus(prev => ({ ...prev, [asset.id]: 'processing' }));
+                      setTimeout(() => {
+                        setActionStatus(prev => ({ ...prev, [asset.id]: 'done' }));
+                        setTimeout(() => setActionStatus(prev => ({ ...prev, [asset.id]: '' })), 2000);
+                      }, 1500);
+                    }} disabled={!!actionStatus[asset.id]} className={`px-4 py-2 rounded text-sm ${
+                      actionStatus[asset.id] === 'done' ? 'bg-green-500/30 border border-green-500 text-green-300' :
+                      actionStatus[asset.id] === 'processing' ? 'bg-yellow-500/20 border border-yellow-500 text-yellow-400' :
+                      'bg-green-500/20 hover:bg-green-500/30 border border-green-500 text-green-400'
+                    }`}>
+                      {actionStatus[asset.id] === 'processing' ? '⏳ Processing...' : actionStatus[asset.id] === 'done' ? '✓ Remediated' : 'Mark Remediated'}
+                    </button>
+                  </div>
+                  {investigateOpen[asset.id] && (
+                    <div className="p-3 bg-gray-800/50 border border-cyan-500/20 rounded-lg text-sm space-y-1">
+                      <div><span className="text-gray-400">Type:</span> <span className="text-white">{asset.type}</span></div>
+                      <div><span className="text-gray-400">Exposure:</span> <span className="text-white">{asset.exposureType.replace('_', ' ')}</span></div>
+                      <div className="text-gray-400">Findings:</div>
+                      {asset.findings.map((f, i) => (
+                        <div key={i} className="text-cyan-300 ml-2">• {f}</div>
+                      ))}
+                      <div className="text-yellow-400 mt-2">💡 Recommendation: Assess risk and apply appropriate remediation.</div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

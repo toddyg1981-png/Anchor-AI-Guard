@@ -62,6 +62,7 @@ export const BreachSimulator: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(true);
   const [simulating, setSimulating] = useState(false);
+  const [showCustomAttack, setShowCustomAttack] = useState(false);
   const [scenarios, setScenarios] = useState<AttackScenario[]>([]);
   const [mockSimulationResult, setMockSimulationResult] = useState<SimulationResult | null>(null);
 
@@ -261,11 +262,37 @@ export const BreachSimulator: React.FC = () => {
           <button onClick={() => { setActiveTab('results'); }} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium">
             📊 View Reports
           </button>
-          <button onClick={() => alert('Custom Attack Builder:\n\nSelect attack vector, target system, techniques (MITRE ATT&CK), and payload type to create a custom breach simulation scenario.')} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
+          <button onClick={() => setShowCustomAttack(!showCustomAttack)} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium">
             🎯 Custom Attack
           </button>
         </div>
       </div>
+
+      {showCustomAttack && (
+        <div className="mb-6 bg-slate-800/50 rounded-xl border border-slate-700/50 p-4">
+          <h4 className="text-white font-medium mb-3">Custom Attack Builder</h4>
+          <div className="space-y-3">
+            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+              <option>External Penetration</option>
+              <option>Insider Threat</option>
+              <option>Supply Chain Attack</option>
+              <option>Ransomware Simulation</option>
+              <option>APT Emulation</option>
+            </select>
+            <input type="text" placeholder="Target system or network segment" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
+            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+              <option>MITRE ATT&CK — Initial Access</option>
+              <option>MITRE ATT&CK — Lateral Movement</option>
+              <option>MITRE ATT&CK — Privilege Escalation</option>
+              <option>MITRE ATT&CK — Exfiltration</option>
+            </select>
+            <div className="flex gap-2">
+              <button onClick={() => setShowCustomAttack(false)} className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm rounded-lg">Launch Simulation</button>
+              <button onClick={() => setShowCustomAttack(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">

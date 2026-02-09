@@ -183,6 +183,7 @@ const AlertCard: React.FC<{
   onTakeAction: (action: string) => void;
 }> = ({ prediction, onViewDetails, onDismiss, onTakeAction }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showAllFiles, setShowAllFiles] = useState(false);
   const colors = severityColors[prediction.predictedSeverity];
 
   return (
@@ -279,9 +280,19 @@ const AlertCard: React.FC<{
                     📄 {file}
                   </div>
                 ))}
-                {prediction.affectedFiles.length > 3 && (
-                  <button onClick={() => alert(`All affected files:\n\n${prediction.affectedFiles.map(f => '• ' + f).join('\n')}`)} className="text-xs text-gray-500 hover:text-gray-400">
+                {prediction.affectedFiles.length > 3 && !showAllFiles && (
+                  <button onClick={() => setShowAllFiles(true)} className="text-xs text-gray-500 hover:text-gray-400">
                     +{prediction.affectedFiles.length - 3} more files
+                  </button>
+                )}
+                {showAllFiles && prediction.affectedFiles.slice(3).map((file, idx) => (
+                  <div key={idx + 3} className="text-sm text-cyan-400 font-mono truncate">
+                    📄 {file}
+                  </div>
+                ))}
+                {showAllFiles && (
+                  <button onClick={() => setShowAllFiles(false)} className="text-xs text-gray-500 hover:text-gray-400">
+                    Show less
                   </button>
                 )}
               </div>
@@ -337,6 +348,7 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
   const [backendLoading, setBackendLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState('');
+  const [showAlertConfig, setShowAlertConfig] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -569,10 +581,48 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
         <p className="text-xs text-gray-500">
           Predictions are based on AI analysis of security signals. Confidence scores indicate likelihood of accuracy.
         </p>
-        <button onClick={() => alert('Alert Configuration:\n\n• Critical alerts: Immediate notification\n• High alerts: Email + dashboard\n• Medium alerts: Dashboard only\n• Low alerts: Weekly digest\n\nChannels: Email, Slack, PagerDuty, Webhook')} className="text-sm text-cyan-400 hover:text-cyan-300 font-medium">
-          Configure Alerts →
+        <button onClick={() => setShowAlertConfig(!showAlertConfig)} className="text-sm text-cyan-400 hover:text-cyan-300 font-medium">
+          {showAlertConfig ? 'Hide Configuration ↑' : 'Configure Alerts →'}
         </button>
       </div>
+
+      {/* Alert Configuration Panel */}
+      {showAlertConfig && (
+        <div className="mx-6 mt-4 p-4 bg-gray-800/50 border border-cyan-500/30 rounded-xl space-y-4">
+          <h3 className="text-lg font-semibold text-cyan-400">⚙️ Alert Configuration</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 className="text-sm font-medium text-gray-300 mb-3">Notification Thresholds</h4>
+              <div className="space-y-3">
+                {[
+                  { level: 'Critical', desc: 'Immediate notification', color: 'text-red-400' },
+                  { level: 'High', desc: 'Email + dashboard', color: 'text-orange-400' },
+                  { level: 'Medium', desc: 'Dashboard only', color: 'text-yellow-400' },
+                  { level: 'Low', desc: 'Weekly digest', color: 'text-green-400' },
+                ].map(item => (
+                  <div key={item.level} className="flex items-center justify-between p-2 bg-gray-900/50 rounded-lg">
+                    <span className={`text-sm font-medium ${item.color}`}>{item.level}</span>
+                    <span className="text-xs text-gray-400">{item.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-gray-300 mb-3">Notification Channels</h4>
+              <div className="space-y-2">
+                {['Email', 'Slack', 'PagerDuty', 'Webhook'].map(channel => (
+                  <label key={channel} className="flex items-center justify-between p-2 bg-gray-900/50 rounded-lg cursor-pointer">
+                    <span className="text-sm text-gray-300">{channel}</span>
+                    <div className="w-10 h-5 bg-cyan-500/30 rounded-full relative">
+                      <div className="absolute left-[calc(100%-1.15rem)] top-0.5 w-4 h-4 bg-cyan-400 rounded-full" />
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AI Analysis Result */}
       {analysisResult && (

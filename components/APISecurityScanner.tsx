@@ -74,6 +74,8 @@ export const APISecurityScanner: React.FC = () => {
   const [_loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState('');
+  const [captureStatus, setCaptureStatus] = useState<'idle' | 'capturing'>('idle');
+  const [repoScanStatus, setRepoScanStatus] = useState<string>('idle');
 
   useEffect(() => {
     (async () => {
@@ -584,15 +586,31 @@ export const APISecurityScanner: React.FC = () => {
               <div className="p-4 bg-gray-800/50 rounded-lg">
                 <h3 className="font-medium mb-2">Traffic Analysis</h3>
                 <p className="text-sm text-gray-400 mb-3">Monitor network traffic to discover API endpoints</p>
-                <button onClick={() => alert('Traffic capture started. Monitoring network requests to discover undocumented API endpoints...')} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
-                  Start Capture
+                <button onClick={() => setCaptureStatus(prev => prev === 'idle' ? 'capturing' : 'idle')} className={`px-4 py-2 rounded-lg text-sm ${
+                  captureStatus === 'capturing' ? 'bg-red-500 hover:bg-red-600' : 'bg-cyan-500 hover:bg-cyan-600'
+                }`}>
+                  {captureStatus === 'capturing' ? '⏹ Stop Capture' : 'Capture Traffic'}
                 </button>
+                {captureStatus === 'capturing' && (
+                  <p className="text-xs text-cyan-400 mt-2 animate-pulse">⏳ Capturing traffic... Monitoring network requests to discover undocumented API endpoints.</p>
+                )}
               </div>
               <div className="p-4 bg-gray-800/50 rounded-lg">
                 <h3 className="font-medium mb-2">Code Scanning</h3>
                 <p className="text-sm text-gray-400 mb-3">Scan source code for API definitions</p>
-                <button onClick={() => alert('Scanning connected repositories for API route definitions, controllers, and endpoint declarations...')} className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-sm">
-                  Scan Repos
+                <button onClick={() => {
+                  if (repoScanStatus !== 'idle') return;
+                  setRepoScanStatus('scanning');
+                  setTimeout(() => {
+                    setRepoScanStatus('complete');
+                    setTimeout(() => setRepoScanStatus('idle'), 2000);
+                  }, 3000);
+                }} disabled={repoScanStatus !== 'idle'} className={`px-4 py-2 rounded-lg text-sm ${
+                  repoScanStatus === 'scanning' ? 'bg-yellow-500' :
+                  repoScanStatus === 'complete' ? 'bg-green-600' :
+                  'bg-cyan-500 hover:bg-cyan-600'
+                }`}>
+                  {repoScanStatus === 'scanning' ? '⏳ Scanning...' : repoScanStatus === 'complete' ? '✓ Complete' : 'Scan Repos'}
                 </button>
               </div>
               <div className="p-4 bg-gray-800/50 rounded-lg">

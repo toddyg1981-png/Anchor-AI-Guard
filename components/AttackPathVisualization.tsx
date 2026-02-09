@@ -277,6 +277,8 @@ const PathSelector: React.FC<{
 
 // Node Detail Panel
 const NodeDetailPanel: React.FC<{ node: AttackNode | null; onClose: () => void }> = ({ node, onClose }) => {
+  const [remediateStatus, setRemediateStatus] = useState<string>('');
+  const [showRemediation, setShowRemediation] = useState(false);
   if (!node) return null;
 
   return (
@@ -325,9 +327,31 @@ const NodeDetailPanel: React.FC<{ node: AttackNode | null; onClose: () => void }
           <span className="text-xs text-gray-500 uppercase">Description</span>
           <p className="text-sm text-gray-300 mt-1">{node.description}</p>
         </div>
-        <button onClick={() => alert(`Remediation for ${node.label}:\n\nSeverity: ${node.severity}\n${node.cve ? 'CVE: ' + node.cve + '\n' : ''}Exploitability: ${node.exploitability}/10\n\nRecommended steps:\n1. Apply relevant security patches\n2. Restrict network access\n3. Enable monitoring and alerting\n4. Validate fix with penetration test`)} className="w-full mt-2 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors">
-          View Remediation
+        <button onClick={() => {
+          if (remediateStatus === '') {
+            setShowRemediation(true);
+            setRemediateStatus('remediating');
+            setTimeout(() => {
+              setRemediateStatus('done');
+              setTimeout(() => setRemediateStatus(''), 2000);
+            }, 1500);
+          }
+        }} disabled={remediateStatus !== ''} className={`w-full mt-2 py-2 rounded-lg text-sm font-medium transition-colors ${
+          remediateStatus === 'remediating' ? 'bg-yellow-500 text-white' :
+          remediateStatus === 'done' ? 'bg-green-600 text-white' :
+          'bg-cyan-500 text-white hover:bg-cyan-600'
+        }`}>
+          {remediateStatus === 'remediating' ? '⏳ Remediating...' : remediateStatus === 'done' ? '✓ Remediated' : 'Remediate'}
         </button>
+        {showRemediation && (
+          <div className="mt-2 p-3 bg-gray-800/50 border border-cyan-500/20 rounded-lg text-sm space-y-1">
+            <div className="text-cyan-400 font-medium mb-1">Remediation Steps:</div>
+            <div className="text-gray-300">1. Apply relevant security patches</div>
+            <div className="text-gray-300">2. Restrict network access</div>
+            <div className="text-gray-300">3. Enable monitoring and alerting</div>
+            <div className="text-gray-300">4. Validate fix with penetration test</div>
+          </div>
+        )}
       </div>
     </div>
   );

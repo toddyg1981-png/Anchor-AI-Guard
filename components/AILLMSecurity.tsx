@@ -64,6 +64,7 @@ export const AILLMSecurity: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<unknown>(null);
   const [auditLog, setAuditLog] = useState<unknown[]>([]);
   const [guardrailConfig, setGuardrailConfig] = useState<unknown>(null);
+  const [expandedPolicies, setExpandedPolicies] = useState<Record<string, boolean>>({});
 
   // Fetch real data from backend
   useEffect(() => {
@@ -413,7 +414,7 @@ export const AILLMSecurity: React.FC = () => {
                     <div className="text-lg font-bold text-cyan-400">{policy.triggers}</div>
                     <div className="text-xs text-gray-500">triggers</div>
                   </div>
-                  <button onClick={() => alert(`Policy "${policy.name}" is currently ${policy.enabled ? 'enabled' : 'disabled'}.\n\n${policy.description}\n\nTriggers: ${policy.triggers}`)} className={`px-4 py-2 rounded-lg ${
+                  <button onClick={() => setExpandedPolicies(prev => ({ ...prev, [policy.id]: !prev[policy.id] }))} className={`px-4 py-2 rounded-lg ${
                     policy.enabled 
                       ? 'bg-green-500/20 text-green-400 border border-green-500' 
                       : 'bg-gray-700 text-gray-400'
@@ -422,6 +423,16 @@ export const AILLMSecurity: React.FC = () => {
                   </button>
                 </div>
               </div>
+              {expandedPolicies[policy.id] && (
+                <div className="mt-4 p-4 bg-gray-800/50 border border-gray-700 rounded-lg space-y-3">
+                  <h4 className="text-sm font-medium text-cyan-400">Policy Configuration</h4>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div><span className="text-gray-400">Status:</span> <span className={policy.enabled ? 'text-green-400' : 'text-gray-500'}>{policy.enabled ? 'Enabled' : 'Disabled'}</span></div>
+                    <div><span className="text-gray-400">Triggers:</span> <span className="text-cyan-400">{policy.triggers}</span></div>
+                  </div>
+                  <p className="text-sm text-gray-400">{policy.description}</p>
+                </div>
+              )}
             </div>
           ))}
         </div>

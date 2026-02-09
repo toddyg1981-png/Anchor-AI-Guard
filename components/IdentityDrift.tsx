@@ -300,7 +300,18 @@ const StaleAccess: React.FC = () => {
   );
 };
 
-const ShadowAccounts: React.FC = () => (
+const ShadowAccounts: React.FC = () => {
+  const [actionStatus, setActionStatus] = useState<Record<string, string>>({});
+
+  const handleAction = (id: string, _actionName: string, _successMessage: string) => {
+    setActionStatus(prev => ({ ...prev, [id]: 'processing' }));
+    setTimeout(() => {
+      setActionStatus(prev => ({ ...prev, [id]: 'done' }));
+      setTimeout(() => setActionStatus(prev => ({ ...prev, [id]: '' })), 2000);
+    }, 1500);
+  };
+
+  return (
   <div className="space-y-4">
     <div className="flex items-center justify-between mb-2">
       <h3 className="text-lg font-semibold text-white">Shadow Account Discovery</h3>
@@ -330,17 +341,32 @@ const ShadowAccounts: React.FC = () => (
           <p className="text-xs text-slate-400 leading-relaxed">{s.detail}</p>
           <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-between text-xs text-slate-500">
             <span>Discovered: {s.discoveredAt}</span>
-            <button className="text-cyan-400 hover:text-cyan-300 transition-colors opacity-0 group-hover:opacity-100">
-              Investigate →
+            <button
+              className="text-cyan-400 hover:text-cyan-300 transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
+              onClick={() => handleAction(`investigate-shadow-${i}`, 'Investigate', 'Investigation started')}
+              disabled={actionStatus[`investigate-shadow-${i}`] === 'processing'}
+            >
+              {actionStatus[`investigate-shadow-${i}`] === 'processing' ? '⏳ Processing...' : actionStatus[`investigate-shadow-${i}`] === 'done' ? '✓ Done' : 'Investigate →'}
             </button>
           </div>
         </div>
       ))}
     </div>
   </div>
-);
+  );
+};
 
 const SessionIntelligence: React.FC = () => {
+  const [actionStatus, setActionStatus] = useState<Record<string, string>>({});
+
+  const handleAction = (id: string, _actionName: string, _successMessage: string) => {
+    setActionStatus(prev => ({ ...prev, [id]: 'processing' }));
+    setTimeout(() => {
+      setActionStatus(prev => ({ ...prev, [id]: 'done' }));
+      setTimeout(() => setActionStatus(prev => ({ ...prev, [id]: '' })), 2000);
+    }, 1500);
+  };
+
   const statusColors: Record<string, string> = {
     Active: 'bg-green-500/20 text-green-400 border-green-500/30',
     Flagged: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
@@ -425,8 +451,20 @@ const SessionIntelligence: React.FC = () => {
             physically impossible in 12 minutes. Session flagged for verification.
           </p>
           <div className="mt-3 flex gap-2">
-            <button className="text-xs px-3 py-1 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors">Revoke</button>
-            <button className="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors">Verify</button>
+            <button
+              className="text-xs px-3 py-1 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
+              onClick={() => handleAction('revoke-travel', 'Revoke', 'Session revoked')}
+              disabled={actionStatus['revoke-travel'] === 'processing'}
+            >
+              {actionStatus['revoke-travel'] === 'processing' ? '⏳ Processing...' : actionStatus['revoke-travel'] === 'done' ? '✓ Done' : 'Revoke'}
+            </button>
+            <button
+              className="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50"
+              onClick={() => handleAction('verify-travel', 'Verify', 'Verification sent')}
+              disabled={actionStatus['verify-travel'] === 'processing'}
+            >
+              {actionStatus['verify-travel'] === 'processing' ? '⏳ Processing...' : actionStatus['verify-travel'] === 'done' ? '✓ Done' : 'Verify'}
+            </button>
           </div>
         </div>
         <div className="bg-slate-800 border border-orange-500/30 rounded-xl p-4">
@@ -439,8 +477,20 @@ const SessionIntelligence: React.FC = () => {
             Historical baseline is 1 session. Potential credential sharing or compromise.
           </p>
           <div className="mt-3 flex gap-2">
-            <button className="text-xs px-3 py-1 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-colors">Force Logout</button>
-            <button className="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors">Monitor</button>
+            <button
+              className="text-xs px-3 py-1 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-colors disabled:opacity-50"
+              onClick={() => handleAction('force-logout-concurrent', 'Force Logout', 'Sessions terminated')}
+              disabled={actionStatus['force-logout-concurrent'] === 'processing'}
+            >
+              {actionStatus['force-logout-concurrent'] === 'processing' ? '⏳ Processing...' : actionStatus['force-logout-concurrent'] === 'done' ? '✓ Done' : 'Force Logout'}
+            </button>
+            <button
+              className="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50"
+              onClick={() => handleAction('monitor-concurrent', 'Monitor', 'Monitoring enabled')}
+              disabled={actionStatus['monitor-concurrent'] === 'processing'}
+            >
+              {actionStatus['monitor-concurrent'] === 'processing' ? '⏳ Processing...' : actionStatus['monitor-concurrent'] === 'done' ? '✓ Done' : 'Monitor'}
+            </button>
           </div>
         </div>
         <div className="bg-slate-800 border border-red-500/30 rounded-xl p-4">
@@ -453,8 +503,20 @@ const SessionIntelligence: React.FC = () => {
             Token fingerprint mismatch. Connection blocked automatically.
           </p>
           <div className="mt-3 flex gap-2">
-            <button className="text-xs px-3 py-1 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors">Rotate Tokens</button>
-            <button className="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors">Forensics</button>
+            <button
+              className="text-xs px-3 py-1 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
+              onClick={() => handleAction('rotate-tokens-theft', 'Rotate Tokens', 'Tokens rotated')}
+              disabled={actionStatus['rotate-tokens-theft'] === 'processing'}
+            >
+              {actionStatus['rotate-tokens-theft'] === 'processing' ? '⏳ Processing...' : actionStatus['rotate-tokens-theft'] === 'done' ? '✓ Done' : 'Rotate Tokens'}
+            </button>
+            <button
+              className="text-xs px-3 py-1 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50"
+              onClick={() => handleAction('forensics-theft', 'Forensics', 'Forensics initiated')}
+              disabled={actionStatus['forensics-theft'] === 'processing'}
+            >
+              {actionStatus['forensics-theft'] === 'processing' ? '⏳ Processing...' : actionStatus['forensics-theft'] === 'done' ? '✓ Done' : 'Forensics'}
+            </button>
           </div>
         </div>
       </div>

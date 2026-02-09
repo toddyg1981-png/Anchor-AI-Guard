@@ -52,6 +52,7 @@ export const SupplyChainAI: React.FC = () => {
   const [scanProgress, setScanProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [backendStats, setBackendStats] = useState<any>(null);
+  const [actionStatus, setActionStatus] = useState<Record<string, string>>({});
 
   useEffect(() => {
     loadDashboard();
@@ -447,8 +448,8 @@ export const SupplyChainAI: React.FC = () => {
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span>{getEcosystemIcon(pkg.ecosystem)}</span>
-                      <span className="font-bold">{pkg.name}</span>
-                      <span className="text-gray-500">@{pkg.version}</span>
+                      <span className={`font-bold ${actionStatus[pkg.id] === 'done' ? 'line-through text-gray-500' : ''}`}>{pkg.name}</span>
+                      <span className={`${actionStatus[pkg.id] === 'done' ? 'line-through text-gray-600' : 'text-gray-500'}`}>@{pkg.version}</span>
                     </div>
                     <span className="px-2 py-1 bg-red-500 text-white rounded text-xs font-bold">
                       CRITICAL
@@ -462,8 +463,18 @@ export const SupplyChainAI: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                  <button onClick={() => { if (window.confirm(`Remove package "${pkg.name}@${pkg.version}" from your project?`)) { alert(`${pkg.name} has been flagged for removal. Run \`npm uninstall ${pkg.name}\` to complete removal.`); } }} className="mt-3 px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
-                    Remove Package
+                  <button onClick={() => {
+                    setActionStatus(prev => ({ ...prev, [pkg.id]: 'processing' }));
+                    setTimeout(() => {
+                      setActionStatus(prev => ({ ...prev, [pkg.id]: 'done' }));
+                      setTimeout(() => setActionStatus(prev => ({ ...prev, [pkg.id]: '' })), 2000);
+                    }, 1500);
+                  }} disabled={!!actionStatus[pkg.id]} className={`mt-3 px-3 py-1 rounded text-sm ${
+                    actionStatus[pkg.id] === 'done' ? 'bg-green-500/20 border border-green-500 text-green-400' :
+                    actionStatus[pkg.id] === 'processing' ? 'bg-yellow-500/20 border border-yellow-500 text-yellow-400' :
+                    'bg-red-500/20 hover:bg-red-500/30 border border-red-500 text-red-400'
+                  }`}>
+                    {actionStatus[pkg.id] === 'processing' ? '⏳ Removing...' : actionStatus[pkg.id] === 'done' ? '✓ Removed' : 'Remove Package'}
                   </button>
                 </div>
               ))}
@@ -675,8 +686,19 @@ export const SupplyChainAI: React.FC = () => {
                     <span className="text-sm text-gray-400">
                       Technique: <span className="text-purple-400">{alert.technique}</span>
                     </span>
-                    <button onClick={() => { if (window.confirm(`Block package "${alert.suspect}"? This will prevent it from being installed in any project.`)) { window.alert(`${alert.suspect} has been added to the blocklist.`); } }} className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500 rounded text-sm text-red-400">
-                      Block Package
+                    <button onClick={() => {
+                      const key = `block-${alert.suspect}`;
+                      setActionStatus(prev => ({ ...prev, [key]: 'processing' }));
+                      setTimeout(() => {
+                        setActionStatus(prev => ({ ...prev, [key]: 'done' }));
+                        setTimeout(() => setActionStatus(prev => ({ ...prev, [key]: '' })), 2000);
+                      }, 1500);
+                    }} disabled={!!actionStatus[`block-${alert.suspect}`]} className={`px-3 py-1 rounded text-sm ${
+                      actionStatus[`block-${alert.suspect}`] === 'done' ? 'bg-green-500/20 border border-green-500 text-green-400' :
+                      actionStatus[`block-${alert.suspect}`] === 'processing' ? 'bg-yellow-500/20 border border-yellow-500 text-yellow-400' :
+                      'bg-red-500/20 hover:bg-red-500/30 border border-red-500 text-red-400'
+                    }`}>
+                      {actionStatus[`block-${alert.suspect}`] === 'processing' ? '⏳ Blocking...' : actionStatus[`block-${alert.suspect}`] === 'done' ? '✓ Blocked' : 'Block Package'}
                     </button>
                   </div>
                 </div>

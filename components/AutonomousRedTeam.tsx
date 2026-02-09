@@ -489,19 +489,28 @@ const ProgressBar: React.FC<{ current: number; total: number; color?: string }> 
 // Tab Content Components
 // ---------------------------------------------------------------------------
 
-const CampaignDashboard: React.FC = () => (
+interface CampaignDashboardProps {
+  campaignRunning: boolean;
+  isPaused: boolean;
+  reportGenerating: boolean;
+  onLaunchCampaign: () => void;
+  onPauseAll: () => void;
+  onGenerateReport: () => void;
+}
+
+const CampaignDashboard: React.FC<CampaignDashboardProps> = ({ campaignRunning, isPaused, reportGenerating, onLaunchCampaign, onPauseAll, onGenerateReport }) => (
   <div className="space-y-4">
     <div className="flex items-center justify-between mb-2">
       <h3 className="text-lg font-semibold text-white">Active Red Team Campaigns</h3>
       <div className="flex gap-2">
-        <button className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium rounded-lg transition-colors">
-          ▶ Launch Campaign
+        <button onClick={onLaunchCampaign} disabled={campaignRunning} className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors">
+          {campaignRunning ? '⏳ Running...' : '▶ Launch Campaign'}
         </button>
-        <button className="px-4 py-1.5 bg-yellow-600/80 hover:bg-yellow-500 text-white text-sm font-medium rounded-lg transition-colors">
-          ⏸ Pause All
+        <button onClick={onPauseAll} className="px-4 py-1.5 bg-yellow-600/80 hover:bg-yellow-500 text-white text-sm font-medium rounded-lg transition-colors">
+          {isPaused ? '▶ Resume All' : '⏸ Pause All'}
         </button>
-        <button className="px-4 py-1.5 bg-slate-600 hover:bg-slate-500 text-white text-sm font-medium rounded-lg transition-colors">
-          📄 Generate Report
+        <button onClick={onGenerateReport} disabled={reportGenerating} className="px-4 py-1.5 bg-slate-600 hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors">
+          {reportGenerating ? '⏳ Generating...' : '📄 Generate Report'}
         </button>
       </div>
     </div>
@@ -808,6 +817,31 @@ const MisconfigExploitationTab: React.FC = () => (
 const AutonomousRedTeam: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('campaigns');
   const [pulse, setPulse] = useState(true);
+  const [campaignRunning, setCampaignRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [reportGenerating, setReportGenerating] = useState(false);
+
+  const handleLaunchCampaign = () => {
+    setCampaignRunning(true);
+    setIsPaused(false);
+    // Simulate campaign execution
+    setTimeout(() => setCampaignRunning(false), 30000);
+  };
+
+  const handlePauseAll = () => {
+    setIsPaused(!isPaused);
+    if (campaignRunning && !isPaused) {
+      setCampaignRunning(false);
+    }
+  };
+
+  const handleGenerateReport = () => {
+    setReportGenerating(true);
+    setTimeout(() => {
+      setReportGenerating(false);
+      // Could trigger download or show report panel
+    }, 3000);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => setPulse((p) => !p), 2000);
@@ -862,14 +896,14 @@ const AutonomousRedTeam: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-red-900/30">
-            ▶ Launch Campaign
+          <button onClick={handleLaunchCampaign} disabled={campaignRunning} className="px-5 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-red-900/30">
+            {campaignRunning ? '⏳ Running...' : '▶ Launch Campaign'}
           </button>
-          <button className="px-4 py-2 bg-yellow-600/80 hover:bg-yellow-500 text-white text-sm font-medium rounded-lg transition-colors">
-            ⏸ Pause All
+          <button onClick={handlePauseAll} className="px-4 py-2 bg-yellow-600/80 hover:bg-yellow-500 text-white text-sm font-medium rounded-lg transition-colors">
+            {isPaused ? '▶ Resume All' : '⏸ Pause All'}
           </button>
-          <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium rounded-lg transition-colors border border-slate-600">
-            📄 Generate Report
+          <button onClick={handleGenerateReport} disabled={reportGenerating} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed text-slate-300 text-sm font-medium rounded-lg transition-colors border border-slate-600">
+            {reportGenerating ? '⏳ Generating...' : '📄 Generate Report'}
           </button>
         </div>
       </div>
@@ -906,7 +940,7 @@ const AutonomousRedTeam: React.FC = () => {
 
       {/* Tab Content */}
       <div className="bg-slate-800/40 backdrop-blur border border-slate-700/40 rounded-xl p-6">
-        {activeTab === 'campaigns' && <CampaignDashboard />}
+        {activeTab === 'campaigns' && <CampaignDashboard campaignRunning={campaignRunning} isPaused={isPaused} reportGenerating={reportGenerating} onLaunchCampaign={handleLaunchCampaign} onPauseAll={handlePauseAll} onGenerateReport={handleGenerateReport} />}
         {activeTab === 'exploits' && <ExploitSimulationTab />}
         {activeTab === 'lateral' && <LateralMovementTab />}
         {activeTab === 'privesc' && <PrivilegeEscalationTab />}

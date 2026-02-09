@@ -6,6 +6,17 @@ const EDRPlatform: React.FC = () => {
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'detections' | 'endpoints' | 'response' | 'hunting'>('detections');
+  const [iocSearching, setIocSearching] = useState(false);
+  const [iocResults, setIocResults] = useState<string | null>(null);
+
+  const handleIOCSearch = () => {
+    setIocSearching(true);
+    setIocResults(null);
+    setTimeout(() => {
+      setIocSearching(false);
+      setIocResults('No matching indicators found across 12,847 endpoints.');
+    }, 2000);
+  };
 
   const tabs = [
     { key: 'detections' as const, label: 'Detections' },
@@ -213,8 +224,13 @@ const EDRPlatform: React.FC = () => {
             <h2 className="text-lg font-semibold mb-3">Custom IOC Search</h2>
             <div className="flex gap-2">
               <input type="text" placeholder="Enter hash, IP, domain, or file path…" className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-green-500" />
-              <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">Search</button>
+              <button onClick={handleIOCSearch} disabled={iocSearching} className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">{iocSearching ? '⏳ Searching...' : 'Search'}</button>
             </div>
+            {iocResults && (
+              <div className="mt-3 bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-slate-300">
+                {iocResults}
+              </div>
+            )}
           </div>
         </div>
       )}

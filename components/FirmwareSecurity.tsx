@@ -117,6 +117,17 @@ const FirmwareSecurity: React.FC = () => {
   const [scanProgress, setScanProgress] = useState(0);
   const [scanning, setScanning] = useState(false);
   const [threatFilter, setThreatFilter] = useState<string>('all');
+  const [actionStatus, setActionStatus] = useState<Record<string, string>>({});
+  const [selectedThreat, setSelectedThreat] = useState<string | null>(null);
+
+  const handleDeviceAction = (deviceId: string, action: string) => {
+    const key = `${deviceId}-${action}`;
+    setActionStatus(prev => ({ ...prev, [key]: 'processing' }));
+    setTimeout(() => {
+      setActionStatus(prev => ({ ...prev, [key]: 'done' }));
+      setTimeout(() => setActionStatus(prev => ({ ...prev, [key]: '' })), 2000);
+    }, 1500);
+  };
 
   useEffect(() => {
     if (scanning && scanProgress < 100) {
@@ -329,9 +340,27 @@ const FirmwareSecurity: React.FC = () => {
                   Confidence: {r.confidence}%. Immediate investigation required.
                 </p>
                 <div className="mt-2 flex gap-2">
-                  <button className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-500 transition-colors">Quarantine Device</button>
-                  <button className="px-3 py-1 bg-slate-700 text-slate-300 text-xs rounded hover:bg-slate-600 transition-colors">Investigate</button>
-                  <button className="px-3 py-1 bg-slate-700 text-slate-300 text-xs rounded hover:bg-slate-600 transition-colors">Restore Golden Image</button>
+                  <button
+                    disabled={actionStatus[`${r.device}-quarantine`] === 'processing'}
+                    onClick={() => handleDeviceAction(r.device, 'quarantine')}
+                    className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {actionStatus[`${r.device}-quarantine`] === 'processing' ? '⏳ Quarantining...' : actionStatus[`${r.device}-quarantine`] === 'done' ? '✓ Quarantined' : 'Quarantine Device'}
+                  </button>
+                  <button
+                    disabled={actionStatus[`${r.device}-investigate`] === 'processing'}
+                    onClick={() => handleDeviceAction(r.device, 'investigate')}
+                    className="px-3 py-1 bg-slate-700 text-slate-300 text-xs rounded hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {actionStatus[`${r.device}-investigate`] === 'processing' ? '⏳ Investigating...' : actionStatus[`${r.device}-investigate`] === 'done' ? '✓ Investigation Started' : 'Investigate'}
+                  </button>
+                  <button
+                    disabled={actionStatus[`${r.device}-restore`] === 'processing'}
+                    onClick={() => handleDeviceAction(r.device, 'restore')}
+                    className="px-3 py-1 bg-slate-700 text-slate-300 text-xs rounded hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {actionStatus[`${r.device}-restore`] === 'processing' ? '⏳ Restoring...' : actionStatus[`${r.device}-restore`] === 'done' ? '✓ Restored' : 'Restore Golden Image'}
+                  </button>
                 </div>
               </div>
             ))}
@@ -570,8 +599,19 @@ const FirmwareSecurity: React.FC = () => {
                 <span>Published: <span className="text-slate-300">{threat.published}</span></span>
               </div>
               <div className="flex gap-2">
-                <button className="px-3 py-1 bg-cyan-600/20 text-cyan-400 rounded hover:bg-cyan-600/30 transition-colors text-xs">View Details</button>
-                <button className="px-3 py-1 bg-slate-700 text-slate-300 rounded hover:bg-slate-600 transition-colors text-xs">Create Ticket</button>
+                <button
+                  onClick={() => setSelectedThreat(selectedThreat === threat.id ? null : threat.id)}
+                  className={`px-3 py-1 rounded transition-colors text-xs ${selectedThreat === threat.id ? 'bg-cyan-600/40 text-cyan-300' : 'bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600/30'}`}
+                >
+                  {selectedThreat === threat.id ? '▼ Hide Details' : 'View Details'}
+                </button>
+                <button
+                  disabled={actionStatus[`${threat.id}-ticket`] === 'processing'}
+                  onClick={() => handleDeviceAction(threat.id, 'ticket')}
+                  className="px-3 py-1 bg-slate-700 text-slate-300 rounded hover:bg-slate-600 transition-colors text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {actionStatus[`${threat.id}-ticket`] === 'processing' ? '⏳ Creating...' : actionStatus[`${threat.id}-ticket`] === 'done' ? '✓ Ticket Created' : 'Create Ticket'}
+                </button>
               </div>
             </div>
             {/* CVSS Visual Bar */}
@@ -583,6 +623,19 @@ const FirmwareSecurity: React.FC = () => {
                 />
               </div>
             </div>
+            {/* Expanded Details */}
+            {selectedThreat === threat.id && (
+              <div className="mt-3 p-3 bg-slate-900 border border-slate-600 rounded-lg text-xs space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <div><span className="text-slate-400">ID:</span> <span className="text-cyan-400 font-mono">{threat.id}</span></div>
+                  <div><span className="text-slate-400">CVSS:</span> <span className="text-white font-bold">{threat.cvss}</span></div>
+                  <div><span className="text-slate-400">Source:</span> <span className="text-slate-300">{threat.source}</span></div>
+                  <div><span className="text-slate-400">Published:</span> <span className="text-slate-300">{threat.published}</span></div>
+                </div>
+                <div><span className="text-slate-400">Affected Systems:</span> <span className="text-slate-300">{threat.affected}</span></div>
+                <div><span className="text-slate-400">Full Description:</span> <span className="text-slate-300">{threat.description}</span></div>
+              </div>
+            )}
           </div>
         ))}
       </div>
