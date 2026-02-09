@@ -617,7 +617,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
               {/* Price */}
               <div className="mb-6">
-                {plan.tier === 'ENTERPRISE' ? (
+                {['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(plan.tier) ? (
                   <div>
                     <span className="text-3xl font-bold text-white">Custom</span>
                     <p className="text-sm text-purple-400 mt-1">Contact us for pricing</p>
@@ -651,6 +651,8 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                     ? 'bg-linear-to-r from-pink-500 via-purple-500 to-cyan-500 hover:from-cyan-500 hover:via-purple-500 hover:to-pink-500 text-white shadow-lg shadow-pink-500/30'
                     : plan.tier === 'ENTERPRISE'
                     ? 'bg-linear-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white shadow-lg shadow-purple-500/30'
+                    : ['ENTERPRISE_PLUS', 'GOVERNMENT'].includes(plan.tier)
+                    ? 'bg-linear-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white shadow-lg shadow-purple-500/30'
                     : 'bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300'
                 }`}
               >
@@ -660,7 +662,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   ? 'Current Plan'
                   : plan.tier === 'FREE'
                   ? 'Start Free'
-                  : plan.tier === 'ENTERPRISE'
+                  : ['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(plan.tier)
                   ? 'Contact Sales'
                   : isAuthenticated
                   ? 'Upgrade Now'
@@ -741,7 +743,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 What&apos;s included in the free plan?
               </h3>
               <p className="text-purple-300">
-                Get 1 project, 10 scans/month, and 25 AI queries to test our platform. Perfect for side projects and evaluation.
+                Get 1 project, 5 scans/month, and 10 AI queries to test our platform. Perfect for side projects and evaluation.
               </p>
             </div>
             <div className="bg-black/40 border border-purple-500/30 rounded-xl p-6 backdrop-blur-sm">

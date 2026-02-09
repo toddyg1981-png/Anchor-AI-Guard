@@ -71,11 +71,8 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
       setUsage(usageData.usage);
     } catch (err) {
       console.error('Failed to fetch billing data:', err);
-      setError('Unable to load billing data. Showing default plan info.');
-      // Set defaults so the UI still renders
-      setPlanName('Starter');
-      setIsTrialing(true);
-      setTrialDaysRemaining(14);
+      setError('Unable to load billing data. Please check your connection and try again.');
+      // Don't set fake trial data — leave state as null so the UI shows the error clearly
     } finally {
       setLoading(false);
     }

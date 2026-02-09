@@ -23,6 +23,7 @@ export const env = {
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
   stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? '',
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? '',
+  stripeEnabled: !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET),
   resendApiKey: process.env.RESEND_API_KEY ?? '',
   fromEmail: process.env.FROM_EMAIL ?? 'noreply@anchoraiguard.com',
   adminEmail: process.env.ADMIN_EMAIL ?? '',

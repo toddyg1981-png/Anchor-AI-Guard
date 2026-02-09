@@ -255,7 +255,7 @@ const AppContent: React.FC = () => {
       setCurrentView('dashboard');
       setDashboardView('billing');
       // Clean up URL
-      window.history.replaceState({}, '', '/');
+      window.history.replaceState({}, '', '/dashboard');
     }
 
     // Handle checkout canceled

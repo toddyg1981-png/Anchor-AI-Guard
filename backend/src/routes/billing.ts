@@ -6,8 +6,15 @@ import { authMiddleware } from '../lib/auth';
 import { env } from '../config/env';
 import { PlanTier } from '@prisma/client';
 
-// Initialize Stripe
-const stripe = new Stripe(env.stripeSecretKey || '', {
+// Initialize Stripe — warn on missing keys but don't crash in dev
+if (!env.stripeSecretKey && env.nodeEnv === 'production') {
+  throw new Error('STRIPE_SECRET_KEY is required in production — payments will not work without it');
+}
+if (!env.stripeWebhookSecret && env.nodeEnv === 'production') {
+  throw new Error('STRIPE_WEBHOOK_SECRET is required in production — webhook verification will fail');
+}
+
+const stripe = new Stripe(env.stripeSecretKey || 'sk_test_placeholder', {
   apiVersion: '2023-10-16',
 });
 
@@ -385,7 +392,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripeCustomerId,
-      return_url: body.returnUrl,
+      return_url: body.returnUrl?.startsWith(env.frontendUrl) ? body.returnUrl : env.frontendUrl,
     });
 
     return reply.send({ url: session.url });
@@ -413,7 +420,10 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
     const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
     const plan = PLANS[planTier];
 
-    // Update subscription in Stripe
+    // Update subscription in Stripe — preserve current billing interval
+    const currentInterval = stripeSubscription.items.data[0].price.recurring?.interval || 'month';
+    const priceAmount = currentInterval === 'year' ? plan.yearlyPrice : plan.monthlyPrice;
+
     await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
       items: [
         {
@@ -421,8 +431,8 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
           price_data: {
             currency: 'usd',
             product: stripeSubscription.items.data[0].price.product as string,
-            unit_amount: plan.monthlyPrice,
-            recurring: { interval: 'month' },
+            unit_amount: priceAmount,
+            recurring: { interval: currentInterval as 'month' | 'year' },
           },
         },
       ],
@@ -496,9 +506,16 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
         const planTier = session.metadata?.planTier as PlanTierKey;
 
         if (orgId && planTier) {
-          await prisma.subscription.update({
+          await prisma.subscription.upsert({
             where: { orgId },
-            data: {
+            update: {
+              stripeSubscriptionId: session.subscription as string,
+              status: 'ACTIVE',
+              planTier: planTier as PlanTier,
+            },
+            create: {
+              orgId,
+              stripeCustomerId: session.customer as string,
               stripeSubscriptionId: session.subscription as string,
               status: 'ACTIVE',
               planTier: planTier as PlanTier,
@@ -564,8 +581,9 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice;
-        const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-        const orgId = subscription.metadata?.orgId;
+        if (!invoice.subscription) break; // Skip one-off invoices
+        const failedSub = await stripe.subscriptions.retrieve(invoice.subscription as string);
+        const orgId = failedSub.metadata?.orgId;
 
         if (orgId) {
           await prisma.subscription.update({
