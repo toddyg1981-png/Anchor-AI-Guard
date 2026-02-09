@@ -358,12 +358,17 @@ export default function AIEvolutionDashboard() {
 
       const statusData = (statusRes as any)?.status || null;
       setStatus(statusData);
-      if (statusData) setEngineRunning(!!statusData.isRunning);
+      if (statusData) {
+        setEngineRunning(!!statusData.isRunning);
+        // Backend responded — mark as connected even without SSE
+        setIsConnected(true);
+      }
       setThreats((threatsRes as any)?.threats || []);
       setRules((rulesRes as any)?.rules || []);
       setEvolutionLog((logRes as any)?.log || []);
     } catch (error) {
       console.error('Failed to load AI Evolution data:', error);
+      setIsConnected(false);
     }
     setLoading(false);
   };
@@ -791,7 +796,7 @@ export default function AIEvolutionDashboard() {
             <div className="flex items-center gap-2">
               <span className={`w-3 h-3 rounded-full ${engineRunning || isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
               <span className={`text-sm font-medium ${engineRunning || isConnected ? 'text-green-400' : 'text-red-400'}`}>
-                {engineRunning ? (isConnected ? 'LIVE' : 'ONLINE') : 'OFFLINE'}
+                {engineRunning ? (isConnected ? 'LIVE' : 'ONLINE') : (isConnected ? 'ONLINE' : 'OFFLINE')}
               </span>
             </div>
             <div className="h-6 w-px bg-slate-600"></div>

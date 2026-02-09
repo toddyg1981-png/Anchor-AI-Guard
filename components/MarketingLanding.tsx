@@ -365,7 +365,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
                 className="w-full"
                 onPlay={() => handleVideoPlay('hero-demo')}
               >
-                <source src="/assets/anchor-demo-1.mp4" type="video/mp4" />
+                <source src="/assets/anchor-promo-video.mp4" type="video/mp4" />
               </video>
             </div>
             <div className="flex items-center justify-center gap-2 mt-4 text-purple-400">

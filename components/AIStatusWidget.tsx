@@ -139,9 +139,12 @@ export default function AIStatusWidget({ onOpenDashboard }: AIStatusWidgetProps)
             uptime: data.uptime?.formatted || '0s',
             startTime: data.uptime?.startTime || data.status?.engineStartTime || new Date().toISOString()
           });
+          // Backend responded successfully — mark as connected
+          setIsConnected(true);
         }
       } catch (error) {
         console.error('AI Status Widget: Failed to load initial data', error);
+        setIsConnected(false);
       }
       setIsLoading(false);
     };
