@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useWebSocket } from './hooks/useWebSocket';
 import LoginSuccessOverlay from './components/LoginSuccessOverlay';
 import { env } from './config/env';
+import { FeatureGate } from './components/FeatureGate';
 
 // Lazy-loaded views (only loaded when navigated to)
 const AuthScreen = React.lazy(() => import('./components/AuthScreen'));
@@ -233,6 +234,7 @@ const AppContent: React.FC = () => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
   const [currentPlan, setCurrentPlan] = useState<string | undefined>(undefined);
+  const userPlan = currentPlan || 'starter';  // Default tier for feature gating
   
     const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
 
@@ -623,13 +625,13 @@ const AppContent: React.FC = () => {
       case 'passwordVault':
         return <PasswordVault />;
       case 'cryptographyManager':
-        return <CryptographyManager />;
+        return <FeatureGate addonId="quantum-cryptography" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><CryptographyManager /></FeatureGate>;
       case 'containerSecurity':
         return <ContainerSecurity />;
       case 'networkSegmentation':
         return <NetworkSegmentation />;
       case 'deceptionTechnology':
-        return <DeceptionTechnology />;
+        return <FeatureGate addonId="deception-technology" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><DeceptionTechnology /></FeatureGate>;
       case 'threatModeling':
         return <ThreatModeling />;
       case 'penetrationTesting':
@@ -647,31 +649,31 @@ const AppContent: React.FC = () => {
       case 'oticsSecurity':
         return <OTICSSecurity />;
       case 'forensicsLab':
-        return <ForensicsLab />;
+        return <FeatureGate addonId="forensics-lab" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><ForensicsLab /></FeatureGate>;
       case 'malwareAnalysis':
         return <MalwareAnalysis />;
       case 'securityTraining':
         return <SecurityTraining />;
       case 'autonomousSOC':
-        return <AutonomousSOC />;
+        return <FeatureGate addonId="autonomous-soc" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><AutonomousSOC /></FeatureGate>;
       case 'digitalTwin':
-        return <DigitalTwinSecurity />;
+        return <FeatureGate addonId="digital-twin-security" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><DigitalTwinSecurity /></FeatureGate>;
       case 'cyberInsurance':
-        return <CyberInsuranceIntegration />;
+        return <FeatureGate addonId="cyber-insurance" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><CyberInsuranceIntegration /></FeatureGate>;
       case 'nationalSecurity':
         return <NationalSecurityModule />;
       case 'criticalInfra':
-        return <CriticalInfrastructureProtection />;
+        return <FeatureGate addonId="critical-infrastructure" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><CriticalInfrastructureProtection /></FeatureGate>;
       case 'supplyChainAttestation':
         return <SupplyChainAttestation />;
       case 'activeDefense':
         return <ActiveDefense />;
       case 'darkWebMonitor':
-        return <DarkWebMonitor />;
+        return <FeatureGate addonId="dark-web-monitor" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><DarkWebMonitor /></FeatureGate>;
       case 'complianceHub':
         return <ComplianceHub />;
       case 'breachSimulator':
-        return <BreachSimulator />;
+        return <FeatureGate addonId="breach-simulator" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><BreachSimulator /></FeatureGate>;
       case 'cloudSecurity':
         return <CloudSecurityPosture />;
       case 'cicdSecurity':
@@ -695,7 +697,7 @@ const AppContent: React.FC = () => {
       case 'secretsRotation':
         return <SecretsRotation />;
       case 'supplyChainAI':
-        return <SupplyChainAI />;
+        return <FeatureGate addonId="supply-chain-ai" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><SupplyChainAI /></FeatureGate>;
       case 'raspAgent':
         return <RASPAgent />;
       case 'mobileSecurity':

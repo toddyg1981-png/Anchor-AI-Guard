@@ -51,24 +51,27 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 
 ---
 
-## 💰 12 Revenue Streams
+## 💰 13 Revenue Streams
 
 ### Overview
 
 | # | Revenue Stream | Annual Potential | % of Revenue |
 |---|----------------|------------------|--------------|
-| 1 | SaaS Self-Serve Subscriptions | $50M+ | 25% |
-| 2 | Enterprise Contracts | $100M+ | 30% |
+| 1 | SaaS Self-Serve Subscriptions | $50M+ | 20% |
+| 2 | Enterprise Contracts | $100M+ | 25% |
 | 3 | Enterprise+ Contracts | $75M+ | 15% |
-| 4 | Government & Defense | $150M+ | 20% |
+| 4 | Government & Defense | $150M+ | 18% |
 | 5 | Professional Services | $15M+ | 3% |
 | 6 | Custom Integrations | $10M+ | 2% |
-| 7 | Marketplace Add-ons | $8M+ | 1.5% |
+| 7 | **Marketplace Add-ons (EXPANDED)** | **$200M+** | **8%** |
 | 8 | Compliance Packs | $5M+ | 1% |
 | 9 | White-Label Licensing | $10M+ | 1% |
 | 10 | Custom AI/ML Training | $8M+ | 1% |
 | 11 | Managed SOC Services | $5M+ | 0.5% |
 | 12 | Threat Intelligence Feeds | $3M+ | 0.5% |
+| **13** | **Anchor Intelligence API** | **$500M+** | **5%** |
+
+> **NEW: Revenue Stream #7 expanded to $200M+ (from $8M) with 10 world-first module add-ons. Revenue Stream #13 added for API licensing ($100K-$2.5M/mo per customer).**
 
 ---
 
@@ -299,6 +302,24 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 
 ## 🛒 Revenue Stream #7: Marketplace Add-ons
 
+### World-First Security Module Add-Ons (NEW — February 2026)
+
+| Module | Monthly | Annual | Min. Tier | Category |
+|--------|---------|--------|-----------|----------|
+| **Autonomous SOC** | $15,000 | $144,000 | Business | World-First |
+| **Digital Twin Security** | $12,000 | $115,200 | Business | World-First |
+| **Deception Technology** | $8,000 | $76,800 | Team | World-First |
+| **Forensics Lab** | $10,000 | $96,000 | Business | World-First |
+| **Supply Chain AI** | $7,500 | $72,000 | Team | World-First |
+| **Quantum Cryptography Manager** | $20,000 | $192,000 | Enterprise | World-First |
+| **Critical Infrastructure Protection** | $25,000 | $240,000 | Enterprise | World-First |
+| **Breach Simulator** | $5,000 | $48,000 | Pro | World-First |
+| **Dark Web Monitor** | $8,500 | $81,600 | Team | World-First |
+| **Cyber Insurance Integration** | $3,000 | $28,800 | Pro | World-First |
+| **Total potential per customer** | **$114,000/mo** | **$1,094,400/yr** | | |
+
+### Usage-Based Add-Ons
+
 | Add-on | Price | Description |
 |--------|-------|-------------|
 | **Additional Scans** | $0.50/scan | Overage pricing |
@@ -308,15 +329,17 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **Priority Queue** | $5,000/mo | Faster scan processing |
 | **Custom Dashboards** | $3,000/mo | Tailored reporting |
 
-### Add-on Revenue Projections
+### Add-on Revenue Projections (REVISED — with World-First module marketplace)
 
-| Year | Revenue |
-|------|---------|
-| **Year 1** | $500K |
-| **Year 2** | $2M |
-| **Year 3** | $6M |
-| **Year 4** | $12M |
-| **Year 5** | $25M |
+| Year | Usage Add-ons | World-First Modules | Total |
+|------|---------------|---------------------|-------|
+| **Year 1** | $500K | $4.5M | **$5M** |
+| **Year 2** | $2M | $18M | **$20M** |
+| **Year 3** | $6M | $45M | **$51M** |
+| **Year 4** | $12M | $90M | **$102M** |
+| **Year 5** | $25M | $175M | **$200M** |
+
+> **Key Insight:** The 10 world-first module add-ons represent up to $1.09M additional ARR per enterprise customer. With 100 enterprise customers purchasing an average of 4 modules each, that's $55M+ in Year 3 from add-ons alone — an **8x increase** over the previous $6M add-on projection.
 
 ---
 
@@ -452,7 +475,32 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 
 ---
 
-## 📈 5-Year Revenue Projections - All 12 Streams
+## � Revenue Stream #13: Anchor Intelligence API (NEW)
+
+The Anchor Intelligence API is a **standalone revenue line** — enterprises and governments pay for direct API access to Anchor's AI-powered threat intelligence, detection rule generation, and predictive analytics.
+
+| Tier | Monthly | Annual | Rate Limit | Monthly Quota |
+|------|---------|--------|-----------|---------------|
+| **Starter API** | $99,990 | $959,900 | 60 req/min | 10,000 calls |
+| **Professional API** | $499,990 | $4,799,900 | 300 req/min | 100,000 calls |
+| **Enterprise API** | $2,499,990 | $23,999,900 | 1,000 req/min | 1,000,000 calls |
+| **Unlimited / OEM** | Custom | Custom | 5,000 req/min | Unlimited |
+
+### API Revenue Projections
+
+| Year | Starter | Professional | Enterprise | OEM | Total |
+|------|---------|-------------|------------|-----|-------|
+| **Year 1** | $3M (3 customers) | $6M (1 customer) | $0 | $0 | **$9M** |
+| **Year 2** | $10M (10) | $25M (5) | $24M (1) | $0 | **$59M** |
+| **Year 3** | $20M (20) | $75M (15) | $96M (4) | $25M (1) | **$216M** |
+| **Year 4** | $30M (30) | $150M (30) | $192M (8) | $75M (3) | **$447M** |
+| **Year 5** | $48M (50) | $240M (50) | $360M (15) | $150M (5) | **$798M** |
+
+> **Key Insight:** API pricing at $100K-$2.5M/mo per customer makes this the highest-margin revenue stream (95%+ gross margin — pure software). With 120 API customers by Year 5, the API alone generates nearly $800M ARR.
+
+---
+
+## 📈 5-Year Revenue Projections - All 13 Streams
 
 ### Detailed Revenue by Stream
 
@@ -464,53 +512,60 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **4. Government** | $30M | $120M | $350M | $660M | $1.2B |
 | **5. Pro Services** | $3M | $9M | $20M | $33M | $50M |
 | **6. Integrations** | $1M | $4M | $10M | $18M | $30M |
-| **7. Add-ons** | $500K | $2M | $6M | $12M | $25M |
+| **7. Add-ons (EXPANDED)** | $5M | $20M | $51M | $102M | $200M |
 | **8. Compliance** | $500K | $2M | $5M | $10M | $20M |
 | **9. White-Label** | $2M | $8M | $20M | $40M | $75M |
 | **10. AI Training** | $1M | $4M | $10M | $18M | $35M |
 | **11. Managed SOC** | $500K | $2M | $6M | $12M | $25M |
 | **12. Intel Feeds** | $500K | $2M | $5M | $10M | $20M |
-| **TOTAL** | **$111M** | **$424M** | **$1.06B** | **$2.08B** | **$3.99B** |
+| **13. Intelligence API (NEW)** | $9M | $59M | $216M | $447M | $798M |
+| **TOTAL** | **$125M** | **$501M** | **$1.32B** | **$2.61B** | **$4.96B** |
 
 ### Summary by Year
 
 | Year | Total ARR | YoY Growth | Employees | Rev/Employee |
 |------|-----------|------------|-----------|--------------|
-| **Year 1** | $111,000,000 | - | 50 | $2.2M |
-| **Year 2** | $424,000,000 | 282% | 150 | $2.8M |
-| **Year 3** | $1,061,000,000 | 150% | 350 | $3.0M |
-| **Year 4** | $2,077,000,000 | 96% | 600 | $3.5M |
-| **Year 5** | $3,985,000,000 | 92% | 900 | $4.4M |
+| **Year 1** | $125,000,000 | - | 50 | $2.5M |
+| **Year 2** | $501,000,000 | 301% | 150 | $3.3M |
+| **Year 3** | $1,322,000,000 | 164% | 350 | $3.8M |
+| **Year 4** | $2,614,000,000 | 98% | 600 | $4.4M |
+| **Year 5** | $4,958,000,000 | 90% | 900 | $5.5M |
 
 ---
 
 ## 📊 Revenue Mix Evolution
 
-### Year 1 ($111M)
+### Year 1 ($125M)
 ```
-Government & Defense:     27.0% ($30M)
-Enterprise:               27.0% ($30M)
-Enterprise+:              21.6% ($24M)
-SaaS Self-Serve:          16.2% ($18M)
-Other 8 Streams:           8.1% ($9M)
-```
-
-### Year 3 ($1.06B)
-```
-Government & Defense:     33.0% ($350M)
-Enterprise:               21.2% ($225M)
-Enterprise+:              19.2% ($204M)
-SaaS Self-Serve:          18.9% ($200M)
-Other 8 Streams:           7.7% ($82M)
+Government & Defense:     24.0% ($30M)
+Enterprise:               24.0% ($30M)
+Enterprise+:              19.2% ($24M)
+SaaS Self-Serve:          14.4% ($18M)
+Intelligence API:          7.2% ($9M)
+Marketplace Add-ons:       4.0% ($5M)
+Other 7 Streams:           7.2% ($9M)
 ```
 
-### Year 5 ($4B)
+### Year 3 ($1.32B)
 ```
-Government & Defense:     30.1% ($1.2B)
-SaaS Self-Serve:          28.2% ($1.125B)
-Enterprise+:              17.6% ($700M)
-Enterprise:               17.1% ($680M)
-Other 8 Streams:           7.0% ($280M)
+Government & Defense:     26.5% ($350M)
+Intelligence API:         16.3% ($216M)
+Enterprise:               17.0% ($225M)
+Enterprise+:              15.4% ($204M)
+SaaS Self-Serve:          15.1% ($200M)
+Marketplace Add-ons:       3.9% ($51M)
+Other 7 Streams:           5.8% ($76M)
+```
+
+### Year 5 ($4.96B)
+```
+Government & Defense:     24.2% ($1.2B)
+SaaS Self-Serve:          22.7% ($1.125B)
+Intelligence API:         16.1% ($798M)
+Enterprise+:              14.1% ($700M)
+Enterprise:               13.7% ($680M)
+Marketplace Add-ons:       4.0% ($200M)
+Other 7 Streams:           5.2% ($255M)
 ```
 
 ---

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { env } from '../config/env';
+import { PremiumMarketplace } from './PremiumMarketplace';
 
 interface UsageData {
   projects: { used: number; limit: number };
@@ -34,6 +35,8 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'marketplace'>('overview');
+  const [purchasedAddons, setPurchasedAddons] = useState<string[]>([]);
 
   useEffect(() => {
     fetchBillingData();
@@ -261,6 +264,46 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
         </div>
       )}
 
+      {/* Billing Tabs */}
+      <div className="flex gap-1 bg-gray-800 rounded-xl p-1">
+        <button
+          onClick={() => setActiveTab('overview')}
+          className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+            activeTab === 'overview'
+              ? 'bg-gray-700 text-white shadow-sm'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          📊 Subscription & Usage
+        </button>
+        <button
+          onClick={() => setActiveTab('marketplace')}
+          className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+            activeTab === 'marketplace'
+              ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-400 shadow-sm border border-cyan-500/20'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          🏪 Premium Add-Ons Marketplace
+          <span className="ml-2 bg-green-500/20 text-green-400 text-xs px-1.5 py-0.5 rounded-full">25+ add-ons</span>
+        </button>
+      </div>
+
+      {/* Marketplace Tab */}
+      {activeTab === 'marketplace' && (
+        <PremiumMarketplace
+          currentTier={planName.toLowerCase()}
+          purchasedAddons={purchasedAddons}
+          onPurchase={(addonId) => {
+            setPurchasedAddons(prev => [...prev, addonId]);
+            showNotification('success', `Add-on activated! You now have access to this feature.`);
+          }}
+        />
+      )}
+
+      {/* Overview Tab */}
+      {activeTab === 'overview' && <>
+
       {/* Trial Banner */}
       {isTrialing && (
         <div className="bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between">
@@ -479,6 +522,8 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
           <p className="text-gray-400 text-sm">See all features and pricing</p>
         </button>
       </div>
+
+      </>}
     </div>
   );
 };
