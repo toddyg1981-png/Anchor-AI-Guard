@@ -1,0 +1,10 @@
+# Anchor AI Guard - https://www.anchoraiguard.com
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.anchoraiguard.com/sitemap.xml
+
+# Block internal API endpoints
+User-agent: *
+Disallow: /api/
