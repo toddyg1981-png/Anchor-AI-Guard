@@ -426,14 +426,14 @@ const HowToGuide: React.FC = () => {
               <div className="p-4 bg-slate-900/50 rounded-lg border border-cyan-500/30">
                 <div className="flex justify-between items-center mb-2">
                   <p className="font-medium text-cyan-400">💎 Pro</p>
-                  <p className="text-white font-bold">$490/mo</p>
+                  <p className="text-white font-bold">$4,990/mo</p>
                 </div>
                 <p className="text-slate-400 text-sm">Unlimited projects, 100 scans/month, AI autofix</p>
               </div>
               <div className="p-4 bg-slate-900/50 rounded-lg border border-purple-500/30">
                 <div className="flex justify-between items-center mb-2">
                   <p className="font-medium text-purple-400">🏢 Team</p>
-                  <p className="text-white font-bold">$1,990/mo</p>
+                  <p className="text-white font-bold">$14,990/mo</p>
                 </div>
                 <p className="text-slate-400 text-sm">Everything in Pro, 10 seats, SSO, custom integrations</p>
               </div>

@@ -54,8 +54,8 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   STARTER: {
     name: 'Starter',
-    monthlyPrice: 49000, // $490
-    yearlyPrice: 470000, // $4,700 (20% off)
+    monthlyPrice: 99000, // $990
+    yearlyPrice: 950000, // $9,500 (20% off)
     maxProjects: 3,
     maxScansPerMonth: 50,
     maxTeamMembers: 1,
@@ -73,8 +73,8 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   PRO: {
     name: 'Pro',
-    monthlyPrice: 199000, // $1,990
-    yearlyPrice: 1910000, // $19,100 (20% off)
+    monthlyPrice: 499000, // $4,990
+    yearlyPrice: 4790000, // $47,900 (20% off)
     maxProjects: 10,
     maxScansPerMonth: 250,
     maxTeamMembers: 3,
@@ -95,8 +95,8 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   TEAM: {
     name: 'Team',
-    monthlyPrice: 599000, // $5,990
-    yearlyPrice: 5750000, // $57,500 (20% off)
+    monthlyPrice: 1499000, // $14,990
+    yearlyPrice: 14390000, // $143,900 (20% off)
     maxProjects: 50,
     maxScansPerMonth: 1500,
     maxTeamMembers: 15,
@@ -119,8 +119,8 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   BUSINESS: {
     name: 'Business',
-    monthlyPrice: 1999000, // $19,990
-    yearlyPrice: 19190000, // $191,900 (20% off)
+    monthlyPrice: 4999000, // $49,990
+    yearlyPrice: 47990000, // $479,900 (20% off)
     maxProjects: 200,
     maxScansPerMonth: 10000,
     maxTeamMembers: 75,
@@ -143,14 +143,14 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   ENTERPRISE: {
     name: 'Enterprise',
-    monthlyPrice: 0, // Custom - $1M-2.5M/year
-    yearlyPrice: 100000000, // $1,000,000 starting
+    monthlyPrice: 0, // Custom - $5M-$10M/year
+    yearlyPrice: 500000000, // $5,000,000 starting
     maxProjects: -1, // unlimited
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      '$1,000,000 - $2,500,000/year',
+      '$5,000,000 - $10,000,000/year',
       'For 100-500 developers',
       'Unlimited everything',
       'On-premise deployment option',
@@ -165,14 +165,14 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   ENTERPRISE_PLUS: {
     name: 'Enterprise+',
-    monthlyPrice: 0, // Custom - $2.5M-7.5M/year
-    yearlyPrice: 250000000, // $2,500,000 starting
+    monthlyPrice: 0, // Custom - $10M-$25M/year
+    yearlyPrice: 1000000000, // $10,000,000 starting
     maxProjects: -1,
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      '$2,500,000 - $7,500,000/year',
+      '$10,000,000 - $25,000,000/year',
       'For 500-2000+ developers',
       'Everything in Enterprise',
       'Multi-region deployment',
@@ -188,14 +188,14 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   GOVERNMENT: {
     name: 'Government & Defense',
-    monthlyPrice: 0, // Custom - $7.5M-30M+/year
-    yearlyPrice: 750000000, // $7,500,000 starting
+    monthlyPrice: 0, // Custom - $25M-$75M+/year
+    yearlyPrice: 2500000000, // $25,000,000 starting
     maxProjects: -1,
     maxScansPerMonth: -1,
     maxTeamMembers: -1,
     maxAIQueries: -1,
     features: [
-      '$7,500,000 - $30,000,000+/year',
+      '$25,000,000 - $75,000,000+/year',
       'Federal, State & Defense',
       'National Security Module (WORLD FIRST)',
       'Critical Infrastructure Protection (WORLD FIRST)',

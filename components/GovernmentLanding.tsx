@@ -252,7 +252,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
   const pricing = [
     {
       tier: 'Department Level',
-      price: '$19,990',
+      price: '$49,990',
       period: '/month',
       users: 'Up to 500 users',
       desc: 'For individual government departments and small agencies requiring essential cybersecurity compliance.',
@@ -261,7 +261,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
     },
     {
       tier: 'Agency Level',
-      price: '$49,990',
+      price: '$149,990',
       period: '/month',
       users: 'Up to 5,000 users',
       desc: 'For large agencies and departments requiring full SOC automation and advanced threat intelligence.',

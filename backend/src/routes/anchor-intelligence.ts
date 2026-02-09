@@ -80,8 +80,8 @@ interface WebhookConfig {
 const B2B_PLANS = {
   starter: {
     name: 'Starter API',
-    monthlyPrice: 4999000, // $49,990/mo
-    yearlyPrice: 47990000, // $479,900/yr
+    monthlyPrice: 9999000, // $99,990/mo
+    yearlyPrice: 95990000, // $959,900/yr
     rateLimit: 60,      // 60 req/min
     monthlyQuota: 10000, // 10K requests/mo
     permissions: ['threat-intel', 'rule-generation'],
@@ -89,8 +89,8 @@ const B2B_PLANS = {
   },
   professional: {
     name: 'Professional API',
-    monthlyPrice: 24999000, // $249,990/mo
-    yearlyPrice: 239990000, // $2,399,900/yr
+    monthlyPrice: 49999000, // $499,990/mo
+    yearlyPrice: 479990000, // $4,799,900/yr
     rateLimit: 300,       // 300 req/min
     monthlyQuota: 100000, // 100K requests/mo
     permissions: ['threat-intel', 'rule-generation', 'ai-analysis', 'predictive', 'competitive-intel'],
@@ -98,8 +98,8 @@ const B2B_PLANS = {
   },
   enterprise: {
     name: 'Enterprise API',
-    monthlyPrice: 99999000, // $999,990/mo
-    yearlyPrice: 959990000, // $9,599,900/yr
+    monthlyPrice: 249999000, // $2,499,990/mo
+    yearlyPrice: 2399990000, // $23,999,900/yr
     rateLimit: 1000,      // 1K req/min
     monthlyQuota: 1000000, // 1M requests/mo
     permissions: ['threat-intel', 'rule-generation', 'ai-analysis', 'predictive', 'competitive-intel', 'white-label', 'custom-models', 'webhooks'],

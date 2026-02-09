@@ -488,15 +488,15 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
             <div className="grid gap-4 mt-4">
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Starter</h3>
-                <p className="text-sm mt-1">$290/month - Ideal for individual developers and small projects</p>
+                <p className="text-sm mt-1">$990/month - Ideal for individual developers and small projects</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Professional</h3>
-                <p className="text-sm mt-1">$990/month - For growing teams with advanced security needs</p>
+                <p className="text-sm mt-1">$4,990/month - For growing teams with advanced security needs</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Enterprise</h3>
-                <p className="text-sm mt-1">$2,990/month - Full platform access with premium support</p>
+                <p className="text-sm mt-1">$49,990/month - Full platform access with premium support</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Government</h3>

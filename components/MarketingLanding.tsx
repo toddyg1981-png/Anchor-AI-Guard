@@ -215,7 +215,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
     },
     {
       question: 'What\'s included in each pricing tier?',
-      answer: 'Free gives you basic scanning for 1 project. Pro ($1,990/mo) unlocks world-first features like Predictive CVE Intelligence and AI Auto-Fix. Team ($5,990/mo) adds Digital Twin Security, Autonomous SOC, and real-time collaboration for 15 users. Business ($19,990/mo) includes all 86 security modules, SSO, and 99.9% SLA. Enterprise and Government plans start at $1M/year with unlimited everything.',
+      answer: 'Free gives you basic scanning for 1 project. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence and AI Auto-Fix. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, and real-time collaboration for 15 users. Business ($49,990/mo) includes all 86 security modules, SSO, and 99.9% SLA. Enterprise and Government plans start at $5M/year with unlimited everything.',
     },
     {
       question: 'What languages, frameworks, and platforms do you support?',
@@ -444,7 +444,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               </span>
             </h2>
             <p className="text-xl text-purple-300 max-w-2xl mx-auto">
-              <strong>We built the security tools we wished existed.</strong> Fifteen world-first innovations 
+              <strong>We built the security tools we wished existed.</strong> Sixteen world-first innovations 
               that fundamentally change how organisations protect their critical assets and code.
             </p>
           </div>
@@ -617,42 +617,42 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               {
                 icon: '🔍',
                 title: 'Threat Intelligence API',
-                price: 'From $49,990/mo',
+                price: 'From $99,990/mo',
                 desc: 'Real-time aggregated feeds from NVD, CISA KEV, MITRE ATT&CK, AlienVault OTX — enriched and scored by AI.',
                 color: 'border-purple-500/30 hover:border-purple-400',
               },
               {
                 icon: '📋',
                 title: 'Detection Rule Generator',
-                price: 'From $49,990/mo',
+                price: 'From $99,990/mo',
                 desc: 'AI generates production-ready Sigma, YARA, Snort, Suricata, KQL & SPL rules. Bulk generation supported.',
                 color: 'border-blue-500/30 hover:border-blue-400',
               },
               {
                 icon: '🧠',
                 title: 'AI Threat Analysis',
-                price: 'From $249,990/mo',
+                price: 'From $499,990/mo',
                 desc: 'Deep analysis of malware, network traffic, logs, incidents, vulnerabilities, and IOCs. Instant verdicts.',
                 color: 'border-cyan-500/30 hover:border-cyan-400',
               },
               {
                 icon: '🔮',
                 title: 'Predictive Modeling',
-                price: 'From $249,990/mo',
+                price: 'From $499,990/mo',
                 desc: 'Industry-specific threat predictions with likelihood scores, attack vectors, and mitigation strategies.',
                 color: 'border-pink-500/30 hover:border-pink-400',
               },
               {
                 icon: '🔎',
                 title: 'IOC Enrichment',
-                price: 'From $49,990/mo',
+                price: 'From $99,990/mo',
                 desc: 'Instantly enrich IPs, domains, hashes, URLs, and emails with reputation, geolocation, and threat associations.',
                 color: 'border-amber-500/30 hover:border-amber-400',
               },
               {
                 icon: '📊',
                 title: 'Competitive Intelligence',
-                price: 'From $249,990/mo',
+                price: 'From $499,990/mo',
                 desc: 'AI analysis of competitor products, pricing trends, market gaps, and strategic positioning in cybersecurity.',
                 color: 'border-green-500/30 hover:border-green-400',
               },
@@ -750,7 +750,7 @@ print(rule["rule"]["content"])
               Explore Anchor Intelligence →
             </button>
             <p className="text-purple-400 text-sm mt-4">
-              API access from $49,990/mo • Enterprise & OEM pricing available • 99.99% SLA
+              API access from $99,990/mo • Enterprise & OEM pricing available • 99.99% SLA
             </p>
           </div>
         </div>
@@ -823,7 +823,7 @@ print(rule["rule"]["content"])
                 MOST POPULAR
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Pro</h3>
-              <div className="text-3xl font-bold text-pink-400 mb-4">$1,990<span className="text-lg text-purple-400">/mo</span></div>
+              <div className="text-3xl font-bold text-pink-400 mb-4">$4,990<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
                 <li>✓ 10 projects</li>
                 <li>✓ 250 scans/month</li>
@@ -839,7 +839,7 @@ print(rule["rule"]["content"])
             {/* Team */}
             <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Team</h3>
-              <div className="text-3xl font-bold text-cyan-400 mb-4">$5,990<span className="text-lg text-purple-400">/mo</span></div>
+              <div className="text-3xl font-bold text-cyan-400 mb-4">$14,990<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
                 <li>✓ 50 projects</li>
                 <li>✓ 15 team members</li>
@@ -855,7 +855,7 @@ print(rule["rule"]["content"])
             {/* Business */}
             <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Business</h3>
-              <div className="text-3xl font-bold text-cyan-400 mb-4">$19,990<span className="text-lg text-purple-400">/mo</span></div>
+              <div className="text-3xl font-bold text-cyan-400 mb-4">$49,990<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
                 <li>✓ 200 projects</li>
                 <li>✓ 75 team members</li>
@@ -871,7 +871,7 @@ print(rule["rule"]["content"])
 
           <div className="text-center">
             <p className="text-purple-400 mb-4">
-              <strong>Enterprise & Government</strong> plans available from <span className="text-pink-400">$1M/year</span>
+              <strong>Enterprise & Government</strong> plans available from <span className="text-pink-400">$5M/year</span>
             </p>
             <button
               onClick={onViewPricing}
@@ -936,7 +936,7 @@ print(rule["rule"]["content"])
               <strong>Get a $345K+ security stack for a fraction of the price.</strong>
             </p>
             <p className="text-lg text-purple-400 mb-8">
-              86+ modules. 16 world-first features. Starting at <span className="text-pink-400 font-bold">$1,990/month</span>.
+              86+ modules. 16 world-first features. Starting at <span className="text-pink-400 font-bold">$4,990/month</span>.
             </p>
             <button
               onClick={onGetStarted}
