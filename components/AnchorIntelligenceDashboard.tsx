@@ -251,9 +251,9 @@ export default function AnchorIntelligenceDashboard() {
                   onChange={e => setNewKeyPlan(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none"
                 >
-                  <option value="starter">Starter ($4,999/mo)</option>
-                  <option value="professional">Professional ($24,999/mo)</option>
-                  <option value="enterprise">Enterprise ($99,999/mo)</option>
+                  <option value="starter">Starter ($49,990/mo)</option>
+                  <option value="professional">Professional ($249,990/mo)</option>
+                  <option value="enterprise">Enterprise ($999,990/mo)</option>
                   <option value="unlimited">Unlimited / OEM (Custom)</option>
                 </select>
               </div>

@@ -366,12 +366,12 @@ Need help with a specific integration? Just ask!`;
 - Basic vulnerability detection
 - Community support
 
-💎 **Pro** ($49/month)
+💎 **Pro** ($490/month)
 - Unlimited projects, 100 scans/month
 - AI autofix, SBOM analysis
 - Priority support
 
-🏢 **Team** ($199/month)
+🏢 **Team** ($1,990/month)
 - Everything in Pro
 - 10 team seats, SSO
 - Custom integrations

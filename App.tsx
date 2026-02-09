@@ -89,6 +89,7 @@ const BackupDisasterRecovery = React.lazy(() => import('./components/BackupDisas
 const SelfProtection = React.lazy(() => import('./components/SelfProtection'));
 const AnchorIntelligenceLanding = React.lazy(() => import('./components/AnchorIntelligenceLanding'));
 const AnchorIntelligenceDashboard = React.lazy(() => import('./components/AnchorIntelligenceDashboard'));
+const GovernmentLanding = React.lazy(() => import('./components/GovernmentLanding'));
 const AIEvolutionDashboard = React.lazy(() => import('./components/AIEvolutionDashboard'));
 const UserProfileSettings = React.lazy(() => import('./components/UserProfileSettings'));
 const AIHelpDesk = React.lazy(() => import('./components/AIHelpDesk'));
@@ -124,7 +125,8 @@ export type AppView =
   | 'contact'        // Contact page
   | 'purchase-terms' // Purchase terms and conditions
   | 'intelligence'     // Anchor Intelligence B2B Landing Page
-  | 'intelligence-dashboard'; // API Customer Dashboard
+  | 'intelligence-dashboard' // API Customer Dashboard
+  | 'government';      // Government & Sovereign Defense Landing Page
 
 // Dashboard sub-views
 export type DashboardView = 
@@ -254,6 +256,8 @@ const AppContent: React.FC = () => {
       setCurrentView('intelligence');
     } else if (path === '/intelligence/dashboard') {
       setCurrentView('intelligence-dashboard');
+    } else if (path === '/government' || path === '/sovereign') {
+      setCurrentView('government');
     }
 
     // Handle Stripe checkout success redirect
@@ -299,6 +303,8 @@ const AppContent: React.FC = () => {
         setCurrentView('intelligence');
       } else if (path === '/intelligence/dashboard') {
         setCurrentView('intelligence-dashboard');
+      } else if (path === '/government' || path === '/sovereign') {
+        setCurrentView('government');
       } else if (path === '/dashboard') {
         setCurrentView('dashboard');
       } else if (path === '/') {
@@ -421,6 +427,11 @@ const AppContent: React.FC = () => {
   const handleViewIntelligence = useCallback(() => {
     setCurrentView('intelligence');
     window.history.pushState({}, '', '/intelligence');
+  }, []);
+
+  const handleViewGovernment = useCallback(() => {
+    setCurrentView('government');
+    window.history.pushState({}, '', '/government');
   }, []);
 
   const handleViewIntelligenceDashboard = useCallback(() => {
@@ -733,6 +744,7 @@ const AppContent: React.FC = () => {
             onViewContact={handleViewContact}
             onViewPurchaseTerms={handleViewPurchaseTerms}
             onViewIntelligence={handleViewIntelligence}
+            onViewGovernment={handleViewGovernment}
           />
         );
       
@@ -842,6 +854,9 @@ const AppContent: React.FC = () => {
       case 'intelligence':
         return <AnchorIntelligenceLanding onBack={handleBackToMarketing} />;
 
+      case 'government':
+        return <GovernmentLanding onBack={handleBackToMarketing} onGetStarted={handleGetStarted} onViewIntelligence={handleViewIntelligence} />;
+
       case 'intelligence-dashboard':
         return <AnchorIntelligenceDashboard />;
       
@@ -858,6 +873,7 @@ const AppContent: React.FC = () => {
             onViewContact={handleViewContact}
             onViewPurchaseTerms={handleViewPurchaseTerms}
             onViewIntelligence={handleViewIntelligence}
+            onViewGovernment={handleViewGovernment}
           />
         );
     }
