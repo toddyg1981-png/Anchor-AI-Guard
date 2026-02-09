@@ -1,8 +1,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import AppRouter from './components/AppRouter';
 import ErrorBoundary from './components/ErrorBoundary';
+import { QueryProvider } from './hooks/QueryProvider';
 import { logger } from './utils/logger';
 import { performanceMonitor } from './utils/performanceMonitor';
 
@@ -26,7 +27,9 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <ErrorBoundary>
-      <App />
+      <QueRouterryProvider>
+        <App />
+      </QueryProvider>
     </ErrorBoundary>
   </React.StrictMode>
 );

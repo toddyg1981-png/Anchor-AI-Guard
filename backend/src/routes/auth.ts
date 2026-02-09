@@ -68,6 +68,15 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       { expiresIn: '7d' }
     );
 
+    // Set httpOnly cookie for secure auth
+    reply.setCookie('anchor_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    });
+
     return reply.status(201).send({
       user: {
         id: user.id,
@@ -104,6 +113,17 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(401).send({ error: 'Invalid credentials' });
     }
 
+    // Check if MFA is enabled
+    const totpSecret = await prisma.totpSecret.findUnique({ where: { userId: user.id } });
+    if (totpSecret?.verified) {
+      // Don't issue full token yet - require MFA step
+      return reply.send({
+        mfaRequired: true,
+        userId: user.id,
+        message: 'MFA verification required. Call POST /mfa/validate with userId and code.',
+      });
+    }
+
     const org = await prisma.organization.findUnique({
       where: { id: user.orgId },
     });
@@ -117,6 +137,15 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       },
       { expiresIn: '7d' }
     );
+
+    // Set httpOnly cookie for secure auth
+    reply.setCookie('anchor_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    });
 
     return reply.send({
       user: {
@@ -155,6 +184,15 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       { userId, email, orgId, role },
       { expiresIn: '7d' }
     );
+
+    // Set httpOnly cookie for secure auth
+    reply.setCookie('anchor_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    });
 
     return reply.send({ token });
   });
@@ -236,6 +274,15 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       { expiresIn: '7d' }
     );
 
+    // Set httpOnly cookie for secure auth
+    reply.setCookie('anchor_token', jwtToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    });
+
     return reply.status(201).send({
       user: {
         id: user.id,
@@ -245,5 +292,11 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       },
       token: jwtToken,
     });
+  });
+
+  // Logout - clear auth cookie
+  app.post('/auth/logout', async (request, reply) => {
+    reply.clearCookie('anchor_token', { path: '/' });
+    return reply.send({ success: true });
   });
 }

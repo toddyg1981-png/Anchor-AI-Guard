@@ -33,9 +33,11 @@
     "prepare": "node -e \"try { require('husky').install() } catch (e) {}\""
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.20",
     "jspdf": "^4.1.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
@@ -45,6 +47,7 @@
     "@types/node": "^22.14.0",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@types/supertest": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-react": "^5.0.0",
@@ -65,7 +68,7 @@
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
-    "vitest": "^1.1.0"
+    "vitest": "^1.6.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

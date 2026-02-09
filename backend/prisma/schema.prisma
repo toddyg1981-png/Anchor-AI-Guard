@@ -56,6 +56,7 @@ model User {
   org           Organization   @relation(fields: [orgId], references: [id])
   oauthAccounts OAuthAccount[]
   profile       UserProfile?
+  totpSecret    TotpSecret?
 
   @@index([orgId])
 }
@@ -285,6 +286,16 @@ model PasswordReset {
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime @default(now())
+}
+
+model TotpSecret {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  secret    String   // Encrypted TOTP secret
+  verified  Boolean  @default(false)  // Has user confirmed setup with valid code?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model OAuthAccount {

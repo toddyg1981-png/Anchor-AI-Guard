@@ -29,4 +29,5 @@ export const env = {
   adminEmail: process.env.ADMIN_EMAIL ?? '',
   nvdApiKey: process.env.NVD_API_KEY ?? '',
   sentryDsn: process.env.SENTRY_DSN ?? '',
+  redisUrl: process.env.REDIS_URL ?? '',
 };

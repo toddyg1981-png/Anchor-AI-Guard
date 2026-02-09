@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import jwt from '@fastify/jwt';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -41,6 +42,8 @@ import anchorIntelligenceRoutes from './routes/anchor-intelligence';
 import { profileRoutes } from './routes/profile';
 import { verificationRoutes } from './routes/verification';
 import { adminRoutes } from './routes/admin';
+import { mfaRoutes } from './routes/mfa';
+import { ssoRoutes } from './routes/sso';
 import { aiChatRoutes } from './routes/ai-chat';
 import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
 import { wsManager } from './lib/websocket';
@@ -114,7 +117,18 @@ async function main() {
     credentials: true,
   });
 
-  await app.register(jwt, { secret: env.jwtSecret });
+  // Cookie support for httpOnly JWT
+  await app.register(cookie, {
+    secret: env.jwtSecret, // signs the cookie
+  });
+
+  await app.register(jwt, {
+    secret: env.jwtSecret,
+    cookie: {
+      cookieName: 'anchor_token',
+      signed: false,
+    },
+  });
 
   await app.register(swagger, {
     swagger: {
@@ -145,7 +159,9 @@ async function main() {
   // Register routes
   app.register(healthRoutes, { prefix: '/api' });
   app.register(authRoutes, { prefix: '/api' });
+  app.register(mfaRoutes, { prefix: '/api' });
   app.register(oauthRoutes, { prefix: '/api' });
+  app.register(ssoRoutes, { prefix: '/api' });
   app.register(emailRoutes, { prefix: '/api' });
   app.register(billingRoutes, { prefix: '/api' });
   app.register(projectRoutes, { prefix: '/api' });

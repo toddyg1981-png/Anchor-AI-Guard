@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
-import { hashPassword, authMiddleware } from '../lib/auth';
+import { hashPassword, authMiddleware, Roles } from '../lib/auth';
 import { env } from '../config/env';
 import crypto from 'crypto';
 
@@ -18,6 +18,53 @@ interface EmailOptions {
   html: string;
   text?: string;
 }
+
+// Email queue for retry logic
+interface QueuedEmail {
+  id: string;
+  options: EmailOptions;
+  attempts: number;
+  maxAttempts: number;
+  nextRetryAt: number;
+  status: 'pending' | 'sent' | 'failed';
+  error?: string;
+  createdAt: number;
+}
+
+const emailQueue: QueuedEmail[] = [];
+const MAX_QUEUE_SIZE = 1000;
+
+async function queueEmail(options: EmailOptions): Promise<string> {
+  const id = crypto.randomUUID();
+  if (emailQueue.length >= MAX_QUEUE_SIZE) {
+    emailQueue.splice(0, 100); // Remove oldest 100
+  }
+  emailQueue.push({
+    id, options, attempts: 0, maxAttempts: 3,
+    nextRetryAt: Date.now(), status: 'pending', createdAt: Date.now()
+  });
+  processQueue(); // Fire and forget
+  return id;
+}
+
+async function processQueue(): Promise<void> {
+  const pending = emailQueue.filter(e => e.status === 'pending' && e.nextRetryAt <= Date.now());
+  for (const email of pending) {
+    email.attempts++;
+    const success = await sendEmail(email.options);
+    if (success) {
+      email.status = 'sent';
+    } else if (email.attempts >= email.maxAttempts) {
+      email.status = 'failed';
+      email.error = 'Max retries exceeded';
+    } else {
+      email.nextRetryAt = Date.now() + Math.pow(2, email.attempts) * 1000;
+    }
+  }
+}
+
+// Process retry queue every 30 seconds
+setInterval(() => processQueue(), 30000);
 
 // Send email via Resend API
 async function sendEmail(options: EmailOptions): Promise<boolean> {
@@ -48,6 +95,55 @@ async function sendEmail(options: EmailOptions): Promise<boolean> {
     console.error('Email send error:', error);
     return false;
   }
+}
+
+// Retry wrapper with exponential backoff (only retries on 5xx / network errors)
+async function sendEmailWithRetry(options: EmailOptions, maxRetries = 3): Promise<boolean> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: `${APP_NAME} <${FROM_EMAIL}>`,
+          to: options.to,
+          subject: options.subject,
+          html: options.html,
+          text: options.text,
+        }),
+      });
+
+      if (response.ok) {
+        return true;
+      }
+
+      const error = await response.json();
+
+      // Don't retry on 4xx client errors
+      if (response.status >= 400 && response.status < 500) {
+        console.error(`Resend API client error (${response.status}), not retrying:`, error);
+        return false;
+      }
+
+      // 5xx server error — retry if attempts remain
+      console.error(`Resend API server error (${response.status}), attempt ${attempt + 1}/${maxRetries + 1}:`, error);
+    } catch (networkError) {
+      // Network failure — retry if attempts remain
+      console.error(`Email network error, attempt ${attempt + 1}/${maxRetries + 1}:`, networkError);
+    }
+
+    if (attempt < maxRetries) {
+      const delay = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
+      console.log(`Retrying email to ${options.to} in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  console.error(`All ${maxRetries + 1} email attempts failed for ${options.to}`);
+  return false;
 }
 
 // Email templates
@@ -403,7 +499,7 @@ export async function notifyAdminNewSignup(userEmail: string, userName: string):
   }
   
   const template = emailTemplates.adminNewSignup(userEmail, userName, new Date());
-  await sendEmail({
+  await sendEmailWithRetry({
     to: ADMIN_EMAIL,
     subject: template.subject,
     html: template.html,
@@ -465,7 +561,7 @@ export async function emailRoutes(app: FastifyInstance): Promise<void> {
 
     // Send email
     const template = emailTemplates.passwordReset(token);
-    await sendEmail({
+    await sendEmailWithRetry({
       to: normalizedEmail,
       subject: template.subject,
       html: template.html,
@@ -580,7 +676,7 @@ export async function emailRoutes(app: FastifyInstance): Promise<void> {
         return reply.status(400).send({ error: 'Unknown email type' });
     }
 
-    const success = await sendEmail({
+    const success = await sendEmailWithRetry({
       to: user.email,
       subject: `[TEST] ${template.subject}`,
       html: template.html,
@@ -589,7 +685,17 @@ export async function emailRoutes(app: FastifyInstance): Promise<void> {
 
     return reply.send({ success, message: success ? 'Test email sent' : 'Failed to send email' });
   });
+
+  // Email queue status endpoint
+  app.get('/email/queue-status', { preHandler: authMiddleware([Roles.OWNER, Roles.ADMIN]) }, async (request, reply) => {
+    return reply.send({
+      total: emailQueue.length,
+      pending: emailQueue.filter(e => e.status === 'pending').length,
+      sent: emailQueue.filter(e => e.status === 'sent').length,
+      failed: emailQueue.filter(e => e.status === 'failed').length,
+    });
+  });
 }
 
 // Export for use in other modules
-export { sendEmail, emailTemplates };
+export { sendEmail, sendEmailWithRetry, emailTemplates, queueEmail };

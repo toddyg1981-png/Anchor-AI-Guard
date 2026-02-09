@@ -8,59 +8,30 @@
 
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import crypto from 'crypto';
-
-// CSRF Token Store (in production, use Redis)
-const csrfTokens = new Map<string, { token: string; createdAt: number; userId: string }>();
-const CSRF_TOKEN_EXPIRY = 15 * 60 * 1000; // 15 minutes
+import * as store from './security-store';
 
 /**
  * Generate a cryptographically secure CSRF token
  */
-export function generateCSRFToken(userId: string): string {
+export async function generateCSRFToken(userId: string): Promise<string> {
   const token = crypto.randomBytes(32).toString('hex');
-  csrfTokens.set(token, {
-    token,
-    createdAt: Date.now(),
-    userId
-  });
-  
-  // Cleanup expired tokens
-  cleanupExpiredCSRFTokens();
-  
+  await store.storeCSRFToken(token, userId);
   return token;
 }
 
 /**
  * Validate a CSRF token
  */
-export function validateCSRFToken(token: string, userId: string): boolean {
-  const stored = csrfTokens.get(token);
+export async function validateCSRFToken(token: string, userId: string): Promise<boolean> {
+  const stored = await store.getCSRFToken(token);
   if (!stored) return false;
-  
-  // Check expiry
-  if (Date.now() - stored.createdAt > CSRF_TOKEN_EXPIRY) {
-    csrfTokens.delete(token);
-    return false;
-  }
   
   // Check user match
   if (stored.userId !== userId) return false;
   
   // Single use - delete after validation
-  csrfTokens.delete(token);
+  await store.deleteCSRFToken(token);
   return true;
-}
-
-/**
- * Cleanup expired CSRF tokens
- */
-function cleanupExpiredCSRFTokens(): void {
-  const now = Date.now();
-  for (const [token, data] of csrfTokens.entries()) {
-    if (now - data.createdAt > CSRF_TOKEN_EXPIRY) {
-      csrfTokens.delete(token);
-    }
-  }
 }
 
 /**
@@ -98,7 +69,7 @@ export function csrfProtection() {
     
     // If we have a user context and a CSRF token, validate it
     if (user && csrfToken) {
-      if (!validateCSRFToken(csrfToken, user.id)) {
+      if (!(await validateCSRFToken(csrfToken, user.id))) {
         request.log.warn({ userId: user.id }, 'CSRF: Invalid or expired token');
         return reply.status(403).send({ error: 'Invalid or expired CSRF token' });
       }
@@ -179,47 +150,31 @@ export const rateLimitConfigs = {
 /**
  * IP-based blocking for repeated violations
  */
-const blockedIPs = new Map<string, { until: number; reason: string }>();
-const violationCounts = new Map<string, { count: number; firstViolation: number }>();
-
 const BLOCK_THRESHOLD = 10; // violations before block
-const BLOCK_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-const VIOLATION_WINDOW = 60 * 60 * 1000; // 1 hour window
+const BLOCK_DURATION_SECONDS = 24 * 60 * 60; // 24 hours
+const VIOLATION_WINDOW_SECONDS = 60 * 60; // 1 hour window
 
 /**
  * Check if IP is blocked
  */
-export function isIPBlocked(ip: string): { blocked: boolean; reason?: string; until?: Date } {
-  const block = blockedIPs.get(ip);
+export async function isIPBlocked(ip: string): Promise<{ blocked: boolean; reason?: string; until?: Date }> {
+  const block = await store.isIPBlocked(ip);
   if (!block) return { blocked: false };
-  
-  if (Date.now() > block.until) {
-    blockedIPs.delete(ip);
-    return { blocked: false };
-  }
   
   return { 
     blocked: true, 
     reason: block.reason,
-    until: new Date(block.until)
+    until: new Date(block.expiresAt)
   };
 }
 
 /**
  * Record a security violation for an IP
  */
-export function recordViolation(ip: string, reason: string): void {
-  const now = Date.now();
-  const existing = violationCounts.get(ip);
-  
-  if (existing && now - existing.firstViolation < VIOLATION_WINDOW) {
-    existing.count++;
-    if (existing.count >= BLOCK_THRESHOLD) {
-      blockedIPs.set(ip, { until: now + BLOCK_DURATION, reason });
-      violationCounts.delete(ip);
-    }
-  } else {
-    violationCounts.set(ip, { count: 1, firstViolation: now });
+export async function recordViolation(ip: string, reason: string): Promise<void> {
+  const count = await store.recordViolation(ip, VIOLATION_WINDOW_SECONDS);
+  if (count >= BLOCK_THRESHOLD) {
+    await store.blockIP(ip, reason, BLOCK_DURATION_SECONDS);
   }
 }
 
@@ -229,7 +184,7 @@ export function recordViolation(ip: string, reason: string): void {
 export function ipBlockingMiddleware() {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     const ip = request.ip;
-    const blockStatus = isIPBlocked(ip);
+    const blockStatus = await isIPBlocked(ip);
     
     if (blockStatus.blocked) {
       request.log.warn({ ip, reason: blockStatus.reason }, 'Blocked IP attempted access');
@@ -258,26 +213,19 @@ export interface AuditLogEntry {
   details?: Record<string, any>;
 }
 
-const auditLog: AuditLogEntry[] = [];
-const MAX_AUDIT_LOG_SIZE = 10000;
-
 /**
  * Log a security audit event
  */
-export function logAuditEvent(entry: Omit<AuditLogEntry, 'timestamp'>): void {
-  auditLog.unshift({ ...entry, timestamp: new Date() });
-  
-  // Trim log if too large (in production, this would go to a database)
-  if (auditLog.length > MAX_AUDIT_LOG_SIZE) {
-    auditLog.pop();
-  }
+export async function logAuditEvent(entry: Omit<AuditLogEntry, 'timestamp'>): Promise<void> {
+  await store.pushAuditLog({ ...entry, timestamp: new Date() });
 }
 
 /**
  * Get recent audit events
  */
-export function getAuditLog(filters?: { userId?: string; orgId?: string; action?: string }): AuditLogEntry[] {
-  let result = auditLog;
+export async function getAuditLog(filters?: { userId?: string; orgId?: string; action?: string }): Promise<AuditLogEntry[]> {
+  const entries = (await store.getAuditLog(100)) as AuditLogEntry[];
+  let result = entries;
   
   if (filters?.userId) {
     result = result.filter(e => e.userId === filters.userId);
@@ -289,7 +237,7 @@ export function getAuditLog(filters?: { userId?: string; orgId?: string; action?
     result = result.filter(e => e.action === filters.action);
   }
   
-  return result.slice(0, 100); // Return max 100 entries
+  return result;
 }
 
 /**
