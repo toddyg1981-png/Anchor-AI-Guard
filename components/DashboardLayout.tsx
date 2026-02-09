@@ -69,156 +69,133 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     // Search functionality - implement as needed
   }, 300);
 
-  type NavItem = { id: string; label: string; icon: string; view: DashboardView; description?: string; };
+  type NavItem = { id: string; label: string; icon: string; view: DashboardView; description?: string; worldFirst?: boolean; };
 
-  const navCategories: Array<{ category: string; icon: string; items: NavItem[] }> = [
+  const navCategories: Array<{ category: string; icon: string; pillar?: string; items: NavItem[] }> = [
+    // ─────────────────────────────────────────────────────────────
+    // PILLAR 1: CORE PLATFORM
+    // ─────────────────────────────────────────────────────────────
     {
-      category: 'Overview',
-      icon: '📊',
+      category: 'Core Platform',
+      icon: '⚡',
+      pillar: '1',
       items: [
-        { id: 'dashboard', label: 'Dashboard', icon: '📊', view: 'overview', description: 'Monitor your security posture in real-time' },
+        { id: 'dashboard', label: 'Dashboard', icon: '📊', view: 'overview', description: 'Real-time security posture overview' },
         { id: 'executive', label: 'Executive View', icon: '👔', view: 'executiveDashboard', description: 'C-suite security overview' },
-        { id: 'metrics', label: 'Security Metrics', icon: '📈', view: 'securityMetrics', description: 'KPIs and executive reporting' },
+        { id: 'metrics', label: 'Security Metrics', icon: '📈', view: 'securityMetrics', description: 'KPIs and reporting' },
         { id: 'soc', label: 'SOC Dashboard', icon: '📺', view: 'socDashboard', description: 'Security operations center' },
+        { id: 'ai-evolution', label: 'AI Engine', icon: '🧬', view: 'aiEvolution', description: 'Self-evolving threat detection' },
+        { id: 'intelligence', label: 'Intelligence API', icon: '🔑', view: 'intelligenceDashboard', description: 'B2B AI-as-a-Service platform' },
+        { id: 'sdk-security', label: 'SDK Security', icon: '📦', view: 'sdkSecurity', description: 'SDK management & scanning' },
+        { id: 'security-training', label: 'Training', icon: '🎓', view: 'securityTraining', description: 'Awareness & gamified learning' },
+        { id: 'help-desk', label: 'AI Help Desk', icon: '💬', view: 'helpDesk', description: 'Instant AI-powered support' },
+        { id: 'how-to-guide', label: 'How-To Guide', icon: '📚', view: 'howToGuide', description: 'Learn all features' },
       ],
     },
+
+    // ─────────────────────────────────────────────────────────────
+    // PILLAR 2: PROTECTION STACK
+    // ─────────────────────────────────────────────────────────────
     {
-      category: 'Threat Detection',
-      icon: '🎯',
-      items: [
-        { id: 'threat-hunting', label: 'Threat Hunting', icon: '🎯', view: 'threatHunting', description: 'Proactive hunts and MITRE ATT&CK coverage' },
-        { id: 'threat-intel', label: 'Threat Intelligence', icon: '🔍', view: 'threatIntelligence', description: 'IOC feeds and threat correlation' },
-        { id: 'ueba', label: 'UEBA', icon: '👤', view: 'ueba', description: 'User/entity behavior analytics' },
-        { id: 'insider-threat', label: 'Insider Threats', icon: '🕵️', view: 'insiderThreat', description: 'Insider threat detection' },
-        { id: 'dark-web', label: 'Dark Web Monitor', icon: '🕶️', view: 'darkWebMonitor', description: 'Dark web intelligence feeds' },
-        { id: 'malware', label: 'Malware Analysis', icon: '🐞', view: 'malwareAnalysis', description: 'Sandbox and reverse engineering' },
-      ],
-    },
-    {
-      category: 'Defense & Response',
+      category: 'Protection Stack',
       icon: '🛡️',
+      pillar: '2',
       items: [
-        { id: 'edr', label: 'EDR', icon: '🖥️', view: 'edr', description: 'Endpoint detection and response' },
-        { id: 'soar', label: 'SOAR', icon: '🤖', view: 'soar', description: 'Orchestration and automated response' },
-        { id: 'incident', label: 'Incident Response', icon: '🚨', view: 'incidentResponse', description: 'Automated incident playbooks' },
-        { id: 'active-defense', label: 'Active Defense', icon: '⚔️', view: 'activeDefense', description: 'Honeypots and threat deception' },
-        { id: 'deception', label: 'Deception', icon: '🎭', view: 'deceptionTechnology', description: 'Decoys and attacker misdirection' },
-        { id: 'autonomous-soc', label: 'Autonomous SOC', icon: '🤖', view: 'autonomousSOC', description: 'AI-powered 24/7 security operations' },
-        { id: 'forensics', label: 'Forensics Lab', icon: '🧪', view: 'forensicsLab', description: 'Evidence handling and analysis' },
-      ],
-    },
-    {
-      category: 'Vulnerability & Attack Surface',
-      icon: '🛰️',
-      items: [
-        { id: 'attack-surface', label: 'Attack Surface', icon: '🛰️', view: 'attackSurface', description: 'Discover exposed assets and shadow IT' },
-        { id: 'vuln-mgmt', label: 'Vulnerability Mgmt', icon: '🛠️', view: 'vulnerability', description: 'CVE tracking, SLAs, remediation' },
-        { id: 'pentest', label: 'Pen Testing', icon: '🛠️', view: 'penetrationTesting', description: 'Automated exploitation and validation' },
-        { id: 'breach-sim', label: 'Breach Simulator', icon: '💥', view: 'breachSimulator', description: 'Attack simulation exercises' },
-        { id: 'purple-team', label: 'Purple Team', icon: '💜', view: 'purpleTeam', description: 'Adversary emulation exercises' },
-        { id: 'threat-modeling', label: 'Threat Modeling', icon: '🗺️', view: 'threatModeling', description: 'STRIDE/DREAD and attack trees' },
-        { id: 'api-security', label: 'API Security', icon: '🔌', view: 'apiSecurity', description: 'API endpoint scanning' },
-      ],
-    },
-    {
-      category: 'Network & Email',
-      icon: '🌐',
-      items: [
-        { id: 'network-traffic', label: 'Network Traffic', icon: '🌐', view: 'networkTraffic', description: 'Flow analytics and anomalies' },
-        { id: 'network-seg', label: 'Network Segmentation', icon: '🧱', view: 'networkSegmentation', description: 'Micro-segmentation and policies' },
-        { id: 'email-security', label: 'Email Security', icon: '📨', view: 'emailSecurity', description: 'Inbound protection and DMARC' },
-        { id: 'phishing', label: 'Phishing Sim', icon: '✉️', view: 'phishing', description: 'Train users with realistic campaigns' },
-        { id: 'browser-isolation', label: 'Browser Isolation', icon: '🛡️', view: 'browserIsolation', description: 'Remote isolation for web threats' },
-        { id: 'zero-trust', label: 'Zero Trust', icon: '🚫', view: 'zeroTrust', description: 'Zero trust architecture' },
-      ],
-    },
-    {
-      category: 'Identity & Data',
-      icon: '🔒',
-      items: [
-        { id: 'identity', label: 'Identity Gov', icon: '🧾', view: 'identityGovernance', description: 'Access reviews and lifecycle' },
-        { id: 'dlp', label: 'DLP', icon: '🔒', view: 'dlp', description: 'Data loss prevention and classification' },
-        { id: 'password-vault', label: 'Password Vault', icon: '🔑', view: 'passwordVault', description: 'Secrets and credential hygiene' },
-        { id: 'secrets', label: 'Secrets Rotation', icon: '🔐', view: 'secretsRotation', description: 'Automated secret lifecycle' },
-        { id: 'crypto', label: 'Cryptography', icon: '📜', view: 'cryptographyManager', description: 'Keys, certs, and HSMs' },
-        { id: 'quantum', label: 'Quantum Crypto', icon: '⚛️', view: 'quantumCryptography', description: 'Post-quantum readiness' },
-      ],
-    },
-    {
-      category: 'Cloud & DevSecOps',
-      icon: '☁️',
-      items: [
-        { id: 'cloud-security', label: 'Cloud Security', icon: '☁️', view: 'cloudSecurity', description: 'CSPM and cloud misconfigurations' },
+        { id: 'edr', label: 'EDR / XDR', icon: '🖥️', view: 'edr', description: 'Endpoint detection & response' },
+        { id: 'endpoint', label: 'Endpoint Protection', icon: '🔒', view: 'endpointProtection', description: 'Next-gen endpoint security' },
+        { id: 'cloud-security', label: 'Cloud Security (CSPM)', icon: '☁️', view: 'cloudSecurity', description: 'Multi-cloud posture management' },
         { id: 'container-security', label: 'Container Security', icon: '🐳', view: 'containerSecurity', description: 'K8s, images, runtime guard' },
-        { id: 'cicd', label: 'CI/CD Security', icon: '🔄', view: 'cicdSecurity', description: 'Pipeline and build security' },
-        { id: 'rasp', label: 'RASP Agent', icon: '🛡️', view: 'raspAgent', description: 'Runtime application self-protection' },
-      ],
-    },
-    {
-      category: 'AI & Automation',
-      icon: '🧠',
-      items: [
-        { id: 'ai-guard', label: 'AI Security', icon: '🧠', view: 'aiSecurity', description: 'LLM prompt injection and data loss controls' },
-        { id: 'ai-evolution', label: 'AI Evolution', icon: '🧬', view: 'aiEvolution', description: 'Self-evolving threat detection engine' },
-        { id: 'security-automation', label: 'Automation', icon: '⚡', view: 'securityAutomation', description: 'No-code security workflows' },
-        { id: 'intelligence', label: 'Intelligence API', icon: '🌐', view: 'intelligenceDashboard', description: 'B2B AI-as-a-Service platform' },
-        { id: 'sdk-security', label: 'SDK Security', icon: '📦', view: 'sdkSecurity', description: 'SDK management and security scanning' },
-        { id: 'supply-ai', label: 'Supply Chain AI', icon: '🤖', view: 'supplyChainAI', description: 'AI-powered supply chain analysis' },
-        { id: 'digital-twin', label: 'Digital Twin', icon: '🪞', view: 'digitalTwin', description: 'Attack simulation on virtual replicas' },
-      ],
-    },
-    {
-      category: 'Compliance & Risk',
-      icon: '✅',
-      items: [
-        { id: 'compliance', label: 'Compliance Hub', icon: '✅', view: 'complianceHub', description: 'Regulatory compliance management' },
-        { id: 'reg-intel', label: 'Regulatory Intel', icon: '📚', view: 'regulatoryIntelligence', description: 'Track global compliance changes' },
-        { id: 'vendor-risk', label: 'Vendor Risk', icon: '🤝', view: 'vendorRisk', description: 'Third-party risk and questionnaires' },
-        { id: 'cyber-insurance', label: 'Cyber Insurance', icon: '🛡️', view: 'cyberInsurance', description: 'Real-time risk scoring for insurers' },
-      ],
-    },
-    {
-      category: '🌍 World-First Layers',
-      icon: '🏆',
-      items: [
-        { id: 'hardware-integrity', label: 'Hardware Integrity', icon: '🔩', view: 'hardwareIntegrity', description: '🏆 WORLD FIRST — Hardware trust verification' },
-        { id: 'firmware-security', label: 'Firmware Security', icon: '💾', view: 'firmwareSecurity', description: '🏆 WORLD FIRST — Firmware & microcode scanner' },
-        { id: 'identity-drift', label: 'Identity Drift', icon: '🪪', view: 'identityDrift', description: '🏆 WORLD FIRST — AI identity integrity engine' },
-        { id: 'data-trust', label: 'Data Trust Engine', icon: '🧬', view: 'dataTrustEngine', description: '🏆 WORLD FIRST — Data integrity verification' },
-        { id: 'ai-runtime', label: 'AI Runtime Security', icon: '🤖', view: 'aiRuntimeSecurity', description: '🏆 WORLD FIRST — AI model runtime protection' },
-        { id: 'human-behaviour', label: 'Human Behaviour', icon: '🧠', view: 'humanBehaviour', description: '🏆 WORLD FIRST — Behavioural risk engine' },
-        { id: 'national-telemetry', label: 'National Telemetry', icon: '🌐', view: 'nationalTelemetry', description: '🏆 WORLD FIRST — Sovereign cyber intelligence' },
-        { id: 'architecture-drift', label: 'Architecture Drift', icon: '🏗️', view: 'architectureDrift', description: '🏆 WORLD FIRST — Continuous drift detection' },
-        { id: 'autonomous-redteam', label: 'Autonomous Red Team', icon: '⚔️', view: 'autonomousRedTeam', description: '🏆 WORLD FIRST — Self-attacking security engine' },
-      ],
-    },
-    {
-      category: 'Infrastructure & Assets',
-      icon: '🏗️',
-      items: [
-        { id: 'asset-inventory', label: 'Asset Inventory', icon: '🗄️', view: 'assetInventory', description: 'CMDB and discovery' },
-        { id: 'otics', label: 'OT/ICS Security', icon: '🏭', view: 'oticsSecurity', description: 'Critical infrastructure protection' },
-        { id: 'critical-infra', label: 'Critical Infra', icon: '🏗️', view: 'criticalInfra', description: '16 sectors, NERC CIP, real-time' },
-        { id: 'national-security', label: 'National Security', icon: '🏛️', view: 'nationalSecurity', description: 'Classified environment management' },
-        { id: 'supply-chain', label: 'Supply Chain', icon: '🔗', view: 'supplyChainAttestation', description: 'Blockchain-verified provenance' },
-        { id: 'mobile', label: 'Mobile Security', icon: '📱', view: 'mobileSecurity', description: 'Mobile app and device security' },
-        { id: 'backup', label: 'Backup & DR', icon: '💾', view: 'backupRecovery', description: 'Disaster recovery management' },
+        { id: 'api-security', label: 'API Security', icon: '🔌', view: 'apiSecurity', description: 'API endpoint scanning' },
+        { id: 'vuln-mgmt', label: 'Vulnerability Mgmt', icon: '🛠️', view: 'vulnerability', description: 'CVE tracking & remediation' },
+        { id: 'cicd', label: 'CI/CD Security', icon: '🔄', view: 'cicdSecurity', description: 'Pipeline & build security' },
+        { id: 'network-traffic', label: 'Network Traffic', icon: '🌐', view: 'networkTraffic', description: 'Flow analytics & anomalies' },
+        { id: 'network-seg', label: 'Network Segmentation', icon: '🧱', view: 'networkSegmentation', description: 'Micro-segmentation & policies' },
+        { id: 'email-security', label: 'Email Security', icon: '📨', view: 'emailSecurity', description: 'Phishing & DMARC enforcement' },
+        { id: 'browser-isolation', label: 'Browser Isolation', icon: '🌐', view: 'browserIsolation', description: 'Remote browser isolation' },
+        { id: 'mobile', label: 'Mobile Security', icon: '📱', view: 'mobileSecurity', description: 'Mobile app & device security' },
+        { id: 'rasp', label: 'RASP Agent', icon: '🛡️', view: 'raspAgent', description: 'Runtime app self-protection' },
+        { id: 'identity', label: 'Identity Governance', icon: '🧾', view: 'identityGovernance', description: 'Access reviews & lifecycle' },
+        { id: 'zero-trust', label: 'Zero Trust', icon: '🚫', view: 'zeroTrust', description: 'Zero trust architecture' },
+        { id: 'dlp', label: 'Data Loss Prevention', icon: '🔒', view: 'dlp', description: 'Data classification & DLP' },
+        { id: 'password-vault', label: 'Password Vault', icon: '🔑', view: 'passwordVault', description: 'Secrets & credential hygiene' },
+        { id: 'secrets', label: 'Secrets Rotation', icon: '🔐', view: 'secretsRotation', description: 'Automated secret lifecycle' },
+        { id: 'crypto', label: 'Cryptography', icon: '📜', view: 'cryptographyManager', description: 'Keys, certs & HSMs' },
+        { id: 'quantum', label: 'Quantum Crypto', icon: '⚛️', view: 'quantumCryptography', description: 'Post-quantum readiness' },
+        { id: 'active-defense', label: 'Active Defense', icon: '⚔️', view: 'activeDefense', description: 'Automated countermeasures' },
+        { id: 'asset-inventory', label: 'Asset Inventory', icon: '🗄️', view: 'assetInventory', description: 'CMDB & discovery' },
+        { id: 'backup', label: 'Backup & DR', icon: '💾', view: 'backupRecovery', description: 'Disaster recovery' },
         { id: 'self-protect', label: 'Self-Protection', icon: '🔰', view: 'selfProtection', description: 'Platform self-defense' },
+        { id: 'hardware-integrity', label: 'Hardware Integrity', icon: '🔩', view: 'hardwareIntegrity', description: 'Hardware trust verification', worldFirst: true },
+        { id: 'firmware-security', label: 'Firmware Security', icon: '💾', view: 'firmwareSecurity', description: 'Firmware & microcode scanner', worldFirst: true },
+        { id: 'identity-drift', label: 'Identity Drift', icon: '🪪', view: 'identityDrift', description: 'AI identity integrity engine', worldFirst: true },
+        { id: 'architecture-drift', label: 'Architecture Drift', icon: '🏗️', view: 'architectureDrift', description: 'Continuous drift detection', worldFirst: true },
       ],
     },
+
+    // ─────────────────────────────────────────────────────────────
+    // PILLAR 3: INTELLIGENCE & AUTOMATION
+    // ─────────────────────────────────────────────────────────────
     {
-      category: 'Training',
-      icon: '🎓',
+      category: 'Intelligence & Automation',
+      icon: '🧠',
+      pillar: '3',
       items: [
-        { id: 'security-training', label: 'Security Training', icon: '🎓', view: 'securityTraining', description: 'Awareness and gamified learning' },
+        { id: 'threat-intel', label: 'Threat Intelligence', icon: '🔍', view: 'threatIntelligence', description: 'IOC feeds & correlation' },
+        { id: 'threat-hunting', label: 'Threat Hunting', icon: '🎯', view: 'threatHunting', description: 'Proactive MITRE ATT&CK hunts' },
+        { id: 'dark-web', label: 'Dark Web Monitor', icon: '🕶️', view: 'darkWebMonitor', description: 'Dark web intelligence feeds' },
+        { id: 'ai-guard', label: 'AI Security Guard', icon: '🧠', view: 'aiSecurity', description: 'LLM & AI protection controls' },
+        { id: 'soar', label: 'SOAR', icon: '🤖', view: 'soar', description: 'Orchestration & auto-response' },
+        { id: 'security-automation', label: 'Automation', icon: '⚡', view: 'securityAutomation', description: 'No-code security workflows' },
+        { id: 'autonomous-soc', label: 'Autonomous SOC', icon: '🏛️', view: 'autonomousSOC', description: 'AI-powered 24/7 SOC' },
+        { id: 'incident', label: 'Incident Response', icon: '🚨', view: 'incidentResponse', description: 'Automated playbooks' },
+        { id: 'ueba', label: 'UEBA', icon: '👤', view: 'ueba', description: 'User behavior analytics' },
+        { id: 'insider-threat', label: 'Insider Threats', icon: '🕵️', view: 'insiderThreat', description: 'Insider threat detection' },
+        { id: 'malware', label: 'Malware Analysis', icon: '🐞', view: 'malwareAnalysis', description: 'Sandbox & reverse engineering' },
+        { id: 'forensics', label: 'Forensics Lab', icon: '🧪', view: 'forensicsLab', description: 'Evidence & analysis' },
+        { id: 'supply-ai', label: 'Supply Chain AI', icon: '🔗', view: 'supplyChainAI', description: 'AI supply chain analysis' },
+        { id: 'supply-chain', label: 'Supply Chain Attestation', icon: '📋', view: 'supplyChainAttestation', description: 'Provenance verification' },
+        { id: 'ai-runtime', label: 'AI Runtime Security', icon: '🤖', view: 'aiRuntimeSecurity', description: 'AI model runtime protection', worldFirst: true },
+        { id: 'data-trust', label: 'Data Trust Engine', icon: '🧬', view: 'dataTrustEngine', description: 'Data integrity verification', worldFirst: true },
+        { id: 'human-behaviour', label: 'Human Behaviour', icon: '🧠', view: 'humanBehaviour', description: 'Behavioural risk engine', worldFirst: true },
+        { id: 'national-telemetry', label: 'National Telemetry', icon: '🌐', view: 'nationalTelemetry', description: 'Sovereign cyber intelligence', worldFirst: true },
       ],
     },
+
+    // ─────────────────────────────────────────────────────────────
+    // PILLAR 4: OFFENSIVE & SIMULATION
+    // ─────────────────────────────────────────────────────────────
     {
-      category: 'Help & Support',
-      icon: '💬',
+      category: 'Offensive & Simulation',
+      icon: '⚔️',
+      pillar: '4',
       items: [
-        { id: 'help-desk', label: 'AI Help Desk', icon: '🤖', view: 'helpDesk', description: 'Get instant help with setup and usage' },
-        { id: 'how-to-guide', label: 'How-To Guide', icon: '📚', view: 'howToGuide', description: 'Learn how to use all features' },
+        { id: 'autonomous-redteam', label: 'Autonomous Red Team', icon: '🔴', view: 'autonomousRedTeam', description: 'Self-attacking security engine', worldFirst: true },
+        { id: 'breach-sim', label: 'Breach Simulator', icon: '💥', view: 'breachSimulator', description: 'MITRE ATT&CK simulation' },
+        { id: 'digital-twin', label: 'Digital Twin', icon: '🪞', view: 'digitalTwin', description: 'Attack sim on virtual replicas' },
+        { id: 'deception', label: 'Deception Technology', icon: '🎭', view: 'deceptionTechnology', description: 'Honeypots & attacker traps' },
+        { id: 'attack-surface', label: 'Attack Surface', icon: '🛰️', view: 'attackSurface', description: 'External asset discovery' },
+        { id: 'pentest', label: 'Penetration Testing', icon: '🛠️', view: 'penetrationTesting', description: 'Automated pen testing' },
+        { id: 'purple-team', label: 'Purple Team', icon: '💜', view: 'purpleTeam', description: 'Adversary emulation exercises' },
+        { id: 'phishing', label: 'Phishing Simulator', icon: '✉️', view: 'phishing', description: 'Realistic phishing campaigns' },
+        { id: 'threat-modeling', label: 'Threat Modeling', icon: '🗺️', view: 'threatModeling', description: 'STRIDE/DREAD & attack trees' },
+      ],
+    },
+
+    // ─────────────────────────────────────────────────────────────
+    // PILLAR 5: GOVERNANCE & COMPLIANCE
+    // ─────────────────────────────────────────────────────────────
+    {
+      category: 'Governance & Compliance',
+      icon: '📋',
+      pillar: '5',
+      items: [
+        { id: 'compliance', label: 'Compliance Hub', icon: '✅', view: 'complianceHub', description: 'Unified compliance management' },
+        { id: 'reg-intel', label: 'Regulatory Intel', icon: '📚', view: 'regulatoryIntelligence', description: 'Track global regulation changes' },
+        { id: 'vendor-risk', label: 'Vendor Risk', icon: '🤝', view: 'vendorRisk', description: 'Third-party risk management' },
+        { id: 'cyber-insurance', label: 'Cyber Insurance', icon: '🛡️', view: 'cyberInsurance', description: 'Risk scoring for insurers' },
+        { id: 'otics', label: 'OT/ICS Security', icon: '🏭', view: 'oticsSecurity', description: 'Industrial control security' },
+        { id: 'critical-infra', label: 'Critical Infrastructure', icon: '🏗️', view: 'criticalInfra', description: 'NERC CIP, 16 sectors' },
+        { id: 'national-security', label: 'National Security', icon: '🏛️', view: 'nationalSecurity', description: 'Classified environment mgmt' },
       ],
     },
   ];
@@ -265,7 +242,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* Main Navigation */}
           <nav className="space-y-1">
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3 px-3">Security</p>
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3 px-3">Product Pillars</p>
             {navCategories.map((cat) => (
               <div key={cat.category} className="mb-1">
                 <button
@@ -275,6 +252,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   <span className="flex items-center gap-2">
                     <span className="text-sm">{cat.icon}</span>
                     <span className="text-xs font-semibold uppercase tracking-wider">{cat.category}</span>
+                    {cat.pillar && (
+                      <span className="text-[9px] font-bold bg-slate-700/60 text-cyan-400 px-1.5 py-0.5 rounded-full leading-none">{cat.items.length}</span>
+                    )}
                   </span>
                   <svg
                     className={`w-3.5 h-3.5 transition-transform duration-200 ${collapsedCategories[cat.category] ? '' : 'rotate-90'}`}
@@ -296,7 +276,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                         }`}
                       >
                         <span className="text-base">{item.icon}</span>
-                        <span className="font-medium">{item.label}</span>
+                        <span className="font-medium flex-1">{item.label}</span>
+                        {item.worldFirst && (
+                          <span className="text-[10px] font-bold bg-linear-to-r from-amber-500 to-orange-500 text-white px-1.5 py-0.5 rounded-full leading-none">🏆 1ST</span>
+                        )}
                       </button>
                     ))}
                   </div>

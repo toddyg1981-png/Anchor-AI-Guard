@@ -39,6 +39,7 @@ const DataLossPrevention = React.lazy(() => import('./components/DataLossPrevent
 const AttackSurfaceManagement = React.lazy(() => import('./components/AttackSurfaceManagement'));
 const AISecurityGuard = React.lazy(() => import('./components/AISecurityGuard'));
 const EDRPlatform = React.lazy(() => import('./components/EDRPlatform'));
+const EndpointProtectionDashboard = React.lazy(() => import('./components/EndpointProtection'));
 const UEBAPlatform = React.lazy(() => import('./components/UEBAPlatform'));
 const SOARPlatform = React.lazy(() => import('./components/SOARPlatform'));
 const NetworkTrafficAnalysis = React.lazy(() => import('./components/NetworkTrafficAnalysis'));
@@ -221,7 +222,8 @@ export type DashboardView =
   | 'humanBehaviour'
   | 'nationalTelemetry'
   | 'architectureDrift'
-  | 'autonomousRedTeam';
+  | 'autonomousRedTeam'
+  | 'endpointProtection';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -608,6 +610,8 @@ const AppContent: React.FC = () => {
         return <EmailSecurity />;
       case 'edr':
         return <EDRPlatform />;
+      case 'endpointProtection':
+        return <EndpointProtectionDashboard />;
       case 'ueba':
         return <UEBAPlatform />;
       case 'networkTraffic':
