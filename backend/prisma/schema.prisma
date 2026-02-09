@@ -28,17 +28,19 @@ enum ScanStatus {
 }
 
 model Organization {
-  id           String        @id @default(cuid())
-  name         String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  members      User[]
-  projects     Project[]
-  invites      Invite[]
-  integrations Integration[]
-  subscription Subscription?
-  apiKeys      APIKey[]
-  auditLogs    AuditLog[]
+  id                   String                @id @default(cuid())
+  name                 String
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  members              User[]
+  projects             Project[]
+  invites              Invite[]
+  integrations         Integration[]
+  subscription         Subscription?
+  apiKeys              APIKey[]
+  auditLogs            AuditLog[]
+  businessVerification BusinessVerification?
+  customerBadges       CustomerBadge[]
 }
 
 model User {
@@ -53,8 +55,45 @@ model User {
   orgId         String
   org           Organization   @relation(fields: [orgId], references: [id])
   oauthAccounts OAuthAccount[]
+  profile       UserProfile?
 
   @@index([orgId])
+}
+
+model UserProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Personal Information
+  firstName       String?
+  lastName        String?
+  phone           String?
+  jobTitle        String?
+  department      String?
+  timezone        String?
+  address         String?
+  city            String?
+  state           String?
+  postalCode      String?
+  country         String?
+
+  // Bank Details (encrypted at rest)
+  bankName        String?
+  bankAccountName String?
+  bankAccountNumber String?  // Should be encrypted
+  bankRoutingNumber String?  // Should be encrypted
+  bankSwiftCode   String?
+  bankIban        String?    // Should be encrypted
+  bankCurrency    String?    @default("USD")
+  bankCountry     String?
+
+  // Tax Information
+  taxId           String?    // SSN/EIN/VAT - encrypted
+  taxCountry      String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Invite {
@@ -310,4 +349,107 @@ model SiteStats {
   videoViews Int     @default(0)
   pageViews  Int     @default(0)
   updatedAt  DateTime @updatedAt
+}
+
+// ============================================
+// BUSINESS VERIFICATION (KYB)
+// ============================================
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  UNDER_REVIEW
+  VERIFIED
+  REJECTED
+}
+
+model BusinessVerification {
+  id                    String             @id @default(cuid())
+  orgId                 String             @unique
+  org                   Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  status                VerificationStatus @default(UNVERIFIED)
+
+  // Company Details
+  companyLegalName      String?
+  companyTradingName    String?
+  companyRegistrationNo String?           // Company House / EIN / ABN etc.
+  companyType           String?           // LLC, Ltd, Corp, Sole Trader, etc.
+  industry              String?
+  companyWebsite        String?
+  companyEmail          String?
+  companyPhone          String?
+
+  // Registered Address
+  regAddress            String?
+  regCity               String?
+  regState              String?
+  regPostalCode         String?
+  regCountry            String?
+
+  // Verification metadata
+  submittedAt           DateTime?
+  reviewedAt            DateTime?
+  reviewedBy            String?           // Admin user ID who reviewed
+  rejectionReason       String?
+  verifiedAt            DateTime?
+  expiresAt             DateTime?         // Re-verification needed after this
+
+  // Document references (URLs or file IDs)
+  documentIds           Json?             // Array of uploaded doc references
+
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+}
+
+// ============================================
+// CUSTOMER BADGES (Pro+ only)
+// ============================================
+
+enum BadgeType {
+  PROTECTED
+  CERTIFIED
+  ENTERPRISE
+  GOVERNMENT
+  REALTIME
+}
+
+enum BadgeStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  REVOKED
+}
+
+model CustomerBadge {
+  id                String      @id @default(cuid())
+  badgeCode         String      @unique      // Public badge ID e.g. ANCHOR-xxxx
+  orgId             String
+  org               Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  type              BadgeType   @default(PROTECTED)
+  status            BadgeStatus @default(ACTIVE)
+
+  // Verification
+  secretKey         String                  // HMAC secret for tamper-proof verification
+  verificationCount Int         @default(0)
+  lastVerifiedAt    DateTime?
+
+  // Metadata
+  planTier          String?                 // Plan at time of issue
+  securityScore     Int?
+  complianceFrameworks Json?                // Array of framework names
+
+  // Embed info
+  embedCode         String?    @db.Text
+  imageUrl          String?
+  verificationUrl   String?
+
+  issuedAt          DateTime   @default(now())
+  expiresAt         DateTime                // Badge validity period
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([orgId])
+  @@index([status])
 }

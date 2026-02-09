@@ -70,7 +70,7 @@ function generateBadgeSecret(): string {
 }
 
 // Create HMAC signature for badge verification
-function createBadgeSignature(badgeId: string, secretKey: string): string {
+function _createBadgeSignature(badgeId: string, secretKey: string): string {
   return crypto.createHmac('sha256', secretKey)
     .update(badgeId)
     .digest('hex')
@@ -78,7 +78,7 @@ function createBadgeSignature(badgeId: string, secretKey: string): string {
 }
 
 // Generate SVG badge
-function generateBadgeSVG(badge: BadgeRecord, size: 'small' | 'medium' | 'large' = 'medium'): string {
+function _generateBadgeSVG(badge: BadgeRecord, size: 'small' | 'medium' | 'large' = 'medium'): string {
   const sizes = {
     small: { width: 120, height: 40, fontSize: 10 },
     medium: { width: 180, height: 50, fontSize: 12 },
@@ -267,103 +267,11 @@ export async function badgeRoutes(app: FastifyInstance) {
   });
   
   /**
-   * GET /badges/verify/:badgeId - PUBLIC verification endpoint
-   * Returns verification status (for embedding/display)
+   * NOTE: Public badge verification (GET /badges/verify/:badgeCode) and
+   * badge image (GET /badges/:badgeCode/image) routes have been moved to
+   * verification.ts with database-backed storage.
    */
-  app.get('/badges/verify/:badgeId', async (request: FastifyRequest<{ Params: { badgeId: string } }>, reply: FastifyReply) => {
-    const { badgeId } = request.params;
-    const badge = badges.get(badgeId);
-    
-    if (!badge) {
-      return reply.status(404).send({ 
-        verified: false, 
-        error: 'Badge not found',
-        message: 'This protection badge could not be verified. It may be invalid or revoked.'
-      });
-    }
-    
-    // Check if badge is still valid
-    if (badge.expiresAt < new Date()) {
-      badge.status = BadgeStatus.EXPIRED;
-    }
-    
-    // Increment verification count
-    badge.verificationCount++;
-    badge.lastVerified = new Date();
-    
-    const signature = createBadgeSignature(badgeId, badge.secretKey);
-    
-    // Log verification attempt
-    logAuditEvent({
-      orgId: badge.orgId,
-      action: 'BADGE_VERIFIED',
-      resource: 'badge',
-      resourceId: badgeId,
-      ip: request.ip,
-      userAgent: request.headers['user-agent'],
-      success: badge.status === BadgeStatus.ACTIVE,
-      details: { verificationCount: badge.verificationCount }
-    });
-    
-    return {
-      verified: badge.status === BadgeStatus.ACTIVE,
-      badge: {
-        id: badge.id,
-        type: badge.type,
-        status: badge.status,
-        organization: badge.orgName,
-        protectedSince: badge.createdAt,
-        validUntil: badge.expiresAt,
-        verificationSignature: signature,
-        securityFeatures: {
-          plan: badge.metadata.plan,
-          securityScore: badge.metadata.securityScore,
-          lastSecurityScan: badge.metadata.lastScan,
-          complianceFrameworks: badge.metadata.complianceFrameworks
-        }
-      },
-      verifiedAt: new Date(),
-      verificationCount: badge.verificationCount,
-      message: badge.status === BadgeStatus.ACTIVE 
-        ? `This organization is actively protected by Anchor Security Platform.`
-        : `This protection badge is currently ${badge.status}.`
-    };
-  });
-  
-  /**
-   * GET /badges/:badgeId/image - Return SVG badge image
-   */
-  app.get('/badges/:badgeId/image', async (request: FastifyRequest<{ 
-    Params: { badgeId: string },
-    Querystring: { size?: 'small' | 'medium' | 'large' }
-  }>, reply: FastifyReply) => {
-    const { badgeId } = request.params;
-    const { size = 'medium' } = request.query;
-    
-    const badge = badges.get(badgeId);
-    
-    if (!badge) {
-      // Return a "not verified" badge
-      const notFoundSvg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="180" height="50" viewBox="0 0 180 50" xmlns="http://www.w3.org/2000/svg">
-  <rect width="180" height="50" rx="6" fill="#1a1a2e" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="90" y="30" font-family="system-ui, sans-serif" font-size="12" fill="#ef4444" text-anchor="middle">
-    Badge Not Verified
-  </text>
-</svg>`;
-      
-      reply.header('Content-Type', 'image/svg+xml');
-      reply.header('Cache-Control', 'public, max-age=60');
-      return reply.send(notFoundSvg);
-    }
-    
-    const svg = generateBadgeSVG(badge, size);
-    
-    reply.header('Content-Type', 'image/svg+xml');
-    reply.header('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
-    return reply.send(svg);
-  });
-  
+
   /**
    * PATCH /badges/:badgeId - Update badge (admin or owner only)
    */

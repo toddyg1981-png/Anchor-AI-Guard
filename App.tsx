@@ -90,6 +90,7 @@ const SelfProtection = React.lazy(() => import('./components/SelfProtection'));
 const AnchorIntelligenceLanding = React.lazy(() => import('./components/AnchorIntelligenceLanding'));
 const AnchorIntelligenceDashboard = React.lazy(() => import('./components/AnchorIntelligenceDashboard'));
 const AIEvolutionDashboard = React.lazy(() => import('./components/AIEvolutionDashboard'));
+const UserProfileSettings = React.lazy(() => import('./components/UserProfileSettings'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -190,7 +191,8 @@ export type DashboardView =
   | 'backupRecovery'
   | 'selfProtection'
   | 'intelligenceDashboard'
-  | 'aiEvolution';
+  | 'aiEvolution'
+  | 'profile';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -665,6 +667,8 @@ const AppContent: React.FC = () => {
         return <AnchorIntelligenceDashboard />;
       case 'aiEvolution':
         return <AIEvolutionDashboard />;
+      case 'profile':
+        return <UserProfileSettings />;
       case 'overview':
       default:
         return (
@@ -794,6 +798,7 @@ const AppContent: React.FC = () => {
             onViewIntegrations={() => setDashboardView('integrations')}
             onLogout={handleLogout}
             onViewBilling={() => setDashboardView('billing')}
+            onViewProfile={() => setDashboardView('profile')}
             onViewAdmin={() => setDashboardView('admin')}
             onNewScan={handleNewScan}
             user={user}
@@ -821,7 +826,7 @@ const AppContent: React.FC = () => {
         return <PurchaseTerms onBack={handleBackToMarketing} />;
 
       case 'intelligence':
-        return <AnchorIntelligenceLanding />;
+        return <AnchorIntelligenceLanding onBack={handleBackToMarketing} />;
 
       case 'intelligence-dashboard':
         return <AnchorIntelligenceDashboard />;

@@ -14,7 +14,7 @@ interface Plan {
   description: string;
 }
 
-export default function AnchorIntelligenceLanding() {
+export default function AnchorIntelligenceLanding({ onBack }: { onBack?: () => void }) {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [selectedTab, setSelectedTab] = useState<'overview' | 'api' | 'pricing' | 'docs'>('overview');
@@ -191,7 +191,18 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
       {/* Navigation Tabs */}
       <div className="sticky top-0 z-50 bg-gray-950/80 backdrop-blur-xl border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1 py-2">
+          <div className="flex items-center gap-1 py-2">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="flex items-center gap-1.5 px-4 py-2.5 mr-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-all text-sm font-medium"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back
+              </button>
+            )}
             {(['overview', 'api', 'pricing', 'docs'] as const).map(tab => (
               <button
                 key={tab}

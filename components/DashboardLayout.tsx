@@ -17,6 +17,7 @@ interface DashboardLayoutProps {
   onViewTeam?: () => void;
   onViewIntegrations?: () => void;
   onViewBilling?: () => void;
+  onViewProfile?: () => void;
   onViewAdmin?: () => void;
   onNewScan?: () => void;
   onLogout?: () => void;
@@ -31,6 +32,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onViewTeam,
   onViewIntegrations,
   onViewBilling,
+  onViewProfile,
   onViewAdmin,
   onNewScan,
   onLogout,
@@ -204,6 +206,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     { id: 'team', label: 'Team', icon: '👥', view: 'team', action: onViewTeam, description: 'Manage people and roles' },
     { id: 'integrations', label: 'Integrations', icon: '🔗', view: 'integrations', action: onViewIntegrations, description: 'Connect tools and platforms' },
     { id: 'billing', label: 'Billing', icon: '💳', view: 'billing', action: onViewBilling, description: 'Subscription and invoicing' },
+    { id: 'profile', label: 'My Profile', icon: '⚙️', view: 'profile' as DashboardView, action: onViewProfile, description: 'Personal info and bank details' },
   ];
 
   // Only show admin for owners/admins
@@ -412,6 +415,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     )}
                   </div>
                   <div className="py-1">
+                    <button
+                      onClick={() => { setActiveNav('profile'); setDashboardView('profile' as DashboardView); onViewProfile?.(); setShowUserMenu(false); }}
+                      className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-700/50 flex items-center gap-3"
+                    >
+                      <span>⚙️</span> Account Settings
+                    </button>
                     <button
                       onClick={() => { setActiveNav('team'); onViewTeam?.(); setShowUserMenu(false); }}
                       className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-slate-700/50 flex items-center gap-3"

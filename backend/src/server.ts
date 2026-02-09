@@ -38,6 +38,8 @@ import { badgeRoutes } from './routes/badges';
 import { aiEvolutionRoutes, startEvolutionEngine, stopEvolutionEngine } from './routes/ai-evolution';
 import endpointProtectionRoutes from './routes/endpoint-protection';
 import anchorIntelligenceRoutes from './routes/anchor-intelligence';
+import { profileRoutes } from './routes/profile';
+import { verificationRoutes } from './routes/verification';
 import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
 import { wsManager } from './lib/websocket';
 
@@ -182,6 +184,12 @@ async function main() {
 
   // Anchor Intelligence — B2B AI-as-a-Service Platform
   app.register(anchorIntelligenceRoutes, { prefix: '/api' });
+
+  // User Profile & Bank Details
+  app.register(profileRoutes, { prefix: '/api' });
+
+  // Business Verification & Customer Badges
+  app.register(verificationRoutes, { prefix: '/api' });
 
   app.get('/', async () => ({ status: 'ok', service: 'anchor-backend' }));
 
