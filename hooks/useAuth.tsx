@@ -26,6 +26,7 @@ interface AuthContextValue extends AuthState {
   signup: (email: string, password: string, name: string, organizationName?: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  loginLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -87,6 +88,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading: !!token, // Will verify token on mount
     };
   });
+
+  // Separate loading state for login/signup (doesn't affect global authLoading)
+  const [loginLoading, setLoginLoading] = useState(false);
 
   // Ref to abort verifyToken if login() is called while verify is in-flight
   const verifyAbortRef = useRef<AbortController | null>(null);
@@ -187,7 +191,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Abort any in-flight token verification to prevent it from clobbering this login
     verifyAbortRef.current?.abort();
 
-    setState((prev) => ({ ...prev, isLoading: true }));
+    setLoginLoading(true);
 
     // Retry logic for Railway cold starts
     const MAX_ATTEMPTS = 3;
@@ -205,7 +209,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const error = await response.json().catch(() => ({ error: 'Login failed' }));
           // Don't retry on auth errors (wrong credentials, rate limit, etc.)
           if (response.status === 401 || response.status === 409 || response.status === 429 || response.status === 400) {
-            setState((prev) => ({ ...prev, isLoading: false }));
+            setLoginLoading(false);
             throw new Error(error.error || 'Login failed');
           }
           // Server error — retry
@@ -215,6 +219,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
         
         setStoredAuth(data.token, data.user, data.organization);
+        setLoginLoading(false);
         setState({
           user: data.user,
           organization: data.organization,
@@ -227,7 +232,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         lastError = error instanceof Error ? error : new Error('Login failed');
         // If it's a known auth error (thrown above with specific status), don't retry
         if (lastError.message.includes('Invalid') || lastError.message.includes('already exists') || lastError.message.includes('rate') || lastError.message === 'Login failed') {
-          setState((prev) => ({ ...prev, isLoading: false }));
+          setLoginLoading(false);
           throw lastError;
         }
         // Network/server error — retry with backoff
@@ -237,7 +242,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    setState((prev) => ({ ...prev, isLoading: false }));
+    setLoginLoading(false);
     throw new Error(
       lastError?.message?.includes('Server error')
         ? 'Server is starting up, please try again in a few seconds'
@@ -246,7 +251,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signup = useCallback(async (email: string, password: string, name: string, organizationName?: string) => {
-    setState((prev) => ({ ...prev, isLoading: true }));
+    setLoginLoading(true);
 
     const MAX_ATTEMPTS = 3;
     let lastError: Error | null = null;
@@ -262,7 +267,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!response.ok) {
           const error = await response.json().catch(() => ({ error: 'Signup failed' }));
           if (response.status === 400 || response.status === 409 || response.status === 429) {
-            setState((prev) => ({ ...prev, isLoading: false }));
+            setLoginLoading(false);
             throw new Error(error.error || 'Signup failed');
           }
           throw new Error(`Server error (${response.status})`);
@@ -271,6 +276,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
         
         setStoredAuth(data.token, data.user, data.organization);
+        setLoginLoading(false);
         setState({
           user: data.user,
           organization: data.organization,
@@ -282,7 +288,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Signup failed');
         if (lastError.message.includes('already exists') || lastError.message.includes('Invalid') || lastError.message === 'Signup failed') {
-          setState((prev) => ({ ...prev, isLoading: false }));
+          setLoginLoading(false);
           throw lastError;
         }
         if (attempt < MAX_ATTEMPTS) {
@@ -291,7 +297,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    setState((prev) => ({ ...prev, isLoading: false }));
+    setLoginLoading(false);
     throw new Error(
       lastError?.message?.includes('Server error')
         ? 'Server is starting up, please try again in a few seconds'
@@ -349,6 +355,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signup,
         logout,
         refreshToken,
+        loginLoading,
       }}
     >
       {children}

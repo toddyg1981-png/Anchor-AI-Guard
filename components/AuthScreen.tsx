@@ -16,7 +16,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, signup, isLoading } = useAuth();
+  const { login, signup, loginLoading: isLoading } = useAuth();
 
   // Check for OAuth callback
   useEffect(() => {
