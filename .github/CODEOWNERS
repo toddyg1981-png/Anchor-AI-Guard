@@ -1,0 +1,32 @@
+# CODEOWNERS - Enforce code review for critical files
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for all files
+* @toddyg1981-png
+
+# Security-critical files require owner review
+SECURITY.md @toddyg1981-png
+SECURITY_AUDIT.md @toddyg1981-png
+SECURITY_CHECKLIST.md @toddyg1981-png
+SECURITY_IMPLEMENTATION.md @toddyg1981-png
+
+# CI/CD and workflow changes require owner review
+.github/ @toddyg1981-png
+
+# Configuration files
+.anchor.yml @toddyg1981-png
+vite.config.ts @toddyg1981-png
+tsconfig.json @toddyg1981-png
+package.json @toddyg1981-png
+package-lock.json @toddyg1981-png
+docker-compose.yml @toddyg1981-png
+Dockerfile @toddyg1981-png
+
+# Backend security-sensitive code
+backend/prisma/ @toddyg1981-png
+backend/src/ @toddyg1981-png
+
+# Security utilities
+utils/sanitization.ts @toddyg1981-png
+utils/validation.ts @toddyg1981-png
+utils/rateLimiting.ts @toddyg1981-png
