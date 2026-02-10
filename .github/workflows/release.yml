@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate action.yml
+        run: |
+          echo "Validating action.yml..."
+          if [ ! -f action.yml ]; then
+            echo "::error::action.yml not found"
+            exit 1
+          fi
+          # Check required fields
+          for field in name description; do
+            if ! grep -q "^${field}:" action.yml; then
+              echo "::error::Missing required field: ${field}"
+              exit 1
+            fi
+          done
+          # Check branding
+          if ! grep -q "^branding:" action.yml; then
+            echo "::error::Missing branding section (required for Marketplace)"
+            exit 1
+          fi
+          echo "✅ action.yml is valid"
+
+      - name: Test action Docker build
+        run: |
+          echo "Building action Docker image..."
+          docker build -f src/Dockerfile.action src/
+          echo "✅ Docker image builds successfully"
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          cat > /tmp/release-notes.md << 'NOTES'
+          ## 🛡️ Anchor Security Scanner
+
+          Enterprise-grade security scanning for CI/CD pipelines.
+
+          ### Scanners
+          - 🔑 **Secrets Detection** — 23 credential patterns (AWS, GitHub, Stripe, etc.)
+          - 🔍 **SAST** — 30+ static analysis rules (JS/TS/Python)
+          - 📦 **Dependencies** — npm audit, Dockerfile security
+          - 🤖 **AI Security** — 13 ML/LLM-specific rules
+
+          ### Features
+          - Zero-config: works out of the box
+          - SARIF output → GitHub Security tab
+          - Inline PR annotations
+          - Configurable severity thresholds
+          - 95+ security modules, 25 world-first features
+
+          ### Quick Start
+          ```yaml
+          - uses: toddyg1981-png/Anchor-AI-Guard@v1
+          ```
+
+          See [README](https://github.com/toddyg1981-png/Anchor-AI-Guard#readme) for full documentation.
+          NOTES
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: /tmp/release-notes.md
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update major version tag
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          MAJOR=$(echo "${TAG}" | grep -oP '^v\d+')
+          if [ -n "${MAJOR}" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -fa "${MAJOR}" -m "Update ${MAJOR} to ${TAG}"
+            git push origin "${MAJOR}" --force
+            echo "✅ Updated ${MAJOR} tag to point to ${TAG}"
+          fi
