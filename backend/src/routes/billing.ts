@@ -5,6 +5,26 @@ import { prisma } from '../lib/prisma';
 import { authMiddleware } from '../lib/auth';
 import { env } from '../config/env';
 import { PlanTier } from '@prisma/client';
+import { queueEmail, emailTemplates } from './email';
+
+// Webhook idempotency — track processed event IDs to prevent duplicate processing
+const processedWebhookEvents = new Set<string>();
+const MAX_PROCESSED_EVENTS = 10000;
+
+function markEventProcessed(eventId: string): boolean {
+  if (processedWebhookEvents.has(eventId)) return false; // already processed
+  if (processedWebhookEvents.size >= MAX_PROCESSED_EVENTS) {
+    // Evict oldest entries (Sets iterate in insertion order)
+    const iterator = processedWebhookEvents.values();
+    for (let i = 0; i < 2000; i++) iterator.next();
+    // Rebuild without the oldest 2000
+    const remaining = [...processedWebhookEvents].slice(2000);
+    processedWebhookEvents.clear();
+    remaining.forEach(id => processedWebhookEvents.add(id));
+  }
+  processedWebhookEvents.add(eventId);
+  return true; // first time seeing this event
+}
 
 // Initialize Stripe — warn on missing keys but don't crash in dev
 if (!env.stripeSecretKey && env.nodeEnv === 'production') {
@@ -212,23 +232,23 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
 };
 
-// Stripe Price ID mapping — from Stripe Dashboard
+// Stripe Price ID mapping — loaded from env vars (set via STRIPE_PRICE_* in .env)
 const STRIPE_PRICES: Record<string, { monthly: string; yearly: string }> = {
   STARTER: {
-    monthly: 'price_1Sz6FUCQAeKEVrjRnXgfIxcb',
-    yearly: 'price_1Sz6GRCQAeKEVrjRrEFTKadG',
+    monthly: env.stripePriceStarterMonthly,
+    yearly: env.stripePriceStarterYearly,
   },
   PRO: {
-    monthly: 'price_1Sz6HcCQAeKEVrjRqrceYVPa',
-    yearly: 'price_1Sz6IECQAeKEVrjRv7qPYluR',
+    monthly: env.stripePriceProMonthly,
+    yearly: env.stripePriceProYearly,
   },
   TEAM: {
-    monthly: 'price_1Sz6JJCQAeKEVrjRLgpJgI4H',
-    yearly: 'price_1Sz6JxCQAeKEVrjRC9RlZeml',
+    monthly: env.stripePriceTeamMonthly,
+    yearly: env.stripePriceTeamYearly,
   },
   BUSINESS: {
-    monthly: 'price_1Sz6KoCQAeKEVrjRSLNrwecH',
-    yearly: 'price_1Sz6LXCQAeKEVrjRKHNmSnOl',
+    monthly: env.stripePriceBusinessMonthly,
+    yearly: env.stripePriceBusinessYearly,
   },
 };
 
@@ -510,6 +530,13 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'Invalid signature' });
     }
 
+    // Idempotency check — skip already-processed events
+    if (!markEventProcessed(event.id)) {
+      // eslint-disable-next-line no-console
+      console.info(`Webhook event ${event.id} already processed, skipping`);
+      return reply.send({ received: true, duplicate: true });
+    }
+
     // Handle the event
     switch (event.type) {
       case 'checkout.session.completed': {
@@ -622,7 +649,25 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
             data: { status: 'PAST_DUE' },
           });
           
-          // TODO: Send payment failed email
+          // Send payment-failed email to the org owner
+          try {
+            const orgOwner = await prisma.user.findFirst({
+              where: { orgId, role: 'OWNER' },
+            });
+            if (orgOwner?.email) {
+              const template = emailTemplates.paymentFailed(orgOwner.name || 'there');
+              await queueEmail({
+                to: orgOwner.email,
+                subject: template.subject,
+                html: template.html,
+                text: template.text,
+              });
+              // eslint-disable-next-line no-console
+              console.info(`Payment-failed email queued for org ${orgId} (${orgOwner.email})`);
+            }
+          } catch (emailErr) {
+            console.error('Failed to queue payment-failed email:', emailErr);
+          }
         }
         break;
       }
@@ -646,7 +691,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    const [projectCount, scanCount, teamCount] = await Promise.all([
+    const [projectCount, scanCount, teamCount, aiQueryCount] = await Promise.all([
       prisma.project.count({ where: { orgId: user.orgId } }),
       prisma.scan.count({
         where: {
@@ -655,6 +700,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
         },
       }),
       prisma.user.count({ where: { orgId: user.orgId } }),
+      getAIQueryCount(user.orgId),
     ]);
 
     return reply.send({
@@ -662,7 +708,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
         projects: { used: projectCount, limit: plan.maxProjects },
         scans: { used: scanCount, limit: plan.maxScansPerMonth },
         teamMembers: { used: teamCount, limit: plan.maxTeamMembers },
-        aiQueries: { used: 0, limit: plan.maxAIQueries }, // TODO: Track AI queries
+        aiQueries: { used: aiQueryCount, limit: plan.maxAIQueries },
       },
       plan: {
         tier: subscription?.planTier || 'STARTER',
@@ -670,4 +716,73 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       },
     });
   });
+}
+
+// ─── AI Query Usage Tracking ───────────────────────────────────────────
+
+/**
+ * Track an AI query for usage metering.
+ * Call this after every successful AI query (chat, vuln-intel, threat-intel, etc.)
+ */
+export async function trackAIQuery(orgId: string): Promise<void> {
+  try {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+    const endOfMonth = new Date(startOfMonth);
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+
+    const subscription = await prisma.subscription.findUnique({ where: { orgId } });
+    if (!subscription) return;
+
+    // Upsert the current month's ai_queries usage record
+    const existing = await prisma.usageRecord.findFirst({
+      where: {
+        subscriptionId: subscription.id,
+        metric: 'ai_queries',
+        periodStart: startOfMonth,
+      },
+    });
+
+    if (existing) {
+      await prisma.usageRecord.update({
+        where: { id: existing.id },
+        data: { quantity: { increment: 1 } },
+      });
+    } else {
+      await prisma.usageRecord.create({
+        data: {
+          subscriptionId: subscription.id,
+          metric: 'ai_queries',
+          quantity: 1,
+          periodStart: startOfMonth,
+          periodEnd: endOfMonth,
+        },
+      });
+    }
+  } catch (err) {
+    console.error('Failed to track AI query:', err);
+  }
+}
+
+/**
+ * Get the AI query count for the current billing month.
+ */
+async function getAIQueryCount(orgId: string): Promise<number> {
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const subscription = await prisma.subscription.findUnique({ where: { orgId } });
+  if (!subscription) return 0;
+
+  const record = await prisma.usageRecord.findFirst({
+    where: {
+      subscriptionId: subscription.id,
+      metric: 'ai_queries',
+      periodStart: startOfMonth,
+    },
+  });
+
+  return record?.quantity || 0;
 }

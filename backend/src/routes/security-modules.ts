@@ -608,6 +608,10 @@ Only return valid JSON.`);
     const user = request.user as { orgId: string };
     const body = request.body as { message: string; conversationId?: string };
 
+    // Track AI query usage
+    const { trackAIQuery } = await import('./billing');
+    trackAIQuery(user.orgId).catch(() => {}); // fire-and-forget
+
     // Get org context for personalized responses
     const findings = await prisma.finding.findMany({
       where: { project: { orgId: user.orgId } }, take: 10,
