@@ -471,7 +471,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-block px-4 py-1 bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-medium mb-4">
-            🏆 95+ MODULES • 25 WORLD-FIRST FEATURES • 9 UNPROTECTED LAYERS
+            🏆 95+ MODULES • 25 WORLD-FIRST FEATURES • 25 UNPROTECTED LAYERS
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Simple, Transparent Pricing

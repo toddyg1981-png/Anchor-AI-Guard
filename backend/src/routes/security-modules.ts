@@ -21,7 +21,7 @@ async function callClaude(prompt: string, maxTokens = 2048): Promise<string | nu
 }
 
 // =============================================================================
-// UNIFIED SECURITY MODULES - Powers all 85+ security features
+// UNIFIED SECURITY MODULES - Powers all 95+ security features
 // =============================================================================
 
 // Shared in-memory stores per module

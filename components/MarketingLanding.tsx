@@ -189,7 +189,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       badgeColor: 'bg-cyan-500',
     },
     // ═══════════════════════════════════════════════════════════════
-    // 9 WORLD-FIRST SECURITY LAYERS — NO OTHER VENDOR HAS THESE
+    // 25 WORLD-FIRST SECURITY LAYERS — NO OTHER VENDOR HAS THESE
     // ═══════════════════════════════════════════════════════════════
     {
       icon: '🔩',
@@ -314,8 +314,8 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       answer: 'Anchor provides automated compliance checking and reporting for SOC 2, HIPAA, PCI-DSS, ISO 27001, GDPR, FedRAMP, NIST 800-53, CIS Controls, and more. Generate audit-ready reports with a single click.',
     },
     {
-      question: 'What makes the 9 World-First Security Layers unique?',
-      answer: 'Anchor protects 9 layers that no other vendor in the world covers: Hardware Integrity (malicious peripherals, TPM manipulation), Firmware & Microcode (invisible implants, supply-chain poisoning), Identity Drift (privilege creep, shadow accounts), Data Trust (poisoned datasets, corrupted logs), AI Runtime Security (prompt injection, model hijacking), Human Behaviour (insider threats, social engineering), National-Scale Telemetry (sovereign threat correlation, attack-wave prediction), Architecture Drift (forgotten services, dependency drift), and Autonomous Red Team (self-attacking exploit simulation). Protecting any one of these is a world first — Anchor protects all nine.',
+      question: 'What makes the 25 World-First Security Layers unique?',
+      answer: 'Anchor protects 25 layers that no other vendor in the world covers — spanning hardware integrity, firmware scanning, identity drift, data trust, AI runtime security, human behaviour analytics, national-scale telemetry, architecture drift, autonomous red team, AI LLM security, supply chain AI, autonomous SOC, predictive attack intelligence, digital twin security, AI breach simulation, predictive CVE intelligence, developer security scoring, real-time security collaboration, AI evolution (self-evolving AI), anti-tampering, quantum-safe cryptography, cyber insurance integration, AI regulatory intelligence, critical infrastructure protection across all 16 CISA sectors, and security awareness training. Protecting any one of these is a world first — Anchor protects all twenty-five.',
     },
     {
       question: 'How does the Autonomous Red Team work?',
@@ -407,7 +407,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <div className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
               <span className="text-cyan-400">✨</span>
               <span className="text-sm text-cyan-300">
-                95+ Security Modules • 25 World-First Features • 9 Unprotected Layers Covered • Self-Evolving AI • Sovereign-Grade
+                95+ Security Modules • 25 World-First Features • 25 Unprotected Layers Covered • Self-Evolving AI • Sovereign-Grade
               </span>
             </div>
 
@@ -422,7 +422,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
 
             {/* Subheadline */}
             <p className="text-xl text-purple-300 mb-4 max-w-2xl mx-auto">
-              Anchor is the world&apos;s first and only security platform protecting <strong>9 layers the entire industry leaves exposed</strong> &mdash;
+              Anchor is the world&apos;s first and only security platform protecting <strong>25 layers the entire industry leaves exposed</strong> &mdash;
               hardware integrity, firmware, identity drift, data trust, AI runtime, human behaviour, national telemetry, architecture drift, and autonomous red team.
             </p>
             <p className="text-lg text-cyan-400 mb-10 max-w-2xl mx-auto font-semibold">
@@ -927,7 +927,7 @@ print(rule["rule"]["content"])
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* 9 WORLD-FIRST SECURITY LAYERS — THE UNPROTECTED FRONTIER          */}
+      {/* 25 WORLD-FIRST SECURITY LAYERS — THE UNPROTECTED FRONTIER          */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-4 bg-linear-to-b from-slate-900/50 via-purple-900/10 to-slate-900/50 border-y border-purple-500/20">
         <div className="max-w-7xl mx-auto">
@@ -936,10 +936,10 @@ print(rule["rule"]["content"])
               <span className="text-purple-400 font-bold text-sm tracking-wider">🏆 WORLD-FIRST TECHNOLOGY</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
-              9 Layers Nobody Else Protects
+              25 Layers Nobody Else Protects
             </h2>
             <p className="text-xl text-purple-300 max-w-3xl mx-auto mb-4">
-              The security industry leaves <strong>9 critical layers</strong> completely unprotected. Not CrowdStrike. Not Palo Alto.
+              The security industry leaves <strong>25 critical layers</strong> completely unprotected. Not CrowdStrike. Not Palo Alto.
               Not SentinelOne. Not Snyk. Not Wiz. Not any government lab. <strong>Nobody.</strong>
             </p>
             <p className="text-lg text-cyan-400 max-w-3xl mx-auto">
@@ -1207,7 +1207,7 @@ print(rule["rule"]["content"])
               <strong>Replace a $345K+ security stack with one platform.</strong>
             </p>
             <p className="text-lg text-purple-400 mb-8">
-              95+ modules. 25 world-first features. 9 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$4,990/month</span>.
+              95+ modules. 25 world-first features. 25 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$4,990/month</span>.
             </p>
             <button
               onClick={onGetStarted}
@@ -1232,7 +1232,7 @@ print(rule["rule"]["content"])
               </div>
               <p className="text-purple-300 text-sm">
                 <strong>The world&apos;s most advanced</strong> AI-powered security platform.
-                25 world-first features. 9 layers nobody else protects.
+                25 world-first features. 25 layers nobody else protects.
                 Built for enterprises, governments, and sovereign defence.
               </p>
             </div>

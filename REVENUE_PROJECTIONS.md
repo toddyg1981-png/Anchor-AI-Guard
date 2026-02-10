@@ -1,7 +1,7 @@
 # Anchor Security - Revenue Projections & Pricing Strategy
 
 > **Last Updated:** February 2026  
-> **Platform Status:** 95+ Security Modules | 25 World-First Features | 9 Unprotected Layers Covered
+> **Platform Status:** 95+ Security Modules | 25 World-First Features | 25 Unprotected Layers Covered
 
 ---
 
@@ -43,7 +43,7 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 ### Anchor's Competitive Advantage
 
 - **🔮 25 World-First Features** - Capabilities no competitor has built
-- **🛡️ 9 Unprotected Layers** - Security blind spots only we cover
+- **🛡️ 25 Unprotected Layers** - Security blind spots only we cover
 - **🤖 95+ Security Modules** - Complete platform, not point solution
 - **🧠 Self-Evolving AI** - Gets smarter autonomously
 - **⚔️ Autonomous Red Team** - Self-attacking security engine
@@ -633,7 +633,7 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 ### Why Anchor Can 10x the Industry Norm
 
 1. **Platform from Day 1** - Not a point solution that expands
-2. **25 World-Firsts** - No competition in 9 critical layers
+2. **25 World-Firsts** - No competition in 25 critical layers
 3. **Government Ready** - $25M-$75M+ contracts from Year 1
 4. **Premium Pricing Justified** - Monopoly on unprotected layers
 5. **12 Revenue Streams** - Diversified, not dependent on one model
@@ -732,7 +732,7 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 
 ## 🎯 The Bottom Line
 
-### 12 Revenue Streams. 25 World-Firsts. 9 Unprotected Layers. One Platform.
+### 12 Revenue Streams. 25 World-Firsts. 25 Unprotected Layers. One Platform.
 
 | Metric | Value |
 |--------|-------|

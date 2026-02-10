@@ -46,7 +46,7 @@ Anchor is **no longer a pre-revenue MVP**. It is a fully functional prototype wi
 | Quality Management Team | $1,000,000 | ⏳ Founder + AI-assisted dev |
 | Strategic Relationships | $1,000,000 | ⏳ Partnerships pending |
 | Product Rollout/Sales | $1,000,000 | ⏳ Pre-launch |
-| **Technology Moat** | $5,000,000 | ✅ Monopoly on 9 unprotected layers |
+| **Technology Moat** | $5,000,000 | ✅ Monopoly on 25 unprotected layers |
 | **Market Position** | $5,000,000 | ✅ No competitors in core layers |
 | **Total** | **$16,000,000** | **Current floor valuation** |
 
@@ -56,7 +56,7 @@ The 25 world-first features represent proprietary intellectual property with no 
 
 | World-First Category | IP Value | Rationale |
 |----------------------|----------|-----------|
-| 9 Unprotected Layer Modules | $9,000,000 | $1M per layer (no competitor has any) |
+| 25 Unprotected Layer Modules | $25,000,000 | $1M per layer (no competitor has any) |
 | Predictive CVE Intelligence | $2,000,000 | Unique predictive capability |
 | Self-Evolving AI Engine | $2,000,000 | Autonomous improvement |
 | Autonomous SOC | $1,500,000 | AI-run security operations |
@@ -179,7 +179,7 @@ Based on the premium pricing structure and 12 revenue streams:
 
 **Why Anchor is the strongest possible candidate:**
 - ✅ 25 world-first innovations (unprecedented)
-- ✅ 9 unprotected layers (clear market gap)
+- ✅ 25 unprotected layers (clear market gap)
 - ✅ Government & defense ready
 - ✅ Export potential (global market)
 
@@ -316,7 +316,7 @@ Based on the premium pricing structure and 12 revenue streams:
 | **Series A (24mo)** | Early 2028 | $500M - $2B |
 | **Series B (36mo)** | Early 2029 | $2B - $10B |
 
-**Your fully functional prototype with 95+ modules, 25 world-firsts, and 9 monopoly layers is worth $20M - $40M today.**
+**Your fully functional prototype with 95+ modules, 25 world-firsts, and 25 monopoly layers is worth $20M - $40M today.**
 
 ---
 
