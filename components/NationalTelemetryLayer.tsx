@@ -1476,7 +1476,7 @@ const NationalTelemetryLayer: React.FC = () => {
             <div className="space-y-2">
               {selectedPlaybook.containmentSteps.map((step, i) => (
                 <div key={i} className="rounded-lg border border-slate-700/30 bg-slate-900/40 p-3 flex items-start gap-3">
-                  <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                  <span className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
                     i === 0 ? 'bg-red-500/20 text-red-400 border border-red-500/40' :
                     i === 1 ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' :
                     i === 2 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40' :
@@ -1552,7 +1552,7 @@ const NationalTelemetryLayer: React.FC = () => {
               {sectorEvents.map(event => (
                 <div key={event.id} className="flex items-start gap-4 relative">
                   {/* Timeline dot */}
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center z-10 ${
+                  <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center z-10 ${
                     event.type === 'observed'
                       ? 'bg-red-500/20 border border-red-500/50'
                       : 'bg-blue-500/20 border border-blue-500/50'

@@ -70,7 +70,7 @@ export const ForensicsInvestigation: React.FC = () => {
     (async () => {
       setBackendLoading(true);
       try {
-        const res = await backendApi.modules.getDashboard('forensics');
+        const _res = await backendApi.modules.getDashboard('forensics');
         } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
@@ -79,7 +79,7 @@ export const ForensicsInvestigation: React.FC = () => {
     setAnalyzing(true);
     try {
       const res = await backendApi.modules.analyze('forensics', 'Analyze forensics investigation data for evidence chain integrity and recommend examination procedures');
-      if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
+      if ((res as unknown as Record<string, unknown>)?.analysis) setAnalysisResult((res as unknown as Record<string, unknown>).analysis as string);
     } catch (e) { console.error(e); } finally { setAnalyzing(false); }
   };
 
@@ -163,7 +163,7 @@ export const ForensicsInvestigation: React.FC = () => {
         <button
           onClick={handleAIAnalysis}
           disabled={analyzing || backendLoading}
-          className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2 bg-linear-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
         >
           {analyzing ? '⏳ Analyzing...' : '🤖 AI Analysis'}
         </button>
@@ -174,7 +174,7 @@ export const ForensicsInvestigation: React.FC = () => {
           <h4 className="text-white font-medium mb-3">New Forensic Case</h4>
           <div className="space-y-3">
             <input type="text" placeholder="Case title" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
-            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+            <select title="Case type" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
               <option>Incident Response</option><option>Malware Analysis</option><option>Data Breach</option><option>Insider Threat</option>
             </select>
             <textarea placeholder="Case description and initial findings..." className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm h-20 resize-none" />
@@ -224,7 +224,7 @@ export const ForensicsInvestigation: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeTab === tab.id
                 ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500'

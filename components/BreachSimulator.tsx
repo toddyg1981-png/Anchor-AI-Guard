@@ -60,8 +60,8 @@ export const BreachSimulator: React.FC = () => {
   const [_selectedScenario, setSelectedScenario] = useState<AttackScenario | null>(null);
   const [runningSimulation, setRunningSimulation] = useState<SimulationResult | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [simulating, setSimulating] = useState(false);
+  const [_loading, setLoading] = useState(true);
+  const [_simulating, setSimulating] = useState(false);
   const [showCustomAttack, setShowCustomAttack] = useState(false);
   const [scenarios, setScenarios] = useState<AttackScenario[]>([]);
   const [mockSimulationResult, setMockSimulationResult] = useState<SimulationResult | null>(null);
@@ -74,25 +74,27 @@ export const BreachSimulator: React.FC = () => {
     setLoading(true);
     try {
       const [dashData, scenData] = await Promise.all([
-        backendApi.breachSim.getDashboard() as Promise<any>,
-        backendApi.breachSim.getScenarios() as Promise<any>,
-      ]);
-      if (scenData?.scenarios) {
-        setScenarios(scenData.scenarios.map((s: any) => ({
-          id: s.id, name: s.name, description: s.description,
-          category: s.category || 'external', difficulty: s.difficulty || 'intermediate',
-          techniques: s.techniques || [], estimatedDuration: s.estimatedDuration || '15 min',
+        backendApi.breachSim.getDashboard() as Promise<unknown>,
+        backendApi.breachSim.getScenarios() as Promise<unknown>,
+      ]) as [Record<string, unknown>, Record<string, unknown>];
+      if ((scenData as Record<string, unknown>)?.scenarios) {
+        const rawScenarios = (scenData as Record<string, unknown>).scenarios as Array<Record<string, string | string[]>>;
+        setScenarios(rawScenarios.map((s) => ({
+          id: s.id as string, name: s.name as string, description: s.description as string,
+          category: (s.category || 'external') as AttackScenario['category'], difficulty: (s.difficulty || 'intermediate') as AttackScenario['difficulty'],
+          techniques: (s.techniques || []) as string[], estimatedDuration: (s.estimatedDuration || '15 min') as string,
           status: 'ready' as const,
         })));
       }
-      if (dashData?.recentResults?.[0]) {
-        const r = dashData.recentResults[0];
+      const recentResults = (dashData as Record<string, unknown>)?.recentResults as Record<string, unknown>[] | undefined;
+      if (recentResults?.[0]) {
+        const r = recentResults[0] as Record<string, unknown>;
         setMockSimulationResult({
-          id: r.id, scenarioId: r.scenarioId, scenarioName: r.scenario || 'Simulation',
-          startTime: r.startedAt, endTime: r.completedAt, status: 'completed',
-          attackPath: r.attackPath || [], findings: r.findings || [],
-          overallSuccess: r.overallSuccess || false, securityScore: r.securityScore || 0,
-          detectionRate: r.detectionRate || 0, meanTimeToDetect: r.meanTimeToDetect,
+          id: r.id as string, scenarioId: r.scenarioId as string, scenarioName: (r.scenario as string) || 'Simulation',
+          startTime: r.startedAt as string, endTime: r.completedAt as string | undefined, status: 'completed',
+          attackPath: (r.attackPath || []) as AttackStep[], findings: (r.findings || []) as SimulationFinding[],
+          overallSuccess: (r.overallSuccess || false) as boolean, securityScore: (r.securityScore || 0) as number,
+          detectionRate: (r.detectionRate || 0) as number, meanTimeToDetect: r.meanTimeToDetect as number | undefined,
         });
       }
     } catch (err) {
@@ -111,18 +113,18 @@ export const BreachSimulator: React.FC = () => {
   const handleRunSimulation = async (scenarioId: string) => {
     setSimulating(true);
     try {
-      const result = await backendApi.breachSim.runSimulation(scenarioId) as any;
+      const result = await backendApi.breachSim.runSimulation(scenarioId) as unknown as Record<string, unknown>;
       if (result?.simulationId) {
         // Poll for results
         const checkResult = async () => {
-          const res = await backendApi.breachSim.getResults(result.simulationId) as any;
+          const res = await backendApi.breachSim.getResults(result.simulationId as string) as unknown as Record<string, unknown>;
           if (res?.status === 'completed') {
             setMockSimulationResult({
-              id: res.id, scenarioId, scenarioName: res.scenario || scenarioId,
-              startTime: res.startedAt, endTime: res.completedAt, status: 'completed',
-              attackPath: res.attackPath || [], findings: res.findings || [],
-              overallSuccess: res.overallSuccess || false, securityScore: res.securityScore || 68,
-              detectionRate: res.detectionRate || 50, meanTimeToDetect: res.meanTimeToDetect,
+              id: res.id as string, scenarioId, scenarioName: (res.scenario as string) || scenarioId,
+              startTime: res.startedAt as string, endTime: res.completedAt as string | undefined, status: 'completed',
+              attackPath: (res.attackPath || []) as AttackStep[], findings: (res.findings || []) as SimulationFinding[],
+              overallSuccess: (res.overallSuccess || false) as boolean, securityScore: (res.securityScore || 68) as number,
+              detectionRate: (res.detectionRate || 50) as number, meanTimeToDetect: res.meanTimeToDetect as number | undefined,
             });
             setActiveTab('results');
           }
@@ -272,7 +274,7 @@ export const BreachSimulator: React.FC = () => {
         <div className="mb-6 bg-slate-800/50 rounded-xl border border-slate-700/50 p-4">
           <h4 className="text-white font-medium mb-3">Custom Attack Builder</h4>
           <div className="space-y-3">
-            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+            <select title="Attack category" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
               <option>External Penetration</option>
               <option>Insider Threat</option>
               <option>Supply Chain Attack</option>
@@ -280,7 +282,7 @@ export const BreachSimulator: React.FC = () => {
               <option>APT Emulation</option>
             </select>
             <input type="text" placeholder="Target system or network segment" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" />
-            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+            <select title="MITRE ATT&CK tactic" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
               <option>MITRE ATT&CK — Initial Access</option>
               <option>MITRE ATT&CK — Lateral Movement</option>
               <option>MITRE ATT&CK — Privilege Escalation</option>
@@ -332,7 +334,7 @@ export const BreachSimulator: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeTab === tab.id
                 ? 'bg-red-500/20 text-red-400 border border-red-500'

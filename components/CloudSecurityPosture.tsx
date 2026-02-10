@@ -57,7 +57,7 @@ export const CloudSecurityPosture: React.FC = () => {
     (async () => {
       setLoading(true);
       try {
-        const res = await backendApi.modules.getDashboard('cloud-security');
+        const _res = await backendApi.modules.getDashboard('cloud-security');
         // eslint-disable-line no-console
       } catch (e) { console.error(e); } finally { setLoading(false); }
     })();
@@ -155,6 +155,7 @@ export const CloudSecurityPosture: React.FC = () => {
         </div>
         <div className="flex items-center gap-4">
           <select 
+            title="Filter by account"
             value={selectedAccount}
             onChange={(e) => setSelectedAccount(e.target.value)}
             className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"
@@ -177,7 +178,7 @@ export const CloudSecurityPosture: React.FC = () => {
         <div className="mb-6 bg-slate-800/50 rounded-xl border border-slate-700/50 p-4">
           <h4 className="text-white font-medium mb-3">Connect Cloud Account</h4>
           <div className="space-y-3">
-            <select className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+            <select title="Cloud provider" className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
               <option>AWS — IAM Role ARN</option>
               <option>Azure — App Registration</option>
               <option>GCP — Service Account</option>
@@ -256,7 +257,7 @@ export const CloudSecurityPosture: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeTab === tab.id
                 ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500'

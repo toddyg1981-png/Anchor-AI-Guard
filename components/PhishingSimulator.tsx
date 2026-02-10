@@ -64,7 +64,7 @@ export const PhishingSimulator: React.FC = () => {
     (async () => {
       setBackendLoading(true);
       try {
-        const res = await backendApi.modules.getDashboard('phishing-sim');
+        const _res = await backendApi.modules.getDashboard('phishing-sim');
         } catch (e) { console.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
@@ -72,8 +72,8 @@ export const PhishingSimulator: React.FC = () => {
   const handleAIAnalysis = async () => {
     setAnalyzing(true);
     try {
-      const res: any = await backendApi.modules.analyze('phishing-sim', 'Analyze phishing simulation results for click-through trends, repeat offenders, and training effectiveness');
-      if (res?.analysis) setAnalysisResult(res.analysis);
+      const res: unknown = await backendApi.modules.analyze('phishing-sim', 'Analyze phishing simulation results for click-through trends, repeat offenders, and training effectiveness');
+      if ((res as Record<string, unknown>)?.analysis) setAnalysisResult((res as Record<string, unknown>).analysis as string);
     } catch (e) { console.error(e); } finally { setAnalyzing(false); }
   };
 
@@ -452,14 +452,14 @@ export const PhishingSimulator: React.FC = () => {
               </div>
               <div>
                 <label className="text-sm text-gray-400 block mb-1">Template</label>
-                <select value={newCampaignTemplate} onChange={e => setNewCampaignTemplate(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
+                <select title="Phishing template" value={newCampaignTemplate} onChange={e => setNewCampaignTemplate(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
                   <option value="">Select a template...</option>
                   {templates.map(t => <option key={t.id} value={t.name}>{t.name}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-sm text-gray-400 block mb-1">Target Group</label>
-                <select value={newCampaignTarget} onChange={e => setNewCampaignTarget(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
+                <select title="Target group" value={newCampaignTarget} onChange={e => setNewCampaignTarget(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none">
                   <option value="All Employees">All Employees</option>
                   <option value="Engineering">Engineering</option>
                   <option value="Finance Team">Finance Team</option>
