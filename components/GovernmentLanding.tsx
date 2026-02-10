@@ -213,9 +213,9 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
       icon: (
         <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none"><path d="M16 4 L16 28" stroke="#06b6d4" strokeWidth="1.5"/><path d="M8 10 Q16 16 24 10" stroke="#06b6d4" strokeWidth="1.2"/><path d="M8 18 Q16 24 24 18" stroke="#06b6d4" strokeWidth="1.2"/><circle cx="16" cy="4" r="2" fill="#06b6d4"/><circle cx="16" cy="28" r="2" fill="#06b6d4"/><path d="M6 14 L10 14" stroke="#06b6d4" strokeWidth="0.8" opacity="0.5"/><path d="M22 14 L26 14" stroke="#06b6d4" strokeWidth="0.8" opacity="0.5"/></svg>
       ),
-      title: 'Self-Evolving Detection Engine',
-      desc: 'Our AI autonomously writes, tests, and deploys its own detection rules. Continuously adapts to emerging threats without human intervention. Evolves faster than adversaries can innovate.',
-      tag: 'AUTONOMOUS',
+      title: 'TITAN — Self-Evolving Detection Engine',
+      desc: 'TITAN, the living core of Anchor, autonomously writes, tests, and deploys its own detection rules. Continuously adapts to emerging threats without human intervention. A sovereign AI powerhouse that evolves faster than adversaries can innovate.',
+      tag: 'TITAN',
     },
   ];
 
@@ -321,9 +321,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
               </button>
             )}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v6c0 5.25 3.75 10.15 9 11.25C17.25 23.15 21 18.25 21 13V7l-9-5z" stroke="currentColor" strokeWidth="2"/></svg>
-              </div>
+              <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="h-9 w-auto object-contain select-none pointer-events-none rounded" />
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-white">ANCHOR</span>
                 <span className="text-cyan-400 ml-1">GOV</span>
@@ -354,9 +352,20 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
       <section className="relative min-h-[90vh] flex items-center justify-center px-4">
         <AnimatedGrid />
         <div className="relative z-10 max-w-6xl mx-auto text-center" style={{ animation: 'fadeInUp 1s ease-out' }}>
-          {/* Shield */}
-          <div className="flex justify-center mb-8 animate-float">
-            <SovereignShield className="w-28 h-32 md:w-36 md:h-40" />
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor AI Guard" draggable="false" className="h-24 md:h-28 w-auto object-contain select-none pointer-events-none rounded-xl shadow-lg shadow-cyan-500/20" />
+          </div>
+
+          {/* TITAN Engine Pulse */}
+          <div className="flex justify-center mb-6">
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 border border-amber-500/30">
+              <div className="relative">
+                <div className="w-3 h-3 bg-amber-500 rounded-full animate-ping absolute" />
+                <div className="w-3 h-3 bg-amber-400 rounded-full relative" />
+              </div>
+              <span className="text-amber-300 text-sm font-bold tracking-widest">TITAN ENGINE — SOVEREIGN DEFENSE ACTIVE</span>
+            </div>
           </div>
 
           {/* Headline */}
@@ -369,7 +378,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
           <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
             The world&apos;s first self-evolving AI security platform built for national defense.
             Protect critical infrastructure, government networks, and classified environments
-            with autonomous threat detection that outpaces nation-state adversaries.
+            with <span className="text-amber-400 font-semibold">TITAN</span> — autonomous threat detection that outpaces nation-state adversaries.
           </p>
 
           {/* CTAs */}
@@ -967,10 +976,11 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
               {/* Brand */}
               <div className="md:col-span-1">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-linear-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v6c0 5.25 3.75 10.15 9 11.25C17.25 23.15 21 18.25 21 13V7l-9-5z" stroke="currentColor" strokeWidth="2"/></svg>
+                  <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="h-8 w-auto object-contain select-none pointer-events-none rounded" />
+                  <div>
+                    <span className="text-lg font-bold text-white">ANCHOR</span>
+                    <span className="block text-[10px] font-bold text-amber-400 tracking-widest">POWERED BY TITAN</span>
                   </div>
-                  <span className="text-lg font-bold text-white">ANCHOR</span>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed mb-4">
                   World&apos;s first self-evolving AI security platform. Australian sovereign technology protecting governments globally.

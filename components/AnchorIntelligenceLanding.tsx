@@ -132,10 +132,15 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
         
         <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center">
+            {/* Real Logo */}
+            <div className="flex justify-center mb-6">
+              <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor AI Guard" draggable="false" className="h-20 w-auto object-contain select-none pointer-events-none rounded-xl shadow-lg shadow-purple-500/20" />
+            </div>
+
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 mb-8">
               <span className="text-purple-400 text-sm font-semibold">ANCHOR INTELLIGENCE</span>
               <span className="mx-2 text-gray-600">|</span>
-              <span className="text-gray-400 text-sm">Self-Evolving Security AI</span>
+              <span className="text-amber-400 text-sm font-bold tracking-wider">Powered by TITAN</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
@@ -143,14 +148,24 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
                 Security AI
               </span>
               <br />
-              <span className="text-white">That Evolves Itself</span>
+              <span className="text-white">Forged by </span>
+              <span className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent animate-pulse">TITAN</span>
             </h1>
             
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-4">
               The world's first self-evolving threat intelligence API. Generate detection rules, 
-              predict attacks, and analyze threats — powered by AI that continuously improves 
-              from global threat data. One API call away.
+              predict attacks, and analyze threats — powered by <span className="text-amber-400 font-semibold">TITAN</span>, the living AI engine that continuously 
+              evolves from global threat data. One API call away.
             </p>
+
+            {/* TITAN Engine Pulse */}
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 border border-amber-500/30 mb-8">
+              <div className="relative">
+                <div className="w-3 h-3 bg-amber-500 rounded-full animate-ping absolute" />
+                <div className="w-3 h-3 bg-amber-400 rounded-full relative" />
+              </div>
+              <span className="text-amber-300 text-sm font-bold tracking-widest">TITAN ENGINE — ACTIVE &amp; EVOLVING</span>
+            </div>
             
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               <button
@@ -205,6 +220,10 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
                 Back
               </button>
             )}
+            <div className="flex items-center gap-2 mr-4">
+              <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="h-8 w-auto object-contain select-none pointer-events-none rounded" />
+              <span className="text-sm font-bold text-amber-400 tracking-wider hidden sm:inline">TITAN</span>
+            </div>
             {(['overview', 'api', 'pricing', 'docs'] as const).map(tab => (
               <button
                 key={tab}
@@ -818,10 +837,16 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h4 className="font-bold text-lg mb-4">Anchor Intelligence</h4>
+              <div className="flex items-center gap-3 mb-4">
+                <img src="/assets/Anchor%20Logo.jpeg" alt="Anchor" draggable="false" className="h-10 w-auto object-contain select-none pointer-events-none rounded" />
+                <div>
+                  <h4 className="font-bold text-lg">Anchor Intelligence</h4>
+                  <span className="text-xs font-bold text-amber-400 tracking-widest">POWERED BY TITAN</span>
+                </div>
+              </div>
               <p className="text-gray-400 text-sm">
                 Self-Evolving Security AI as a Service. Threat intelligence, detection rule generation, 
-                and predictive analysis — powered by AI that never stops learning.
+                and predictive analysis — powered by <span className="text-amber-400 font-semibold">TITAN</span>, the living engine that never stops evolving.
               </p>
             </div>
             <div>
@@ -857,7 +882,7 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} Anchor Intelligence, a division of Anchor Security. All rights reserved.
+            © {new Date().getFullYear()} Anchor Intelligence, a division of Anchor Security. All rights reserved. Powered by TITAN Engine.
           </div>
         </div>
       </div>
