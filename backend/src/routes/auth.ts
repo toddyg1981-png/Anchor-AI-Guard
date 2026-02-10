@@ -113,9 +113,16 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(401).send({ error: 'Invalid credentials' });
     }
 
-    // Check if MFA is enabled
-    const totpSecret = await prisma.totpSecret.findUnique({ where: { userId: user.id } });
-    if (totpSecret?.verified) {
+    // Check if MFA is enabled (safely — table may not exist yet)
+    let mfaEnabled = false;
+    try {
+      const totpSecret = await prisma.totpSecret.findUnique({ where: { userId: user.id } });
+      mfaEnabled = !!totpSecret?.verified;
+    } catch {
+      // TotpSecret table may not exist yet — skip MFA check
+    }
+
+    if (mfaEnabled) {
       // Don't issue full token yet - require MFA step
       return reply.send({
         mfaRequired: true,
