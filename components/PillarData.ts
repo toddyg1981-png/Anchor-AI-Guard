@@ -53,9 +53,9 @@ export const PRODUCT_PILLARS: ProductPillar[] = [
     color: 'from-cyan-500 to-blue-600',
     accent: 'text-cyan-400',
     tagline: 'The command centre for your entire security posture',
-    narrative: `Anchor's Core Platform is the single pane of glass that security teams, CISOs, and executives have been waiting for. Instead of juggling 15 dashboards from 15 vendors, Anchor unifies everything — real-time threat posture, executive risk scoring, AI engine health, and team operations — into one seamlessly integrated command centre.
+    narrative: `Anchor's Core Platform is the single pane of glass that security teams, CISOs, and executives have been waiting for. Instead of juggling 15 dashboards from 15 vendors, Anchor unifies everything — real-time threat posture, executive risk scoring, Titan engine health, and team operations — into one seamlessly integrated command centre.
 
-The platform includes a self-evolving AI Engine that continuously generates new detection rules, an Intelligence API that lets customers monetise their own threat data, and built-in training and support so teams can onboard in hours, not weeks. Every module across all five pillars feeds telemetry back into the Core Platform, creating a single source of truth that gets smarter with every interaction.
+The platform includes a self-evolving Titan Engine that continuously generates new detection rules, an Intelligence API that lets customers monetise their own threat data, and built-in training and support so teams can onboard in hours, not weeks. Every module across all five pillars feeds telemetry back into the Core Platform, creating a single source of truth that gets smarter with every interaction.
 
 For investors: This is the "sticky" layer. Once a team's workflows live inside the Core Platform, switching costs become prohibitive — driving 95%+ retention and massive expansion revenue.`,
     investorHook: 'Single pane of glass with 95%+ retention — the platform everything else plugs into',
@@ -68,7 +68,7 @@ For investors: This is the "sticky" layer. Once a team's workflows live inside t
       { name: 'Executive View', icon: '👔', description: 'C-suite security overview' },
       { name: 'Security Metrics', icon: '📈', description: 'KPIs and reporting' },
       { name: 'SOC Dashboard', icon: '📺', description: 'Security operations center' },
-      { name: 'AI Engine', icon: '🧬', description: 'Self-evolving threat detection' },
+      { name: 'Titan Engine', icon: '🧬', description: 'Self-evolving threat detection' },
       { name: 'Intelligence API', icon: '🔑', description: 'B2B AI-as-a-Service platform' },
       { name: 'SDK Security', icon: '📦', description: 'SDK management & scanning' },
       { name: 'Training', icon: '🎓', description: 'Awareness & gamified learning' },
@@ -85,7 +85,7 @@ For investors: This is the "sticky" layer. Once a team's workflows live inside t
     ],
     pricingTiers: [
       { name: 'Starter', price: '$0', period: '/mo', features: ['Dashboard', 'Security Metrics', '5 scans/mo', 'Community support'], cta: 'Start Free' },
-      { name: 'Professional', price: '$990', period: '/mo', features: ['Executive View', 'SOC Dashboard', 'AI Engine access', '100 AI queries', 'Email support'], cta: 'Start Trial' },
+      { name: 'Professional', price: '$990', period: '/mo', features: ['Executive View', 'SOC Dashboard', 'Titan Engine access', '100 AI queries', 'Email support'], cta: 'Start Trial' },
       { name: 'Business', price: '$4,990', period: '/mo', features: ['Intelligence API access', 'SDK Security', 'Training platform', 'Unlimited AI queries', 'API access'], highlight: true, cta: 'Start Trial' },
       { name: 'Enterprise', price: 'Custom', period: '', features: ['White-label API', 'Custom AI models', 'Dedicated CSM', 'On-premise deployment', 'SLA guarantee'], cta: 'Contact Sales' },
     ],

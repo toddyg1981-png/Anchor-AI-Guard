@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -83,7 +84,7 @@ export const APISecurityScanner: React.FC = () => {
       try {
         const res = await backendApi.modules.getDashboard('api-security');
         // eslint-disable-line no-console
-      } catch (e) { console.error(e); } finally { setLoading(false); }
+      } catch (e) { logger.error(e); } finally { setLoading(false); }
     })();
   }, []);
 
@@ -92,7 +93,7 @@ export const APISecurityScanner: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('api-security', 'Analyze API security posture for authentication weaknesses, injection vectors, and rate limiting gaps') as Record<string, unknown>;
       if (res?.analysis) setAnalysisResult(res.analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock API collections

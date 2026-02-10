@@ -5,6 +5,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // Types
 export interface ChatMessage {
@@ -320,7 +321,7 @@ export const AISecurityChat: React.FC<AISecurityChatProps> = ({
         ],
       };
     } catch (err) {
-      console.error('AI chat error:', err);
+      logger.error('AI chat error:', err);
       return {
         id: `msg-${Date.now()}`,
         role: 'assistant',
@@ -386,7 +387,7 @@ export const AISecurityChat: React.FC<AISecurityChatProps> = ({
             <h3 className="text-lg font-semibold text-white">AI Security Assistant</h3>
             <p className="text-xs text-green-400 flex items-center gap-1">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              Online • Powered by Claude
+              Online • Powered by Titan
             </p>
           </div>
         </div>

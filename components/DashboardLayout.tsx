@@ -20,6 +20,7 @@ interface DashboardLayoutProps {
   onViewProfile?: () => void;
   onViewAdmin?: () => void;
   onNewScan?: () => void;
+  onRepair?: () => void;
   onLogout?: () => void;
   user?: User | null;
   children: React.ReactNode;
@@ -35,6 +36,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onViewProfile,
   onViewAdmin,
   onNewScan,
+  onRepair,
   onLogout,
   user,
   children,
@@ -84,8 +86,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         { id: 'executive', label: 'Executive View', icon: '👔', view: 'executiveDashboard', description: 'C-suite security overview' },
         { id: 'metrics', label: 'Security Metrics', icon: '📈', view: 'securityMetrics', description: 'KPIs and reporting' },
         { id: 'soc', label: 'SOC Dashboard', icon: '📺', view: 'socDashboard', description: 'Security operations center' },
-        { id: 'ai-evolution', label: 'AI Engine', icon: '🧬', view: 'aiEvolution', description: 'Self-evolving threat detection' },
-        { id: 'ai-command', label: 'AI Command Center', icon: '🎛️', view: 'aiCommandCenter', description: 'Unified AI analysis hub' },
+        { id: 'ai-evolution', label: 'Titan Engine', icon: '🧬', view: 'aiEvolution', description: 'Self-evolving threat detection' },
+        { id: 'ai-command', label: 'Titan Command Centre', icon: '🎛️', view: 'aiCommandCenter', description: 'Unified AI analysis hub' },
         { id: 'intelligence', label: 'Intelligence API', icon: '🔑', view: 'intelligenceDashboard', description: 'B2B AI-as-a-Service platform' },
         { id: 'sdk-security', label: 'SDK Security', icon: '📦', view: 'sdkSecurity', description: 'SDK management & scanning' },
         { id: 'security-training', label: 'Training', icon: '🎓', view: 'securityTraining', description: 'Awareness & gamified learning' },
@@ -246,8 +248,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </div>
 
           {/* Main Navigation */}
-          <nav className="space-y-1">
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3 px-3">Product Pillars</p>
+          <nav className="space-y-1" aria-label="Product pillars navigation">
             {navCategories.map((cat) => (
               <div key={cat.category} className="mb-1">
                 <button
@@ -274,6 +275,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       <button
                         key={item.id}
                         onClick={() => { setActiveNav(item.id); setDashboardView(item.view); }}
+                        aria-current={activeNav === item.id ? 'page' : undefined}
                         className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center gap-3 text-sm ${
                           activeNav === item.id
                             ? 'bg-linear-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3] border-l-2 border-[#ff4fa3]'
@@ -296,11 +298,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           {/* Manage Section */}
           <div className="mt-8 pt-6 border-t border-slate-700/50">
             <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3 px-3">Manage</p>
-            <nav className="space-y-1">
+            <nav className="space-y-1" aria-label="Management navigation">
               {manageItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => { setActiveNav(item.id); setDashboardView(item.view); item.action?.(); }}
+                  aria-current={activeNav === item.id ? 'page' : undefined}
                   className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center gap-3 ${
                     activeNav === item.id
                       ? 'bg-linear-to-r from-[#35c6ff]/20 to-[#ff4fa3]/20 text-[#ff4fa3]'
@@ -371,6 +374,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           
           <div className="flex items-center gap-3">
             {/* Quick Actions */}
+            <button
+              onClick={onRepair}
+              className="px-4 py-2 bg-linear-to-r from-emerald-500 to-green-600 text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              Repair
+            </button>
             <button
               onClick={onNewScan}
               className="px-4 py-2 bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-pink-500/25">

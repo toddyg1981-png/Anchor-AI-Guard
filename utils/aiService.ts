@@ -6,6 +6,7 @@
 
 import { Finding, Severity } from '../types';
 import { env } from '../config/env';
+import { logger } from './logger';
 
 const API_BASE_URL = env.apiBaseUrl;
 
@@ -50,13 +51,13 @@ export async function analyzeSecurityFinding(finding: Finding): Promise<AIAnalys
     });
 
     if (!response.ok) {
-      console.error('AI analysis error:', response.statusText);
+      logger.error('AI analysis error', { status: response.statusText });
       return getDefaultAnalysis(finding);
     }
 
     return await response.json();
   } catch (error) {
-    console.error('AI analysis error:', error);
+    logger.error('AI analysis error', { error });
     return getDefaultAnalysis(finding);
   }
 }
@@ -74,13 +75,13 @@ export async function analyzeBulkFindings(findings: Finding[]): Promise<BulkAnal
     });
 
     if (!response.ok) {
-      console.error('Bulk AI analysis error:', response.statusText);
+      logger.error('Bulk AI analysis error', { status: response.statusText });
       return getDefaultBulkAnalysis(findings);
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Bulk AI analysis error:', error);
+    logger.error('Bulk AI analysis error', { error });
     return getDefaultBulkAnalysis(findings);
   }
 }
@@ -98,14 +99,14 @@ export async function generateSecurityReport(findings: Finding[], projectName: s
     });
 
     if (!response.ok) {
-      console.error('Report generation error:', response.statusText);
+      logger.error('Report generation error', { status: response.statusText });
       return getDefaultReport(findings, projectName);
     }
 
     const data = await response.json();
     return data.report;
   } catch (error) {
-    console.error('Report generation error:', error);
+    logger.error('Report generation error', { error });
     return getDefaultReport(findings, projectName);
   }
 }
@@ -128,13 +129,13 @@ export async function getThreatIntelligence(vulnerabilityType: string): Promise<
     });
 
     if (!response.ok) {
-      console.error('Threat intelligence error:', response.statusText);
+      logger.error('Threat intelligence error', { status: response.statusText });
       return getDefaultThreatIntel(vulnerabilityType);
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Threat intelligence error:', error);
+    logger.error('Threat intelligence error', { error });
     return getDefaultThreatIntel(vulnerabilityType);
   }
 }

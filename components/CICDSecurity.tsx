@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -73,7 +74,7 @@ export const CICDSecurity: React.FC = () => {
       try {
         const res = await backendApi.modules.getDashboard('cicd-security');
         // eslint-disable-line no-console
-      } catch (e) { console.error(e); } finally { setLoading(false); }
+      } catch (e) { logger.error(e); } finally { setLoading(false); }
     })();
   }, []);
 
@@ -82,7 +83,7 @@ export const CICDSecurity: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('cicd-security', 'Analyze CI/CD pipeline security for supply chain risks, secret exposure, and policy violations') as Record<string, unknown>;
       if (res?.analysis) setAnalysisResult(res.analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock pipelines

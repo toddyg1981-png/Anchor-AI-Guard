@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -74,7 +75,7 @@ export const ExecutiveDashboard: React.FC = () => {
         const kpis = await backendApi.securityMetrics.getKPIs();
         setKpiData(kpis);
       } catch (err) {
-        console.error('Failed to load executive metrics:', err);
+        logger.error('Failed to load executive metrics:', err);
       } finally {
         setLoading(false);
       }
@@ -88,7 +89,7 @@ export const ExecutiveDashboard: React.FC = () => {
       const result = await backendApi.modules.analyze('security-metrics', 'Board-level security posture', 'Provide an executive summary of our security posture, risk exposure, and recommendations for the board');
       setAiAnalysis(result);
     } catch (err) {
-      console.error('Executive analysis failed:', err);
+      logger.error('Executive analysis failed:', err);
     } finally {
       setAnalyzing(false);
     }

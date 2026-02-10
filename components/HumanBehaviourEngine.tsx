@@ -753,7 +753,7 @@ const HumanBehaviourEngine: React.FC = () => {
 
       {/* Footer */}
       <div className="mt-8 text-center text-slate-600 text-xs border-t border-slate-800 pt-4">
-        Anchor Human Behaviour Risk Engine v3.0 — Powered by Anchor AI · Behavioural models retrained every 6 hours · UEBA · SOAR integrated
+        Anchor Human Behaviour Risk Engine v3.0 — Powered by Titan · Behavioural models retrained every 6 hours · UEBA · SOAR integrated
       </div>
     </div>
   );

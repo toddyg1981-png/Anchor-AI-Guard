@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -68,7 +69,7 @@ export const SecurityAwarenessTraining: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('security-training');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -77,7 +78,7 @@ export const SecurityAwarenessTraining: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('security-training', 'Analyze security awareness training effectiveness, completion rates, and knowledge retention gaps');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const showNotification = (msg: string) => {

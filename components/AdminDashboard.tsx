@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { env } from '../config/env';
 
 interface AdminDashboardProps {
@@ -92,7 +93,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
         setAuditLogs(logsData.logs || []);
       }
     } catch (err) {
-      console.error('Failed to fetch admin data:', err);
+      logger.error('Failed to fetch admin data:', err);
       setError('Failed to load admin data. Please try again.');
     } finally {
       setLoading(false);
@@ -118,7 +119,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
       setInviteRole('member');
       fetchAdminData(); // Refresh team list
     } catch (err) {
-      console.error('Failed to invite:', err);
+      logger.error('Failed to invite:', err);
       alert(err instanceof Error ? err.message : 'Failed to send invite');
     }
   };
@@ -137,7 +138,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
       }
       setTeamMembers(teamMembers.filter(m => m.id !== memberId));
     } catch (err) {
-      console.error('Failed to remove member:', err);
+      logger.error('Failed to remove member:', err);
       alert(err instanceof Error ? err.message : 'Failed to remove member');
     }
   };
@@ -160,7 +161,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orgId: _orgId }) => {
         m.id === memberId ? { ...m, role: newRole } : m
       ));
     } catch (err) {
-      console.error('Failed to change role:', err);
+      logger.error('Failed to change role:', err);
       alert(err instanceof Error ? err.message : 'Failed to change role');
       fetchAdminData(); // Refresh to restore correct state
     }

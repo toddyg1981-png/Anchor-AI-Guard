@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const VendorRiskManagement: React.FC = () => {
@@ -41,7 +42,7 @@ const VendorRiskManagement: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setVendors(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load vendor risk dashboard:', err);
+      logger.error('Failed to load vendor risk dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -54,7 +55,7 @@ const VendorRiskManagement: React.FC = () => {
       const result = await backendApi.vendorRisk.assess(vendorInput);
       if (result) setAssessmentResult(result);
     } catch (err) {
-      console.error('Vendor assessment failed:', err);
+      logger.error('Vendor assessment failed:', err);
     } finally {
       setAssessing(false);
     }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const ThreatModeling: React.FC = () => {
@@ -44,7 +45,7 @@ const ThreatModeling: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setModels(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load threat modeling dashboard:', err);
+      logger.error('Failed to load threat modeling dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -57,7 +58,7 @@ const ThreatModeling: React.FC = () => {
       const result = await backendApi.threatModeling.create(systemInput);
       if (result) setModelResult(result);
     } catch (err) {
-      console.error('Threat model creation failed:', err);
+      logger.error('Threat model creation failed:', err);
     } finally {
       setCreating(false);
     }

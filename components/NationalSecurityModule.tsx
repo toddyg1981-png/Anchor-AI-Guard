@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 interface ClassificationLevel {
@@ -52,12 +53,12 @@ const NationalSecurityModule: React.FC = () => {
         // Map to briefings
         setThreatBriefings(data.threatActors.slice(0, 3).map((a: any, i: number) => ({
           id: `brief-${i}`, classification: 'CUI', title: `${a.name} - ${a.type} Activity`,
-          source: 'Anchor AI', timestamp: new Date().toISOString(),
+          source: 'Titan', timestamp: new Date().toISOString(),
           priority: a.dangerLevel >= 9 ? 'immediate' : 'priority',
           summary: a.targets?.join(', ') || 'Multiple sectors targeted',
         })));
       }
-    } catch (err) { console.error('National security dashboard failed:', err); }
+    } catch (err) { logger.error('National security dashboard failed:', err); }
     setLoading(false);
   };
 

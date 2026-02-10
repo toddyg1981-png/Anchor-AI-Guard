@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -65,7 +66,7 @@ export const PhishingSimulator: React.FC = () => {
       setBackendLoading(true);
       try {
         const _res = await backendApi.modules.getDashboard('phishing-sim');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -74,7 +75,7 @@ export const PhishingSimulator: React.FC = () => {
     try {
       const res: unknown = await backendApi.modules.analyze('phishing-sim', 'Analyze phishing simulation results for click-through trends, repeat offenders, and training effectiveness');
       if ((res as Record<string, unknown>)?.analysis) setAnalysisResult((res as Record<string, unknown>).analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const campaigns: PhishingCampaign[] = [

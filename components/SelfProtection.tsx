@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -70,7 +71,7 @@ export const SelfProtection: React.FC = () => {
       if (data?.lockdownMode) {
         setLockdownLevel(data.lockdownMode ? 1 : 0);
       }
-    } catch (err) { console.error('Self-protection dashboard failed:', err); }
+    } catch (err) { logger.error('Self-protection dashboard failed:', err); }
     setLoading(false);
   };
 

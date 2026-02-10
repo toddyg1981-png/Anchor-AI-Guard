@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 interface Device {
@@ -89,7 +90,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
       setDevices(devicesRes.devices as Device[]);
       setThreats(threatsRes.threats);
     } catch (error) {
-      console.error('Failed to load endpoint data:', error);
+      logger.error('Failed to load endpoint data:', error);
     } finally {
       setLoading(false);
     }
@@ -101,7 +102,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
       await backendApi.endpointProtection.isolateDevice(deviceId, 'Manual isolation from dashboard');
       await loadData();
     } catch (error) {
-      console.error('Failed to isolate device:', error);
+      logger.error('Failed to isolate device:', error);
     } finally {
       setActionLoading(null);
     }
@@ -113,7 +114,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
       await backendApi.endpointProtection.restoreDevice(deviceId);
       await loadData();
     } catch (error) {
-      console.error('Failed to restore device:', error);
+      logger.error('Failed to restore device:', error);
     } finally {
       setActionLoading(null);
     }
@@ -125,7 +126,7 @@ export const EndpointProtectionDashboard: React.FC = () => {
       const result = await backendApi.endpointProtection.scanDevice(deviceId, scanType);
       alert(`${result.message}\nEstimated duration: ${result.estimatedDuration}`);
     } catch (error) {
-      console.error('Failed to initiate scan:', error);
+      logger.error('Failed to initiate scan:', error);
     } finally {
       setActionLoading(null);
     }

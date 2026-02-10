@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -71,7 +72,7 @@ export const QuantumCryptography: React.FC = () => {
         setCryptoAssets(mapped);
       }
     } catch (err) {
-      console.error('Failed to load quantum crypto dashboard:', err);
+      logger.error('Failed to load quantum crypto dashboard:', err);
       // Fall back to defaults
       setCryptoAssets([
         { id: 'ca-1', name: 'Production TLS Certificate', type: 'tls_cert', algorithm: 'RSA-2048', keySize: 2048, quantumSafe: false, location: 'Cloudflare', expiryDate: '2026-08-15', riskLevel: 'critical', migrationStatus: 'planning' },
@@ -115,7 +116,7 @@ export const QuantumCryptography: React.FC = () => {
         }));
         setCryptoAssets(prev => [...prev, ...mapped]);
       }
-    } catch (err) { console.error('Scan failed:', err); }
+    } catch (err) { logger.error('Scan failed:', err); }
     setScanning(false);
   };
 

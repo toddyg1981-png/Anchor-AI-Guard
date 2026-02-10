@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -54,7 +55,7 @@ export const AntiTampering: React.FC = () => {
           setLastFullVerification(new Date().toISOString());
         }
       } catch (err) {
-        console.error('Failed to load anti-tampering data:', err);
+        logger.error('Failed to load anti-tampering data:', err);
       } finally {
         setLoading(false);
       }
@@ -110,7 +111,7 @@ export const AntiTampering: React.FC = () => {
       setAiResult(analysis);
       setLastFullVerification(new Date().toISOString());
     } catch (err) {
-      console.error('Verification failed:', err);
+      logger.error('Verification failed:', err);
     } finally {
       setIsVerifying(false);
     }

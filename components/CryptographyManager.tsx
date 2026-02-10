@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const CryptographyManager: React.FC = () => {
@@ -40,7 +41,7 @@ const CryptographyManager: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setCerts(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load crypto dashboard:', err);
+      logger.error('Failed to load crypto dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ const CryptographyManager: React.FC = () => {
       const result = await backendApi.modules.analyze('cryptography', 'Audit our cryptographic posture and recommend improvements');
       if ((result as any)?.analysis) setAnalysisResult((result as any).analysis);
     } catch (err) {
-      console.error('Analysis failed:', err);
+      logger.error('Analysis failed:', err);
     } finally {
       setAnalyzing(false);
     }

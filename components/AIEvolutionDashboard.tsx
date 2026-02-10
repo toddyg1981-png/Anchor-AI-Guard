@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // Real-time event from SSE stream
 interface LiveEvent {
@@ -367,7 +368,7 @@ export default function AIEvolutionDashboard() {
       setRules((rulesRes as any)?.rules || []);
       setEvolutionLog((logRes as any)?.log || []);
     } catch (error) {
-      console.error('Failed to load AI Evolution data:', error);
+      logger.error('Failed to load AI Evolution data:', error);
       setIsConnected(false);
     }
     setLoading(false);
@@ -378,7 +379,7 @@ export default function AIEvolutionDashboard() {
       const metricsRes = await backendApi.aiEvolution.getMetrics();
       setMetrics(metricsRes as MetricsData);
     } catch (error) {
-      console.error('Failed to load metrics:', error);
+      logger.error('Failed to load metrics:', error);
     }
   };
 
@@ -391,7 +392,7 @@ export default function AIEvolutionDashboard() {
       loadData();
       loadMetrics();
     } catch (error) {
-      console.error('Scan failed:', error);
+      logger.error('Scan failed:', error);
       alert('Scan failed - check console for details');
     }
     setIsScanning(false);
@@ -409,7 +410,7 @@ export default function AIEvolutionDashboard() {
       loadData();
       loadMetrics();
     } catch (error) {
-      console.error('Repair failed:', error);
+      logger.error('Repair failed:', error);
       alert('Repair failed - check console for details');
     }
     setIsRepairing(false);
@@ -422,7 +423,7 @@ export default function AIEvolutionDashboard() {
         <!DOCTYPE html>
         <html>
         <head>
-          <title>AI Evolution Engine Report - ${new Date().toLocaleDateString()}</title>
+          <title>Titan Evolution Engine Report - ${new Date().toLocaleDateString()}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
             h1 { color: #6366f1; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
@@ -524,7 +525,7 @@ export default function AIEvolutionDashboard() {
       
       alert('Report exported successfully! Open the HTML file in a browser and print to PDF if needed.');
     } catch (error) {
-      console.error('Export failed:', error);
+      logger.error('Export failed:', error);
       alert('Export failed');
     }
   };
@@ -536,7 +537,7 @@ export default function AIEvolutionDashboard() {
       alert(`Evolution complete: ${(result as any).results.newThreats} new threats, ${(result as any).results.newRules} new rules from ${(result as any).results.sources?.length || 0} sources`);
       loadData();
     } catch (error) {
-      console.error('Evolution failed:', error);
+      logger.error('Evolution failed:', error);
       alert('Evolution cycle failed');
     }
     setIsEvolving(false);
@@ -556,7 +557,7 @@ export default function AIEvolutionDashboard() {
         `Engine is now in ACCELERATED mode (15-min cycles for 24h)`);
       loadData();
     } catch (error) {
-      console.error('Bootstrap failed:', error);
+      logger.error('Bootstrap failed:', error);
       alert('Bootstrap failed — check console for details');
     }
     setIsBootstrapping(false);
@@ -567,7 +568,7 @@ export default function AIEvolutionDashboard() {
       const result = await backendApi.aiEvolution.analyze({ customQuery: query });
       setAnalysisResult((result as any).analysis);
     } catch (error) {
-      console.error('Analysis failed:', error);
+      logger.error('Analysis failed:', error);
     }
   };
 
@@ -577,7 +578,7 @@ export default function AIEvolutionDashboard() {
       const result = await backendApi.aiEvolution.generateModule(moduleRequirement);
       setGeneratedModule((result as any).module);
     } catch (error) {
-      console.error('Module generation failed:', error);
+      logger.error('Module generation failed:', error);
     }
   };
 
@@ -586,7 +587,7 @@ export default function AIEvolutionDashboard() {
       const result = await backendApi.aiEvolution.getCompetitiveAnalysis();
       setCompetitiveAnalysis(result);
     } catch (error) {
-      console.error('Competitive analysis failed:', error);
+      logger.error('Competitive analysis failed:', error);
     }
   };
 
@@ -595,7 +596,7 @@ export default function AIEvolutionDashboard() {
       await backendApi.aiEvolution.toggleRule(ruleId, !enabled);
       setRules(rules.map(r => r.id === ruleId ? { ...r, enabled: !enabled } : r));
     } catch (error) {
-      console.error('Failed to toggle rule:', error);
+      logger.error('Failed to toggle rule:', error);
     }
   };
 
@@ -660,7 +661,7 @@ export default function AIEvolutionDashboard() {
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
             <span className="text-3xl">🧠</span>
-            AI Evolution Engine
+            Titan Evolution Engine
           </h1>
           <p className="text-slate-400 mt-1">
             Autonomous security updates keeping Anchor ahead of threats
@@ -804,7 +805,7 @@ export default function AIEvolutionDashboard() {
               <span className="text-slate-400">Threats: <span className="text-cyan-400 font-bold">{liveStats.totalThreats}</span></span>
               <span className="text-slate-400">Rules: <span className="text-purple-400 font-bold">{liveStats.totalRules}</span></span>
               <span className="text-slate-400">AI Analyses: <span className="text-green-400 font-bold">{liveStats.aiAnalysisCount}</span></span>
-              <span className="text-slate-400">Score: <span className="text-yellow-400 font-bold" title="Competitive Score — how far ahead Anchor's AI engine is vs industry-standard detection baselines">{liveStats.competitiveScore}%</span></span>
+              <span className="text-slate-400">Score: <span className="text-yellow-400 font-bold" title="Competitive Score — how far ahead Anchor's Titan engine is vs industry-standard detection baselines">{liveStats.competitiveScore}%</span></span>
             </div>
           </div>
           <div className="text-xs text-slate-500 font-mono">
@@ -831,10 +832,10 @@ export default function AIEvolutionDashboard() {
           <div className="bg-slate-800/50 rounded-xl p-4 border border-yellow-700/30 relative group">
             <div className="text-2xl font-bold text-yellow-400">{status.competitiveScore}%</div>
             <div className="text-sm text-slate-400 flex items-center gap-1">Competitive Score
-              <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's AI engine is compared to industry-standard detection baselines">ⓘ</span>
+              <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's Titan engine is compared to industry-standard detection baselines">ⓘ</span>
             </div>
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-900 border border-yellow-700/40 rounded-lg p-3 text-xs text-slate-300 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-              <span className="text-yellow-400 font-semibold">Competitive Score</span> measures how far ahead Anchor&apos;s AI engine is compared to industry-standard detection baselines (MITRE ATT&CK, NIST, CIS). A score of 95% means Anchor detects 95% more threats than baseline tools.
+              <span className="text-yellow-400 font-semibold">Competitive Score</span> measures how far ahead Anchor&apos;s Titan engine is compared to industry-standard detection baselines (MITRE ATT&CK, NIST, CIS). A score of 95% means Anchor detects 95% more threats than baseline tools.
             </div>
           </div>
           <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
@@ -978,7 +979,7 @@ export default function AIEvolutionDashboard() {
                     label="Competitive Score"
                     height={150}
                   />
-                  <p className="text-xs text-slate-500 mt-1 px-1">How far ahead Anchor&apos;s AI engine is vs industry-standard detection baselines</p>
+                  <p className="text-xs text-slate-500 mt-1 px-1">How far ahead Anchor&apos;s Titan engine is vs industry-standard detection baselines</p>
                 </div>
               </div>
             ) : (
@@ -1019,14 +1020,14 @@ export default function AIEvolutionDashboard() {
                 <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/10 rounded-xl p-4 border border-yellow-700/30 relative group">
                   <div className="text-3xl font-bold text-yellow-400">{metrics.currentTotals.score}%</div>
                   <div className="text-sm text-slate-400 flex items-center gap-1">Competitive Score
-                    <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's AI engine is compared to industry-standard detection baselines">ⓘ</span>
+                    <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's Titan engine is compared to industry-standard detection baselines">ⓘ</span>
                   </div>
                   <div className="text-xs text-yellow-500 mt-1 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
                     Live updating
                   </div>
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-900 border border-yellow-700/40 rounded-lg p-3 text-xs text-slate-300 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                    <span className="text-yellow-400 font-semibold">Competitive Score</span> = how far ahead Anchor&apos;s AI engine is compared to industry-standard detection baselines (MITRE ATT&CK, NIST, CIS benchmarks).
+                    <span className="text-yellow-400 font-semibold">Competitive Score</span> = how far ahead Anchor&apos;s Titan engine is compared to industry-standard detection baselines (MITRE ATT&CK, NIST, CIS benchmarks).
                   </div>
                 </div>
               </div>

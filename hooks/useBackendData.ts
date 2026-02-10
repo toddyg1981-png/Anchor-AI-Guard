@@ -5,6 +5,54 @@ import { env } from '../config/env';
 import { mockProjects, mockFindings, mockActiveScans } from '../constants';
 import { errorHandler } from '../utils/errorHandler';
 
+const DEMO_KEY = 'anchor_demo_mode';
+
+/** Richer demo data for screen-recording / demo mode */
+const demoProjects: Project[] = [
+  ...mockProjects,
+  {
+    id: 'p4',
+    name: 'Aurora Financial Platform',
+    owner: 'Demo Admin',
+    totalScans: 67,
+    activeScans: 1,
+    findingsCount: 9,
+    scope: {
+      domains: ['aurora-finance.com', 'api.aurora-finance.com'],
+      apis: ['REST v3', 'GraphQL v2'],
+      mobileBuilds: ['iOS v2.4', 'Android v2.5'],
+    },
+    runHistory: [
+      { id: 'r6', date: '2024-01-15 09:30', result: '9 Findings', findings: 9, status: 'Completed' },
+      { id: 'r7', date: '2024-01-14 14:00', result: '11 Findings', findings: 11, status: 'Completed' },
+      { id: 'r8', date: '2024-01-13 08:00', result: '14 Findings', findings: 14, status: 'Completed' },
+    ],
+  },
+  {
+    id: 'p5',
+    name: 'Sentinel Healthcare Portal',
+    owner: 'Demo Admin',
+    totalScans: 34,
+    activeScans: 0,
+    findingsCount: 4,
+    scope: {
+      domains: ['portal.sentinel-health.io'],
+      apis: ['FHIR R4'],
+      mobileBuilds: [],
+    },
+    runHistory: [
+      { id: 'r9', date: '2024-01-16 11:15', result: '4 Findings', findings: 4, status: 'Completed' },
+    ],
+  },
+];
+
+const demoActiveScans: ActiveScan[] = [
+  ...mockActiveScans,
+  { id: 's4', projectName: 'Aurora Financial Platform', progress: 62 },
+];
+
+const demoFindings: Finding[] = [...mockFindings];
+
 interface BackendDataState {
   projects: Project[];
   findings: Finding[];
@@ -25,12 +73,25 @@ const initialState: Omit<BackendDataState, 'refetch'> = {
 export function useBackendData(isAuthenticated = false, authLoading = false): BackendDataState {
   const [state, setState] = useState<Omit<BackendDataState, 'refetch'>>(initialState);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+  const isDemo = localStorage.getItem(DEMO_KEY) === 'true';
 
   const refetch = useCallback(() => {
     setRefetchTrigger((prev) => prev + 1);
   }, []);
 
   useEffect(() => {
+    // Demo mode: skip backend, return rich mock data immediately
+    if (isDemo) {
+      setState({
+        projects: demoProjects,
+        findings: demoFindings,
+        activeScans: demoActiveScans,
+        loading: false,
+        error: null,
+      });
+      return;
+    }
+
     // Don't fetch if auth is still loading (verifying token) or user is not authenticated
     if (authLoading || !isAuthenticated) {
       setState({ ...initialState, loading: false });

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -63,7 +64,7 @@ export const SupplyChainAI: React.FC = () => {
     try {
       const data = await backendApi.supplyChain.getDashboard() as any;
       setBackendStats(data);
-    } catch (err) { console.error('Supply chain dashboard failed:', err); }
+    } catch (err) { logger.error('Supply chain dashboard failed:', err); }
     setLoading(false);
   };
 
@@ -74,7 +75,7 @@ export const SupplyChainAI: React.FC = () => {
     try {
       const result = await backendApi.supplyChain.scan(pkgName, version) as any;
             setScanProgress(100);
-    } catch (err) { console.error('Package scan failed:', err); }
+    } catch (err) { logger.error('Package scan failed:', err); }
     clearInterval(interval);
     setIsScanning(false);
   };

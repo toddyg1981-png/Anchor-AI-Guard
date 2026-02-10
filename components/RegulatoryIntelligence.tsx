@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const RegulatoryIntelligence: React.FC = () => {
@@ -16,7 +17,7 @@ const RegulatoryIntelligence: React.FC = () => {
     try {
       const data = await backendApi.regulatoryIntel.getDashboard() as any;
       setDashboardData(data);
-    } catch (err) { console.error('Regulatory intel failed:', err); }
+    } catch (err) { logger.error('Regulatory intel failed:', err); }
     setLoading(false);
   };
 

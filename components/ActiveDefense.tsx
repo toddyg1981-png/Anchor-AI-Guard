@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -79,7 +80,7 @@ export const ActiveDefense: React.FC = () => {
       try {
         const res = await backendApi.modules.getDashboard('active-defense');
         // eslint-disable-line no-console
-      } catch (e) { console.error(e); } finally { setLoading(false); }
+      } catch (e) { logger.error(e); } finally { setLoading(false); }
     })();
   }, []);
 
@@ -88,7 +89,7 @@ export const ActiveDefense: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('active-defense', 'Analyze active defense posture and recommend deception strategies and automated response improvements') as Record<string, unknown>;
       if (res?.analysis) setAnalysisResult(res.analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const showNotification = (msg: string) => {

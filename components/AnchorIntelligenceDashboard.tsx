@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 interface APIKey {
@@ -61,7 +62,7 @@ export default function AnchorIntelligenceDashboard() {
       setKeys(keysRes.keys || []);
       setUsage(usageRes);
     } catch (err) {
-      console.error('Failed to load dashboard data:', err);
+      logger.error('Failed to load dashboard data:', err);
     } finally {
       setLoading(false);
     }
@@ -85,7 +86,7 @@ export default function AnchorIntelligenceDashboard() {
         loadData();
       }
     } catch (err) {
-      console.error('Failed to create API key:', err);
+      logger.error('Failed to create API key:', err);
     }
   };
 
@@ -95,7 +96,7 @@ export default function AnchorIntelligenceDashboard() {
       await backendApi.anchorIntelligence.revokeKey(keyId);
       loadData();
     } catch (err) {
-      console.error('Failed to revoke key:', err);
+      logger.error('Failed to revoke key:', err);
     }
   };
 

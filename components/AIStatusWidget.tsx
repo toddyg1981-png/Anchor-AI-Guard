@@ -12,6 +12,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 interface LiveEvent {
   type: string;
@@ -143,7 +144,7 @@ export default function AIStatusWidget({ onOpenDashboard }: AIStatusWidgetProps)
           setIsConnected(true);
         }
       } catch (error) {
-        console.error('AI Status Widget: Using cached AI metrics', error);
+        logger.error('AI Status Widget: Using cached AI metrics', error);
         // AI engine continues running — use accumulated metrics
         setIsConnected(true);
         // Simulate continuous ingestion growth
@@ -177,7 +178,7 @@ export default function AIStatusWidget({ onOpenDashboard }: AIStatusWidgetProps)
           setIsConnected(true);
           addLiveEvent({ 
             type: 'connected', 
-            data: { message: 'AI Engine connected' }, 
+            data: { message: 'Titan Engine connected' }, 
             timestamp: new Date().toISOString() 
           });
         };

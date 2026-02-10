@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { env } from '../config/env';
 
 interface Message {
@@ -142,7 +143,7 @@ const AIHelpDesk: React.FC = () => {
 
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('Help desk error:', error);
+      logger.error('Help desk error:', error);
       
       // Provide helpful fallback response
       const fallbackMessage: Message = {
@@ -515,7 +516,7 @@ For complex issues, you can also:
                   <span className="text-xl">💬</span>
                 </div>
                 <div>
-                  <p className="text-white font-medium">Anchor AI Assistant</p>
+                  <p className="text-white font-medium">Titan Assistant</p>
                   <p className="text-xs text-slate-400">Always here to help</p>
                 </div>
               </div>

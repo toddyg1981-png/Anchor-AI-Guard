@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { useSBOM } from '../hooks/useIntegrations';
 import { backendApi } from '../utils/backendApi';
 
@@ -46,7 +47,7 @@ export const SBOMViewer: React.FC<SBOMViewerProps> = ({ projectId, projectName, 
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('sbom');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -55,7 +56,7 @@ export const SBOMViewer: React.FC<SBOMViewerProps> = ({ projectId, projectName, 
     try {
       const res: any = await backendApi.modules.analyze('sbom', 'Analyze SBOM for vulnerable dependencies, license compliance risks, and supply chain integrity');
       if (res?.analysis) setAnalysisResult(res.analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const loadSBOM = async () => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { env } from '../config/env';
 
 interface Plan {
@@ -63,7 +64,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       const data = await response.json();
       setPlans(data.plans);
     } catch (error) {
-      console.error('Failed to fetch plans:', error);
+      logger.error('Failed to fetch plans:', error);
       // WORLD-FIRST PRICING - Premium for 95+ modules & 25 world-first features
       setPlans([
         {
@@ -382,7 +383,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         throw new Error('No checkout URL returned from server');
       }
     } catch (error) {
-      console.error('Checkout error:', error);
+      logger.error('Checkout error:', error);
       const message = error instanceof Error ? error.message : 'Failed to start checkout';
       showNotification('error', `${message}. Please try again or contact support.`);
     } finally {

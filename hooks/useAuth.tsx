@@ -27,6 +27,8 @@ interface AuthContextValue extends AuthState {
   logout: () => void;
   refreshToken: () => Promise<void>;
   loginLoading: boolean;
+  isDemoMode: boolean;
+  demoLogin: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -34,6 +36,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const TOKEN_KEY = 'anchor_auth_token';
 const USER_KEY = 'anchor_auth_user';
 const ORG_KEY = 'anchor_auth_org';
+const DEMO_KEY = 'anchor_demo_mode';
 
 function getStoredAuth(): { token: string | null; user: User | null; organization: Organization | null } {
   try {
@@ -75,6 +78,7 @@ function clearStoredAuth() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
   localStorage.removeItem(ORG_KEY);
+  localStorage.removeItem(DEMO_KEY);
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -92,11 +96,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Separate loading state for login/signup (doesn't affect global authLoading)
   const [loginLoading, setLoginLoading] = useState(false);
 
+  // Demo mode
+  const [isDemoMode, setIsDemoMode] = useState(() => localStorage.getItem(DEMO_KEY) === 'true');
+
+  const demoLogin = useCallback(() => {
+    const demoUser: User = {
+      id: 'demo-user-001',
+      email: 'demo@anchoraiguard.com',
+      name: 'Demo Admin',
+      role: 'owner',
+    };
+    const demoOrg: Organization = {
+      id: 'demo-org-001',
+      name: 'Anchor AI Guard — Demo',
+    };
+    const demoToken = 'demo-token-enterprise-full-access';
+
+    localStorage.setItem(DEMO_KEY, 'true');
+    localStorage.setItem('onboarding_complete', 'true');
+    setStoredAuth(demoToken, demoUser, demoOrg);
+    setIsDemoMode(true);
+    setState({
+      user: demoUser,
+      organization: demoOrg,
+      token: demoToken,
+      isAuthenticated: true,
+      isLoading: false,
+    });
+  }, []);
+
   // Ref to abort verifyToken if login() is called while verify is in-flight
   const verifyAbortRef = useRef<AbortController | null>(null);
 
   // Verify token on mount
   useEffect(() => {
+    if (isDemoMode) {
+      // Skip token verification in demo mode
+      setState(prev => ({ ...prev, isLoading: false }));
+      return;
+    }
     if (state.token) {
       verifyToken();
     }
@@ -356,6 +394,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         refreshToken,
         loginLoading,
+        isDemoMode,
+        demoLogin,
       }}
     >
       {children}

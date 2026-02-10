@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -98,7 +99,7 @@ export const BreachSimulator: React.FC = () => {
         });
       }
     } catch (err) {
-      console.error('Failed to load breach sim:', err);
+      logger.error('Failed to load breach sim:', err);
     }
     // Fall back to defaults if empty
     if (scenarios.length === 0) {
@@ -131,7 +132,7 @@ export const BreachSimulator: React.FC = () => {
         };
         setTimeout(checkResult, 3000);
       }
-    } catch (err) { console.error('Simulation failed:', err); }
+    } catch (err) { logger.error('Simulation failed:', err); }
     setSimulating(false);
   };
 

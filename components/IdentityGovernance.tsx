@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 type Tab = 'identities' | 'access-reviews' | 'lifecycle' | 'privileged';
@@ -25,7 +26,7 @@ const IdentityGovernance: React.FC = () => {
       setLoading(true);
       await backendApi.modules.getDashboard('identity-governance');
     } catch (e) {
-      console.error('Failed to load identity governance dashboard', e);
+      logger.error('Failed to load identity governance dashboard', e);
     } finally {
       setLoading(false);
     }

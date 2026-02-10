@@ -52,15 +52,30 @@ class Logger {
   /**
    * Warning log
    */
-  public warn(message: string, context?: Record<string, unknown>): void {
-    this.log(LogLevel.WARN, message, context);
+  public warn(message: unknown, context?: unknown): void {
+    this.log(LogLevel.WARN, this.toMessage(message), this.toContext(context));
   }
 
   /**
-   * Error log
+   * Error log — accepts strings, Error objects, or unknown catch values
    */
-  public error(message: string, context?: Record<string, unknown>): void {
-    this.log(LogLevel.ERROR, message, context);
+  public error(message: unknown, context?: unknown): void {
+    this.log(LogLevel.ERROR, this.toMessage(message), this.toContext(context));
+  }
+
+  /** Coerce unknown values to a log-friendly string */
+  private toMessage(value: unknown): string {
+    if (typeof value === 'string') return value;
+    if (value instanceof Error) return value.message;
+    try { return String(value); } catch { return 'Unknown error'; }
+  }
+
+  /** Coerce unknown context values to Record */
+  private toContext(value: unknown): Record<string, unknown> | undefined {
+    if (value === undefined || value === null) return undefined;
+    if (typeof value === 'object' && !Array.isArray(value)) return value as Record<string, unknown>;
+    if (value instanceof Error) return { error: value.message, stack: value.stack };
+    return { detail: String(value) };
   }
 
   /**
@@ -120,9 +135,9 @@ class Logger {
    * Send logs to external services
    */
   private sendToExternalServices(entry: LogEntry): void {
-    // Send to analytics/monitoring platforms
     if (env.gaId && typeof window !== 'undefined') {
-      console.log('Would send to analytics:', entry);
+      // Analytics integration — implement when analytics SDK is added
+      void entry;
     }
   }
 
@@ -166,7 +181,7 @@ export const logger = new Logger();
 export const log = {
   debug: (message: string, context?: Record<string, unknown>) => logger.debug(message, context),
   info: (message: string, context?: Record<string, unknown>) => logger.info(message, context),
-  warn: (message: string, context?: Record<string, unknown>) => logger.warn(message, context),
-  error: (message: string, context?: Record<string, unknown>) => logger.error(message, context),
+  warn: (message: unknown, context?: unknown) => logger.warn(message, context),
+  error: (message: unknown, context?: unknown) => logger.error(message, context),
   time: (label: string) => logger.time(label),
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 interface Attestation {
@@ -43,7 +44,7 @@ const SupplyChainAttestation: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('supply-chain-attestation');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -52,7 +53,7 @@ const SupplyChainAttestation: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('supply-chain-attestation', 'Analyze supply chain attestation for SLSA compliance, provenance verification, and build integrity');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const [attestations] = useState<Attestation[]>([

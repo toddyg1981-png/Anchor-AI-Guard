@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -59,7 +60,7 @@ export const CloudSecurityPosture: React.FC = () => {
       try {
         const _res = await backendApi.modules.getDashboard('cloud-security');
         // eslint-disable-line no-console
-      } catch (e) { console.error(e); } finally { setLoading(false); }
+      } catch (e) { logger.error(e); } finally { setLoading(false); }
     })();
   }, []);
 
@@ -68,7 +69,7 @@ export const CloudSecurityPosture: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('cloud-security', 'Analyze cloud security posture for misconfigurations, excessive permissions, and compliance gaps') as Record<string, unknown>;
       if (res?.analysis) setAnalysisResult(res.analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock cloud accounts

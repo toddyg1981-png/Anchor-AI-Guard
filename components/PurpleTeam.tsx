@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const PurpleTeam: React.FC = () => {
@@ -45,7 +46,7 @@ const PurpleTeam: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setExercises(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load purple team dashboard:', err);
+      logger.error('Failed to load purple team dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -57,7 +58,7 @@ const PurpleTeam: React.FC = () => {
       const result = await backendApi.modules.analyze('purple-team', 'Plan a purple team exercise targeting our current detection gaps, focusing on MITRE ATT&CK coverage improvement');
       if ((result as any)?.analysis) setAnalysisResult((result as any).analysis);
     } catch (err) {
-      console.error('Exercise planning failed:', err);
+      logger.error('Exercise planning failed:', err);
     } finally {
       setAnalyzing(false);
     }

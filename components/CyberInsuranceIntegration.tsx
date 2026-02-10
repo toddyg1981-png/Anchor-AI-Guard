@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 interface RiskScore {
@@ -146,7 +147,7 @@ const CyberInsuranceIntegration: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('cyber-insurance');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -155,7 +156,7 @@ const CyberInsuranceIntegration: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('cyber-insurance', 'Analyze cyber insurance posture, coverage gaps, and risk factors affecting premiums');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const getScoreColor = (score: number) => {

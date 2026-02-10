@@ -980,7 +980,7 @@ Respond in JSON:
     return reply.send({
       indicator: { type: body.type, value: body.value },
       enrichment,
-      sources: ['AlienVault OTX', 'Anchor AI'],
+      sources: ['AlienVault OTX', 'Titan'],
       timestamp: new Date().toISOString(),
     });
   });
@@ -1014,7 +1014,7 @@ Respond in JSON:
         'MITRE ATT&CK — Enterprise technique framework',
         'FIRST EPSS — Exploit Prediction Scoring System',
         'AlienVault OTX — Open Threat Exchange IOC feeds',
-        'Anchor AI — Claude-powered analysis and rule generation',
+        'Titan — Claude-powered analysis and rule generation',
       ],
       plans: Object.entries(B2B_PLANS).map(([tier, config]) => ({
         tier,

@@ -118,6 +118,7 @@ const AILLMSecurity = React.lazy(() => import('./components/AILLMSecurity'));
 const AntiTampering = React.lazy(() => import('./components/AntiTampering'));
 const ForensicsInvestigation = React.lazy(() => import('./components/ForensicsInvestigation'));
 const SecurityAwarenessTraining = React.lazy(() => import('./components/SecurityAwarenessTraining'));
+const NotFoundPage = React.lazy(() => import('./components/NotFoundPage'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -153,7 +154,8 @@ export type AppView =
   | 'government'      // Government & Sovereign Defense Landing Page
   | 'pillar-pricing'   // 5-Pillar pricing page
   | 'product-narratives' // Product deep-dive pages
-  | 'investor-slides';  // Investor pitch deck
+  | 'investor-slides'   // Investor pitch deck
+  | 'not-found';        // 404 page
 
 // Dashboard sub-views
 export type DashboardView = 
@@ -244,7 +246,7 @@ export type DashboardView =
   | 'securityAwarenessTraining';
 
 const AppContent: React.FC = () => {
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, logout, isDemoMode } = useAuth();
   const [currentView, setCurrentView] = useState<AppView>('marketing');
   const [dashboardView, setDashboardView] = useState<DashboardView>('overview');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -254,7 +256,8 @@ const AppContent: React.FC = () => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
   const [currentPlan, setCurrentPlan] = useState<string | undefined>(undefined);
-  const userPlan = currentPlan || 'starter';  // Default tier for feature gating
+  // Demo mode gets enterprise tier to unlock everything
+  const userPlan = isDemoMode ? 'enterprise' : (currentPlan || 'starter');
   const [checkoutNotification, setCheckoutNotification] = useState<string | null>(null);
   
     const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
@@ -279,12 +282,9 @@ const AppContent: React.FC = () => {
     } else if (path === '/forgot-password') {
       setCurrentView('forgot-password');
     } else if (path === '/pricing') {
-      // Handle checkout=canceled return from Stripe
-      if (params.get('checkout') === 'canceled') {
-        setCurrentView('pricing');
-      } else {
-        setCurrentView('pricing');
-      }
+      setCurrentView('pricing');
+    } else if (path === '/purchase-terms') {
+      setCurrentView('purchase-terms');
     } else if (path === '/privacy') {
       setCurrentView('privacy');
     } else if (path === '/terms') {
@@ -309,6 +309,9 @@ const AppContent: React.FC = () => {
       setCurrentView('product-narratives');
     } else if (path === '/investors') {
       setCurrentView('investor-slides');
+    } else if (path !== '/' && path !== '/dashboard') {
+      // Unknown route — show 404
+      setCurrentView('not-found');
     }
 
     // Handle Stripe checkout success redirect
@@ -360,6 +363,14 @@ const AppContent: React.FC = () => {
         setCurrentView('intelligence-dashboard');
       } else if (path === '/government' || path === '/sovereign') {
         setCurrentView('government');
+      } else if (path === '/pricing/pillars') {
+        setCurrentView('pillar-pricing');
+      } else if (path === '/products') {
+        setCurrentView('product-narratives');
+      } else if (path === '/investors') {
+        setCurrentView('investor-slides');
+      } else if (path === '/purchase-terms') {
+        setCurrentView('purchase-terms');
       } else if (path === '/dashboard') {
         setCurrentView('dashboard');
       } else if (path === '/') {
@@ -429,9 +440,7 @@ const AppContent: React.FC = () => {
   // WebSocket for real-time updates
   useWebSocket({
     onScanComplete: () => refetch(),
-    onScanProgress: (_event) => {
-      // Scan progress event - could update UI state here
-    },
+    onScanProgress: () => {},
     onFindingCreated: () => refetch(),
   });
 
@@ -494,11 +503,6 @@ const AppContent: React.FC = () => {
   const handleViewGovernment = useCallback(() => {
     setCurrentView('government');
     window.history.pushState({}, '', '/government');
-  }, []);
-
-  const _handleViewIntelligenceDashboard = useCallback(() => {
-    setCurrentView('intelligence-dashboard');
-    window.history.pushState({}, '', '/intelligence/dashboard');
   }, []);
 
   const handleViewPillarPricing = useCallback(() => {
@@ -564,6 +568,11 @@ const AppContent: React.FC = () => {
     // Otherwise go to overview where user can select a project to scan
     setDashboardView('overview');
   }, [selectedProject]);
+
+  const handleRepair = useCallback(() => {
+    // Navigate to vulnerability management where auto-repair tools live
+    setDashboardView('vulnerability');
+  }, []);
 
   // Render dashboard content based on sub-view
   const renderDashboardContent = () => {
@@ -939,6 +948,7 @@ const AppContent: React.FC = () => {
             onViewProfile={() => setDashboardView('profile')}
             onViewAdmin={() => setDashboardView('admin')}
             onNewScan={handleNewScan}
+            onRepair={handleRepair}
             user={user}
           >
             {renderDashboardContent()}
@@ -1000,6 +1010,14 @@ const AppContent: React.FC = () => {
 
       case 'investor-slides':
         return <InvestorSlides onBack={handleBackToMarketing} />;
+
+      case 'not-found':
+        return (
+          <NotFoundPage onGoHome={() => {
+            setCurrentView('marketing');
+            window.history.pushState({}, '', '/');
+          }} />
+        );
       
       default:
         return (

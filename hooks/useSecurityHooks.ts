@@ -87,8 +87,7 @@ export const useValidatedEmail = (initialValue: string = '') => {
  */
 export const useValidatedInput = (
   initialValue: string = '',
-  maxLength: number = 1000,
-  _allowSpecialChars: boolean = true
+  maxLength: number = 1000
 ) => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);

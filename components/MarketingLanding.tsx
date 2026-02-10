@@ -363,6 +363,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <a href="#faq" className="text-cyan-400 hover:text-pink-400 transition-colors">
                 FAQ
               </a>
+              <a href="#founder" className="text-cyan-400 hover:text-pink-400 transition-colors">
+                Our Story
+              </a>
               <button onClick={onViewIntelligence} className="text-cyan-400 hover:text-pink-400 transition-colors font-semibold">
                 Intelligence
               </button>
@@ -1192,6 +1195,131 @@ print(rule["rule"]["content"])
                 )}
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About the Creator */}
+      <section id="founder" className="py-24 px-4 relative overflow-hidden">
+        {/* Subtle background accent */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest uppercase text-pink-400 mb-3">The Story Behind Anchor</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              About the Creator
+            </h2>
+            <p className="text-purple-400 text-lg max-w-2xl mx-auto">
+              Extraordinary things can be built from the hardest places.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-5 gap-10 items-start">
+            {/* Photo / Identity Card */}
+            <div className="lg:col-span-2 flex flex-col items-center">
+              <div className="relative group">
+                {/* Glow ring */}
+                <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-40 group-hover:opacity-60 blur-sm transition-opacity" />
+                <div className="relative bg-slate-900 rounded-2xl p-1">
+                  <div className="w-full aspect-square rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
+                    {/* Anchor shield placeholder — replace with photo when available */}
+                    <div className="text-center p-8">
+                      <div className="w-28 h-28 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500/20 to-pink-500/20 border-2 border-cyan-500/30 flex items-center justify-center">
+                        <svg className="w-14 h-14 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">Todd Goodwin</h3>
+                      <p className="text-cyan-400 font-medium mt-1">Founder &amp; Creator</p>
+                      <p className="text-purple-400 text-sm mt-1">Anchor AI Guard</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick facts */}
+              <div className="mt-6 w-full space-y-3">
+                <div className="flex items-center gap-3 bg-slate-800/40 rounded-lg px-4 py-2.5 border border-slate-700/40">
+                  <span className="text-cyan-400 text-lg">🏗️</span>
+                  <span className="text-slate-300 text-sm">24 years in construction &bull; 5 trade certificates</span>
+                </div>
+                <div className="flex items-center gap-3 bg-slate-800/40 rounded-lg px-4 py-2.5 border border-slate-700/40">
+                  <span className="text-cyan-400 text-lg">🇦🇺</span>
+                  <span className="text-slate-300 text-sm">Born in Sydney &bull; Based in Queensland</span>
+                </div>
+                <div className="flex items-center gap-3 bg-slate-800/40 rounded-lg px-4 py-2.5 border border-slate-700/40">
+                  <span className="text-cyan-400 text-lg">🛡️</span>
+                  <span className="text-slate-300 text-sm">Self-taught &bull; AI &amp; cybersecurity</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Story */}
+            <div className="lg:col-span-3 space-y-6">
+              {/* Opening */}
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-6 border border-cyan-500/20">
+                <p className="text-lg text-slate-200 leading-relaxed">
+                  Todd Goodwin was born in Sydney, raised in Greenacre, and moved to Queensland at 18, where he has lived for the past 25 years. Growing up as one of eight children shaped him early — <span className="text-cyan-400 font-medium">responsibility, resilience, and hard work were not choices, they were necessities.</span> Those values carried him through a 24-year career in housing construction, where he earned five trade certificates and built a reputation for reliability, skill, and grit.
+                </p>
+              </div>
+
+              {/* The turning point */}
+              <div className="space-y-4 text-purple-200 leading-relaxed">
+                <p>
+                  Life changed dramatically. After decades on the tools, Todd found himself on a disability pension, living with his wife and her five children under his brother-in-law&apos;s house in Logan, sleeping on a mattress and working from a 16-year-old computer. At 45, he was starting again from the bottom — not by choice, but by circumstance.
+                </p>
+                <p>
+                  <span className="text-pink-400 font-semibold">It was a moment that could have ended his story. Instead, it became the moment he rewrote it.</span>
+                </p>
+                <p>
+                  A conversation introduced him to artificial intelligence and the idea that AI could be used to build tools, apps, and entire systems. That single moment opened a door he had never imagined. He began learning, experimenting, and teaching himself everything he could about AI, coding, and digital systems.
+                </p>
+              </div>
+
+              {/* The vision */}
+              <div className="border-l-2 border-pink-500/50 pl-6 space-y-4 text-purple-200 leading-relaxed">
+                <p>
+                  While the world was racing to build front-end apps and consumer tools, Todd began asking a deeper question: <span className="text-white font-medium italic">&ldquo;Who is protecting the back end? Who is securing the future?&rdquo;</span>
+                </p>
+                <p>
+                  Research revealed a confronting truth. Despite enormous budgets, cybersecurity was reacting to threats only after they occurred. Information was delayed. Defences were outdated. The world was accelerating into an AI-driven future, but security was stuck in the past.
+                </p>
+                <p className="text-cyan-400 font-medium text-lg">
+                  Todd wanted to change that.
+                </p>
+              </div>
+
+              {/* Anchor */}
+              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-2xl p-6 border border-pink-500/20 space-y-4">
+                <p className="text-slate-200 leading-relaxed">
+                  He envisioned a system that could be both proactive and reactive — something capable of predicting, detecting, and defending in real time. Something sovereign. Something built for the future, not the past.
+                </p>
+                <p className="text-white font-semibold text-lg">
+                  From that vision, Anchor AI Guard was born.
+                </p>
+                <p className="text-purple-200 leading-relaxed">
+                  It wasn&apos;t created in a lab or funded by investors. It was built under a house, on an old computer, by someone who refused to accept the limits of his circumstances. Todd transformed hardship into innovation, turning a moment of struggle into a mission to protect organisations, communities, and nations.
+                </p>
+              </div>
+
+              {/* Closing quote */}
+              <div className="relative">
+                <div className="absolute -top-3 -left-2 text-6xl text-cyan-500/20 font-serif leading-none">&ldquo;</div>
+                <blockquote className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/40 relative">
+                  <p className="text-lg text-white leading-relaxed italic pl-6">
+                    No starting point is too low, and no vision is too big, when the will to rise is stronger than the circumstances trying to hold you down.
+                  </p>
+                  <footer className="mt-4 pl-6">
+                    <p className="text-cyan-400 font-semibold">Todd Goodwin</p>
+                    <p className="text-purple-400 text-sm">Founder, Anchor AI Guard</p>
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
           </div>
         </div>
       </section>

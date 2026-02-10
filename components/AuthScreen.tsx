@@ -16,7 +16,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, signup, loginLoading: isLoading } = useAuth();
+  const { login, signup, loginLoading: isLoading, demoLogin } = useAuth();
 
   // Check for OAuth callback
   useEffect(() => {
@@ -434,6 +434,34 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
               ) : (
                 'Create Account'
               )}
+            </button>
+
+            {/* Divider */}
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-700" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-slate-800 px-3 text-slate-500">or</span>
+              </div>
+            </div>
+
+            {/* Demo Mode Button */}
+            <button
+              type="button"
+              onClick={() => {
+                demoLogin();
+                onSuccess();
+              }}
+              className="w-full py-3 px-4 rounded-lg border-2 border-emerald-500/50 bg-emerald-500/10 text-emerald-400 font-semibold hover:bg-emerald-500/20 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
+            >
+              <span className="flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Try Demo — Full Access
+              </span>
             </button>
           </form>
 

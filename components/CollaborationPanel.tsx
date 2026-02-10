@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { useCollaboration, CollaborationUser, Comment, FindingLock } from '../hooks/useCollaboration';
+import { logger } from '../utils/logger';
 
 // Types
 interface CollaborationPanelProps {
@@ -284,11 +285,11 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
     userId,
     userName,
     onFindingUpdate,
-    onUserJoin: (user) => {
-      console.log(`👋 ${user.name} joined the room`);
+    onUserJoin: (_user) => {
+      // user join handled by collaboration state
     },
-    onUserLeave: (leftUserId) => {
-      console.log(`👋 User ${leftUserId} left the room`);
+    onUserLeave: (_leftUserId) => {
+      // user leave handled by collaboration state
     },
   });
 
@@ -313,7 +314,7 @@ export const CollaborationPanel: React.FC<CollaborationPanelProps> = ({
     } else if (!currentLock) {
       const success = await collabActions.lockFinding(currentFindingId);
       if (!success) {
-        console.log('Failed to acquire lock');
+        logger.warn('Failed to acquire finding lock');
       }
     }
   };

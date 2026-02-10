@@ -12,7 +12,7 @@ interface ModuleState<T> {
  * Generic hook for connecting any security module to its backend.
  * Fetches dashboard data on mount, provides loading/error states.
  */
-export function useModuleDashboard<T = any>(
+export function useModuleDashboard<T = unknown>(
   fetchFn: () => Promise<unknown>,
   fallback?: T
 ): ModuleState<T> {
@@ -26,14 +26,14 @@ export function useModuleDashboard<T = any>(
     try {
       const result = await fetchFn();
       setData(result as T);
-    } catch (err: any) {
-      console.error('Module dashboard fetch failed:', err);
-      setError(err.message || 'Failed to load');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to load';
+      setError(message);
       if (fallback) setData(fallback);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchFn, fallback]);
 
   useEffect(() => {
     refresh();
@@ -46,8 +46,8 @@ export function useModuleDashboard<T = any>(
  * Hook for generic security modules that use the /modules/:name/ endpoints
  */
 export function useGenericModule(moduleName: string) {
-  const [dashboard, setDashboard] = useState<any>(null);
-  const [analysis, setAnalysis] = useState<any>(null);
+  const [dashboard, setDashboard] = useState<Record<string, unknown> | null>(null);
+  const [analysis, setAnalysis] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,9 +56,9 @@ export function useGenericModule(moduleName: string) {
     setLoading(true);
     try {
       const data = await backendApi.modules.getDashboard(moduleName);
-      setDashboard(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load module');
+      setDashboard(data as Record<string, unknown>);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load module');
     } finally {
       setLoading(false);
     }
@@ -68,10 +68,10 @@ export function useGenericModule(moduleName: string) {
     setAnalyzing(true);
     try {
       const result = await backendApi.modules.analyze(moduleName, context, question);
-      setAnalysis(result);
+      setAnalysis(result as Record<string, unknown>);
       return result;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Analysis failed');
       return null;
     } finally {
       setAnalyzing(false);
@@ -83,8 +83,8 @@ export function useGenericModule(moduleName: string) {
       const result = await backendApi.modules.createItem(moduleName, data);
       await loadDashboard(); // refresh
       return result;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Create failed');
       return null;
     }
   }, [moduleName, loadDashboard]);

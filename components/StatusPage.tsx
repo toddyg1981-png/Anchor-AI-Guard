@@ -98,7 +98,7 @@ export default function StatusPage() {
           <ServiceRow name="Backend API (Railway)" status={stats.current.status} latency={stats.current.latencyMs} />
           <ServiceRow name="Database (PostgreSQL)" status={stats.current.status === 'healthy' ? 'healthy' : 'degraded'} />
           <ServiceRow name="Stripe Billing" status="healthy" />
-          <ServiceRow name="AI Engine (Claude)" status="healthy" />
+          <ServiceRow name="Titan Engine (Claude)" status="healthy" />
           <ServiceRow name="Email (Resend)" status="healthy" />
         </div>
       </div>

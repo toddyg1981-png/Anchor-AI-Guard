@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -71,7 +72,7 @@ export const ForensicsInvestigation: React.FC = () => {
       setBackendLoading(true);
       try {
         const _res = await backendApi.modules.getDashboard('forensics');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -80,7 +81,7 @@ export const ForensicsInvestigation: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('forensics', 'Analyze forensics investigation data for evidence chain integrity and recommend examination procedures');
       if ((res as unknown as Record<string, unknown>)?.analysis) setAnalysisResult((res as unknown as Record<string, unknown>).analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const cases: ForensicCase[] = [

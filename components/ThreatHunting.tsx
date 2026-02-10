@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -71,7 +72,7 @@ export const ThreatHunting: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('threat-hunting');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -80,7 +81,7 @@ export const ThreatHunting: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('threat-hunting', 'Analyze threat hunting hypotheses, IOC correlation, and recommend new hunting methodologies');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const [anomalies, setAnomalies] = useState<BehavioralAnomaly[]>([

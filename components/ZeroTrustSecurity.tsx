@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -52,7 +53,7 @@ export const ZeroTrustSecurity: React.FC = () => {
         ]);
         setBackendPosture(posture);
       } catch (err) {
-        console.error('Failed to load zero trust data:', err);
+        logger.error('Failed to load zero trust data:', err);
       } finally {
         setLoading(false);
       }
@@ -66,7 +67,7 @@ export const ZeroTrustSecurity: React.FC = () => {
       const result = await backendApi.modules.analyze('zero-trust', 'Zero Trust Architecture posture assessment', 'Evaluate our zero trust implementation maturity and provide recommendations');
       setAiAnalysis(result);
     } catch (err) {
-      console.error('AI analysis failed:', err);
+      logger.error('AI analysis failed:', err);
     } finally {
       setAnalyzing(false);
     }

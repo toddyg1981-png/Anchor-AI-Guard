@@ -182,8 +182,7 @@ class ErrorHandler {
 
     // Integration with LogRocket
     if (env.logRocketId && typeof window !== 'undefined') {
-      // LogRocket.captureException would go here
-      console.log('Would send to LogRocket:', error);
+      // LogRocket integration — implement when LogRocket SDK is added
     }
 
     // Custom analytics
@@ -195,12 +194,8 @@ class ErrorHandler {
    */
   private sendToAnalytics(error: ErrorDetails): void {
     if (env.gaId && typeof window !== 'undefined') {
-      // Google Analytics event tracking
-      console.log('Would send to GA:', {
-        event: 'error',
-        error_code: error.code,
-        error_severity: error.severity,
-      });
+      // GA error event — implement when GA SDK is integrated
+      void error;
     }
   }
 

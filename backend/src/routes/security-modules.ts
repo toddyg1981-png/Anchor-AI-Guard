@@ -627,7 +627,7 @@ Only return valid JSON.`);
     const context = `Organization has ${projects.length} projects, ${findings.length} findings (${findings.filter(f => f.severity === 'CRITICAL').length} critical).
 Recent findings: ${findings.slice(0, 5).map(f => `${f.severity}: ${f.title}`).join('; ')}`;
 
-    const result = await callClaude(`You are Anchor AI, an elite cybersecurity AI assistant. You help security teams with threat analysis, vulnerability management, compliance, incident response, and security strategy.
+    const result = await callClaude(`You are Titan, an elite cybersecurity AI assistant. You help security teams with threat analysis, vulnerability management, compliance, incident response, and security strategy.
 
 Organization context: ${context}
 

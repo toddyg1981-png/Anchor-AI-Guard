@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { env } from '../config/env';
 import { PremiumMarketplace } from './PremiumMarketplace';
 
@@ -73,7 +74,7 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
       setTrialDaysRemaining(subData.trialDaysRemaining || 0);
       setUsage(usageData.usage);
     } catch (err) {
-      console.error('Failed to fetch billing data:', err);
+      logger.error('Failed to fetch billing data:', err);
       setError('Unable to load billing data. Please check your connection and try again.');
       // Don't set fake trial data — leave state as null so the UI shows the error clearly
     } finally {
@@ -131,7 +132,7 @@ export const BillingDashboard: React.FC<BillingDashboardProps> = ({
         throw new Error('No portal URL returned');
       }
     } catch (err) {
-      console.error('Failed to open billing portal:', err);
+      logger.error('Failed to open billing portal:', err);
       showNotification('error', err instanceof Error ? err.message : 'Failed to open billing portal. Please try again.');
     } finally {
       setPortalLoading(false);

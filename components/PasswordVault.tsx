@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const PasswordVault: React.FC = () => {
@@ -48,7 +49,7 @@ const PasswordVault: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setSecrets(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load vault dashboard:', err);
+      logger.error('Failed to load vault dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -60,7 +61,7 @@ const PasswordVault: React.FC = () => {
       const result = await backendApi.modules.analyze('password-vault', 'Audit our secrets management posture including rotation compliance, access patterns, and exposure risks');
       if ((result as any)?.analysis) setAnalysisResult((result as any).analysis);
     } catch (err) {
-      console.error('Vault audit failed:', err);
+      logger.error('Vault audit failed:', err);
     } finally {
       setAnalyzing(false);
     }

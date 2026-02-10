@@ -93,8 +93,7 @@ export const safeJsonParse = (input: string | null | undefined): any => {
   
   try {
     return JSON.parse(input);
-  } catch (error) {
-    console.warn('Invalid JSON input detected', error);
+  } catch {
     return null;
   }
 };

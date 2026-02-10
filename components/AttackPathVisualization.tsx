@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // Types
 export interface AttackNode {
@@ -381,7 +382,7 @@ export const AttackPathVisualization: React.FC<AttackPathVisualizationProps> = (
       try {
         const res = await backendApi.modules.getDashboard('attack-path');
         // eslint-disable-line no-console
-      } catch (e) { console.error(e); } finally { setLoading(false); }
+      } catch (e) { logger.error(e); } finally { setLoading(false); }
     })();
   }, []);
 
@@ -390,7 +391,7 @@ export const AttackPathVisualization: React.FC<AttackPathVisualizationProps> = (
     try {
       const res = await backendApi.modules.analyze('attack-path', 'Analyze attack paths for critical asset exposure and recommend segmentation improvements') as Record<string, unknown>;
       if (res?.analysis) setAnalysisResult(res.analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock data for demo

@@ -42,7 +42,7 @@ async function callClaude(prompt: string, systemPrompt: string, maxTokens = 1024
   return data.content?.[0]?.text || '';
 }
 
-const SECURITY_CHAT_SYSTEM_PROMPT = `You are Anchor AI, the security assistant for the Anchor Security Platform — a world-first AI-powered cybersecurity platform.
+const SECURITY_CHAT_SYSTEM_PROMPT = `You are Titan, the security assistant for the Anchor Security Platform — a world-first AI-powered cybersecurity platform.
 
 Your capabilities:
 - Explain vulnerabilities and security concepts clearly
@@ -55,7 +55,7 @@ Your capabilities:
 
 Always be helpful, precise, and security-focused. Format responses with markdown when useful. If unsure, say so rather than guessing.`;
 
-const HELPDESK_SYSTEM_PROMPT = `You are Anchor AI Help Desk, the support assistant for the Anchor Security Platform.
+const HELPDESK_SYSTEM_PROMPT = `You are Titan Help Desk, the support assistant for the Anchor Security Platform.
 
 Your role is to help users with:
 - Getting started with Anchor (creating projects, running scans)
@@ -145,7 +145,7 @@ XSS allows attackers to inject malicious scripts into web pages viewed by other 
 Critical findings should be addressed within **24 hours**, high within **48 hours**.`;
   }
 
-  return `I'm your Anchor AI Security Assistant. I can help with:
+  return `I'm your Titan Security Assistant. I can help with:
 
 - 🔍 **Vulnerability explanations** — Ask about any security issue (SQLi, XSS, CSRF, etc.)
 - 🔧 **Remediation guidance** — How to fix security findings

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -52,7 +53,7 @@ export const SOCDashboard: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('soc-dashboard');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -61,7 +62,7 @@ export const SOCDashboard: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('soc-dashboard', 'Analyze SOC operations for alert fatigue, analyst workload, and detection coverage gaps');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Update clock every second

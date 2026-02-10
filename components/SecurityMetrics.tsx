@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const SecurityMetrics: React.FC = () => {
@@ -44,7 +45,7 @@ const SecurityMetrics: React.FC = () => {
       if ((result as any)?.kpis) setKpis(prev => (result as any).kpis.length > 0 ? (result as any).kpis : prev);
       if ((result as any)?.risks) setRisks(prev => (result as any).risks.length > 0 ? (result as any).risks : prev);
     } catch (err) {
-      console.error('Failed to load security metrics:', err);
+      logger.error('Failed to load security metrics:', err);
     } finally {
       setLoading(false);
     }
@@ -58,7 +59,7 @@ const SecurityMetrics: React.FC = () => {
       );
       if ((result as any)?.analysis) setAnalysisResult((result as any).analysis);
     } catch (err) {
-      console.error('Report generation failed:', err);
+      logger.error('Report generation failed:', err);
     } finally {
       setAnalyzing(false);
     }

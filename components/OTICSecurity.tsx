@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -67,7 +68,7 @@ export const OTICSecurity: React.FC = () => {
         const dashboard = await backendApi.modules.getDashboard('ot-security');
         setBackendData(dashboard);
       } catch (err) {
-        console.error('Failed to load OT/ICS data:', err);
+        logger.error('Failed to load OT/ICS data:', err);
       } finally {
         setLoading(false);
       }
@@ -81,7 +82,7 @@ export const OTICSecurity: React.FC = () => {
       const result = await backendApi.modules.analyze('ot-security', 'OT/ICS/SCADA environment', 'Assess industrial control system security posture including Purdue Model compliance');
       setAiAnalysis(result);
     } catch (err) {
-      console.error('OT analysis failed:', err);
+      logger.error('OT analysis failed:', err);
     } finally {
       setAnalyzing(false);
     }

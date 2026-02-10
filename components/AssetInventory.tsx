@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const AssetInventory: React.FC = () => {
@@ -23,7 +24,7 @@ const AssetInventory: React.FC = () => {
       setLoading(true);
       await backendApi.modules.getDashboard('asset-inventory');
     } catch (err) {
-      console.error('Failed to load asset inventory dashboard:', err);
+      logger.error('Failed to load asset inventory dashboard:', err);
     } finally {
       setLoading(false);
     }

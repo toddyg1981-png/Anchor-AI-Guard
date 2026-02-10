@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -50,7 +51,7 @@ export const InsiderThreatDetection: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('insider-threat');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -59,7 +60,7 @@ export const InsiderThreatDetection: React.FC = () => {
     try {
       const res: any = await backendApi.modules.analyze('insider-threat', 'Analyze insider threat indicators for behavioral anomalies, data exfiltration patterns, and policy violations');
       if (res?.analysis) setAnalysisResult(res.analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Team members with risk scores

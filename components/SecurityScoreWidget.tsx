@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // Types
 export interface SecurityScoreData {
@@ -244,7 +245,7 @@ export const SecurityScoreWidget: React.FC<SecurityScoreWidgetProps> = ({
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('security-score');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -253,7 +254,7 @@ export const SecurityScoreWidget: React.FC<SecurityScoreWidgetProps> = ({
     try {
       const res = await backendApi.modules.analyze('security-score', 'Analyze overall security score trends, contributing factors, and improvement recommendations');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock data for demo

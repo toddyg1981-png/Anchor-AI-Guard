@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const TABS = ['flows', 'anomalies', 'protocols', 'captures'] as const;
@@ -14,7 +15,7 @@ const NetworkTrafficAnalysis: React.FC = () => {
 
   const loadDashboard = async () => {
     try { setLoading(true); await backendApi.modules.getDashboard('network-traffic'); }
-    catch (e) { console.error('Failed to load network traffic dashboard', e); }
+    catch (e) { logger.error('Failed to load network traffic dashboard', e); }
     finally { setLoading(false); }
   };
 
@@ -23,7 +24,7 @@ const NetworkTrafficAnalysis: React.FC = () => {
       setAnalyzing(true);
       const res = await backendApi.modules.analyze('network-traffic', 'Analyze network traffic patterns for anomalies, C2 beaconing, data exfiltration, and lateral movement indicators');
       setAnalysisResult(typeof res === 'string' ? res : JSON.stringify(res, null, 2));
-    } catch (e) { setAnalysisResult('Analysis failed – see console for details.'); console.error(e); }
+    } catch (e) { setAnalysisResult('Analysis failed – see console for details.'); logger.error(e); }
     finally { setAnalyzing(false); }
   };
 

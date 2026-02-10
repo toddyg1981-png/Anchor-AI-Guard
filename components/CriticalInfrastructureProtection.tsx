@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 interface Sector {
@@ -151,7 +152,7 @@ const CriticalInfrastructureProtection: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('critical-infrastructure');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -160,7 +161,7 @@ const CriticalInfrastructureProtection: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('critical-infrastructure', 'Analyze critical infrastructure protection for SCADA/ICS vulnerabilities and recommend hardening measures');
       if ((res as any)?.analysis) setAnalysisResult((res as any).analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   useEffect(() => {

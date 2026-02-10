@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -56,7 +57,7 @@ export const MobileSecurity: React.FC = () => {
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('mobile-security');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -65,7 +66,7 @@ export const MobileSecurity: React.FC = () => {
     try {
       const res: any = await backendApi.modules.analyze('mobile-security', 'Analyze mobile device fleet security for MDM compliance, app vulnerabilities, and jailbreak detection');
       if (res?.analysis) setAnalysisResult(res.analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock mobile apps

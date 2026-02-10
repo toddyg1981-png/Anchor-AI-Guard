@@ -751,7 +751,7 @@ async function runEvolutionCycle(aggressive: boolean = false): Promise<{
       severity: 'medium',
       autoApplied: false,
       appliedAt: new Date(),
-      source: 'Anchor AI'
+      source: 'Titan'
     });
   }
   

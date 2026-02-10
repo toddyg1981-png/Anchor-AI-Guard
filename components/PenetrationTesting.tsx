@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const PenetrationTesting: React.FC = () => {
@@ -40,7 +41,7 @@ const PenetrationTesting: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setTests(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load pentest dashboard:', err);
+      logger.error('Failed to load pentest dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ const PenetrationTesting: React.FC = () => {
       const result = await backendApi.modules.analyze('penetration-testing', 'Analyze our attack surface and recommend the next penetration test scope, methodology, and focus areas');
       if ((result as any)?.analysis) setAnalysisResult((result as any).analysis);
     } catch (err) {
-      console.error('Scope analysis failed:', err);
+      logger.error('Scope analysis failed:', err);
     } finally {
       setAnalyzing(false);
     }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const ForensicsLab: React.FC = () => {
@@ -43,7 +44,7 @@ const ForensicsLab: React.FC = () => {
       if ((result as any)?.stats) setStats(prev => (result as any).stats.length > 0 ? (result as any).stats : prev);
       if ((result as any)?.items) setCases(prev => (result as any).items.length > 0 ? (result as any).items : prev);
     } catch (err) {
-      console.error('Failed to load forensics dashboard:', err);
+      logger.error('Failed to load forensics dashboard:', err);
     } finally {
       setLoading(false);
     }
@@ -56,7 +57,7 @@ const ForensicsLab: React.FC = () => {
       const result = await backendApi.forensics.analyze(evidenceInput);
       if (result) setAnalysisResult(result);
     } catch (err) {
-      console.error('Forensic analysis failed:', err);
+      logger.error('Forensic analysis failed:', err);
     } finally {
       setAnalyzing(false);
     }

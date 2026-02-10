@@ -117,9 +117,9 @@ export function loadEnvironmentConfig(): EnvironmentConfig {
     enableDevTools: parseBoolean(import.meta.env.VITE_ENABLE_DEVTOOLS, true),
   };
 
-  // Log configuration in development
+  // Log non-sensitive config in development only
   if (config.debugMode && config.appEnv === 'development') {
-    console.log('🔧 Environment Configuration:', config);
+    console.log('🔧 Environment:', config.appEnv, '| Debug:', config.debugMode);
   }
 
   return config;

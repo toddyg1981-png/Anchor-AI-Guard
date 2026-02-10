@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { backendApi } from '../utils/backendApi';
+import { logger } from '../utils/logger';
 
 // Types
 export interface PredictedVulnerability {
@@ -355,7 +356,7 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
       setBackendLoading(true);
       try {
         const res = await backendApi.modules.getDashboard('predictive-alerts');
-        } catch (e) { console.error(e); } finally { setBackendLoading(false); }
+        } catch (e) { logger.error(e); } finally { setBackendLoading(false); }
     })();
   }, []);
 
@@ -364,7 +365,7 @@ export const PredictiveAlertsPanel: React.FC<PredictiveAlertsPanelProps> = ({
     try {
       const res: any = await backendApi.modules.analyze('predictive-alerts', 'Analyze alert patterns for prediction accuracy, false positive optimization, and emerging threat correlation');
       if (res?.analysis) setAnalysisResult(res.analysis);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   // Mock data for demo

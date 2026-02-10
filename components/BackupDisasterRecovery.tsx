@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 // ============================================================================
@@ -58,7 +59,7 @@ export const BackupDisasterRecovery: React.FC = () => {
       try {
         const res = await backendApi.modules.getDashboard('backup-dr');
         // eslint-disable-line no-console
-      } catch (e) { console.error(e); } finally { setLoading(false); }
+      } catch (e) { logger.error(e); } finally { setLoading(false); }
     })();
   }, []);
 
@@ -67,7 +68,7 @@ export const BackupDisasterRecovery: React.FC = () => {
     try {
       const res = await backendApi.modules.analyze('backup-dr', 'Analyze backup and disaster recovery posture for gaps in RPO/RTO compliance') as Record<string, unknown>;
       if (res?.analysis) setAnalysisResult(res.analysis as string);
-    } catch (e) { console.error(e); } finally { setAnalyzing(false); }
+    } catch (e) { logger.error(e); } finally { setAnalyzing(false); }
   };
 
   const handleRestore = (_rpId: string) => {

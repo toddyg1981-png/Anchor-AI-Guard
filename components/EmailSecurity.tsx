@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
 
 const EmailSecurity: React.FC = () => {
@@ -33,7 +34,7 @@ const EmailSecurity: React.FC = () => {
       setLoading(true);
       await backendApi.modules.getDashboard('email-security');
     } catch (err) {
-      console.error('Failed to load email security dashboard:', err);
+      logger.error('Failed to load email security dashboard:', err);
     } finally {
       setLoading(false);
     }
