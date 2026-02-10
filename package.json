@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Enterprise-grade security vulnerability dashboard with AI-powered analysis",
-  "author": "Anchor AI Guard",
-  "license": "MIT",
+  "author": "Todd Goodwin / Anchor Security Pty Ltd",
+  "license": "BUSL-1.1",
   "keywords": [
     "security",
     "vulnerability",
