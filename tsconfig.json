@@ -35,5 +35,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["."],
-  "exclude": ["node_modules", "dist", "backend"]
+  "exclude": ["node_modules", "dist", "backend", "e2e", "playwright.config.ts"]
 }
