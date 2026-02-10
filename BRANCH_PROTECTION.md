@@ -23,7 +23,7 @@ Apply these settings in **Settings → Branches → Branch protection rules → 
   - `Anchor Security Scan` (security scanning)
 
 ### Additional Protections
-- **Require signed commits**: ✅ Recommended
+- **Require signed commits**: ✅ Recommended — see [GitHub's guide to signing commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
 - **Require linear history**: ✅ Recommended (enforces squash or rebase merges)
 - **Include administrators**: ✅ Enabled (rules apply to admins too)
 - **Restrict who can push to matching branches**: ✅ Enabled
