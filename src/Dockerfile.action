@@ -4,7 +4,7 @@ FROM alpine:3.19
 LABEL maintainer="Anchor AI Guard"
 LABEL org.opencontainers.image.title="Anchor Security Scanner"
 LABEL org.opencontainers.image.description="Enterprise-grade security scanning for CI/CD pipelines"
-LABEL org.opencontainers.image.source="https://github.com/toddyg1981-png/Anchor"
+LABEL org.opencontainers.image.source="https://github.com/toddyg1981-png/Anchor-AI-Guard"
 
 # Install dependencies
 RUN apk add --no-cache \
