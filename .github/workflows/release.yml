@@ -84,7 +84,7 @@ jobs:
       - name: Update major version tag
         run: |
           TAG="${GITHUB_REF_NAME}"
-          MAJOR=$(echo "${TAG}" | grep -oP '^v\d+')
+          MAJOR=$(echo "${TAG}" | sed -n 's/^\(v[0-9]\+\).*/\1/p')
           if [ -n "${MAJOR}" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
