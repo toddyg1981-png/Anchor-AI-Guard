@@ -312,7 +312,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
 
     const user = request.user as { orgId: string; email: string };
     const { planTier, billingPeriod, successUrl, cancelUrl } = parsed.data;
-    const plan = PLANS[planTier];
+    const _plan = PLANS[planTier];
 
     // Get or create Stripe customer
     let subscription = await prisma.subscription.findUnique({
@@ -518,19 +518,37 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
         const planTier = session.metadata?.planTier as PlanTierKey;
 
         if (orgId && planTier) {
+          // Fetch subscription details for period dates
+          let periodStart: Date | undefined;
+          let periodEnd: Date | undefined;
+          let stripePriceId: string | undefined;
+          if (session.subscription) {
+            const sub = await stripe.subscriptions.retrieve(session.subscription as string);
+            periodStart = new Date(sub.current_period_start * 1000);
+            periodEnd = new Date(sub.current_period_end * 1000);
+            stripePriceId = sub.items.data[0]?.price?.id;
+          }
+
           await prisma.subscription.upsert({
             where: { orgId },
             update: {
               stripeSubscriptionId: session.subscription as string,
+              stripePriceId: stripePriceId || null,
               status: 'ACTIVE',
               planTier: planTier as PlanTier,
+              currentPeriodStart: periodStart,
+              currentPeriodEnd: periodEnd,
+              trialEndsAt: null,
             },
             create: {
               orgId,
               stripeCustomerId: session.customer as string,
               stripeSubscriptionId: session.subscription as string,
+              stripePriceId: stripePriceId || null,
               status: 'ACTIVE',
               planTier: planTier as PlanTier,
+              currentPeriodStart: periodStart,
+              currentPeriodEnd: periodEnd,
             },
           });
         }
@@ -566,6 +584,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
             where: { orgId },
             data: {
               status,
+              stripePriceId: subscription.items.data[0]?.price?.id || undefined,
               currentPeriodStart: new Date(subscription.current_period_start * 1000),
               currentPeriodEnd: new Date(subscription.current_period_end * 1000),
               cancelAtPeriodEnd: subscription.cancel_at_period_end,

@@ -255,6 +255,7 @@ const AppContent: React.FC = () => {
   });
   const [currentPlan, setCurrentPlan] = useState<string | undefined>(undefined);
   const userPlan = currentPlan || 'starter';  // Default tier for feature gating
+  const [checkoutNotification, setCheckoutNotification] = useState<string | null>(null);
   
     const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
 
@@ -314,6 +315,8 @@ const AppContent: React.FC = () => {
     if (params.get('checkout') === 'success' && path === '/dashboard') {
       setCurrentView('dashboard');
       setDashboardView('billing');
+      setCheckoutNotification('🎉 Payment successful! Your subscription is now active.');
+      setTimeout(() => setCheckoutNotification(null), 8000);
       // Clean up URL
       window.history.replaceState({}, '', '/dashboard');
     }
@@ -321,6 +324,8 @@ const AppContent: React.FC = () => {
     // Handle checkout canceled
     if (params.get('checkout') === 'canceled' && path === '/pricing') {
       setCurrentView('pricing');
+      setCheckoutNotification('Checkout was canceled. You can try again anytime.');
+      setTimeout(() => setCheckoutNotification(null), 5000);
       window.history.replaceState({}, '', '/pricing');
     }
   }, []);
@@ -617,7 +622,7 @@ const AppContent: React.FC = () => {
               </svg>
               Back to Dashboard
             </button>
-            <BillingDashboard onUpgrade={handleViewPricing} onManageBilling={handleViewPricing} />
+            <BillingDashboard onUpgrade={handleViewPricing} />
           </div>
         );
       case 'admin':
@@ -965,6 +970,15 @@ const AppContent: React.FC = () => {
           <PillarPricing
             onBack={handleBackToMarketing}
             onGetStarted={handleGetStarted}
+            onSelectPlan={(_pillarId, tierName) => {
+              const customTiers = ['Enterprise', 'Government', 'Custom'];
+              if (customTiers.some(t => tierName.includes(t))) {
+                // Contact Sales handled inside PillarPricing already
+                return;
+              }
+              // Navigate to main pricing page for Stripe checkout
+              handleViewPricing();
+            }}
           />
         );
 
@@ -1005,6 +1019,15 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen w-full bg-transparent">
       <div className="relative z-10 min-h-screen">
+        {/* Checkout notification banner */}
+        {checkoutNotification && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-100 px-6 py-3 rounded-xl bg-green-500/20 border border-green-500/40 text-green-300 text-sm font-medium shadow-2xl shadow-green-500/10 backdrop-blur-sm animate-in slide-in-from-top">
+            <div className="flex items-center gap-3">
+              <span>{checkoutNotification}</span>
+              <button onClick={() => setCheckoutNotification(null)} className="text-green-400 hover:text-white ml-2">✕</button>
+            </div>
+          </div>
+        )}
         {showLoginSuccess && (
           <LoginSuccessOverlay
             onContinue={() => setShowLoginSuccess(false)}

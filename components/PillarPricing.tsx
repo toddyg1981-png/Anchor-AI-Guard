@@ -23,11 +23,24 @@ const PillarPricing: React.FC<PillarPricingProps> = ({ onSelectPlan, onBack, onG
   };
 
   const handleSelect = (pillar: ProductPillar, tierName: string) => {
-    if (onSelectPlan) {
-      onSelectPlan(pillar.id, tierName);
-    } else if (tierName === 'Enterprise' || tierName === 'Government') {
+    // Enterprise / Government / Custom → Contact sales
+    if (tierName === 'Enterprise' || tierName === 'Government' || tierName.includes('Custom')) {
       window.open('mailto:sales@anchoraiguard.com?subject=' + encodeURIComponent(`${pillar.name} - ${tierName} Inquiry`), '_blank');
       showNotification('info', 'Opening email client...');
+      return;
+    }
+
+    // Free / $0 tier → Sign up
+    const tier = pillar.pricingTiers.find(t => t.name === tierName);
+    if (tier && tier.price === '$0') {
+      if (onGetStarted) onGetStarted();
+      return;
+    }
+
+    // Paid tier → delegate to parent (navigates to pricing checkout)
+    if (onSelectPlan) {
+      onSelectPlan(pillar.id, tierName);
+      showNotification('success', 'Redirecting to checkout...');
     } else if (onGetStarted) {
       onGetStarted();
     }
