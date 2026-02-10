@@ -360,6 +360,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
               <button onClick={onViewPillarPricing || onViewPricing} className="text-cyan-400 hover:text-pink-400 transition-colors">
                 Pricing
               </button>
+              <a href="#comparison" className="text-cyan-400 hover:text-pink-400 transition-colors">
+                Compare
+              </a>
               <a href="#faq" className="text-cyan-400 hover:text-pink-400 transition-colors">
                 FAQ
               </a>
@@ -1059,6 +1062,169 @@ print(rule["rule"]["content"])
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Competitive Comparison Section */}
+      <section id="comparison" className="py-24 px-4 relative overflow-hidden">
+        {/* Background accents */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pink-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold tracking-widest uppercase text-pink-400 mb-3">Why Anchor Wins</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Anchor vs. The Industry
+            </h2>
+            <p className="text-purple-400 text-lg max-w-3xl mx-auto">
+              See how Anchor AI Guard with the <span className="text-cyan-400 font-semibold">Titan Engine</span> stacks up against the world&apos;s largest cybersecurity platforms.
+            </p>
+          </div>
+
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/50 w-[30%]">
+                    Capability
+                  </th>
+                  <th className="py-4 px-4 text-center border-b border-cyan-500/30 bg-gradient-to-b from-cyan-500/10 to-transparent rounded-t-xl">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-lg font-bold text-white">Anchor AI Guard</span>
+                      <span className="text-xs text-cyan-400 font-medium">Powered by Titan</span>
+                    </div>
+                  </th>
+                  <th className="py-4 px-4 text-center border-b border-slate-700/50">
+                    <span className="text-sm font-semibold text-slate-400">CrowdStrike Falcon</span>
+                  </th>
+                  <th className="py-4 px-4 text-center border-b border-slate-700/50">
+                    <span className="text-sm font-semibold text-slate-400">SentinelOne</span>
+                  </th>
+                  <th className="py-4 px-4 text-center border-b border-slate-700/50">
+                    <span className="text-sm font-semibold text-slate-400">Microsoft Defender</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { cap: 'AI Self-Evolution Engine (TITAN)', anchor: 'first', cs: 'no', s1: 'no', ms: 'no', note: 'World-first — continuously learns and updates defences autonomously' },
+                  { cap: 'Predictive CVE Intelligence', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no', note: 'Alerts before vulnerabilities are public' },
+                  { cap: 'Autonomous SOC (no human required)', anchor: 'yes', cs: 'partial', s1: 'partial', ms: 'partial' },
+                  { cap: '1-Click AI Fix (auto patch + merge)', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
+                  { cap: 'Digital Twin Security', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no', note: 'Full infrastructure simulation' },
+                  { cap: 'Endpoint Detection & Response (EDR/XDR)', anchor: 'yes', cs: 'yes', s1: 'yes', ms: 'yes' },
+                  { cap: 'Cloud Security (CSPM / CWPP)', anchor: 'yes', cs: 'yes', s1: 'partial', ms: 'yes' },
+                  { cap: 'AI/LLM Security Protection', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
+                  { cap: 'Supply Chain Attestation (Blockchain SBOM)', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
+                  { cap: 'Real-Time Cyber Insurance Integration', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
+                  { cap: 'Quantum-Ready Cryptography', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
+                  { cap: 'Advanced Breach Simulation Engine', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
+                  { cap: 'AI-Powered Threat Intel API (TITAN API)', anchor: 'yes', cs: 'partial', s1: 'partial', ms: 'partial' },
+                  { cap: 'Integrated Security Modules', anchor: '95+', cs: '10-20', s1: '10-20', ms: 'varies' },
+                  { cap: 'Government & FedRAMP / SCIF Support', anchor: 'yes', cs: 'partial', s1: 'partial', ms: 'yes' },
+                  { cap: 'Threat Hunting & MITRE ATT&CK Coverage', anchor: 'yes', cs: 'yes', s1: 'yes', ms: 'yes' },
+                  { cap: 'Managed Threat Detection Services', anchor: 'yes', cs: 'yes', s1: 'yes', ms: 'yes' },
+                ].map((row, i) => {
+                  const renderCell = (val: string) => {
+                    if (val === 'first') return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold">🏆 WORLD 1ST</span>;
+                    if (val === 'yes') return <span className="text-emerald-400 font-bold text-lg">✓</span>;
+                    if (val === 'no') return <span className="text-red-400/60 font-medium">✗</span>;
+                    if (val === 'partial') return <span className="text-amber-400/70 text-sm font-medium">⚠ Partial</span>;
+                    return <span className="text-slate-300 font-semibold text-sm">{val}</span>;
+                  };
+                  return (
+                    <tr key={i} className={`border-b border-slate-800/50 hover:bg-slate-800/20 transition-colors ${i % 2 === 0 ? 'bg-slate-900/20' : ''}`}>
+                      <td className="py-3.5 px-4">
+                        <span className="text-sm font-medium text-white">{row.cap}</span>
+                        {row.note && <p className="text-xs text-slate-500 mt-0.5">{row.note}</p>}
+                      </td>
+                      <td className="py-3.5 px-4 text-center bg-cyan-500/5 border-x border-cyan-500/10">{renderCell(row.anchor)}</td>
+                      <td className="py-3.5 px-4 text-center">{renderCell(row.cs)}</td>
+                      <td className="py-3.5 px-4 text-center">{renderCell(row.s1)}</td>
+                      <td className="py-3.5 px-4 text-center">{renderCell(row.ms)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards (stacked) */}
+          <div className="lg:hidden space-y-3">
+            {[
+              { cap: 'AI Self-Evolution Engine (TITAN)', anchor: true, others: false, tag: '🏆 WORLD 1ST' },
+              { cap: 'Predictive CVE Intelligence', anchor: true, others: false },
+              { cap: 'Autonomous SOC (no human required)', anchor: true, others: 'partial' },
+              { cap: '1-Click AI Fix (auto patch + merge)', anchor: true, others: false },
+              { cap: 'Digital Twin Security', anchor: true, others: false },
+              { cap: 'EDR / XDR', anchor: true, others: true },
+              { cap: 'Cloud Security (CSPM / CWPP)', anchor: true, others: 'mixed' },
+              { cap: 'AI/LLM Security Protection', anchor: true, others: false },
+              { cap: 'Supply Chain Attestation', anchor: true, others: false },
+              { cap: 'Cyber Insurance Integration', anchor: true, others: false },
+              { cap: 'Quantum-Ready Cryptography', anchor: true, others: false },
+              { cap: 'Breach Simulation Engine', anchor: true, others: false },
+              { cap: 'Titan Threat Intel API', anchor: true, others: 'partial' },
+              { cap: '95+ Integrated Modules', anchor: true, others: false },
+              { cap: 'Government / FedRAMP / SCIF', anchor: true, others: 'mixed' },
+              { cap: 'MITRE ATT&CK Coverage', anchor: true, others: true },
+              { cap: 'Managed Threat Detection', anchor: true, others: true },
+            ].map((row, i) => (
+              <div
+                key={i}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors ${
+                  row.others === false
+                    ? 'bg-gradient-to-r from-cyan-500/10 to-pink-500/10 border-cyan-500/20'
+                    : 'bg-slate-800/30 border-slate-700/30'
+                }`}
+              >
+                <div className="flex-1">
+                  <span className="text-sm font-medium text-white">{row.cap}</span>
+                  {row.tag && <span className="ml-2 text-[10px] font-bold text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded-full">{row.tag}</span>}
+                </div>
+                <div className="flex items-center gap-3 ml-4">
+                  <div className="text-center">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <p className="text-[9px] text-cyan-400 font-medium mt-0.5">Anchor</p>
+                  </div>
+                  <div className="text-center">
+                    {row.others === true ? (
+                      <span className="text-emerald-400/50 font-bold">✓</span>
+                    ) : row.others === 'partial' || row.others === 'mixed' ? (
+                      <span className="text-amber-400/60 text-xs">⚠</span>
+                    ) : (
+                      <span className="text-red-400/50">✗</span>
+                    )}
+                    <p className="text-[9px] text-slate-500 mt-0.5">Others</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Summary stats */}
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center bg-slate-800/30 rounded-xl p-5 border border-slate-700/30">
+              <div className="text-3xl font-bold text-cyan-400">12</div>
+              <div className="text-sm text-slate-400 mt-1">Capabilities only Anchor has</div>
+            </div>
+            <div className="text-center bg-slate-800/30 rounded-xl p-5 border border-slate-700/30">
+              <div className="text-3xl font-bold text-amber-400">95+</div>
+              <div className="text-sm text-slate-400 mt-1">Integrated security modules</div>
+            </div>
+            <div className="text-center bg-slate-800/30 rounded-xl p-5 border border-slate-700/30">
+              <div className="text-3xl font-bold text-pink-400">1</div>
+              <div className="text-sm text-slate-400 mt-1">Platform to replace them all</div>
+            </div>
+            <div className="text-center bg-slate-800/30 rounded-xl p-5 border border-slate-700/30">
+              <div className="text-3xl font-bold text-emerald-400">$345K+</div>
+              <div className="text-sm text-slate-400 mt-1">Annual stack cost replaced</div>
+            </div>
           </div>
         </div>
       </section>
