@@ -307,7 +307,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           {/* Error Message */}
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-sm">
-              {error}
+              <p>{error}</p>
+              {(error.includes('connect') || error.includes('starting up') || error.includes('network') || error.includes('Server error')) && (
+                <button 
+                  type="button"
+                  onClick={() => { setError(null); }}
+                  className="mt-2 text-cyan-400 hover:text-cyan-300 underline text-xs"
+                >
+                  Dismiss and try again
+                </button>
+              )}
             </div>
           )}
 

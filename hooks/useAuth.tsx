@@ -102,9 +102,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const verifyToken = async () => {
+  const verifyToken = async (attempt = 1): Promise<void> => {
     const controller = new AbortController();
     verifyAbortRef.current = controller;
+    const MAX_RETRIES = 3;
 
     try {
       const response = await fetch(`${env.apiBaseUrl}/auth/me`, {
@@ -114,13 +115,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signal: controller.signal,
       });
 
+      if (controller.signal.aborted) return;
+
+      if (response.status === 401 || response.status === 403) {
+        // Token is explicitly invalid/expired — clear auth
+        clearStoredAuth();
+        setState({
+          user: null,
+          organization: null,
+          token: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Token invalid');
+        throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
 
-      // Bail out if login() was called while we were verifying
       if (controller.signal.aborted) return;
 
       setState((prev) => ({
@@ -131,18 +146,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading: false,
       }));
       setStoredAuth(state.token, data.user, data.organization);
-    } catch {
-      // Bail out if aborted (e.g. login() was called)
+    } catch (err) {
       if (controller.signal.aborted) return;
 
-      clearStoredAuth();
-      setState({
-        user: null,
-        organization: null,
-        token: null,
-        isAuthenticated: false,
-        isLoading: false,
-      });
+      // Network error or server error (not 401) — backend might be cold-starting
+      // Retry with exponential backoff before giving up
+      if (attempt < MAX_RETRIES) {
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        if (!controller.signal.aborted) {
+          return verifyToken(attempt + 1);
+        }
+        return;
+      }
+
+      // After all retries failed: keep user logged in with cached data if available
+      // Only clear auth if we have no cached user data at all
+      const cached = getStoredAuth();
+      if (cached.user && cached.token) {
+        // Trust the cached session — backend is probably just down temporarily
+        setState((prev) => ({
+          ...prev,
+          isAuthenticated: true,
+          isLoading: false,
+        }));
+      } else {
+        clearStoredAuth();
+        setState({
+          user: null,
+          organization: null,
+          token: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      }
     }
   };
 
@@ -152,63 +189,114 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setState((prev) => ({ ...prev, isLoading: true }));
 
-    try {
-      const response = await fetch(`${env.apiBaseUrl}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+    // Retry logic for Railway cold starts
+    const MAX_ATTEMPTS = 3;
+    let lastError: Error | null = null;
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Login failed');
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const response = await fetch(`${env.apiBaseUrl}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: 'Login failed' }));
+          // Don't retry on auth errors (wrong credentials, rate limit, etc.)
+          if (response.status === 401 || response.status === 409 || response.status === 429 || response.status === 400) {
+            setState((prev) => ({ ...prev, isLoading: false }));
+            throw new Error(error.error || 'Login failed');
+          }
+          // Server error — retry
+          throw new Error(`Server error (${response.status})`);
+        }
+
+        const data = await response.json();
+        
+        setStoredAuth(data.token, data.user, data.organization);
+        setState({
+          user: data.user,
+          organization: data.organization,
+          token: data.token,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+        return; // Success — exit
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error('Login failed');
+        // If it's a known auth error (thrown above with specific status), don't retry
+        if (lastError.message.includes('Invalid') || lastError.message.includes('already exists') || lastError.message.includes('rate') || lastError.message === 'Login failed') {
+          setState((prev) => ({ ...prev, isLoading: false }));
+          throw lastError;
+        }
+        // Network/server error — retry with backoff
+        if (attempt < MAX_ATTEMPTS) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
       }
-
-      const data = await response.json();
-      
-      setStoredAuth(data.token, data.user, data.organization);
-      setState({
-        user: data.user,
-        organization: data.organization,
-        token: data.token,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-    } catch (error) {
-      setState((prev) => ({ ...prev, isLoading: false }));
-      throw error;
     }
+
+    setState((prev) => ({ ...prev, isLoading: false }));
+    throw new Error(
+      lastError?.message?.includes('Server error')
+        ? 'Server is starting up, please try again in a few seconds'
+        : 'Unable to connect to server. Please check your internet connection and try again.'
+    );
   }, []);
 
   const signup = useCallback(async (email: string, password: string, name: string, organizationName?: string) => {
     setState((prev) => ({ ...prev, isLoading: true }));
 
-    try {
-      const response = await fetch(`${env.apiBaseUrl}/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name, organizationName }),
-      });
+    const MAX_ATTEMPTS = 3;
+    let lastError: Error | null = null;
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Signup failed');
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const response = await fetch(`${env.apiBaseUrl}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, name, organizationName }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: 'Signup failed' }));
+          if (response.status === 400 || response.status === 409 || response.status === 429) {
+            setState((prev) => ({ ...prev, isLoading: false }));
+            throw new Error(error.error || 'Signup failed');
+          }
+          throw new Error(`Server error (${response.status})`);
+        }
+
+        const data = await response.json();
+        
+        setStoredAuth(data.token, data.user, data.organization);
+        setState({
+          user: data.user,
+          organization: data.organization,
+          token: data.token,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+        return; // Success
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error('Signup failed');
+        if (lastError.message.includes('already exists') || lastError.message.includes('Invalid') || lastError.message === 'Signup failed') {
+          setState((prev) => ({ ...prev, isLoading: false }));
+          throw lastError;
+        }
+        if (attempt < MAX_ATTEMPTS) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
       }
-
-      const data = await response.json();
-      
-      setStoredAuth(data.token, data.user, data.organization);
-      setState({
-        user: data.user,
-        organization: data.organization,
-        token: data.token,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-    } catch (error) {
-      setState((prev) => ({ ...prev, isLoading: false }));
-      throw error;
     }
+
+    setState((prev) => ({ ...prev, isLoading: false }));
+    throw new Error(
+      lastError?.message?.includes('Server error')
+        ? 'Server is starting up, please try again in a few seconds'
+        : 'Unable to connect to server. Please check your internet connection and try again.'
+    );
   }, []);
 
   const logout = useCallback(() => {
@@ -233,15 +321,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
 
+      if (response.status === 401 || response.status === 403) {
+        // Token is explicitly invalid — log out
+        logout();
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Token refresh failed');
+        // Server error — don't log out, token might still be valid
+        return;
       }
 
       const data = await response.json();
       setStoredAuth(data.token, state.user, state.organization);
       setState((prev) => ({ ...prev, token: data.token }));
     } catch {
-      logout();
+      // Network error — don't log out the user
+      // Token might still be valid, backend is just temporarily unreachable
     }
   }, [state.token, state.user, state.organization, logout]);
 
