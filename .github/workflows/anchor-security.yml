@@ -1,0 +1,87 @@
+name: Anchor Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly security scan every Monday at 6am UTC
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  security-events: write  # Required for SARIF upload
+  pull-requests: write    # Required for PR annotations
+
+jobs:
+  anchor-security:
+    name: Anchor Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Anchor Security Scanner
+        uses: toddyg1981-png/Anchor@v1
+        id: anchor
+        with:
+          scan-type: 'all'
+          severity-threshold: 'medium'
+          fail-on-findings: 'true'
+          enable-sarif: 'true'
+          enable-annotations: 'true'
+          # api-key: ${{ secrets.ANCHOR_API_KEY }}  # Optional: enables AI-powered analysis
+
+      - name: Upload SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: .anchor-reports/anchor-results.sarif
+          category: anchor-security
+
+      - name: Upload Anchor Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: anchor-security-report
+          path: .anchor-reports/
+          retention-days: 30
+
+      - name: Comment PR with Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const critical = '${{ steps.anchor.outputs.critical-count }}';
+            const high = '${{ steps.anchor.outputs.high-count }}';
+            const medium = '${{ steps.anchor.outputs.medium-count }}';
+            const low = '${{ steps.anchor.outputs.low-count }}';
+            const total = '${{ steps.anchor.outputs.findings-count }}';
+            const duration = '${{ steps.anchor.outputs.scan-duration }}';
+            const exitCode = '${{ steps.anchor.outputs.exit-code }}';
+
+            const status = exitCode === '0' ? '✅ PASSED' : '❌ FAILED';
+            const emoji = exitCode === '0' ? '🟢' : '🔴';
+
+            const body = `## ${emoji} Anchor Security Scan ${status}
+
+            | Severity | Count |
+            |----------|-------|
+            | 🔴 Critical | ${critical || 0} |
+            | 🟠 High | ${high || 0} |
+            | 🟡 Medium | ${medium || 0} |
+            | 🔵 Low | ${low || 0} |
+            | **Total** | **${total || 0}** |
+
+            ⏱️ Scan duration: ${duration || 0}s
+
+            ---
+            *Powered by [Anchor Security Scanner](https://github.com/toddyg1981-png/Anchor) — 95+ Security Modules • 25 World-First Features*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });

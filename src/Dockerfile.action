@@ -1,0 +1,27 @@
+# Anchor Security Scanner — GitHub Action Container
+FROM alpine:3.19
+
+LABEL maintainer="Anchor AI Guard"
+LABEL org.opencontainers.image.title="Anchor Security Scanner"
+LABEL org.opencontainers.image.description="Enterprise-grade security scanning for CI/CD pipelines"
+LABEL org.opencontainers.image.source="https://github.com/toddyg1981-png/Anchor"
+
+# Install dependencies
+RUN apk add --no-cache \
+    bash \
+    coreutils \
+    grep \
+    jq \
+    curl \
+    git \
+    nodejs \
+    npm \
+    python3 \
+    findutils \
+    && rm -rf /var/cache/apk/*
+
+# Copy scanner script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

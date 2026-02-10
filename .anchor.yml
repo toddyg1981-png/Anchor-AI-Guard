@@ -1,0 +1,67 @@
+# Anchor Security Scanner Configuration
+# Place this file in your repository root as .anchor.yml
+
+# Scanner settings
+scan:
+  # Which scanners to enable
+  enabled:
+    - sast
+    - secrets
+    - dependencies
+    - ai
+
+  # Minimum severity to report
+  severity-threshold: medium
+
+  # Fail CI/CD if findings exceed threshold
+  fail-on-findings: true
+
+  # Maximum findings to report (0 = unlimited)
+  max-findings: 100
+
+# File exclusions (glob patterns)
+exclude:
+  - node_modules/**
+  - dist/**
+  - build/**
+  - .git/**
+  - coverage/**
+  - '*.min.js'
+  - '*.min.css'
+  - '*.test.ts'
+  - '*.spec.ts'
+  - __tests__/**
+  - __mocks__/**
+
+# Custom rules
+rules:
+  # SAST rules to ignore (by rule ID)
+  ignore:
+    # - ANCHOR-SAST-CONSOLE-LOG  # Allow console.log
+    # - ANCHOR-SAST-HTTP-URL     # Allow HTTP URLs
+
+  # Additional secret patterns to detect
+  custom-secrets:
+    # - name: "Internal API Key"
+    #   pattern: "INTERNAL_[A-Z]+"
+    #   severity: high
+
+# Reporting
+reports:
+  # Generate SARIF for GitHub Security tab
+  sarif: true
+
+  # Generate JSON report
+  json: true
+
+  # Report output directory
+  output-dir: .anchor-reports
+
+# Notifications (requires Anchor API key)
+notifications:
+  # Slack webhook for scan results
+  # slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+
+  # Email recipients for critical findings
+  # email:
+  #   - security@yourcompany.com

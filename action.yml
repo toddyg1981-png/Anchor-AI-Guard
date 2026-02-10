@@ -1,0 +1,84 @@
+name: 'Anchor Security Scanner'
+description: 'Enterprise-grade security scanning: SAST, secrets detection, dependency audit, and AI-powered analysis. 95+ security modules, 25 world-first features.'
+author: 'Anchor AI Guard'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  scan-type:
+    description: 'Type of scan to run: all, sast, secrets, dependencies, ai'
+    required: false
+    default: 'all'
+  severity-threshold:
+    description: 'Minimum severity to report: critical, high, medium, low, info'
+    required: false
+    default: 'medium'
+  fail-on-findings:
+    description: 'Fail the workflow if findings meet or exceed severity threshold'
+    required: false
+    default: 'true'
+  scan-path:
+    description: 'Path to scan (relative to repository root)'
+    required: false
+    default: '.'
+  config-file:
+    description: 'Path to Anchor configuration file (.anchor.yml)'
+    required: false
+    default: ''
+  api-key:
+    description: 'Anchor platform API key for AI-powered analysis and cloud features'
+    required: false
+    default: ''
+  exclude-patterns:
+    description: 'Comma-separated glob patterns to exclude from scanning'
+    required: false
+    default: 'node_modules/**,dist/**,build/**,.git/**,coverage/**,*.min.js,*.min.css'
+  enable-sarif:
+    description: 'Generate SARIF output for GitHub Security tab integration'
+    required: false
+    default: 'true'
+  enable-annotations:
+    description: 'Add inline PR annotations for findings'
+    required: false
+    default: 'true'
+  max-findings:
+    description: 'Maximum number of findings to report (0 = unlimited)'
+    required: false
+    default: '100'
+
+outputs:
+  findings-count:
+    description: 'Total number of security findings'
+  critical-count:
+    description: 'Number of critical severity findings'
+  high-count:
+    description: 'Number of high severity findings'
+  medium-count:
+    description: 'Number of medium severity findings'
+  low-count:
+    description: 'Number of low severity findings'
+  sarif-file:
+    description: 'Path to generated SARIF file'
+  report-file:
+    description: 'Path to generated JSON report'
+  scan-duration:
+    description: 'Total scan duration in seconds'
+  exit-code:
+    description: '0 if no findings above threshold, 1 if findings found'
+
+runs:
+  using: 'docker'
+  image: 'src/Dockerfile.action'
+  args:
+    - ${{ inputs.scan-type }}
+    - ${{ inputs.severity-threshold }}
+    - ${{ inputs.fail-on-findings }}
+    - ${{ inputs.scan-path }}
+    - ${{ inputs.config-file }}
+    - ${{ inputs.api-key }}
+    - ${{ inputs.exclude-patterns }}
+    - ${{ inputs.enable-sarif }}
+    - ${{ inputs.enable-annotations }}
+    - ${{ inputs.max-findings }}
