@@ -46,7 +46,7 @@ jobs:
 
       - name: Update major version tag
         run: |
-          MAJOR=$(echo "${{ steps.tag.outputs.version }}" | grep -oP '^v\d+')
+          MAJOR=$(echo "${{ steps.tag.outputs.version }}" | cut -d. -f1)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -fa "${MAJOR}" -m "Update ${MAJOR} tag to ${{ steps.tag.outputs.version }}"
