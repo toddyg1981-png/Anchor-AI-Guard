@@ -329,6 +329,11 @@ export async function attackSurfaceRoutes(app: FastifyInstance): Promise<void> {
   // AI-powered attack surface analysis
   app.post('/attack-surface/analyze', { preHandler: [authMiddleware()] }, async (request: FastifyRequest, reply: FastifyReply) => {
     const user = request.user as { orgId: string };
+
+    // Track AI query usage
+    const { trackAIQuery } = await import('./billing');
+    trackAIQuery(user.orgId).catch(() => {});
+
     const parsed = analyzeSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });

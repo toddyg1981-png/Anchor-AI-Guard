@@ -401,6 +401,10 @@ export async function aiGuardrailsRoutes(app: FastifyInstance): Promise<void> {
   app.post('/ai-guardrails/threat-intel', { preHandler: [authMiddleware()] }, async (request: FastifyRequest, reply: FastifyReply) => {
     const user = request.user as { orgId: string };
 
+    // Track AI query usage
+    const { trackAIQuery } = await import('./billing');
+    trackAIQuery(user.orgId).catch(() => {});
+
     const orgAudit = auditLog.filter(e => e.orgId === user.orgId).slice(-100);
     const threatSummary = orgAudit.length > 0
       ? `Recent threats detected: ${orgAudit.filter(e => e.threats.length > 0).length} incidents`

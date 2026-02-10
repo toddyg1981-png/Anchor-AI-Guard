@@ -100,6 +100,10 @@ export async function securityModulesRoutes(app: FastifyInstance): Promise<void>
     const { module } = request.params as { module: string };
     const body = request.body as { context?: string; question?: string };
 
+    // Track AI query usage
+    const { trackAIQuery } = await import('./billing');
+    trackAIQuery(user.orgId).catch(() => {});
+
     const findings = await prisma.finding.findMany({
       where: { project: { orgId: user.orgId } }, take: 20,
     });

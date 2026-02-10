@@ -75,6 +75,10 @@ function cleanJsonResponse(content: string): string {
 export async function aiRoutes(app: FastifyInstance): Promise<void> {
   // Analyze single finding
   app.post('/ai/analyze', { preHandler: authMiddleware(), config: { rateLimit: { max: 20, timeWindow: '1 minute' } } }, async (request, reply) => {
+    // Track AI query usage (fire-and-forget, best-effort)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    try { const u = (request as any).user; if (u?.orgId) { const { trackAIQuery } = await import('./billing'); trackAIQuery(u.orgId).catch(() => {}); } } catch { /* ignore */ }
+
     const parsed = analyzeSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });

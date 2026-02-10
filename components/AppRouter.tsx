@@ -13,6 +13,7 @@ const LoadingFallback = () => (
 
 // Lazy import the main App component
 const App = React.lazy(() => import('../App'));
+const StatusPage = React.lazy(() => import('./StatusPage'));
 
 export default function AppRouter() {
   return (
@@ -26,6 +27,7 @@ export default function AppRouter() {
           <Route path="/forgot-password" element={<App />} />
           <Route path="/pricing" element={<App />} />
           <Route path="/government" element={<App />} />
+          <Route path="/status" element={<div className="min-h-screen bg-slate-950"><StatusPage /></div>} />
           
           {/* Dashboard routes - all handled by App's internal switch */}
           <Route path="/dashboard/*" element={<App />} />

@@ -1111,6 +1111,9 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
       customQuery?: string 
     };
     const user = (request as any).user;
+
+    // Track AI query usage
+    try { const { trackAIQuery } = await import('./billing'); trackAIQuery(user.orgId).catch(() => {}); } catch {}
     
     let analysis: string;
     

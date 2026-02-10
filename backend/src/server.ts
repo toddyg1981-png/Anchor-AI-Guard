@@ -47,6 +47,7 @@ import { ssoRoutes } from './routes/sso';
 import { aiChatRoutes } from './routes/ai-chat';
 import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
 import { wsManager } from './lib/websocket';
+import { registerMonitoring } from './lib/monitoring';
 
 async function main() {
   // Initialize Sentry for error tracking
@@ -63,6 +64,9 @@ async function main() {
     // 10MB to support file-upload scanning
     bodyLimit: 10485760,
   });
+
+  // Register monitoring middleware (request timing, error rates, alerting)
+  registerMonitoring(app);
 
   // Add rawBody for Stripe webhook signature verification
   app.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {

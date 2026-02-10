@@ -6,6 +6,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { QueryProvider } from './hooks/QueryProvider';
 import { logger } from './utils/logger';
 import { performanceMonitor } from './utils/performanceMonitor';
+import { initSentry } from './utils/sentry';
+
+// Initialize Sentry error tracking (before anything else)
+initSentry();
 
 // Log application startup
 logger.info('🚀 Anchor Security Dashboard starting...', {

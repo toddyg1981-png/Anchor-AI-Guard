@@ -4,6 +4,7 @@
  */
 
 import { env } from '../config/env';
+import { captureException as sentryCaptureException } from './sentry';
 
 export enum ErrorSeverity {
   LOW = 'low',
@@ -172,8 +173,11 @@ class ErrorHandler {
   private reportToExternalServices(error: ErrorDetails): void {
     // Integration with Sentry
     if (env.sentryDsn && typeof window !== 'undefined') {
-      // Sentry.captureException would go here
-      console.log('Would send to Sentry:', error);
+      sentryCaptureException(new Error(error.message), {
+        code: error.code,
+        severity: error.severity,
+        context: error.context,
+      });
     }
 
     // Integration with LogRocket

@@ -77,6 +77,9 @@ export async function aiChatRoutes(app: FastifyInstance): Promise<void> {
     preHandler: authMiddleware(),
     config: { rateLimit: { max: 30, timeWindow: '1 minute' } },
   }, async (request, reply) => {
+    // Track AI query usage
+    try { const u = (request as any).user; if (u?.orgId) { const { trackAIQuery } = await import('./billing'); trackAIQuery(u.orgId).catch(() => {}); } } catch {}
+
     const parsed = z.object({ question: z.string().min(1).max(4000) }).safeParse(request.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
