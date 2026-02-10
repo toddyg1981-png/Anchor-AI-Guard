@@ -4,7 +4,7 @@ import DashboardLayout from './components/DashboardLayout';
 import DashboardOverview from './components/DashboardOverview';
 import { Project, Finding } from './types';
 import { useBackendData } from './hooks/useBackendData';
-import { AuthProvider, useAuth } from './hooks/useAuth';
+import { useAuth } from './hooks/useAuth';
 import { useWebSocket } from './hooks/useWebSocket';
 import LoginSuccessOverlay from './components/LoginSuccessOverlay';
 import { env } from './config/env';
@@ -398,8 +398,14 @@ const AppContent: React.FC = () => {
   // Determine initial view based on auth state
   useEffect(() => {
     if (!authLoading) {
-      // Don't override special routes
-      if (['auth', 'auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard'].includes(currentView)) {
+      // Only skip redirect for unauthenticated users on public/special pages.
+      // Authenticated users on 'auth' or 'auth-callback' should be sent to dashboard.
+      if (!isAuthenticated && ['auth', 'auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard', 'government', 'pillar-pricing', 'product-narratives', 'investor-slides'].includes(currentView)) {
+        return;
+      }
+
+      // Allow authenticated users to stay on truly public info pages
+      if (isAuthenticated && ['pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard', 'government', 'pillar-pricing', 'product-narratives', 'investor-slides', 'purchase-terms'].includes(currentView)) {
         return;
       }
       
@@ -407,8 +413,9 @@ const AppContent: React.FC = () => {
         // Check if new user needs onboarding
         if (!hasCompletedOnboarding) {
           setCurrentView('onboarding');
-        } else if (currentView !== 'dashboard' && currentView !== 'purchase-terms') {
+        } else if (currentView !== 'dashboard') {
           setCurrentView('dashboard');
+          window.history.replaceState({}, '', '/');
         }
       }
       // If not authenticated, stay on whatever view we're on (marketing, auth, etc.)
@@ -1052,13 +1059,10 @@ const AppContent: React.FC = () => {
   );
 };
 
-// Main App component with AuthProvider
+// Main App component — AuthProvider is in AppRouter so auth state
+// persists across route changes and never remounts.
 const App: React.FC = () => {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+  return <AppContent />;
 };
 
 export default App;
