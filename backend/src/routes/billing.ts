@@ -212,6 +212,26 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
 };
 
+// Stripe Price ID mapping — from Stripe Dashboard
+const STRIPE_PRICES: Record<string, { monthly: string; yearly: string }> = {
+  STARTER: {
+    monthly: 'price_1Sz6FUCQAeKEVrjRnXgfIxcb',
+    yearly: 'price_1Sz6GRCQAeKEVrjRrEFTKadG',
+  },
+  PRO: {
+    monthly: 'price_1Sz6HcCQAeKEVrjRqrceYVPa',
+    yearly: 'price_1Sz6IECQAeKEVrjRv7qPYluR',
+  },
+  TEAM: {
+    monthly: 'price_1Sz6JJCQAeKEVrjRLgpJgI4H',
+    yearly: 'price_1Sz6JxCQAeKEVrjRC9RlZeml',
+  },
+  BUSINESS: {
+    monthly: 'price_1Sz6KoCQAeKEVrjRSLNrwecH',
+    yearly: 'price_1Sz6LXCQAeKEVrjRKHNmSnOl',
+  },
+};
+
 const createCheckoutSchema = z.object({
   planTier: z.enum(['FREE', 'STARTER', 'PRO', 'TEAM', 'BUSINESS', 'ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT']),
   billingPeriod: z.enum(['monthly', 'yearly']),
@@ -336,8 +356,12 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       }
     }
 
-    // Create checkout session
-    const priceInCents = billingPeriod === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
+    // Create checkout session using Stripe Price IDs
+    const stripePrices = STRIPE_PRICES[planTier];
+    if (!stripePrices) {
+      return reply.status(400).send({ error: `No Stripe prices configured for ${planTier}. Contact sales for Enterprise plans.` });
+    }
+    const priceId = billingPeriod === 'yearly' ? stripePrices.yearly : stripePrices.monthly;
     
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -345,17 +369,7 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `Anchor Security - ${plan.name}`,
-              description: plan.features.slice(0, 3).join(', '),
-            },
-            unit_amount: priceInCents,
-            recurring: {
-              interval: billingPeriod === 'yearly' ? 'year' : 'month',
-            },
-          },
+          price: priceId,
           quantity: 1,
         },
       ],
@@ -418,22 +432,20 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
 
     // Get current subscription from Stripe
     const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
-    const plan = PLANS[planTier];
 
-    // Update subscription in Stripe — preserve current billing interval
+    // Look up the Stripe Price ID for the new plan
+    const stripePrices = STRIPE_PRICES[planTier];
+    if (!stripePrices) {
+      return reply.status(400).send({ error: `No Stripe prices configured for ${planTier}. Contact sales for Enterprise plans.` });
+    }
     const currentInterval = stripeSubscription.items.data[0].price.recurring?.interval || 'month';
-    const priceAmount = currentInterval === 'year' ? plan.yearlyPrice : plan.monthlyPrice;
+    const newPriceId = currentInterval === 'year' ? stripePrices.yearly : stripePrices.monthly;
 
     await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
       items: [
         {
           id: stripeSubscription.items.data[0].id,
-          price_data: {
-            currency: 'usd',
-            product: stripeSubscription.items.data[0].price.product as string,
-            unit_amount: priceAmount,
-            recurring: { interval: currentInterval as 'month' | 'year' },
-          },
+          price: newPriceId,
         },
       ],
       proration_behavior: 'create_prorations',
