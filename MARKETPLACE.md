@@ -1,7 +1,7 @@
 # Anchor Security Scanner — GitHub Marketplace
 
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Anchor%20Security%20Scanner-blue?logo=github)](https://github.com/marketplace/actions/anchor-security-scanner)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 > **Enterprise-grade security scanning for your CI/CD pipeline.**  
 > SAST • Secrets Detection • Dependency Audit • AI Security Analysis  
@@ -15,7 +15,7 @@ Add to any workflow in **2 lines**:
 
 ```yaml
 - name: Anchor Security Scan
-  uses: toddyg1981-png/Anchor@v1
+  uses: toddyg1981-png/Anchor-AI-Guard@v1
 ```
 
 ## 📋 Full Example
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Anchor Security Scan
-        uses: toddyg1981-png/Anchor@v1
+        uses: toddyg1981-png/Anchor-AI-Guard@v1
         id: anchor
         with:
           scan-type: 'all'
@@ -111,7 +111,7 @@ jobs:
 
 ### Scan only secrets
 ```yaml
-- uses: toddyg1981-png/Anchor@v1
+- uses: toddyg1981-png/Anchor-AI-Guard@v1
   with:
     scan-type: 'secrets'
     severity-threshold: 'high'
@@ -119,7 +119,7 @@ jobs:
 
 ### Scan a specific directory
 ```yaml
-- uses: toddyg1981-png/Anchor@v1
+- uses: toddyg1981-png/Anchor-AI-Guard@v1
   with:
     scan-path: 'src'
     exclude-patterns: 'src/tests/**,src/__mocks__/**'
@@ -127,14 +127,14 @@ jobs:
 
 ### Report without failing
 ```yaml
-- uses: toddyg1981-png/Anchor@v1
+- uses: toddyg1981-png/Anchor-AI-Guard@v1
   with:
     fail-on-findings: 'false'
 ```
 
 ### AI-only scan for ML projects
 ```yaml
-- uses: toddyg1981-png/Anchor@v1
+- uses: toddyg1981-png/Anchor-AI-Guard@v1
   with:
     scan-type: 'ai'
     severity-threshold: 'high'
@@ -195,8 +195,8 @@ rules:
 
 ## 📄 License
 
-MIT — see [LICENSE](LICENSE) for details.
+Apache 2.0 — see [LICENSE](LICENSE) for details.
 
 ---
 
-**Built by [Anchor AI Guard](https://github.com/toddyg1981-png/Anchor)** — Protecting the world's code, one scan at a time.
+**Built by [Anchor AI Guard](https://github.com/toddyg1981-png/Anchor-AI-Guard)** — Protecting the world's code, one scan at a time.

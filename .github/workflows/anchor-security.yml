@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Anchor Security Scanner
-        uses: toddyg1981-png/Anchor@v1
+        uses: toddyg1981-png/Anchor-AI-Guard@v1
         id: anchor
         with:
           scan-type: 'all'
@@ -77,7 +77,7 @@ jobs:
             ⏱️ Scan duration: ${duration || 0}s
 
             ---
-            *Powered by [Anchor Security Scanner](https://github.com/toddyg1981-png/Anchor) — 95+ Security Modules • 25 World-First Features*`;
+            *Powered by [Anchor Security Scanner](https://github.com/toddyg1981-png/Anchor-AI-Guard) — 95+ Security Modules • 25 World-First Features*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,

@@ -621,7 +621,7 @@ EOF
         "name": "Anchor Security Scanner",
         "organization": "Anchor AI Guard",
         "version": "1.0.0",
-        "informationUri": "https://github.com/toddyg1981-png/Anchor",
+        "informationUri": "https://github.com/toddyg1981-png/Anchor-AI-Guard",
         "rules": [${sarif_rules}]
       }
     },
