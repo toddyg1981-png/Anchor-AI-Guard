@@ -188,7 +188,7 @@ export async function generateSBOM(targetPath: string): Promise<SBOMResult> {
 
           for (const [pkgPath, pkg] of Object.entries(packages)) {
             if (!pkgPath || pkgPath === '') continue;
-            const pkgData = pkg as any;
+            const pkgData = pkg as { version?: string };
             const name = pkgPath.replace(/^node_modules\//, '').split('/node_modules/').pop() || '';
             
             if (name && !components.some((c) => c.name === name)) {
@@ -345,7 +345,7 @@ export async function runSBOMScan(projectId: string, targetPath: string): Promis
   await prisma.sBOM.upsert({
     where: { projectId },
     update: {
-      components: sbom.components as any,
+      components: sbom.components as unknown as Record<string, unknown>[],
       totalDependencies: sbom.totalDependencies,
       directDependencies: sbom.directDependencies,
       transitiveDependencies: sbom.transitiveDependencies,
@@ -353,7 +353,7 @@ export async function runSBOMScan(projectId: string, targetPath: string): Promis
     },
     create: {
       projectId,
-      components: sbom.components as any,
+      components: sbom.components as unknown as Record<string, unknown>[],
       totalDependencies: sbom.totalDependencies,
       directDependencies: sbom.directDependencies,
       transitiveDependencies: sbom.transitiveDependencies,

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AppView, DashboardView } from '../App';
 import { useDebouncedSearch } from '../hooks/useSecurityHooks';
+import { useAuth } from '../hooks/useAuth';
 import AIStatusWidget from './AIStatusWidget';
+import { DemoModeIndicator } from './DemoBanner';
 
 interface User {
   id?: string;
@@ -41,6 +43,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   user,
   children,
 }) => {
+  const { isDemoMode } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [activeNav, setActiveNav] = useState<string>('dashboard');
@@ -374,6 +377,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           
           <div className="flex items-center gap-3">
             {/* Quick Actions */}
+            {/* Demo Mode Indicator */}
+            {isDemoMode && <DemoModeIndicator />}
+
             <button
               onClick={onRepair}
               className="px-4 py-2 bg-linear-to-r from-emerald-500 to-green-600 text-white rounded-lg text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-emerald-500/25 flex items-center gap-1.5">

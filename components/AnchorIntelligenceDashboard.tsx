@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { logger } from '../utils/logger';
 import { backendApi } from '../utils/backendApi';
+import { useAuth } from '../hooks/useAuth';
+import { DemoBanner, DemoAPIKeyWarning, DemoModeIndicator } from './DemoBanner';
 
 interface APIKey {
   id: string;
@@ -35,6 +37,7 @@ interface UsageData {
 }
 
 export default function AnchorIntelligenceDashboard() {
+  const { isDemoMode } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'usage' | 'playground'>('overview');
   const [keys, setKeys] = useState<APIKey[]>([]);
   const [usage, setUsage] = useState<UsageData | null>(null);
@@ -176,6 +179,7 @@ export default function AnchorIntelligenceDashboard() {
             >
               + New API Key
             </button>
+            {isDemoMode && <DemoModeIndicator className="ml-3" />}
           </div>
 
           {/* Tabs */}
@@ -203,9 +207,20 @@ export default function AnchorIntelligenceDashboard() {
           <div className="bg-gray-900 rounded-xl border border-gray-700 p-8 max-w-lg w-full">
             <div className="text-center">
               <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🔑</span>
+                <span className="text-3xl">{isDemoMode ? '🎭' : '🔑'}</span>
               </div>
-              <h3 className="text-xl font-bold mb-2">API Key Created!</h3>
+              <h3 className="text-xl font-bold mb-2">
+                {isDemoMode ? 'Demo API Key Created!' : 'API Key Created!'}
+              </h3>
+              {isDemoMode && (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 mb-4 text-left">
+                  <p className="text-amber-400 text-sm font-medium">⚠️ This is a DEMO key</p>
+                  <p className="text-amber-300/80 text-xs mt-1">
+                    This key is for demonstration only and will NOT work for real API integrations. 
+                    <a href="https://anchoraiguard.com/signup" className="underline ml-1">Create a real account</a> to get working API keys.
+                  </p>
+                </div>
+              )}
               <p className="text-red-400 text-sm font-medium mb-4">
                 Copy this key now. It will NEVER be shown again.
               </p>
@@ -233,7 +248,8 @@ export default function AnchorIntelligenceDashboard() {
       {showCreateKey && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
           <div className="bg-gray-900 rounded-xl border border-gray-700 p-8 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-6">Create New API Key</h3>
+            <h3 className="text-xl font-bold mb-4">Create New API Key</h3>
+            {isDemoMode && <DemoAPIKeyWarning />}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">Key Name</label>
@@ -264,7 +280,7 @@ export default function AnchorIntelligenceDashboard() {
                   disabled={!newKeyName}
                   className="flex-1 py-3 bg-purple-600 rounded-lg font-bold hover:bg-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Create Key
+                  {isDemoMode ? 'Create Demo Key' : 'Create Key'}
                 </button>
                 <button
                   onClick={() => setShowCreateKey(false)}
@@ -286,6 +302,9 @@ export default function AnchorIntelligenceDashboard() {
           </div>
         ) : (
           <>
+            {/* Demo Mode Banner */}
+            {isDemoMode && <DemoBanner className="mb-6" />}
+
             {/* ==================== OVERVIEW ==================== */}
             {activeTab === 'overview' && (
               <div className="space-y-8">

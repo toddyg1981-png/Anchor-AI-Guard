@@ -111,6 +111,9 @@ const detectionRules = new Map<string, DetectionRule>();
 const securityUpdates: SecurityUpdate[] = [];
 const evolutionLog: Array<{ timestamp: Date; action: string; details: string; aiGenerated: boolean }> = [];
 
+// Evolution timer for scheduled cycles
+let evolutionInterval: ReturnType<typeof setInterval> | undefined;
+
 // ============================================
 // AI ANALYSIS ENGINE
 // ============================================
@@ -908,8 +911,8 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
   /**
    * POST /ai-evolution/trigger - Manually trigger evolution cycle
    */
-  app.post('/ai-evolution/trigger', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
-    const user = (request as any).user;
+  app.post('/ai-evolution/trigger', { preHandler: authMiddleware() }, async (request: FastifyRequest, _reply: FastifyReply) => {
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
     const { aggressive = false } = (request.body as { aggressive?: boolean }) || {};
     
     logAuditEvent({
@@ -936,8 +939,8 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
    * POST /ai-evolution/bootstrap - NUCLEAR OPTION: Massive initial data seed
    * Fetches from ALL sources with maximum data, generates rules, and primes the engine
    */
-  app.post('/ai-evolution/bootstrap', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
-    const user = (request as any).user;
+  app.post('/ai-evolution/bootstrap', { preHandler: authMiddleware() }, async (request: FastifyRequest, _reply: FastifyReply) => {
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
     
     logAuditEvent({
       userId: user.id,
@@ -1036,7 +1039,7 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
   /**
    * GET /ai-evolution/threats - Get processed threat intelligence
    */
-  app.get('/ai-evolution/threats', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/ai-evolution/threats', { preHandler: authMiddleware() }, async (request: FastifyRequest, _reply: FastifyReply) => {
     const { severity, type, limit = '50' } = request.query as { severity?: string; type?: string; limit?: string };
     
     let threats = Array.from(threatIntelStore.values());
@@ -1055,7 +1058,7 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
   /**
    * GET /ai-evolution/rules - Get auto-generated detection rules
    */
-  app.get('/ai-evolution/rules', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/ai-evolution/rules', { preHandler: authMiddleware() }, async (_request: FastifyRequest, _reply: FastifyReply) => {
     const rules = Array.from(detectionRules.values());
     
     return {
@@ -1072,7 +1075,7 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
   app.patch('/ai-evolution/rules/:ruleId', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
     const { ruleId } = request.params as { ruleId: string };
     const updates = request.body as { enabled?: boolean; severity?: string };
-    const user = (request as any).user;
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
     
     const rule = detectionRules.get(ruleId);
     if (!rule) {
@@ -1110,10 +1113,10 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
       threatId?: string; 
       customQuery?: string 
     };
-    const user = (request as any).user;
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
 
     // Track AI query usage
-    try { const { trackAIQuery } = await import('./billing'); trackAIQuery(user.orgId).catch(() => {}); } catch {}
+    try { const { trackAIQuery } = await import('./billing'); trackAIQuery(user.orgId).catch(() => { /* ignore */ }); } catch { /* ignore tracking errors */ }
     
     let analysis: string;
     
@@ -1155,7 +1158,7 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
     config: { rateLimit: { max: 5, timeWindow: '1 minute' } }
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     const { requirement } = request.body as { requirement: string };
-    const user = (request as any).user;
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
     
     if (!requirement) {
       return reply.status(400).send({ error: 'Requirement is required' });
@@ -1245,7 +1248,7 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
       id: `custom-${Date.now()}`,
       name,
       url,
-      type: type as any,
+      type: type as ThreatFeed['type'],
       updateFrequency,
       status: 'active'
     };
@@ -1258,8 +1261,8 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
   /**
    * POST /ai-evolution/scan - Quick scan of all threat feeds
    */
-  app.post('/ai-evolution/scan', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
-    const user = (request as any).user;
+  app.post('/ai-evolution/scan', { preHandler: authMiddleware() }, async (request: FastifyRequest, _reply: FastifyReply) => {
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
     
     logAuditEvent({
       userId: user.id,
@@ -1304,8 +1307,8 @@ export async function aiEvolutionRoutes(app: FastifyInstance) {
   /**
    * POST /ai-evolution/repair - Repair/reset the AI evolution engine
    */
-  app.post('/ai-evolution/repair', { preHandler: authMiddleware() }, async (request: FastifyRequest, reply: FastifyReply) => {
-    const user = (request as any).user;
+  app.post('/ai-evolution/repair', { preHandler: authMiddleware() }, async (request: FastifyRequest, _reply: FastifyReply) => {
+    const user = (request as unknown as { user: { id: string; orgId: string } }).user;
     const { mode = 'soft' } = (request.body as { mode?: 'soft' | 'hard' }) || {};
     
     logAuditEvent({

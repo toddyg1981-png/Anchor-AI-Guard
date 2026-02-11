@@ -40,9 +40,11 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.14.0",
     "@types/ws": "^8.5.12",
+    "@vitest/coverage-v8": "^1.6.0",
     "prisma": "^5.20.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^1.6.0"
   },
   "engines": {
     "node": ">=18.0.0",

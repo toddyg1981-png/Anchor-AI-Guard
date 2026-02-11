@@ -124,7 +124,7 @@ export function authMiddleware(requireRole?: string | string[]) {
       const decoded = await request.jwtVerify<JWTPayload>();
       
       // Attach user to request
-      (request as any).user = {
+      (request as unknown as { user: { userId: string; email: string; orgId: string; role: string } }).user = {
         userId: decoded.userId,
         email: decoded.email,
         orgId: decoded.orgId,

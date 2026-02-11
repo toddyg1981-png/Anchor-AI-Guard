@@ -5,7 +5,7 @@ import { authMiddleware } from '../lib/auth';
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
-const messageSchema = z.object({
+const _messageSchema = z.object({
   message: z.string().min(1).max(4000),
   conversationId: z.string().optional(),
 });
@@ -42,7 +42,7 @@ async function callClaude(prompt: string, systemPrompt: string, maxTokens = 1024
   return data.content?.[0]?.text || '';
 }
 
-const SECURITY_CHAT_SYSTEM_PROMPT = `You are Titan, the security assistant for the Anchor Security Platform — a world-first AI-powered cybersecurity platform.
+const _SECURITY_CHAT_SYSTEM_PROMPT = `You are Titan, the security assistant for the Anchor Security Platform — a world-first AI-powered cybersecurity platform.
 
 Your capabilities:
 - Explain vulnerabilities and security concepts clearly
@@ -78,7 +78,7 @@ export async function aiChatRoutes(app: FastifyInstance): Promise<void> {
     config: { rateLimit: { max: 30, timeWindow: '1 minute' } },
   }, async (request, reply) => {
     // Track AI query usage
-    try { const u = (request as any).user; if (u?.orgId) { const { trackAIQuery } = await import('./billing'); trackAIQuery(u.orgId).catch(() => {}); } } catch {}
+    try { const u = (request as unknown as { user?: { orgId?: string } }).user; if (u?.orgId) { const { trackAIQuery } = await import('./billing'); trackAIQuery(u.orgId).catch(() => { /* ignore */ }); } } catch { /* ignore tracking errors */ }
 
     const parsed = z.object({ question: z.string().min(1).max(4000) }).safeParse(request.body);
     if (!parsed.success) {
@@ -101,7 +101,7 @@ export async function aiChatRoutes(app: FastifyInstance): Promise<void> {
   });
 }
 
-function getFallbackChatResponse(message: string): string {
+function _getFallbackChatResponse(message: string): string {
   const q = message.toLowerCase();
 
   if (q.includes('sql injection') || q.includes('sqli')) {

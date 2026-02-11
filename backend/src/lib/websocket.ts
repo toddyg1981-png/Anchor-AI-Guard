@@ -57,9 +57,9 @@ class WebSocketManager {
         return;
       }
 
-      let payload: any;
+      let payload: { orgId?: string };
       try {
-        payload = jwt.verify(token, env.jwtSecret);
+        payload = jwt.verify(token, env.jwtSecret) as { orgId?: string };
       } catch {
         ws.close(4001, 'Invalid token');
         return;
