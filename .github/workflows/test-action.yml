@@ -1,0 +1,76 @@
+name: Test Action
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'action.yml'
+      - 'src/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'action.yml'
+      - 'src/**'
+
+permissions:
+  contents: read
+
+jobs:
+  test-action:
+    name: Test Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate action.yml
+        run: |
+          echo "Checking action.yml structure..."
+          # Verify required fields for Marketplace
+          for field in name description branding; do
+            if ! grep -q "^${field}:" action.yml; then
+              echo "::error::Missing required field: ${field}"
+              exit 1
+            fi
+          done
+          echo "✅ action.yml structure is valid"
+
+      - name: Build Docker image
+        run: |
+          docker build -f src/Dockerfile.action -t anchor-scanner-test src/
+          echo "✅ Docker image built successfully"
+
+      - name: Run action (self-scan)
+        uses: ./
+        id: anchor
+        with:
+          scan-type: 'all'
+          severity-threshold: 'low'
+          fail-on-findings: 'false'
+          scan-path: '.'
+          enable-sarif: 'true'
+          enable-annotations: 'false'
+
+      - name: Verify outputs
+        run: |
+          echo "Findings: ${{ steps.anchor.outputs.findings-count }}"
+          echo "Critical: ${{ steps.anchor.outputs.critical-count }}"
+          echo "High:     ${{ steps.anchor.outputs.high-count }}"
+          echo "Medium:   ${{ steps.anchor.outputs.medium-count }}"
+          echo "Low:      ${{ steps.anchor.outputs.low-count }}"
+          echo "Duration: ${{ steps.anchor.outputs.scan-duration }}s"
+          echo "Exit:     ${{ steps.anchor.outputs.exit-code }}"
+
+          # Verify SARIF file was generated
+          if [ -f ".anchor-reports/anchor-results.sarif" ]; then
+            echo "✅ SARIF report generated"
+          else
+            echo "::warning::SARIF report not found"
+          fi
+
+          # Verify JSON report was generated
+          if [ -f ".anchor-reports/anchor-report.json" ]; then
+            echo "✅ JSON report generated"
+          else
+            echo "::warning::JSON report not found"
+          fi

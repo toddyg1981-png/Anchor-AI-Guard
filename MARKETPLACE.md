@@ -1,7 +1,7 @@
 # Anchor Security Scanner — GitHub Marketplace
 
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Anchor%20Security%20Scanner-blue?logo=github)](https://github.com/marketplace/actions/anchor-security-scanner)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 > **Enterprise-grade security scanning for your CI/CD pipeline.**  
 > SAST • Secrets Detection • Dependency Audit • AI Security Analysis  
@@ -195,7 +195,7 @@ rules:
 
 ## 📄 License
 
-MIT — see [LICENSE](LICENSE) for details.
+Apache 2.0 — see [LICENSE](LICENSE) for details.
 
 ---
 
