@@ -212,7 +212,7 @@ const DataTrustEngine: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('Trust Overview');
   const [overallTrust, setOverallTrust] = useState(0);
   const [verifiedFlows, setVerifiedFlows] = useState(0);
-  const [scanProgress, setScanProgress] = useState(0);
+  const scanProgress = 94;
 
   useEffect(() => {
     // Animate the overall trust score on mount
@@ -233,14 +233,6 @@ const DataTrustEngine: React.FC = () => {
   useEffect(() => {
     const verified = dataFlows.filter((f) => f.verified).length;
     setVerifiedFlows(verified);
-  }, []);
-
-  useEffect(() => {
-    // Simulate a continuous background scan
-    const interval = setInterval(() => {
-      setScanProgress((prev) => (prev >= 100 ? 0 : prev + 0.4));
-    }, 100);
-    return () => clearInterval(interval);
   }, []);
 
   // ---- Tab renderers ----
@@ -718,12 +710,12 @@ const DataTrustEngine: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-3xl font-bold text-white tracking-tight">Data Trust Engine</h1>
-          <span className="bg-gradient-to-r from-cyan-500 to-pink-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse">
+          <span className="bg-gradient-to-r from-cyan-500 to-pink-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
             World First
           </span>
         </div>
@@ -743,7 +735,6 @@ const DataTrustEngine: React.FC = () => {
           </div>
           <span className="text-xs text-cyan-400 font-mono">{scanProgress.toFixed(0)}%</span>
           <span className="relative flex h-2 w-2 ml-1">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
           <span className="text-xs text-emerald-400">LIVE</span>

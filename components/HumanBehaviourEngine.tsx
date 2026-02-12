@@ -5,7 +5,7 @@
 // patterns, behavioural anomalies, and privilege misuse in real-time.
 // ============================================================================
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const tabs = [
   'Risk Dashboard',
@@ -682,12 +682,6 @@ const PrivilegeMisuseTab: React.FC = () => (
 
 const HumanBehaviourEngine: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('Risk Dashboard');
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 150);
-    return () => clearTimeout(timer);
-  }, []);
 
   const renderTab = () => {
     switch (activeTab) {
@@ -701,7 +695,7 @@ const HumanBehaviourEngine: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-slate-900 text-white p-6 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex flex-wrap items-center gap-3 mb-2">

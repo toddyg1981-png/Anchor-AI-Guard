@@ -48,7 +48,6 @@ import { aiChatRoutes } from './routes/ai-chat';
 import { ipBlockingMiddleware, securityHeaders, logAuditEvent } from './lib/security';
 import { wsManager } from './lib/websocket';
 import { registerMonitoring } from './lib/monitoring';
-import { startTitanReportScheduler, stopTitanReportScheduler } from './services/titan-report';
 import { titanReportRoutes } from './routes/titan-report';
 
 async function main() {
@@ -275,20 +274,15 @@ async function main() {
   // Start AI Evolution Engine for continuous security updates
   startEvolutionEngine();
   
-  // Start TITAN daily report scheduler (06:00 AEST daily)
-  startTitanReportScheduler();
-  
   app.log.info(`Anchor backend running on http://localhost:${env.port}`);
   app.log.info(`WebSocket server available at ws://localhost:${env.port}/ws`);
   app.log.info(`AI Evolution Engine active - continuously monitoring threats`);
-  app.log.info(`TITAN Daily Report scheduler active — reports sent at 06:00 AEST`);
 
   // Graceful shutdown on SIGTERM/SIGINT (container restarts, deploys)
   const gracefulShutdown = async (signal: string) => {
     app.log.info(`Received ${signal}, shutting down gracefully...`);
     try {
       stopEvolutionEngine();
-      stopTitanReportScheduler();
       wsManager.shutdown?.();
       await app.close();
       app.log.info('Server closed successfully');

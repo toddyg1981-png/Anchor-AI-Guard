@@ -149,7 +149,7 @@ const LLMSupplyChain = React.lazy(() => import('./components/LLMSupplyChain'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
-  <div className="min-h-100 flex items-center justify-center">
+  <div className="flex items-center justify-center py-20">
     <div className="text-center">
       <svg className="animate-spin h-10 w-10 mx-auto text-cyan-400 mb-3" viewBox="0 0 24 24">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />

@@ -52,7 +52,7 @@ const RegulatoryIntelligence: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">📋 Regulatory Intelligence</h1>

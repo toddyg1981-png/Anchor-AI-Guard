@@ -625,7 +625,7 @@ const AIRuntimeSecurity: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>

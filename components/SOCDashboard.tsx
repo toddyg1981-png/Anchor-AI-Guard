@@ -144,7 +144,7 @@ export const SOCDashboard: React.FC = () => {
   const highCount = events.filter(e => e.severity === 'high' && e.status !== 'resolved').length;
 
   return (
-    <div className="min-h-screen bg-[#050508] text-white p-4">
+    <div className="bg-slate-900 text-white p-4">
       {/* SOC Header - Always visible */}
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-cyan-500/30">
         <div className="flex items-center gap-4">

@@ -65,13 +65,13 @@ const ThreatModeling: React.FC = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+    <div className="bg-slate-900 text-white flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-400" />
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-teal-400 to-blue-400">Threat Modeling</h1>

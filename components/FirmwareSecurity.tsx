@@ -656,12 +656,12 @@ const FirmwareSecurity: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-2xl font-bold text-white">Firmware &amp; Microcode Security</h1>
-          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-pink-500 to-cyan-500 text-white rounded-full shadow-lg shadow-pink-500/20 animate-pulse">
+          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-pink-500 to-cyan-500 text-white rounded-full shadow-lg shadow-pink-500/20">
             World First
           </span>
         </div>

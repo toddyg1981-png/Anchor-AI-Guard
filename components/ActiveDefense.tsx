@@ -247,7 +247,7 @@ export const ActiveDefense: React.FC = () => {
   const attackersTrapped = honeypots.reduce((sum, h) => sum + h.attackersTrapped, 0);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+    <div className="bg-slate-900 text-white p-6">
       {/* Notification Banner */}
       {notification && (
         <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-green-500/20 border border-green-500 rounded-xl text-green-400 shadow-lg animate-pulse">

@@ -563,12 +563,12 @@ const ArchitectureDrift: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-4 mb-2">
           <h1 className="text-3xl font-bold text-white">Architecture Drift Detection</h1>
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white uppercase tracking-wider animate-pulse">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white uppercase tracking-wider">
             WORLD FIRST
           </span>
         </div>

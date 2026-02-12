@@ -61,7 +61,7 @@ const DeceptionTechnology: React.FC = () => {
   const stats = dashboardData?.stats || { activeHoneypots: honeypots.length, totalInteractions: honeypots.reduce((s: number, h: Honeypot) => s + h.interactions, 0), capturedTTPs: 19, alertsSent: 12 };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {notification && (
         <div className="fixed top-4 right-4 z-50 bg-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">{notification}</div>
       )}

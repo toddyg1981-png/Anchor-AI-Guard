@@ -63,10 +63,10 @@ const PrivacyImpactAssessment: React.FC = () => {
   const statusColor = (s: string) => { switch (s) { case 'Complete': case 'Completed': return 'text-green-400'; case 'In Progress': case 'Review': return 'text-yellow-400'; default: return 'text-slate-400'; } };
   const riskColor = (r: string) => { switch (r) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; default: return 'text-green-400'; } };
 
-  if (loading) return (<div className="min-h-screen bg-slate-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-400" /></div>);
+  if (loading) return (<div className="bg-slate-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-400" /></div>);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400">Privacy Impact Assessment</h1>

@@ -224,7 +224,7 @@ export const IncidentResponseAutomation: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+    <div className="bg-slate-900 text-white p-6">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">⚡ Incident Response Automation</h1>

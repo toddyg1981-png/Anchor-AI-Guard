@@ -236,6 +236,7 @@ export default function AIEvolutionDashboard() {
 
 
   const [isBootstrapping, setIsBootstrapping] = useState(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   // SSE connection for real-time streaming
   useEffect(() => {
@@ -416,117 +417,94 @@ export default function AIEvolutionDashboard() {
     setIsRepairing(false);
   };
 
-  const exportToPDF = async () => {
+  const generateTitanReport = async () => {
+    setIsGeneratingReport(true);
     try {
-      // Generate HTML for PDF
-      const html = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Titan Evolution Engine Report - ${new Date().toLocaleDateString()}</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
-            h1 { color: #6366f1; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
-            h2 { color: #8b5cf6; margin-top: 30px; }
-            .stats { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
-            .stat-card { background: #f3f4f6; padding: 15px 25px; border-radius: 8px; }
-            .stat-value { font-size: 24px; font-weight: bold; color: #6366f1; }
-            .stat-label { color: #6b7280; font-size: 12px; }
-            table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-            th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; }
-            th { background: #f9fafb; }
-            .severity-critical { color: #ef4444; }
-            .severity-high { color: #f97316; }
-            .severity-medium { color: #eab308; }
-            .severity-low { color: #3b82f6; }
-            .footer { margin-top: 40px; text-align: center; color: #9ca3af; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <h1>🧠 AI Evolution Engine Report</h1>
-          <p>Generated: ${new Date().toLocaleString()}</p>
-          
-          <h2>Current Status</h2>
-          <div class="stats">
-            <div class="stat-card">
-              <div class="stat-value">${liveStats.totalThreats}</div>
-              <div class="stat-label">Total Threats</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">${liveStats.totalRules}</div>
-              <div class="stat-label">Detection Rules</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">${liveStats.aiAnalysisCount}</div>
-              <div class="stat-label">AI Analyses</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">${liveStats.competitiveScore}%</div>
-              <div class="stat-label">Competitive Score</div>
-            </div>
-          </div>
-          
-          <h2>Processed Threats (Top 20)</h2>
-          <table>
-            <tr><th>Severity</th><th>Source</th><th>Title</th><th>Date</th></tr>
-            ${threats.slice(0, 20).map(t => `
-              <tr>
-                <td class="severity-${t.severity}">${t.severity.toUpperCase()}</td>
-                <td>${t.source}</td>
-                <td>${t.title}</td>
-                <td>${new Date(t.timestamp).toLocaleDateString()}</td>
-              </tr>
-            `).join('')}
-          </table>
-          
-          <h2>Detection Rules (Top 20)</h2>
-          <table>
-            <tr><th>Name</th><th>Type</th><th>Severity</th><th>Status</th></tr>
-            ${rules.slice(0, 20).map(r => `
-              <tr>
-                <td>${r.name}</td>
-                <td>${r.type}</td>
-                <td class="severity-${r.severity}">${r.severity.toUpperCase()}</td>
-                <td>${r.enabled ? '✓ Enabled' : '✗ Disabled'}</td>
-              </tr>
-            `).join('')}
-          </table>
-          
-          <h2>Recent Activity</h2>
-          <table>
-            <tr><th>Time</th><th>Action</th><th>Details</th></tr>
-            ${evolutionLog.slice(0, 10).map(l => `
-              <tr>
-                <td>${new Date(l.timestamp).toLocaleString()}</td>
-                <td>${l.aiGenerated ? '🤖 ' : ''}${l.action}</td>
-                <td>${l.details.substring(0, 100)}...</td>
-              </tr>
-            `).join('')}
-          </table>
-          
-          <div class="footer">
-            <p>ANCHOR SECURITY PLATFORM - AI Evolution Engine</p>
-            <p>Confidential Report - Do Not Distribute</p>
-          </div>
-        </body>
-        </html>
-      `;
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+      const token = localStorage.getItem('anchor_auth_token') || '';
+      const response = await fetch(`${apiBase}/titan-report/preview`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      // Create blob and download
+      if (!response.ok) {
+        // Fallback: generate a basic client-side report if backend unavailable
+        const html = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Titan Evolution Engine Report - ${new Date().toLocaleDateString()}</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; color: #1e293b; background: #f8fafc; }
+              .container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+              .header { background: linear-gradient(135deg, #0f172a, #0c4a6e); color: #fff; padding: 32px 40px; }
+              .header h1 { margin: 0; font-size: 24px; }
+              .section { padding: 24px 40px; border-bottom: 1px solid #e2e8f0; }
+              .section h2 { font-size: 18px; color: #0891b2; margin: 0 0 16px 0; }
+              .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+              .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; text-align: center; }
+              .card .value { font-size: 28px; font-weight: 700; }
+              .card .label { font-size: 11px; color: #64748b; text-transform: uppercase; }
+              table { width: 100%; border-collapse: collapse; font-size: 13px; }
+              th { background: #f1f5f9; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: #64748b; }
+              td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
+              .footer { padding: 24px 40px; background: #f8fafc; text-align: center; color: #94a3b8; font-size: 12px; }
+              @media print { body { background: #fff; } }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>⚡ TITAN Engine — Performance Report</h1>
+                <p style="color:#67e8f9;font-size:14px;margin:4px 0 0;">Anchor Security AI Evolution Engine</p>
+                <p style="color:#94a3b8;font-size:13px;margin:8px 0 0;">Generated: ${new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })} AEST</p>
+              </div>
+              <div class="section">
+                <h2>24-Hour Overview</h2>
+                <div class="grid">
+                  <div class="card"><div class="value" style="color:#0891b2;">${liveStats.totalThreats}</div><div class="label">Total Threats</div></div>
+                  <div class="card"><div class="value" style="color:#22c55e;">${liveStats.totalRules}</div><div class="label">Detection Rules</div></div>
+                  <div class="card"><div class="value">${liveStats.aiAnalysisCount}</div><div class="label">AI Analyses</div></div>
+                  <div class="card"><div class="value" style="color:#0891b2;">${liveStats.competitiveScore}/100</div><div class="label">Competitive Score</div></div>
+                </div>
+              </div>
+              <div class="section">
+                <h2>Top Threats</h2>
+                <table>
+                  <tr><th>Severity</th><th>Source</th><th>Title</th><th>Date</th></tr>
+                  ${threats.slice(0, 20).map(t => `<tr><td style="font-weight:600;text-transform:uppercase;">${t.severity}</td><td>${t.source}</td><td>${t.title}</td><td>${new Date(t.timestamp).toLocaleDateString()}</td></tr>`).join('')}
+                </table>
+              </div>
+              <div class="section">
+                <h2>Detection Rules</h2>
+                <table>
+                  <tr><th>Name</th><th>Type</th><th>Severity</th><th>Status</th></tr>
+                  ${rules.slice(0, 20).map(r => `<tr><td>${r.name}</td><td>${r.type}</td><td style="text-transform:uppercase;">${r.severity}</td><td>${r.enabled ? '✓ Enabled' : '✗ Disabled'}</td></tr>`).join('')}
+                </table>
+              </div>
+              <div class="footer">
+                <p>Anchor Security Pty Ltd — <a href="https://anchoraiguard.com">anchoraiguard.com</a></p>
+              </div>
+            </div>
+          </body>
+          </html>`;
+
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+        return;
+      }
+
+      const html = await response.text();
       const blob = new Blob([html], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `ai-evolution-report-${new Date().toISOString().split('T')[0]}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      alert('Report exported successfully! Open the HTML file in a browser and print to PDF if needed.');
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
     } catch (error) {
-      logger.error('Export failed:', error);
-      alert('Export failed');
+      logger.error('Report generation failed:', error);
+      alert('Failed to generate report — check console for details');
+    } finally {
+      setIsGeneratingReport(false);
     }
   };
 
@@ -668,15 +646,29 @@ export default function AIEvolutionDashboard() {
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          {/* Export PDF Button */}
+          {/* Generate TITAN Report Button */}
           <button
-            onClick={exportToPDF}
-            className="px-4 py-2.5 rounded-lg font-semibold transition-all bg-slate-700 hover:bg-slate-600 text-slate-200 shadow-lg flex items-center gap-2"
+            onClick={generateTitanReport}
+            disabled={isGeneratingReport}
+            className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
+              isGeneratingReport
+                ? 'bg-gray-600 cursor-not-allowed'
+                : 'bg-linear-to-r from-indigo-600 to-purple-500 hover:from-indigo-500 hover:to-purple-400'
+            } text-white shadow-lg flex items-center gap-2`}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Export
+            {isGeneratingReport ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Generating...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Generate Report
+              </>
+            )}
           </button>
           
           {/* Scan Button */}
@@ -868,7 +860,7 @@ export default function AIEvolutionDashboard() {
             }`}
           >
             {tab === 'live' && '📡 Live Feed'}
-            {tab === 'charts' && '📊 Live Charts'}
+            {tab === 'charts' && '📊 Analytics'}
             {tab === 'overview' && 'Overview'}
             {tab === 'threats' && 'Threats'}
             {tab === 'rules' && 'Rules'}
@@ -933,66 +925,250 @@ export default function AIEvolutionDashboard() {
           </div>
         )}
 
-        {/* LIVE CHARTS TAB */}
+        {/* LIVE CHARTS TAB — TITAN ANALYTICS */}
         {activeTab === 'charts' && (
           <div className="space-y-6">
+            {/* Header Row */}
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
-                Real-Time Metrics
+                TITAN Analytics — AI Threat Protection
               </h3>
-              <button
-                onClick={loadMetrics}
-                className="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-all flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Refresh
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={generateTitanReport}
+                  disabled={isGeneratingReport}
+                  className={`px-3 py-1.5 text-xs rounded transition-all flex items-center gap-1 ${
+                    isGeneratingReport ? 'bg-gray-600 cursor-not-allowed text-gray-400' : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                  }`}
+                >
+                  {isGeneratingReport ? (
+                    <><div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div> Generating...</>
+                  ) : (
+                    <><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg> Full Report</>
+                  )}
+                </button>
+                <button
+                  onClick={loadMetrics}
+                  className="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-all flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Refresh
+                </button>
+              </div>
             </div>
-            
+
+            {/* ──── ROW 1: Severity Donut + Threats by Source ──── */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Threat Severity Donut */}
+              {(() => {
+                const sevCounts = { critical: 0, high: 0, medium: 0, low: 0, info: 0 };
+                threats.forEach(t => { if (t.severity in sevCounts) sevCounts[t.severity as keyof typeof sevCounts]++; });
+                const sevColors: Record<string, string> = { critical: '#ef4444', high: '#f97316', medium: '#eab308', low: '#22d3ee', info: '#a78bfa' };
+                const total = threats.length || 1;
+                const segments = Object.entries(sevCounts).filter(([, v]) => v > 0);
+                let cumAngle = -90;
+
+                // Build SVG arcs
+                const arcs = segments.map(([key, count]) => {
+                  const angle = (count / total) * 360;
+                  const startAngle = cumAngle;
+                  cumAngle += angle;
+                  const endAngle = cumAngle;
+                  const startRad = (startAngle * Math.PI) / 180;
+                  const endRad = (endAngle * Math.PI) / 180;
+                  const r = 70;
+                  const cx = 90, cy = 90;
+                  const x1 = cx + r * Math.cos(startRad);
+                  const y1 = cy + r * Math.sin(startRad);
+                  const x2 = cx + r * Math.cos(endRad);
+                  const y2 = cy + r * Math.sin(endRad);
+                  const largeArc = angle > 180 ? 1 : 0;
+                  const d = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+                  return { key, count, color: sevColors[key], d };
+                });
+
+                return (
+                  <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                    <h4 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                      🎯 Threat Severity Breakdown
+                      <span className="text-xs text-slate-500 font-normal">({threats.length} total)</span>
+                    </h4>
+                    <div className="flex items-center gap-8">
+                      <svg width="180" height="180" viewBox="0 0 180 180">
+                        {threats.length === 0 ? (
+                          <circle cx="90" cy="90" r="70" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
+                        ) : (
+                          arcs.map(arc => (
+                            <path key={arc.key} d={arc.d} fill={arc.color} opacity="0.85" stroke="#0f172a" strokeWidth="1.5">
+                              <title>{arc.key}: {arc.count}</title>
+                            </path>
+                          ))
+                        )}
+                        <circle cx="90" cy="90" r="40" fill="#0f172a" />
+                        <text x="90" y="84" textAnchor="middle" fill="#f8fafc" fontSize="22" fontWeight="bold">{threats.length}</text>
+                        <text x="90" y="102" textAnchor="middle" fill="#94a3b8" fontSize="10">THREATS</text>
+                      </svg>
+                      <div className="space-y-2 flex-1">
+                        {Object.entries(sevCounts).map(([sev, count]) => (
+                          <div key={sev} className="flex items-center gap-3">
+                            <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: sevColors[sev] }}></span>
+                            <span className="text-xs text-slate-400 uppercase w-16">{sev}</span>
+                            <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(count / total) * 100}%`, backgroundColor: sevColors[sev] }}></div>
+                            </div>
+                            <span className="text-sm font-semibold text-white w-8 text-right">{count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Threats by Source — Horizontal Bars */}
+              {(() => {
+                const sourceCounts: Record<string, number> = {};
+                threats.forEach(t => { sourceCounts[t.source] = (sourceCounts[t.source] || 0) + 1; });
+                const sorted = Object.entries(sourceCounts).sort(([, a], [, b]) => b - a).slice(0, 8);
+                const maxCount = sorted.length > 0 ? sorted[0][1] : 1;
+                const barColors = ['#06b6d4', '#818cf8', '#a855f7', '#f472b6', '#fb923c', '#34d399', '#fbbf24', '#f87171'];
+
+                return (
+                  <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                    <h4 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                      📡 Threats by Intelligence Source
+                    </h4>
+                    {sorted.length === 0 ? (
+                      <div className="text-slate-500 text-center py-10 text-sm">No threat data yet — run a scan</div>
+                    ) : (
+                      <div className="space-y-3">
+                        {sorted.map(([source, count], i) => (
+                          <div key={source}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs text-slate-400 truncate max-w-[180px]">{source}</span>
+                              <span className="text-xs font-semibold text-white">{count}</span>
+                            </div>
+                            <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-700"
+                                style={{ width: `${(count / maxCount) * 100}%`, backgroundColor: barColors[i % barColors.length] }}
+                              ></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* ──── ROW 2: Time-Series Charts ──── */}
             {metrics ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <LiveChart
-                  data={metrics.threats}
-                  color="#06b6d4"
-                  label="Threats Processed"
-                  height={150}
-                />
-                <LiveChart
-                  data={metrics.rules}
-                  color="#a855f7"
-                  label="Detection Rules"
-                  height={150}
-                />
-                <LiveChart
-                  data={metrics.analyses}
-                  color="#22c55e"
-                  label="AI Analyses"
-                  height={150}
-                />
+                <LiveChart data={metrics.threats} color="#06b6d4" label="Threats Processed Over Time" height={140} />
+                <LiveChart data={metrics.rules} color="#a855f7" label="Detection Rules Generated" height={140} />
+                <LiveChart data={metrics.analyses} color="#22c55e" label="AI Analyses Performed" height={140} />
                 <div>
-                  <LiveChart
-                    data={metrics.competitiveScore}
-                    color="#eab308"
-                    label="Competitive Score"
-                    height={150}
-                  />
+                  <LiveChart data={metrics.competitiveScore} color="#eab308" label="Competitive Score" height={140} />
                   <p className="text-xs text-slate-500 mt-1 px-1">How far ahead Anchor&apos;s Titan engine is vs industry-standard detection baselines</p>
                 </div>
               </div>
             ) : (
-              <div className="text-slate-500 text-center py-16">
+              <div className="text-slate-500 text-center py-10">
                 <div className="text-4xl mb-3">📊</div>
-                <div className="text-lg">Loading metrics...</div>
-                <div className="text-sm mt-2">Charts will appear here with live data</div>
+                <div className="text-sm">Loading time-series metrics...</div>
               </div>
             )}
 
-            {/* Summary Stats */}
+            {/* ──── ROW 3: Rule Effectiveness + AI Actions Taken ──── */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Rule Effectiveness Breakdown */}
+              {(() => {
+                const typeCounts: Record<string, { count: number; avgEff: number }> = {};
+                rules.forEach(r => {
+                  if (!typeCounts[r.type]) typeCounts[r.type] = { count: 0, avgEff: 0 };
+                  typeCounts[r.type].count++;
+                  typeCounts[r.type].avgEff += r.effectiveness;
+                });
+                Object.values(typeCounts).forEach(v => { v.avgEff = v.count > 0 ? Math.round(v.avgEff / v.count) : 0; });
+                const sorted = Object.entries(typeCounts).sort(([, a], [, b]) => b.count - a.count);
+                const overallEff = rules.length > 0 ? Math.round(rules.reduce((s, r) => s + r.effectiveness, 0) / rules.length) : 0;
+                const autoGen = rules.filter(r => r.autoGenerated).length;
+
+                return (
+                  <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                    <h4 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                      🛡️ Detection Rules — AI Performance
+                    </h4>
+                    {/* Big numbers */}
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      <div className="bg-slate-900/50 rounded-lg p-3 text-center">
+                        <div className="text-2xl font-bold text-purple-400">{rules.length}</div>
+                        <div className="text-[10px] text-slate-500 uppercase">Total Rules</div>
+                      </div>
+                      <div className="bg-slate-900/50 rounded-lg p-3 text-center">
+                        <div className="text-2xl font-bold text-cyan-400">{autoGen}</div>
+                        <div className="text-[10px] text-slate-500 uppercase">AI-Generated</div>
+                      </div>
+                      <div className="bg-slate-900/50 rounded-lg p-3 text-center">
+                        <div className={`text-2xl font-bold ${overallEff >= 80 ? 'text-green-400' : overallEff >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>{overallEff}%</div>
+                        <div className="text-[10px] text-slate-500 uppercase">Avg Effectiveness</div>
+                      </div>
+                    </div>
+                    {/* By type */}
+                    <div className="space-y-2">
+                      {sorted.slice(0, 6).map(([type, data]) => (
+                        <div key={type} className="flex items-center gap-3">
+                          <span className="text-xs text-slate-400 w-20 truncate">{type}</span>
+                          <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full bg-purple-500 transition-all duration-700" style={{ width: `${data.avgEff}%` }}></div>
+                          </div>
+                          <span className="text-xs text-slate-300 w-16 text-right">{data.avgEff}% eff</span>
+                          <span className="text-xs text-slate-500 w-6 text-right">{data.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* AI Actions Timeline */}
+              <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                <h4 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                  🤖 AI Actions — What TITAN Did to Protect You
+                </h4>
+                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                  {evolutionLog.length === 0 ? (
+                    <div className="text-slate-500 text-center py-10 text-sm">No activity yet — engine starting up</div>
+                  ) : (
+                    evolutionLog.slice(-15).reverse().map((entry, i) => (
+                      <div key={i} className="flex gap-3 items-start">
+                        <div className="flex flex-col items-center">
+                          <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1 ${entry.aiGenerated ? 'bg-purple-500' : 'bg-cyan-500'}`}></span>
+                          {i < Math.min(evolutionLog.length, 15) - 1 && <div className="w-px h-full bg-slate-700 min-h-[20px]"></div>}
+                        </div>
+                        <div className="flex-1 pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-white">{entry.action}</span>
+                            {entry.aiGenerated && <span className="text-[9px] px-1.5 py-0.5 bg-purple-500/20 text-purple-300 rounded">AI</span>}
+                          </div>
+                          <div className="text-[11px] text-slate-400 mt-0.5 line-clamp-2">{entry.details}</div>
+                          <div className="text-[10px] text-slate-600 mt-0.5">{new Date(entry.timestamp).toLocaleString()}</div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* ──── ROW 4: Live Summary Cards ──── */}
             {metrics?.currentTotals && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-linear-to-br from-cyan-900/30 to-cyan-800/10 rounded-xl p-4 border border-cyan-700/30">
                   <div className="text-3xl font-bold text-cyan-400">{metrics.currentTotals.threats.toLocaleString()}</div>
                   <div className="text-sm text-slate-400">Total Threats</div>

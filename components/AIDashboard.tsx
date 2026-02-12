@@ -44,7 +44,7 @@ export const AIDashboard: React.FC<AIDashboardProps> = ({ projectId, userId, use
   ];
 
   return (
-    <div className="min-h-screen bg-transparent text-white">
+    <div className="bg-transparent text-white">
       {/* Finding Update Notification */}
       {findingNotification && (
         <div className="fixed top-4 right-4 z-50 px-6 py-3 bg-cyan-500/20 border border-cyan-500 rounded-xl text-cyan-400 shadow-lg animate-pulse">

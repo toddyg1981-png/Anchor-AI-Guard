@@ -1614,7 +1614,7 @@ const NationalTelemetryLayer: React.FC = () => {
   // Main Render
   // -------------------------------------------------------------------------
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
+    <div className="bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between flex-wrap gap-3">

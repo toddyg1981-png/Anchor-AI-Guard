@@ -178,7 +178,7 @@ export const SelfProtection: React.FC = () => {
   const failedChecks = integrityChecks.filter(c => c.status === 'failed').length;
 
   return (
-    <div className={`min-h-screen ${panicMode ? 'bg-red-950' : 'bg-[#0a0a0f]'} text-white p-6 transition-colors duration-500`}>
+    <div className={`${panicMode ? 'bg-red-950' : 'bg-slate-900'} text-white p-6 transition-colors duration-500`}>
       {/* Notification Banner */}
       {notification && (
         <div className="fixed top-4 right-4 z-60 px-6 py-3 bg-cyan-500/20 border border-cyan-500 rounded-xl text-cyan-400 shadow-lg animate-pulse">

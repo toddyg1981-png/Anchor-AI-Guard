@@ -207,7 +207,7 @@ export const CICDSecurity: React.FC = () => {
   const totalFindings = pipelines.reduce((sum, p) => sum + p.stages.reduce((s, st) => s + st.findings, 0), 0);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+    <div className="bg-slate-900 text-white p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

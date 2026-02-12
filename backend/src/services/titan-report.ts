@@ -1,32 +1,20 @@
 /**
- * TITAN Engine Daily Performance Report
+ * TITAN Engine Performance Report Generator
  * 
  * Generates a comprehensive PDF-quality HTML report of TITAN's
  * performance metrics, threat intelligence ingestion, detection
- * rule generation, and engine health — then emails it via Resend.
+ * rule generation, and engine health.
  * 
- * Schedule: Daily at 06:00 AEST (UTC+11)
- * Recipient: Configurable via TITAN_REPORT_EMAIL env var
+ * Reports are generated on-demand via the dashboard
+ * "Generate TITAN Report" button.
  */
 
-import { env } from '../config/env';
 import {
   getEvolutionData,
   getEvolutionStatus,
   getEvolutionThreats,
   getEvolutionRules,
 } from '../routes/ai-evolution';
-
-// ============================================
-// CONFIGURATION
-// ============================================
-
-const REPORT_RECIPIENT = process.env.TITAN_REPORT_EMAIL || 'toddg@anchoraiguard.com';
-const RESEND_API_KEY = env.resendApiKey;
-const FROM_EMAIL = env.fromEmail;
-const REPORT_HOUR_UTC = 19; // 19:00 UTC = 06:00 AEST (UTC+11)
-
-let dailyReportTimer: ReturnType<typeof setTimeout> | null = null;
 
 // ============================================
 // REPORT DATA COLLECTION
@@ -420,204 +408,26 @@ function generateReportHTML(metrics: ReportMetrics): string {
 
     <!-- FOOTER -->
     <div class="footer">
-      <p>This is an automated daily report from the TITAN AI Evolution Engine.</p>
+      <p>Generated on-demand from the TITAN AI Evolution Engine.</p>
       <p>Anchor Security Pty Ltd — <a href="https://anchoraiguard.com">anchoraiguard.com</a></p>
       <p style="margin-top:8px;">Report period: ${metrics.periodStart.toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })} — ${metrics.periodEnd.toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })} AEST</p>
-      <p style="color:#cbd5e1;font-size:11px;margin-top:12px;">To change delivery settings, update TITAN_REPORT_EMAIL in your environment variables.</p>
     </div>
   </div>
 </body>
 </html>`;
 }
 
-// ============================================
-// EMAIL DELIVERY
-// ============================================
 
-async function sendReportEmail(html: string, metrics: ReportMetrics): Promise<boolean> {
-  const dateStr = metrics.generatedAt.toLocaleDateString('en-AU', {
-    year: 'numeric', month: 'short', day: 'numeric',
-    timeZone: 'Australia/Sydney',
-  });
-
-  const subject = `⚡ TITAN Daily Report — ${dateStr} | ${metrics.threats.newInPeriod} new threats, ${metrics.rules.newInPeriod} new rules`;
-
-  // Convert HTML to base64 for attachment
-  const htmlBase64 = Buffer.from(html).toString('base64');
-
-  try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: `TITAN Engine <${FROM_EMAIL}>`,
-        to: REPORT_RECIPIENT,
-        subject,
-        html: generateEmailSummaryHTML(metrics),
-        attachments: [
-          {
-            filename: `TITAN-Report-${metrics.generatedAt.toISOString().slice(0, 10)}.html`,
-            content: htmlBase64,
-            content_type: 'text/html',
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('📧 TITAN Report email error:', error);
-      return false;
-    }
-
-    console.log(`📧 TITAN Daily Report sent to ${REPORT_RECIPIENT}`);
-    return true;
-  } catch (error) {
-    console.error('📧 TITAN Report send error:', error);
-    return false;
-  }
-}
-
-/**
- * Generates a compact email body summary (for email clients that don't open attachments).
- * The full detailed report is attached as an HTML file that can be opened in a browser and printed to PDF.
- */
-function generateEmailSummaryHTML(metrics: ReportMetrics): string {
-  const dateStr = metrics.generatedAt.toLocaleDateString('en-AU', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    timeZone: 'Australia/Sydney',
-  });
-
-  const statusEmoji = metrics.engine.isRunning ? '🟢' : '🔴';
-  const cycleEmoji = metrics.engine.lastCycleStatus === 'success' ? '✅' : metrics.engine.lastCycleStatus === 'error' ? '❌' : '⚠️';
-
-  return `
-<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;color:#1e293b;">
-  <div style="background:linear-gradient(135deg,#0f172a,#0c4a6e);color:#fff;padding:24px 32px;border-radius:12px 12px 0 0;">
-    <h1 style="margin:0;font-size:20px;">⚡ TITAN Engine — Daily Report</h1>
-    <p style="margin:4px 0 0;color:#67e8f9;font-size:13px;">${dateStr}</p>
-  </div>
-  
-  <div style="background:#fff;padding:24px 32px;border:1px solid #e2e8f0;border-top:none;">
-    <h2 style="font-size:16px;color:#0891b2;margin:0 0 16px;">Quick Summary</h2>
-    
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      <tr><td style="padding:8px 0;color:#64748b;">Engine Status</td><td style="padding:8px 0;text-align:right;font-weight:600;">${statusEmoji} ${metrics.engine.isRunning ? 'ONLINE' : 'OFFLINE'}</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">Uptime</td><td style="padding:8px 0;text-align:right;font-weight:600;">${metrics.engine.uptime}</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">Last Cycle</td><td style="padding:8px 0;text-align:right;">${cycleEmoji} ${metrics.engine.lastCycleStatus}</td></tr>
-      <tr style="border-top:1px solid #e2e8f0;"><td style="padding:8px 0;color:#64748b;">Total Threats</td><td style="padding:8px 0;text-align:right;font-weight:700;font-size:18px;color:#0891b2;">${metrics.threats.total.toLocaleString()}</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">New Threats (24h)</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#ef4444;">+${metrics.threats.newInPeriod}</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">Detection Rules</td><td style="padding:8px 0;text-align:right;font-weight:700;font-size:18px;color:#22c55e;">${metrics.rules.total.toLocaleString()}</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">New Rules (24h)</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#22c55e;">+${metrics.rules.newInPeriod}</td></tr>
-      <tr style="border-top:1px solid #e2e8f0;"><td style="padding:8px 0;color:#64748b;">AI Analyses Run</td><td style="padding:8px 0;text-align:right;font-weight:600;">${metrics.intelligence.aiAnalysisCount}</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">Competitive Score</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#0891b2;">${metrics.intelligence.competitiveScore}/100</td></tr>
-      <tr><td style="padding:8px 0;color:#64748b;">Avg Rule Effectiveness</td><td style="padding:8px 0;text-align:right;font-weight:600;">${metrics.rules.avgEffectiveness}%</td></tr>
-    </table>
-
-    <div style="margin-top:16px;padding:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;">
-      <p style="margin:0;font-size:13px;color:#166534;">
-        <strong>Severity Breakdown:</strong>
-        🔴 Critical: ${metrics.threats.bySeverity.critical || 0} |
-        🟠 High: ${metrics.threats.bySeverity.high || 0} |
-        🟡 Medium: ${metrics.threats.bySeverity.medium || 0} |
-        🔵 Low: ${metrics.threats.bySeverity.low || 0} |
-        🟣 Info: ${metrics.threats.bySeverity.info || 0}
-      </p>
-    </div>
-
-    <p style="margin:20px 0 0;font-size:13px;color:#64748b;">
-      📎 <strong>Full detailed report attached</strong> as an HTML file. Open it in your browser for the complete breakdown with charts, top threats, detection rules, and activity log. You can print it to PDF from your browser.
-    </p>
-  </div>
-
-  <div style="background:#f8fafc;padding:16px 32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;text-align:center;">
-    <p style="margin:0;font-size:12px;color:#94a3b8;">
-      Anchor Security Pty Ltd — <a href="https://anchoraiguard.com" style="color:#0891b2;">anchoraiguard.com</a>
-    </p>
-    <p style="margin:4px 0 0;font-size:11px;color:#cbd5e1;">
-      Automated report from TITAN AI Evolution Engine
-    </p>
-  </div>
-</div>`;
-}
 
 // ============================================
 // PUBLIC API
 // ============================================
 
 /**
- * Generate and send the TITAN daily report NOW (callable on-demand).
- */
-export async function sendTitanDailyReport(): Promise<{ success: boolean; recipient: string; metrics: ReportMetrics }> {
-  console.log('📧 Generating TITAN Daily Report...');
-  const metrics = collectReportMetrics();
-  const html = generateReportHTML(metrics);
-  const success = await sendReportEmail(html, metrics);
-  return { success, recipient: REPORT_RECIPIENT, metrics };
-}
-
-/**
- * Generate report HTML without sending (for preview / API download).
+ * Generate report HTML and metrics (for preview / download).
  */
 export function generateTitanReport(): { html: string; metrics: ReportMetrics } {
   const metrics = collectReportMetrics();
   const html = generateReportHTML(metrics);
   return { html, metrics };
-}
-
-// ============================================
-// DAILY SCHEDULER
-// ============================================
-
-function msUntilNextReport(): number {
-  const now = new Date();
-  const next = new Date(now);
-  next.setUTCHours(REPORT_HOUR_UTC, 0, 0, 0);
-  if (next <= now) {
-    next.setUTCDate(next.getUTCDate() + 1);
-  }
-  return next.getTime() - now.getTime();
-}
-
-function scheduleNextReport() {
-  const delay = msUntilNextReport();
-  const nextTime = new Date(Date.now() + delay);
-  console.log(`📧 Next TITAN report scheduled for ${nextTime.toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })} AEST (in ${Math.round(delay / 3600000)}h ${Math.round((delay % 3600000) / 60000)}m)`);
-
-  dailyReportTimer = setTimeout(async () => {
-    try {
-      const result = await sendTitanDailyReport();
-      if (result.success) {
-        console.log(`📧 TITAN Daily Report delivered to ${result.recipient} — ${result.metrics.threats.total} threats, ${result.metrics.rules.total} rules`);
-      } else {
-        console.error(`📧 TITAN Daily Report delivery FAILED for ${result.recipient}`);
-      }
-    } catch (err) {
-      console.error('📧 TITAN Daily Report error:', err);
-    }
-    // Schedule the next one
-    scheduleNextReport();
-  }, delay);
-}
-
-/**
- * Start the daily report scheduler. Call once at server startup.
- */
-export function startTitanReportScheduler() {
-  console.log(`📧 TITAN Daily Report scheduler started — reports sent to ${REPORT_RECIPIENT} at 06:00 AEST daily`);
-  scheduleNextReport();
-}
-
-/**
- * Stop the daily report scheduler. Call on graceful shutdown.
- */
-export function stopTitanReportScheduler() {
-  if (dailyReportTimer) {
-    clearTimeout(dailyReportTimer);
-    dailyReportTimer = null;
-  }
-  console.log('📧 TITAN Daily Report scheduler stopped');
 }

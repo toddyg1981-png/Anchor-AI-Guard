@@ -563,14 +563,14 @@ const IdentityDrift: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
             Identity Drift Detection
           </h1>
-          <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-gradient-to-r from-cyan-500/20 to-pink-500/20 text-cyan-400 border border-cyan-500/30 animate-pulse">
+          <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-gradient-to-r from-cyan-500/20 to-pink-500/20 text-cyan-400 border border-cyan-500/30">
             🌍 World First
           </span>
         </div>
@@ -618,7 +618,7 @@ const IdentityDrift: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="animate-in fade-in duration-300">
+      <div>
         {renderTab()}
       </div>
 

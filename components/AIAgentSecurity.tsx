@@ -69,10 +69,10 @@ const AIAgentSecurity: React.FC = () => {
   const riskColor = (r: string) => { switch (r) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; default: return 'text-green-400'; } };
   const outcomeColor = (o: string) => o === 'BLOCKED' ? 'text-red-400' : o.includes('Pending') ? 'text-yellow-400' : o.includes('masked') ? 'text-blue-400' : 'text-green-400';
 
-  if (loading) return (<div className="min-h-screen bg-slate-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400" /></div>);
+  if (loading) return (<div className="bg-slate-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400" /></div>);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 space-y-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       <header className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2"><h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">AI Agent Security</h1><span className="bg-emerald-900 text-emerald-300 text-xs font-bold px-2 py-1 rounded-full">WORLD FIRST</span></div>

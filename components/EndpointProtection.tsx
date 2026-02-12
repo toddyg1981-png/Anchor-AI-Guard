@@ -165,14 +165,14 @@ export const EndpointProtectionDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-transparent flex items-center justify-center">
+      <div className="bg-transparent flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-transparent p-6">
+    <div className="bg-transparent p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

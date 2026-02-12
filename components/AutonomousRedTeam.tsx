@@ -876,7 +876,7 @@ const AutonomousRedTeam: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-200 p-6">
+    <div className="bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-200 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

@@ -5,7 +5,7 @@
 // devices, BIOS/UEFI tampering, and TPM manipulation at the platform level.
 // ============================================================================
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const TABS = ['Device Trust', 'Peripheral Monitor', 'Implant Detection', 'TPM & Attestation', 'Alerts'] as const;
 type Tab = typeof TABS[number];
@@ -202,12 +202,7 @@ const formatTimestamp = (iso: string): string => {
 // ─── MAIN COMPONENT ─────────────────────────────────────────────────────────
 const HardwareIntegrity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('Device Trust');
-  const [liveTimestamp, setLiveTimestamp] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => setLiveTimestamp(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const [liveTimestamp] = useState(new Date());
 
   // ── Stat counters ──
   const totalDevices = mockDeviceTrust.length;
@@ -604,14 +599,14 @@ const HardwareIntegrity: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="bg-slate-900 text-white p-6 space-y-6">
       {/* ── Header ── */}
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-2">
           <h1 className="text-3xl font-bold tracking-tight">
             <span className="text-cyan-400">Hardware</span> Integrity Layer
           </h1>
-          <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-pink-500/20 text-pink-400 border border-pink-500/40 animate-pulse">
+          <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-pink-500/20 text-pink-400 border border-pink-500/40">
             World First
           </span>
         </div>

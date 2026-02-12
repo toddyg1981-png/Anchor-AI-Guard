@@ -254,7 +254,7 @@ export const BreachSimulator: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+    <div className="bg-slate-900 text-white p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
