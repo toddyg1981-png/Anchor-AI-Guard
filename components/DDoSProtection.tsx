@@ -73,8 +73,8 @@ const DDoSProtection: React.FC = () => {
     ],
   };
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('ddos-protection', {
-    liveStatus, stats, attackLog, mitigationRules, scrubbingConfig,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('ddos-protection', {
+    liveStatus, stats, attackLog, mitigationRules, scrubbingCenters,
   });
 
   if (loading) return (<div className="min-h-screen bg-slate-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-400" /></div>);
@@ -87,7 +87,7 @@ const DDoSProtection: React.FC = () => {
           <p className="text-slate-400">Multi-layer DDoS mitigation — L3/L4 volumetric, L7 application, traffic scrubbing &amp; BGP protection.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={runAnalysis} disabled={analyzing} className="bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+          <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
           <div className={`bg-slate-800 border rounded-xl px-4 py-2 text-sm font-medium ${liveStatus.activeAttacks > 0 ? 'border-red-500 text-red-400' : 'border-green-700 text-green-400'}`}>
             {liveStatus.activeAttacks > 0 ? `🔴 ${liveStatus.activeAttacks} Active Attack(s)` : '🟢 No Active Attacks'}
           </div>
@@ -182,7 +182,7 @@ const DDoSProtection: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-violet-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-violet-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-violet-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

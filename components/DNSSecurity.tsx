@@ -75,8 +75,8 @@ const DNSSecurity: React.FC = () => {
     { label: 'DNSSEC Coverage', value: analytics.dnssecValidated },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('dns-security', {
-    liveQueries, filteringPolicies, threatDetections, sinkholeData, analytics, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('dns-security', {
+    liveQueries, filteringPolicies, threatDetections, sinkholeEntries, analytics, stats,
   });
 
   const severityColor = (s: string) => {
@@ -97,7 +97,7 @@ const DNSSecurity: React.FC = () => {
           <p className="text-slate-400">DNS filtering, sinkholing, tunneling detection, DNSSEC enforcement &amp; DGA classification.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={runAnalysis} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+          <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
             {analyzing ? 'Analyzing…' : '🤖 AI Analysis'}
           </button>
           <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300">Resolver: Healthy</div>
@@ -207,7 +207,7 @@ const DNSSecurity: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-blue-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-blue-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-blue-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

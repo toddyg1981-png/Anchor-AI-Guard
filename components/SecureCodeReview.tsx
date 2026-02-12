@@ -61,8 +61,8 @@ const SecureCodeReview: React.FC = () => {
     { label: 'Avg Review Time', value: metrics.avgReviewTime },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('secure-code-review', {
-    activeReviews, findings, securityChecklist, metrics, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('secure-code-review', {
+    reviews, policies, securityChecklist, metrics, stats,
   });
 
   const sevColor = (s: string) => { switch (s) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; case 'Low': return 'text-slate-400'; default: return 'text-green-400'; } };
@@ -76,7 +76,7 @@ const SecureCodeReview: React.FC = () => {
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400">Secure Code Review</h1>
           <p className="text-slate-400">AI-powered peer review workflow with security checklists, auto-fix, and approval gates.</p>
         </div>
-        <button onClick={runAnalysis} disabled={analyzing} className="bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+        <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
       </header>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -148,7 +148,7 @@ const SecureCodeReview: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-sky-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-sky-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-sky-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

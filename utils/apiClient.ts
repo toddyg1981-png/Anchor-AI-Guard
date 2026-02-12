@@ -41,9 +41,26 @@ class APIClient {
   private pendingRequests = new Map<string, Promise<unknown>>();
 
   /**
+   * Check if application is running in demo mode (no backend required)
+   */
+  private isDemoMode(): boolean {
+    if (typeof window === 'undefined') return false;
+    try {
+      return localStorage.getItem('anchor_demo_mode') === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Make an API request with retry logic and caching
    */
   async request<T>(url: string, config: RequestConfig = {}): Promise<T> {
+    // In demo mode, skip all network requests — components use local mock data
+    if (this.isDemoMode()) {
+      throw new NetworkError('Demo mode — no backend required');
+    }
+
     const {
       method = 'GET',
       headers = {},

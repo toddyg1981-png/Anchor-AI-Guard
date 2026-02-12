@@ -25,6 +25,7 @@ export function useSecurityModule<T extends Record<string, unknown>>(
   error: string | null;
   analyzing: boolean;
   analysisResult: string | null;
+  clearAnalysis: () => void;
   runAnalysis: (context?: string) => Promise<void>;
   refresh: () => Promise<void>;
   isDemoMode: boolean;
@@ -37,6 +38,8 @@ export function useSecurityModule<T extends Record<string, unknown>>(
   const [error, setError] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+
+  const clearAnalysis = useCallback(() => setAnalysisResult(null), []);
 
   const refresh = useCallback(async () => {
     if (isDemoMode) {
@@ -83,5 +86,5 @@ export function useSecurityModule<T extends Record<string, unknown>>(
     refresh();
   }, [refresh]);
 
-  return { data, loading, error, analyzing, analysisResult, runAnalysis, refresh, isDemoMode };
+  return { data, loading, error, analyzing, analysisResult, clearAnalysis, runAnalysis, refresh, isDemoMode };
 }

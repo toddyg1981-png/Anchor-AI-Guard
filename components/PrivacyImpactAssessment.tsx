@@ -56,8 +56,8 @@ const PrivacyImpactAssessment: React.FC = () => {
     { label: 'Templates', value: templates.length },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('privacy-impact', {
-    assessments, dataMapping, riskRegister, templates, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('privacy-impact', {
+    assessments, dataMapping, dpiaSteps, templates, stats,
   });
 
   const statusColor = (s: string) => { switch (s) { case 'Complete': case 'Completed': return 'text-green-400'; case 'In Progress': case 'Review': return 'text-yellow-400'; default: return 'text-slate-400'; } };
@@ -73,7 +73,7 @@ const PrivacyImpactAssessment: React.FC = () => {
           <p className="text-slate-400">GDPR DPIA, EU AI Act assessments, data mapping, and automated privacy compliance.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={runAnalysis} disabled={analyzing} className="bg-pink-600 hover:bg-pink-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+          <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-pink-600 hover:bg-pink-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
         </div>
       </header>
 
@@ -160,7 +160,7 @@ const PrivacyImpactAssessment: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-pink-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-pink-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-pink-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

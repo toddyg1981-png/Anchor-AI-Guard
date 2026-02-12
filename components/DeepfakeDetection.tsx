@@ -58,8 +58,8 @@ const DeepfakeDetection: React.FC = () => {
     { label: 'False Positive', value: analyticsData.falsePositiveRate },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('deepfake-detection', {
-    detections, voiceAnalysis, videoAnalysis, analyticsData, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('deepfake-detection', {
+    detections, realtimeMonitors, dfPolicies, analyticsData, stats,
   });
 
   const severityColor = (s: string) => { switch (s) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; default: return 'text-green-400'; } };
@@ -73,7 +73,7 @@ const DeepfakeDetection: React.FC = () => {
           <div className="flex items-center gap-2"><h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-400">Deepfake Detection</h1><span className="bg-fuchsia-900 text-fuchsia-300 text-xs font-bold px-2 py-1 rounded-full">WORLD FIRST</span></div>
           <p className="text-slate-400">Real-time voice, video, and image deepfake detection — protect against synthetic media social engineering.</p>
         </div>
-        <button onClick={runAnalysis} disabled={analyzing} className="bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+        <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
       </header>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -132,7 +132,7 @@ const DeepfakeDetection: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-fuchsia-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-fuchsia-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-fuchsia-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

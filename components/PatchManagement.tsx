@@ -60,8 +60,8 @@ const PatchManagement: React.FC = () => {
     { label: 'Compliance', value: complianceData.overallScore },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('patch-management', {
-    patches, deploymentSchedule, complianceData, automationRules, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('patch-management', {
+    pendingPatches, recentDeployments, complianceData, patchPolicies, rollbackLog, stats,
   });
 
   const severityColor = (s: string) => { switch (s) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; default: return 'text-green-400'; } };
@@ -76,7 +76,7 @@ const PatchManagement: React.FC = () => {
           <p className="text-slate-400">Automated patch orchestration, SLA tracking, staged rollouts, and rollback automation.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={runAnalysis} disabled={analyzing} className="bg-lime-600 hover:bg-lime-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+          <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-lime-600 hover:bg-lime-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
         </div>
       </header>
 
@@ -158,7 +158,7 @@ const PatchManagement: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-lime-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-lime-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-lime-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

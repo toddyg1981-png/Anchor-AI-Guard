@@ -57,8 +57,8 @@ const CASBSecurity: React.FC = () => {
     { label: 'Data Exfil Blocked', value: '2.4 GB' },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('casb', {
-    saasApps, policies, dlpAlerts, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('casb', {
+    shadowITApps, sanctionedApps, casbPolicies, incidents, stats,
   });
 
   const severityColor = (s: string) => { switch (s) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; default: return 'text-green-400'; } };
@@ -74,7 +74,7 @@ const CASBSecurity: React.FC = () => {
           <p className="text-slate-400">Shadow IT discovery, SaaS governance, DLP for cloud apps, and data exfiltration prevention.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={runAnalysis} disabled={analyzing} className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+          <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
         </div>
       </header>
 
@@ -153,7 +153,7 @@ const CASBSecurity: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-indigo-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-indigo-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-indigo-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}

@@ -63,8 +63,8 @@ const SIEMPlatform: React.FC = () => {
     { label: 'Detection Rules', value: detectionRules.length.toString() },
   ];
 
-  const { loading, analyzing, analysisResult, runAnalysis } = useSecurityModule('siem', {
-    securityEvents, detectionRules, logSources, stats,
+  const { loading, analyzing, analysisResult, runAnalysis, clearAnalysis } = useSecurityModule('siem', {
+    events, correlatedAlerts, detectionRules, logSources, stats,
   });
 
   const severityColor = (s: string) => { switch (s) { case 'Critical': return 'text-red-400'; case 'High': return 'text-orange-400'; case 'Medium': return 'text-yellow-400'; default: return 'text-green-400'; } };
@@ -79,7 +79,7 @@ const SIEMPlatform: React.FC = () => {
           <p className="text-slate-400">Centralized log ingestion, correlation engine, threat detection, and cross-domain attack chain analysis.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={runAnalysis} disabled={analyzing} className="bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
+          <button onClick={() => runAnalysis()} disabled={analyzing} className="bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">{analyzing ? 'Analyzing…' : '🤖 AI Analysis'}</button>
           <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-green-400">Ingestion: Healthy</div>
         </div>
       </header>
@@ -155,7 +155,7 @@ const SIEMPlatform: React.FC = () => {
 
       {analysisResult && (
         <div className="bg-slate-800 border border-cyan-700 rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-cyan-400">🤖 AI Analysis</h2><button onClick={() => setAnalysisResult(null)} className="text-slate-400 hover:text-white text-sm">✕</button></div>
+          <div className="flex items-center justify-between"><h2 className="text-lg font-semibold text-cyan-400">🤖 AI Analysis</h2><button onClick={() => clearAnalysis()} className="text-slate-400 hover:text-white text-sm">✕</button></div>
           <pre className="text-sm text-slate-300 whitespace-pre-wrap">{analysisResult}</pre>
         </div>
       )}
