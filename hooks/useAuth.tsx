@@ -84,12 +84,15 @@ function clearStoredAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>(() => {
     const { token, user, organization } = getStoredAuth();
+    const hasToken = !!token && !!user;
     return {
-      user,
-      organization,
-      token,
-      isAuthenticated: !!token && !!user,
-      isLoading: !!token, // Will verify token on mount
+      user: hasToken ? user : null,
+      organization: hasToken ? organization : null,
+      token: hasToken ? token : null,
+      // Never trust localStorage alone — always start as unauthenticated
+      // Token will be verified on mount before granting access
+      isAuthenticated: false,
+      isLoading: hasToken, // Will verify token on mount
     };
   });
 
@@ -103,14 +106,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const demoUser: User = {
       id: 'demo-user-001',
       email: 'demo@anchoraiguard.com',
-      name: 'Demo Admin',
-      role: 'owner',
+      name: 'Demo Viewer',
+      role: 'viewer',  // Read-only demo access — no admin/owner privileges
     };
     const demoOrg: Organization = {
       id: 'demo-org-001',
       name: 'Anchor AI Guard — Demo',
     };
-    const demoToken = 'demo-token-enterprise-full-access';
+    // Generate a unique demo session token (not a static string)
+    const demoToken = `demo-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
     localStorage.setItem(DEMO_KEY, 'true');
     localStorage.setItem('onboarding_complete', 'true');
@@ -131,8 +135,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Verify token on mount
   useEffect(() => {
     if (isDemoMode) {
-      // Skip token verification in demo mode
-      setState(prev => ({ ...prev, isLoading: false }));
+      // Demo mode: restore demo session from localStorage
+      const { token, user, organization } = getStoredAuth();
+      if (token && user && token.startsWith('demo-')) {
+        setState({
+          user,
+          organization,
+          token,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      } else {
+        // Invalid demo state — clear and reset
+        clearStoredAuth();
+        localStorage.removeItem(DEMO_KEY);
+        setIsDemoMode(false);
+        setState({ user: null, organization: null, token: null, isAuthenticated: false, isLoading: false });
+      }
       return;
     }
     if (state.token) {
@@ -202,26 +221,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // After all retries failed: keep user logged in with cached data if available
-      // Only clear auth if we have no cached user data at all
-      const cached = getStoredAuth();
-      if (cached.user && cached.token) {
-        // Trust the cached session — backend is probably just down temporarily
-        setState((prev) => ({
-          ...prev,
-          isAuthenticated: true,
-          isLoading: false,
-        }));
-      } else {
-        clearStoredAuth();
-        setState({
-          user: null,
-          organization: null,
-          token: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
-      }
+      // After all retries failed: clear auth and require re-login
+      // Never trust cached tokens — if backend can't verify, user must re-authenticate
+      clearStoredAuth();
+      setState({
+        user: null,
+        organization: null,
+        token: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
     }
   };
 

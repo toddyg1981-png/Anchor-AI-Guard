@@ -24,7 +24,7 @@ const ProductNarratives: React.FC<ProductNarrativesProps> = ({ onGetStarted, onV
   // Use cases per pillar
   const useCases: Record<string, Array<{ persona: string; scenario: string; outcome: string }>> = {
     'core-platform': [
-      { persona: 'CISO', scenario: 'Needs a single dashboard for board-level reporting across 95+ security capabilities', outcome: 'Replaces 8 vendor dashboards with one source of truth — saves 15hrs/week' },
+      { persona: 'CISO', scenario: 'Needs a single dashboard for board-level reporting across 109+ security capabilities', outcome: 'Replaces 8 vendor dashboards with one source of truth — saves 15hrs/week' },
       { persona: 'SOC Analyst', scenario: 'Drowning in alerts from 12 different tools with no correlation', outcome: 'Unified SOC Dashboard with AI-prioritized alerts — 73% alert fatigue reduction' },
       { persona: 'DevSecOps Lead', scenario: 'Needs to embed security into CI/CD without slowing developers', outcome: 'SDK Security + Intelligence API integrate in 30 minutes — zero friction' },
     ],

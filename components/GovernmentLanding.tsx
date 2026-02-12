@@ -1022,7 +1022,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
             {/* Bottom bar */}
             <div className="border-t border-slate-800/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-xs text-slate-600">
-                &copy; {new Date().getFullYear()} Anchor Security Pty Ltd. All rights reserved. ABN 00 000 000 000.
+                &copy; {new Date().getFullYear()} Anchor Security Pty Ltd. All rights reserved. ABN registration pending.
               </div>
               <div className="flex items-center gap-6">
                 <a href="#" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Privacy Policy</a>

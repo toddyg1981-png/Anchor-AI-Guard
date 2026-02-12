@@ -5,7 +5,7 @@
 
 > **Enterprise-grade security scanning for your CI/CD pipeline.**  
 > SAST • Secrets Detection • Dependency Audit • AI Security Analysis  
-> 95+ Security Modules • 25 World-First Features
+> 109+ Security Modules • 29 World-First Features
 
 ---
 
@@ -190,8 +190,8 @@ rules:
 | SARIF Output | ✅ | ✅ | ✅ | ✅ |
 | PR Annotations | ✅ | ✅ | ✅ | ✅ |
 | Zero Config | ✅ | ❌ | ❌ | ❌ |
-| Scan Modules | 95+ | ~30 | ~50 | ~40 |
-| World-First Features | 25 | 0 | 0 | 0 |
+| Scan Modules | 109+ | ~30 | ~50 | ~40 |
+| World-First Features | 29 | 0 | 0 | 0 |
 
 ## 📄 License
 

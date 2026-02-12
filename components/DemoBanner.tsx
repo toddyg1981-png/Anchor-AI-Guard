@@ -21,7 +21,7 @@ export const DemoBanner: React.FC<DemoBannerProps> = ({ className = '' }) => {
             <span className="px-2 py-0.5 bg-amber-500/30 rounded text-xs">Preview Only</span>
           </h3>
           <p className="text-amber-200/80 text-sm mt-1">
-            You're exploring Anchor AI Guard in demo mode. All data shown is simulated, and any API keys generated are <strong className="text-amber-300">for demonstration purposes only</strong> — they will not work in production integrations.
+            You&apos;re exploring Anchor AI Guard in demo mode. All data shown is simulated, and any API keys generated are <strong className="text-amber-300">for demonstration purposes only</strong> — they will not work in production integrations.
           </p>
           <div className="flex items-center gap-4 mt-3">
             <a

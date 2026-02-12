@@ -686,7 +686,7 @@ export default function AIEvolutionDashboard() {
             className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
               isScanning
                 ? 'bg-gray-600 cursor-not-allowed'
-                : 'bg-gradient-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400'
+                : 'bg-linear-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400'
             } text-white shadow-lg flex items-center gap-2`}
           >
             {isScanning ? (
@@ -712,7 +712,7 @@ export default function AIEvolutionDashboard() {
               className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
                 isRepairing
                   ? 'bg-gray-600 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-yellow-600 to-amber-500 hover:from-yellow-500 hover:to-amber-400'
+                  : 'bg-linear-to-r from-yellow-600 to-amber-500 hover:from-yellow-500 hover:to-amber-400'
               } text-white shadow-lg flex items-center gap-2`}
             >
               {isRepairing ? (
@@ -757,7 +757,7 @@ export default function AIEvolutionDashboard() {
             className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
               isBootstrapping
                 ? 'bg-gray-600 cursor-not-allowed'
-                : 'bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400'
+                : 'bg-linear-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400'
             } text-white shadow-lg`}
           >
             {isBootstrapping ? (
@@ -775,7 +775,7 @@ export default function AIEvolutionDashboard() {
             className={`px-4 py-2.5 rounded-lg font-semibold transition-all ${
               isEvolving
                 ? 'bg-gray-600 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400'
+                : 'bg-linear-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400'
             } text-white shadow-lg`}
           >
             {isEvolving ? (
@@ -791,7 +791,7 @@ export default function AIEvolutionDashboard() {
       </div>
 
       {/* Live Stats Bar */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-4 border border-purple-500/30">
+      <div className="bg-linear-to-r from-slate-800 to-slate-900 rounded-xl p-4 border border-purple-500/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -899,12 +899,12 @@ export default function AIEvolutionDashboard() {
               </div>
             </div>
             
-            <div ref={liveLogRef} className="space-y-1.5 max-h-[600px] overflow-y-auto font-mono text-sm">
+            <div ref={liveLogRef} className="space-y-1.5 max-h-150 overflow-y-auto font-mono text-sm">
               {liveEvents.map((event, i) => {
                 const eventConfig = getEventConfig(event.type);
                 return (
                   <div key={i} className={`flex items-start gap-3 p-2.5 rounded-lg border ${eventConfig.border} ${eventConfig.bg} transition-all ${i === 0 ? 'ring-1 ring-inset ' + eventConfig.ring : ''}`}>
-                    <span className="text-lg flex-shrink-0 mt-0.5">{eventConfig.icon}</span>
+                    <span className="text-lg shrink-0 mt-0.5">{eventConfig.icon}</span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className={`text-xs font-bold uppercase tracking-wider ${eventConfig.label}`}>{event.type.replace(/_/g, ' ')}</span>
@@ -915,7 +915,7 @@ export default function AIEvolutionDashboard() {
                       </div>
                     </div>
                     {(event.data as any)?.severity && (
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${getSeverityColor((event.data as any).severity)}`}>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 ${getSeverityColor((event.data as any).severity)}`}>
                         {((event.data as any).severity as string).toUpperCase()}
                       </span>
                     )}
@@ -993,7 +993,7 @@ export default function AIEvolutionDashboard() {
             {/* Summary Stats */}
             {metrics?.currentTotals && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                <div className="bg-gradient-to-br from-cyan-900/30 to-cyan-800/10 rounded-xl p-4 border border-cyan-700/30">
+                <div className="bg-linear-to-br from-cyan-900/30 to-cyan-800/10 rounded-xl p-4 border border-cyan-700/30">
                   <div className="text-3xl font-bold text-cyan-400">{metrics.currentTotals.threats.toLocaleString()}</div>
                   <div className="text-sm text-slate-400">Total Threats</div>
                   <div className="text-xs text-cyan-500 mt-1 flex items-center gap-1">
@@ -1001,7 +1001,7 @@ export default function AIEvolutionDashboard() {
                     Live updating
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/10 rounded-xl p-4 border border-purple-700/30">
+                <div className="bg-linear-to-br from-purple-900/30 to-purple-800/10 rounded-xl p-4 border border-purple-700/30">
                   <div className="text-3xl font-bold text-purple-400">{metrics.currentTotals.rules.toLocaleString()}</div>
                   <div className="text-sm text-slate-400">Active Rules</div>
                   <div className="text-xs text-purple-500 mt-1 flex items-center gap-1">
@@ -1009,7 +1009,7 @@ export default function AIEvolutionDashboard() {
                     Live updating
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-green-900/30 to-green-800/10 rounded-xl p-4 border border-green-700/30">
+                <div className="bg-linear-to-br from-green-900/30 to-green-800/10 rounded-xl p-4 border border-green-700/30">
                   <div className="text-3xl font-bold text-green-400">{metrics.currentTotals.analyses.toLocaleString()}</div>
                   <div className="text-sm text-slate-400">AI Analyses</div>
                   <div className="text-xs text-green-500 mt-1 flex items-center gap-1">
@@ -1017,7 +1017,7 @@ export default function AIEvolutionDashboard() {
                     Live updating
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/10 rounded-xl p-4 border border-yellow-700/30 relative group">
+                <div className="bg-linear-to-br from-yellow-900/30 to-yellow-800/10 rounded-xl p-4 border border-yellow-700/30 relative group">
                   <div className="text-3xl font-bold text-yellow-400">{metrics.currentTotals.score}%</div>
                   <div className="text-sm text-slate-400 flex items-center gap-1">Competitive Score
                     <span className="cursor-help text-yellow-500/60" title="How far ahead Anchor's Titan engine is compared to industry-standard detection baselines">ⓘ</span>
@@ -1146,7 +1146,7 @@ export default function AIEvolutionDashboard() {
         {activeTab === 'threats' && (
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Processed Threats ({threats.length})</h3>
-            <div className="space-y-3 max-h-[500px] overflow-y-auto">
+            <div className="space-y-3 max-h-125 overflow-y-auto">
               {threats.map(threat => (
                 <div key={threat.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600">
                   <div className="flex items-start justify-between">
@@ -1199,7 +1199,7 @@ export default function AIEvolutionDashboard() {
             <h3 className="text-lg font-semibold text-white mb-4">
               Auto-Generated Detection Rules ({rules.filter(r => r.autoGenerated).length} / {rules.length})
             </h3>
-            <div className="space-y-3 max-h-[500px] overflow-y-auto">
+            <div className="space-y-3 max-h-125 overflow-y-auto">
               {rules.map(rule => (
                 <div key={rule.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600">
                   <div className="flex items-start justify-between">
@@ -1303,7 +1303,7 @@ export default function AIEvolutionDashboard() {
                 />
                 <button
                   onClick={generateModule}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white rounded-lg font-medium transition-all"
+                  className="px-6 py-3 bg-linear-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white rounded-lg font-medium transition-all"
                 >
                   Generate
                 </button>

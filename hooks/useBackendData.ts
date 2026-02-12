@@ -80,8 +80,8 @@ export function useBackendData(isAuthenticated = false, authLoading = false): Ba
   }, []);
 
   useEffect(() => {
-    // Demo mode: skip backend, return rich mock data immediately
-    if (isDemo) {
+    // Demo mode: skip backend, return sample data — but only if user is authenticated
+    if (isDemo && isAuthenticated) {
       setState({
         projects: demoProjects,
         findings: demoFindings,
@@ -125,7 +125,8 @@ export function useBackendData(isAuthenticated = false, authLoading = false): Ba
         const message = err instanceof Error ? err.message : 'Failed to load data';
         errorHandler.handle(err as Error);
 
-        if (env.useMockData) {
+        if (env.useMockData && env.appEnv === 'development') {
+          // Only use mock data fallback in development — never in production/staging
           setState({
             projects: mockProjects,
             findings: mockFindings,

@@ -65,7 +65,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       setPlans(data.plans);
     } catch (error) {
       logger.error('Failed to fetch plans:', error);
-      // WORLD-FIRST PRICING - Premium for 95+ modules & 25 world-first features
+      // WORLD-FIRST PRICING - Premium for 109+ modules & 29 world-first features
       setPlans([
         {
           tier: 'FREE',
@@ -191,7 +191,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '10,000 scans/month',
             '50,000 AI queries/month',
             '75 team members',
-            '📊 All 95+ Security Modules',
+            '📊 All 109+ Security Modules',
             '🔐 SSO/SAML authentication',
             '🏥 Cyber Insurance Integration (WORLD FIRST)',
             '⛓️ Supply Chain Attestation (WORLD FIRST)',
@@ -205,7 +205,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             'Phone & Slack support',
             '99.9% SLA',
           ],
-          highlight: 'Complete security platform — All 25 World-Firsts',
+          highlight: 'Complete security platform — All 29 World-Firsts',
         },
         {
           tier: 'ENTERPRISE',
@@ -222,7 +222,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           features: [
             '💰 $5,000,000 - $10,000,000/year',
             '🏢 For 100-500 developers',
-            'All 95+ modules + 25 World-Firsts',
+            'All 109+ modules + 29 World-Firsts',
             'On-premise deployment option',
             'Custom AI model training',
             'Dedicated security engineer',
@@ -250,7 +250,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             '💰 $10,000,000 - $25,000,000/year',
             '🏢 For 500-2000+ developers',
             'Everything in Enterprise',
-            'All 95+ modules + all World-Firsts',
+            'All 109+ modules + all World-Firsts',
             'Multi-region deployment',
             'Custom AI model fine-tuning',
             'White-label licensing available',
@@ -472,13 +472,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-block px-4 py-1 bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-medium mb-4">
-            🏆 95+ MODULES • 25 WORLD-FIRST FEATURES • 25 UNPROTECTED LAYERS
+            🏆 109+ MODULES • 29 WORLD-FIRST FEATURES • 29 UNPROTECTED LAYERS
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-purple-300 max-w-2xl mx-auto">
-            The world&apos;s most complete security platform. 25 world-first features that don&apos;t exist anywhere else. You&apos;re not buying a tool — you&apos;re buying a monopoly.
+            The world&apos;s most complete security platform. 29 world-first features that don&apos;t exist anywhere else. You&apos;re not buying a tool — you&apos;re buying a monopoly.
           </p>
         </div>
 
@@ -719,7 +719,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* World-First Features Banner */}
         <div className="mb-16 max-w-5xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-cyan-400 mb-2">🏆 25 World-First Features — No Other Vendor Has These</h2>
+            <h2 className="text-2xl font-bold text-cyan-400 mb-2">🏆 29 World-First Features — No Other Vendor Has These</h2>
             <p className="text-purple-300">Technology that doesn&apos;t exist anywhere else. You&apos;re buying a monopoly.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">

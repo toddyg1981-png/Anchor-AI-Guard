@@ -12,11 +12,22 @@ interface MarketingLandingProps {
   onViewAbout?: () => void;
   onViewContact?: () => void;
   onViewPurchaseTerms?: () => void;
+  onViewCookiePolicy?: () => void;
+  onViewAcceptableUse?: () => void;
+  onViewDPA?: () => void;
+  onViewDisclaimer?: () => void;
+  onViewResponsibleDisclosure?: () => void;
   onViewIntelligence?: () => void;
   onViewGovernment?: () => void;
   onViewPillarPricing?: () => void;
   onViewProducts?: () => void;
   onViewInvestors?: () => void;
+  onViewSLA?: () => void;
+  onViewEULA?: () => void;
+  onViewSovereignData?: () => void;
+  onViewWhistleblower?: () => void;
+  onViewIncidentResponsePolicy?: () => void;
+  onViewAccessibility?: () => void;
 }
 
 // Use centralized env config - strip /api suffix for analytics endpoints
@@ -32,11 +43,22 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
   onViewAbout,
   onViewContact,
   onViewPurchaseTerms,
+  onViewCookiePolicy,
+  onViewAcceptableUse,
+  onViewDPA,
+  onViewDisclaimer,
+  onViewResponsibleDisclosure,
   onViewIntelligence,
   onViewGovernment,
   onViewPillarPricing,
   onViewProducts,
   onViewInvestors,
+  onViewSLA,
+  onViewEULA,
+  onViewSovereignData,
+  onViewWhistleblower,
+  onViewIncidentResponsePolicy,
+  onViewAccessibility,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -189,7 +211,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       badgeColor: 'bg-cyan-500',
     },
     // ═══════════════════════════════════════════════════════════════
-    // 25 WORLD-FIRST SECURITY LAYERS — NO OTHER VENDOR HAS THESE
+    // 29 WORLD-FIRST SECURITY LAYERS — NO OTHER VENDOR HAS THESE
     // ═══════════════════════════════════════════════════════════════
     {
       icon: '🔩',
@@ -254,11 +276,39 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       badge: 'WORLD FIRST',
       badgeColor: 'bg-purple-500',
     },
+    {
+      icon: '🤖',
+      title: 'AI Agent Security',
+      description: 'The world\'s first permission boundaries and action audit system for autonomous AI agents. Sandbox enforcement, prompt injection defence, chain-of-thought logging, hallucinated dependency blocking, and data-exfiltration prevention — for every AI agent in your stack.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
+    {
+      icon: '🎭',
+      title: 'Deepfake Detection & Defence',
+      description: 'First integrated deepfake defence for the enterprise. Real-time voice, video, and image deepfake detection across VoIP, Zoom, Teams, email, and badge systems. Blocks CFO voice impersonation, CEO video fakes, and AI-generated document forgery before damage is done.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
+    {
+      icon: '🛰️',
+      title: 'Satellite Communications Security',
+      description: 'The first cybersecurity platform to protect satellite links. GPS spoofing defence, jamming detection, quantum key distribution for space links, command injection blocking, ground station hardening — protecting the final frontier of communications.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
+    {
+      icon: '🔗',
+      title: 'LLM Supply Chain Security',
+      description: 'First-ever model weight integrity verification and training data poisoning detection. SLSA Level 3 attestation for AI models, adversarial sample detection, model provenance tracking, and hallucinated dependency blocking across your entire ML pipeline.',
+      badge: 'WORLD FIRST',
+      badgeColor: 'bg-purple-500',
+    },
   ];
 
   const stats = [
-    { value: '95+', label: 'Security Modules' },
-    { value: '25', label: 'World-First Features' },
+    { value: '109+', label: 'Security Modules' },
+    { value: '29', label: 'World-First Features' },
     { value: '16', label: 'Compliance Frameworks' },
     { value: '24/7', label: 'Self-Evolving Protection' },
   ];
@@ -295,7 +345,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
     },
     {
       question: 'What\'s included in each pricing tier?',
-      answer: 'Free gives you basic scanning for 1 project. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence, AI Auto-Fix, Identity Drift Detection, and Architecture Drift. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, Data Trust Engine, Human Behaviour Risk Engine, AI Runtime Security, and real-time collaboration for 15 users. Business ($49,990/mo) includes all 95+ security modules, Hardware Integrity, Firmware Scanner, Autonomous Red Team, National Telemetry, SSO, and 99.9% SLA. Enterprise and Government plans start at $5M/year with unlimited everything.',
+      answer: 'Free gives you basic scanning for 1 project. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence, AI Auto-Fix, Identity Drift Detection, and Architecture Drift. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, Data Trust Engine, Human Behaviour Risk Engine, AI Runtime Security, and real-time collaboration for 15 users. Business ($49,990/mo) includes all 109+ security modules, Hardware Integrity, Firmware Scanner, Autonomous Red Team, National Telemetry, SSO, and 99.9% SLA. Enterprise and Government plans start at $5M/year with unlimited everything.',
     },
     {
       question: 'What languages, frameworks, and platforms do you support?',
@@ -314,8 +364,8 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       answer: 'Anchor provides automated compliance checking and reporting for SOC 2, HIPAA, PCI-DSS, ISO 27001, GDPR, FedRAMP, NIST 800-53, CIS Controls, and more. Generate audit-ready reports with a single click.',
     },
     {
-      question: 'What makes the 25 World-First Security Layers unique?',
-      answer: 'Anchor protects 25 layers that no other vendor in the world covers — spanning hardware integrity, firmware scanning, identity drift, data trust, AI runtime security, human behaviour analytics, national-scale telemetry, architecture drift, autonomous red team, AI LLM security, supply chain AI, autonomous SOC, predictive attack intelligence, digital twin security, AI breach simulation, predictive CVE intelligence, developer security scoring, real-time security collaboration, AI evolution (self-evolving AI), anti-tampering, quantum-safe cryptography, cyber insurance integration, AI regulatory intelligence, critical infrastructure protection across all 16 CISA sectors, and security awareness training. Protecting any one of these is a world first — Anchor protects all twenty-five.',
+      question: 'What makes the 29 World-First Security Layers unique?',
+      answer: 'Anchor protects 29 layers that no other vendor in the world covers — spanning hardware integrity, firmware scanning, identity drift, data trust, AI runtime security, human behaviour analytics, national-scale telemetry, architecture drift, autonomous red team, AI LLM security, supply chain AI, autonomous SOC, predictive attack intelligence, digital twin security, AI breach simulation, predictive CVE intelligence, developer security scoring, real-time security collaboration, AI evolution (self-evolving AI), anti-tampering, quantum-safe cryptography, cyber insurance integration, AI regulatory intelligence, critical infrastructure protection across all 16 CISA sectors, security awareness training, AI agent security with permission boundaries, real-time deepfake detection and defence, satellite communications encryption, and LLM supply chain poisoning protection. Protecting any one of these is a world first — Anchor protects all twenty-nine.',
     },
     {
       question: 'How does the Autonomous Red Team work?',
@@ -413,7 +463,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <div className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
               <span className="text-cyan-400">✨</span>
               <span className="text-sm text-cyan-300">
-                95+ Security Modules • 25 World-First Features • 25 Unprotected Layers Covered • Self-Evolving AI • Sovereign-Grade
+                109+ Security Modules • 29 World-First Features • 29 Unprotected Layers Covered • Self-Evolving AI • Sovereign-Grade
               </span>
             </div>
 
@@ -428,13 +478,13 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
 
             {/* Subheadline */}
             <p className="text-xl text-purple-300 mb-4 max-w-2xl mx-auto">
-              Anchor is the world&apos;s first and only security platform protecting <strong>25 layers the entire industry leaves exposed</strong> &mdash;
-              hardware integrity, firmware, identity drift, data trust, AI runtime, human behaviour, national telemetry, architecture drift, and autonomous red team.
+              Anchor is the world&apos;s first and only security platform protecting <strong>29 layers the entire industry leaves exposed</strong> &mdash;
+              hardware integrity, firmware, identity drift, data trust, AI runtime, human behaviour, national telemetry, architecture drift, autonomous red team, AI agent security, deepfake defence, satellite communications, and LLM supply chain.
             </p>
             <p className="text-lg text-cyan-400 mb-10 max-w-2xl mx-auto font-semibold">
               No vendor. No government. No research lab. Nobody has done this before.
               <br />
-              <span className="text-pink-400">95+ modules. 25 world-first features. One platform.</span>
+              <span className="text-pink-400">109+ modules. 29 world-first features. One platform.</span>
             </p>
 
             {/* CTA Buttons */}
@@ -933,7 +983,7 @@ print(rule["rule"]["content"])
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* 25 WORLD-FIRST SECURITY LAYERS — THE UNPROTECTED FRONTIER          */}
+      {/* 29 WORLD-FIRST SECURITY LAYERS — THE UNPROTECTED FRONTIER          */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-4 bg-linear-to-b from-slate-900/50 via-purple-900/10 to-slate-900/50 border-y border-purple-500/20">
         <div className="max-w-7xl mx-auto">
@@ -942,10 +992,10 @@ print(rule["rule"]["content"])
               <span className="text-purple-400 font-bold text-sm tracking-wider">🏆 WORLD-FIRST TECHNOLOGY</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
-              25 Layers Nobody Else Protects
+              29 Layers Nobody Else Protects
             </h2>
             <p className="text-xl text-purple-300 max-w-3xl mx-auto mb-4">
-              The security industry leaves <strong>25 critical layers</strong> completely unprotected. Not CrowdStrike. Not Palo Alto.
+              The security industry leaves <strong>29 critical layers</strong> completely unprotected. Not CrowdStrike. Not Palo Alto.
               Not SentinelOne. Not Snyk. Not Wiz. Not any government lab. <strong>Nobody.</strong>
             </p>
             <p className="text-lg text-cyan-400 max-w-3xl mx-auto">
@@ -965,6 +1015,10 @@ print(rule["rule"]["content"])
               { icon: '🌐', title: 'National Telemetry', desc: 'Cross-industry threat correlation, early-warning signals, attack-wave prediction, national risk scoring', color: 'from-blue-500/20 to-indigo-500/20', border: 'border-blue-500/30' },
               { icon: '🏗️', title: 'Architecture Drift', desc: 'Misconfigurations, insecure defaults, forgotten services, exposed ports, dependency drift', color: 'from-indigo-500/20 to-purple-500/20', border: 'border-indigo-500/30' },
               { icon: '⚔️', title: 'Autonomous Red Team', desc: 'Exploit simulation, lateral movement, privilege escalation, misconfiguration exploitation', color: 'from-purple-500/20 to-pink-500/20', border: 'border-purple-500/30' },
+              { icon: '🤖', title: 'AI Agent Security', desc: 'Permission boundaries, prompt injection defence, action auditing for autonomous AI agents', color: 'from-pink-500/20 to-rose-500/20', border: 'border-pink-500/30' },
+              { icon: '🎭', title: 'Deepfake Detection', desc: 'Real-time voice, video, image deepfake detection across VoIP, video conferencing, email', color: 'from-rose-500/20 to-fuchsia-500/20', border: 'border-rose-500/30' },
+              { icon: '🛰️', title: 'Satellite Comms', desc: 'GPS spoofing defence, jamming detection, QKD encryption, ground station hardening', color: 'from-fuchsia-500/20 to-violet-500/20', border: 'border-fuchsia-500/30' },
+              { icon: '🔗', title: 'LLM Supply Chain', desc: 'Model weight poisoning detection, training data integrity, SLSA attestation, provenance tracking', color: 'from-violet-500/20 to-indigo-500/20', border: 'border-violet-500/30' },
             ].map((layer, i) => (
               <div key={i} className={`bg-linear-to-br ${layer.color} border ${layer.border} rounded-2xl p-6 hover:scale-105 transition-all duration-300 group`}>
                 <div className="flex items-start gap-4">
@@ -986,7 +1040,7 @@ print(rule["rule"]["content"])
               <strong>Protecting even one</strong> of these layers makes a platform world-first.
             </p>
             <p className="text-xl text-white font-bold mb-8">
-              Anchor protects all nine. No other vendor on Earth can say that.
+              Anchor protects all thirteen core layers — and 29 world-firsts total. No other vendor on Earth can say that.
             </p>
 
             {/* Competitor Gap Table */}
@@ -1007,7 +1061,8 @@ print(rule["rule"]["content"])
                   {[
                     'Hardware Integrity', 'Firmware & Microcode', 'Identity Drift',
                     'Data Trust Engine', 'AI Runtime Security', 'Human Behaviour',
-                    'National Telemetry', 'Architecture Drift', 'Autonomous Red Team'
+                    'National Telemetry', 'Architecture Drift', 'Autonomous Red Team',
+                    'AI Agent Security', 'Deepfake Detection', 'Satellite Comms', 'LLM Supply Chain'
                   ].map((layer) => (
                     <tr key={layer} className="border-b border-slate-800">
                       <td className="py-2.5 px-4 text-white font-medium">{layer}</td>
@@ -1070,14 +1125,14 @@ print(rule["rule"]["content"])
       <section id="comparison" className="py-24 px-4 relative overflow-hidden">
         {/* Background accents */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pink-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/4 w-125 h-125 bg-cyan-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-pink-500/5 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold tracking-widest uppercase text-pink-400 mb-3">Why Anchor Wins</p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Anchor vs. The Industry
             </h2>
             <p className="text-purple-400 text-lg max-w-3xl mx-auto">
@@ -1093,7 +1148,7 @@ print(rule["rule"]["content"])
                   <th className="text-left py-4 px-4 text-sm font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700/50 w-[30%]">
                     Capability
                   </th>
-                  <th className="py-4 px-4 text-center border-b border-cyan-500/30 bg-gradient-to-b from-cyan-500/10 to-transparent rounded-t-xl">
+                  <th className="py-4 px-4 text-center border-b border-cyan-500/30 bg-linear-to-b from-cyan-500/10 to-transparent rounded-t-xl">
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-lg font-bold text-white">Anchor AI Guard</span>
                       <span className="text-xs text-cyan-400 font-medium">Powered by Titan</span>
@@ -1125,13 +1180,13 @@ print(rule["rule"]["content"])
                   { cap: 'Quantum-Ready Cryptography', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
                   { cap: 'Advanced Breach Simulation Engine', anchor: 'yes', cs: 'no', s1: 'no', ms: 'no' },
                   { cap: 'AI-Powered Threat Intel API (TITAN API)', anchor: 'yes', cs: 'partial', s1: 'partial', ms: 'partial' },
-                  { cap: 'Integrated Security Modules', anchor: '95+', cs: '10-20', s1: '10-20', ms: 'varies' },
+                  { cap: 'Integrated Security Modules', anchor: '109+', cs: '10-20', s1: '10-20', ms: 'varies' },
                   { cap: 'Government & FedRAMP / SCIF Support', anchor: 'yes', cs: 'partial', s1: 'partial', ms: 'yes' },
                   { cap: 'Threat Hunting & MITRE ATT&CK Coverage', anchor: 'yes', cs: 'yes', s1: 'yes', ms: 'yes' },
                   { cap: 'Managed Threat Detection Services', anchor: 'yes', cs: 'yes', s1: 'yes', ms: 'yes' },
                 ].map((row, i) => {
                   const renderCell = (val: string) => {
-                    if (val === 'first') return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold">🏆 WORLD 1ST</span>;
+                    if (val === 'first') return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-linear-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold">🏆 WORLD 1ST</span>;
                     if (val === 'yes') return <span className="text-emerald-400 font-bold text-lg">✓</span>;
                     if (val === 'no') return <span className="text-red-400/60 font-medium">✗</span>;
                     if (val === 'partial') return <span className="text-amber-400/70 text-sm font-medium">⚠ Partial</span>;
@@ -1170,7 +1225,7 @@ print(rule["rule"]["content"])
               { cap: 'Quantum-Ready Cryptography', anchor: true, others: false },
               { cap: 'Breach Simulation Engine', anchor: true, others: false },
               { cap: 'Titan Threat Intel API', anchor: true, others: 'partial' },
-              { cap: '95+ Integrated Modules', anchor: true, others: false },
+              { cap: '109+ Integrated Modules', anchor: true, others: false },
               { cap: 'Government / FedRAMP / SCIF', anchor: true, others: 'mixed' },
               { cap: 'MITRE ATT&CK Coverage', anchor: true, others: true },
               { cap: 'Managed Threat Detection', anchor: true, others: true },
@@ -1179,7 +1234,7 @@ print(rule["rule"]["content"])
                 key={i}
                 className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors ${
                   row.others === false
-                    ? 'bg-gradient-to-r from-cyan-500/10 to-pink-500/10 border-cyan-500/20'
+                    ? 'bg-linear-to-r from-cyan-500/10 to-pink-500/10 border-cyan-500/20'
                     : 'bg-slate-800/30 border-slate-700/30'
                 }`}
               >
@@ -1214,7 +1269,7 @@ print(rule["rule"]["content"])
               <div className="text-sm text-slate-400 mt-1">Capabilities only Anchor has</div>
             </div>
             <div className="text-center bg-slate-800/30 rounded-xl p-5 border border-slate-700/30">
-              <div className="text-3xl font-bold text-amber-400">95+</div>
+              <div className="text-3xl font-bold text-amber-400">109+</div>
               <div className="text-sm text-slate-400 mt-1">Integrated security modules</div>
             </div>
             <div className="text-center bg-slate-800/30 rounded-xl p-5 border border-slate-700/30">
@@ -1237,7 +1292,7 @@ print(rule["rule"]["content"])
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-purple-300">
-              95+ modules. 25 world-first features. One platform.
+              109+ modules. 29 world-first features. One platform.
             </p>
           </div>
 
@@ -1299,7 +1354,7 @@ print(rule["rule"]["content"])
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
                 <li>✓ 200 projects</li>
                 <li>✓ 75 team members</li>
-                <li>✓ <strong className="text-cyan-400">All 95+ modules</strong></li>
+                <li>✓ <strong className="text-cyan-400">All 109+ modules</strong></li>
                 <li>✓ SSO/SAML</li>
                 <li>✓ 99.9% SLA</li>
               </ul>
@@ -1376,7 +1431,7 @@ print(rule["rule"]["content"])
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold tracking-widest uppercase text-pink-400 mb-3">The Story Behind Anchor</p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               About the Creator
             </h2>
             <p className="text-purple-400 text-lg max-w-2xl mx-auto">
@@ -1389,12 +1444,12 @@ print(rule["rule"]["content"])
             <div className="lg:col-span-2 flex flex-col items-center">
               <div className="relative group">
                 {/* Glow ring */}
-                <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-40 group-hover:opacity-60 blur-sm transition-opacity" />
+                <div className="absolute -inset-1 bg-linear-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-40 group-hover:opacity-60 blur-sm transition-opacity" />
                 <div className="relative bg-slate-900 rounded-2xl p-1">
-                  <div className="w-full aspect-square rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
+                  <div className="w-full aspect-square rounded-xl bg-linear-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
                     {/* Anchor shield placeholder — replace with photo when available */}
                     <div className="text-center p-8">
-                      <div className="w-28 h-28 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500/20 to-pink-500/20 border-2 border-cyan-500/30 flex items-center justify-center">
+                      <div className="w-28 h-28 mx-auto mb-4 rounded-full bg-linear-to-br from-cyan-500/20 to-pink-500/20 border-2 border-cyan-500/30 flex items-center justify-center">
                         <svg className="w-14 h-14 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -1427,7 +1482,7 @@ print(rule["rule"]["content"])
             {/* Story */}
             <div className="lg:col-span-3 space-y-6">
               {/* Opening */}
-              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-6 border border-cyan-500/20">
+              <div className="bg-linear-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-6 border border-cyan-500/20">
                 <p className="text-lg text-slate-200 leading-relaxed">
                   Todd Goodwin was born in Sydney, raised in Greenacre, and moved to Queensland at 18, where he has lived for the past 25 years. Growing up as one of eight children shaped him early — <span className="text-cyan-400 font-medium">responsibility, resilience, and hard work were not choices, they were necessities.</span> Those values carried him through a 24-year career in housing construction, where he earned five trade certificates and built a reputation for reliability, skill, and grit.
                 </p>
@@ -1460,7 +1515,7 @@ print(rule["rule"]["content"])
               </div>
 
               {/* Anchor */}
-              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-2xl p-6 border border-pink-500/20 space-y-4">
+              <div className="bg-linear-to-r from-pink-500/10 to-purple-500/10 rounded-2xl p-6 border border-pink-500/20 space-y-4">
                 <p className="text-slate-200 leading-relaxed">
                   He envisioned a system that could be both proactive and reactive — something capable of predicting, detecting, and defending in real time. Something sovereign. Something built for the future, not the past.
                 </p>
@@ -1501,7 +1556,7 @@ print(rule["rule"]["content"])
               <strong>Replace a $345K+ security stack with one platform.</strong>
             </p>
             <p className="text-lg text-purple-400 mb-8">
-              95+ modules. 25 world-first features. 25 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$4,990/month</span>.
+              109+ modules. 29 world-first features. 29 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$4,990/month</span>.
             </p>
             <button
               onClick={onGetStarted}
@@ -1526,7 +1581,7 @@ print(rule["rule"]["content"])
               </div>
               <p className="text-purple-300 text-sm">
                 <strong>The world&apos;s most advanced</strong> AI-powered security platform.
-                25 world-first features. 25 layers nobody else protects.
+                29 world-first features. 29 layers nobody else protects.
                 Built for enterprises, governments, and sovereign defence.
               </p>
             </div>
@@ -1555,9 +1610,20 @@ print(rule["rule"]["content"])
               <ul className="space-y-2 text-purple-300">
                 <li><button onClick={onViewPrivacy} className="hover:text-pink-400 transition-colors text-left">Privacy Policy</button></li>
                 <li><button onClick={onViewTerms} className="hover:text-pink-400 transition-colors text-left">Terms of Service</button></li>
+                <li><button onClick={onViewEULA} className="hover:text-pink-400 transition-colors text-left">EULA</button></li>
                 <li><button onClick={onViewPurchaseTerms} className="hover:text-pink-400 transition-colors text-left">Purchase Terms</button></li>
+                <li><button onClick={onViewSLA} className="hover:text-pink-400 transition-colors text-left">Service Level Agreement</button></li>
+                <li><button onClick={onViewCookiePolicy} className="hover:text-pink-400 transition-colors text-left">Cookie Policy</button></li>
+                <li><button onClick={onViewAcceptableUse} className="hover:text-pink-400 transition-colors text-left">Acceptable Use</button></li>
+                <li><button onClick={onViewDPA} className="hover:text-pink-400 transition-colors text-left">Data Processing</button></li>
+                <li><button onClick={onViewSovereignData} className="hover:text-pink-400 transition-colors text-left">Data Sovereignty</button></li>
+                <li><button onClick={onViewDisclaimer} className="hover:text-pink-400 transition-colors text-left">Disclaimer</button></li>
+                <li><button onClick={onViewResponsibleDisclosure} className="hover:text-pink-400 transition-colors text-left">Responsible Disclosure</button></li>
+                <li><button onClick={onViewIncidentResponsePolicy} className="hover:text-pink-400 transition-colors text-left">Incident Response</button></li>
+                <li><button onClick={onViewWhistleblower} className="hover:text-pink-400 transition-colors text-left">Whistleblower Policy</button></li>
+                <li><button onClick={onViewAccessibility} className="hover:text-pink-400 transition-colors text-left">Accessibility</button></li>
                 <li><button onClick={onViewSecurity} className="hover:text-pink-400 transition-colors text-left">Security</button></li>
-                <li><a href="mailto:compliance@anchoraiguard.com" className="hover:text-pink-400 transition-colors">SOC 2 Report</a></li>
+                <li><a href="mailto:compliance@anchoraiguard.com" className="hover:text-pink-400 transition-colors">SOC 2 (In Progress)</a></li>
               </ul>
             </div>
           </div>

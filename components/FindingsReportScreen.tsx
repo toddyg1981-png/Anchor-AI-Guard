@@ -5,17 +5,227 @@ import { useSecureFinding } from '../hooks/useSecurityHooks';
 import { sanitizeHtml } from '../utils/sanitization';
 import AIAnalysisComponent from './AIAnalysisComponent';
 
+// ─── Subscription Tier Definitions ───
+type TierKey = 'free' | 'starter' | 'pro' | 'team' | 'business' | 'enterprise';
+
+interface TierDefinition {
+  name: string;
+  monthlyPrice: string;
+  maxProjects: number | 'Unlimited';
+  maxScansPerMonth: number | 'Unlimited';
+  maxAIQueries: number | 'Unlimited';
+  maxTeamMembers: number | 'Unlimited';
+  features: string[];
+  worldFirsts: string[];
+}
+
+const TIER_ORDER: TierKey[] = ['free', 'starter', 'pro', 'team', 'business', 'enterprise'];
+
+const TIER_DEFINITIONS: Record<TierKey, TierDefinition> = {
+  free: {
+    name: 'Free',
+    monthlyPrice: '$0',
+    maxProjects: 1,
+    maxScansPerMonth: 5,
+    maxAIQueries: 10,
+    maxTeamMembers: 1,
+    features: [
+      'Basic vulnerability scanning',
+      'GitHub integration',
+      'Community support',
+    ],
+    worldFirsts: [],
+  },
+  starter: {
+    name: 'Starter',
+    monthlyPrice: '$990/mo',
+    maxProjects: 3,
+    maxScansPerMonth: 50,
+    maxAIQueries: 100,
+    maxTeamMembers: 1,
+    features: [
+      'All vulnerability scanners',
+      'AI Security Chat',
+      'Email support',
+      'Export reports (PDF)',
+      'Security score badge',
+    ],
+    worldFirsts: [],
+  },
+  pro: {
+    name: 'Pro',
+    monthlyPrice: '$4,990/mo',
+    maxProjects: 10,
+    maxScansPerMonth: 250,
+    maxAIQueries: 1000,
+    maxTeamMembers: 3,
+    features: [
+      'API access',
+      'Priority email support',
+      'Slack integration',
+    ],
+    worldFirsts: [
+      'Predictive CVE Intelligence',
+      'AI Auto-Fix with 1-click PRs',
+      'Attack Path Visualization',
+      'Threat Hunting Module',
+      'Architecture Drift Detection',
+      'Identity Drift Detection',
+    ],
+  },
+  team: {
+    name: 'Team',
+    monthlyPrice: '$14,990/mo',
+    maxProjects: 50,
+    maxScansPerMonth: 1500,
+    maxAIQueries: 7500,
+    maxTeamMembers: 15,
+    features: [
+      'All Pro features included',
+      'Team dashboard & analytics',
+      'Role-based access control',
+      'Full audit logs',
+      'Jira & GitHub integration',
+      'Priority support',
+    ],
+    worldFirsts: [
+      'Real-time Collaboration',
+      'Digital Twin Security',
+      'Autonomous SOC Access',
+      'Data Trust Engine',
+      'Human Behaviour Risk Engine',
+      'AI Runtime Security',
+    ],
+  },
+  business: {
+    name: 'Business',
+    monthlyPrice: '$49,990/mo',
+    maxProjects: 200,
+    maxScansPerMonth: 10000,
+    maxAIQueries: 50000,
+    maxTeamMembers: 75,
+    features: [
+      'All 109+ Security Modules',
+      'SSO/SAML authentication',
+      'Custom security rules',
+      'Advanced threat analytics',
+      'Dedicated CSM',
+      'Phone & Slack support',
+      '99.9% SLA',
+    ],
+    worldFirsts: [
+      'Cyber Insurance Integration',
+      'Supply Chain Attestation',
+      'Hardware Integrity Layer',
+      'Firmware & Microcode Scanner',
+      'Autonomous Red Team',
+      'National-Scale Telemetry',
+    ],
+  },
+  enterprise: {
+    name: 'Enterprise',
+    monthlyPrice: 'Custom',
+    maxProjects: 'Unlimited',
+    maxScansPerMonth: 'Unlimited',
+    maxAIQueries: 'Unlimited',
+    maxTeamMembers: 'Unlimited',
+    features: [
+      'On-premise deployment option',
+      'Custom AI model training',
+      'Dedicated security engineer',
+      '24/7/365 phone & Slack support',
+      '99.95% SLA guarantee',
+      'SOC 2 Type II compliance',
+      'Quarterly business reviews',
+      'Custom integrations',
+    ],
+    worldFirsts: [
+      'All 29 World-First features',
+    ],
+  },
+};
+
+function normaliseTier(raw: string): TierKey {
+  const lower = raw.toLowerCase().replace(/[^a-z]/g, '');
+  if (TIER_ORDER.includes(lower as TierKey)) return lower as TierKey;
+  if (lower.includes('enterprise')) return 'enterprise';
+  if (lower.includes('business')) return 'business';
+  if (lower.includes('team')) return 'team';
+  if (lower.includes('pro')) return 'pro';
+  if (lower.includes('starter')) return 'starter';
+  return 'free';
+}
+
+function getTierIndex(tier: TierKey): number {
+  return TIER_ORDER.indexOf(tier);
+}
+
+function getNextTier(tier: TierKey): TierKey | null {
+  const idx = getTierIndex(tier);
+  if (idx < 0 || idx >= TIER_ORDER.length - 1) return null;
+  return TIER_ORDER[idx + 1];
+}
+
+/** Collect cumulative features for a tier (includes all lower tiers). */
+function getCumulativeFeatures(tier: TierKey): string[] {
+  const idx = getTierIndex(tier);
+  const features: string[] = [];
+  for (let i = 0; i <= idx; i++) {
+    const t = TIER_ORDER[i];
+    features.push(...TIER_DEFINITIONS[t].features);
+    features.push(...TIER_DEFINITIONS[t].worldFirsts.map(w => `🌟 ${w} (WORLD FIRST)`));
+  }
+  return features;
+}
+
+/** Get features the user is MISSING by not being on the next tier. */
+function getUpgradeFeatures(currentTier: TierKey): { nextTier: TierDefinition; features: string[]; tierKey: TierKey } | null {
+  const next = getNextTier(currentTier);
+  if (!next) return null;
+  const def = TIER_DEFINITIONS[next];
+  const features = [
+    ...def.features,
+    ...def.worldFirsts.map(w => `🌟 ${w} (WORLD FIRST)`),
+  ];
+  return { nextTier: def, features, tierKey: next };
+}
+
+/** Get ALL higher tiers and their features for the upsell section. */
+function getAllHigherTiers(currentTier: TierKey): Array<{ tierKey: TierKey; def: TierDefinition; uniqueFeatures: string[] }> {
+  const idx = getTierIndex(currentTier);
+  const result: Array<{ tierKey: TierKey; def: TierDefinition; uniqueFeatures: string[] }> = [];
+  for (let i = idx + 1; i < TIER_ORDER.length; i++) {
+    const t = TIER_ORDER[i];
+    const def = TIER_DEFINITIONS[t];
+    result.push({
+      tierKey: t,
+      def,
+      uniqueFeatures: [
+        ...def.features,
+        ...def.worldFirsts.map(w => `🌟 ${w} (WORLD FIRST)`),
+      ],
+    });
+  }
+  return result;
+}
+
 interface FindingsReportScreenProps {
   findings: Finding[];
   selectedFinding: Finding | null;
   onSelectFinding: (finding: Finding) => void;
+  subscriptionTier?: string;
+  onNavigateToUpgrade?: () => void;
 }
 
 const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
   findings,
   selectedFinding,
   onSelectFinding,
+  subscriptionTier = 'starter',
+  onNavigateToUpgrade,
 }) => {
+  const tier = normaliseTier(subscriptionTier);
+  const tierDef = TIER_DEFINITIONS[tier];
   const secureSelectedFinding = useSecureFinding(selectedFinding);
   const [resolvedIds, setResolvedIds] = useState<Set<string>>(new Set());
 
@@ -222,7 +432,7 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
   }, [secureSelectedFinding]);
 
   // ---------------------------------------------------------------
-  // Export full report PDF (all findings)
+  // Export full report PDF (all findings) — subscription-aware
   // ---------------------------------------------------------------
   const exportFullReportPdf = useCallback(() => {
     if (sortedFindings.length === 0) return;
@@ -232,7 +442,23 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
 
     let y = 42;
 
-    // Summary counts
+    // ── Plan Banner ──
+    doc.setFillColor(30, 41, 59);
+    doc.roundedRect(15, y - 4, 180, 12, 3, 3, 'F');
+    doc.setTextColor(53, 198, 255);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Your Plan: ${tierDef.name}`, 20, y + 3);
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const limitsText = tierDef.maxProjects === 'Unlimited'
+      ? 'Unlimited projects · Unlimited scans · Unlimited AI queries'
+      : `${tierDef.maxProjects} projects · ${tierDef.maxScansPerMonth} scans/mo · ${tierDef.maxAIQueries} AI queries/mo`;
+    doc.text(limitsText, 20, y + 8);
+    y += 18;
+
+    // ── Executive Summary ──
     const counts: Record<string, number> = {};
     for (const f of sortedFindings) {
       counts[f.severity] = (counts[f.severity] || 0) + 1;
@@ -250,6 +476,26 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
     doc.text(`Total Findings: ${sortedFindings.length}`, 15, y);
     y += 6;
 
+    // Risk score
+    const riskScore = Math.min(100, Math.round(
+      ((counts[Severity.Critical] || 0) * 25 +
+       (counts[Severity.High] || 0) * 15 +
+       (counts[Severity.Medium] || 0) * 8 +
+       (counts[Severity.Low] || 0) * 3 +
+       (counts[Severity.Informational] || 0) * 1
+      ) / Math.max(1, sortedFindings.length) * 10
+    ));
+
+    const riskLabel = riskScore >= 75 ? 'CRITICAL' : riskScore >= 50 ? 'HIGH' : riskScore >= 25 ? 'MODERATE' : 'LOW';
+    const riskColor: [number, number, number] = riskScore >= 75 ? [239,68,68] : riskScore >= 50 ? [249,115,22] : riskScore >= 25 ? [234,179,8] : [34,197,94];
+    doc.setFillColor(...riskColor);
+    doc.roundedRect(15, y - 4, 40, 8, 2, 2, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Risk: ${riskLabel} (${riskScore}/100)`, 17, y + 1);
+    y += 10;
+
     const severities: Severity[] = [Severity.Critical, Severity.High, Severity.Medium, Severity.Low, Severity.Informational, Severity.Resolved];
     for (const sev of severities) {
       if (counts[sev]) {
@@ -257,18 +503,86 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
         doc.setFillColor(r, g, b);
         doc.circle(18, y - 1.5, 2, 'F');
         doc.setTextColor(51, 65, 85);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
         doc.text(`${sev}: ${counts[sev]}`, 23, y);
         y += 5;
       }
     }
-    y += 6;
+    y += 4;
+
+    // Report period
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139);
+    doc.setFont('helvetica', 'italic');
+    doc.text(`Report generated: ${new Date().toLocaleDateString('en-AU', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`, 15, y);
+    y += 8;
 
     // Divider
     doc.setDrawColor(203, 213, 225);
     doc.line(15, y, 195, y);
     y += 8;
 
-    // Each finding
+    // ── Your Plan Includes ──
+    doc.setFontSize(14);
+    doc.setTextColor(30, 41, 59);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Your Plan Capabilities', 15, y);
+    y += 7;
+
+    doc.setFontSize(9);
+    doc.setTextColor(51, 65, 85);
+    doc.setFont('helvetica', 'normal');
+
+    const cumulativeFeatures = getCumulativeFeatures(tier);
+    for (const feature of cumulativeFeatures) {
+      if (y > 265) { doc.addPage(); y = 20; }
+      doc.text(`✓  ${feature}`, 18, y);
+      y += 4.5;
+    }
+    y += 4;
+
+    // Divider
+    doc.setDrawColor(203, 213, 225);
+    doc.line(15, y, 195, y);
+    y += 8;
+
+    // ── Subscription Utilisation ──
+    if (y > 240) { doc.addPage(); y = 20; }
+    doc.setFontSize(14);
+    doc.setTextColor(30, 41, 59);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Subscription Utilisation', 15, y);
+    y += 8;
+
+    const utilRows = [
+      { label: 'Findings detected this period', value: String(sortedFindings.length) },
+      { label: 'Critical issues', value: String(counts[Severity.Critical] || 0) },
+      { label: 'Issues resolved', value: String(counts[Severity.Resolved] || 0) },
+      { label: 'Plan scan limit', value: tierDef.maxScansPerMonth === 'Unlimited' ? 'Unlimited' : `${tierDef.maxScansPerMonth}/month` },
+      { label: 'AI query limit', value: tierDef.maxAIQueries === 'Unlimited' ? 'Unlimited' : `${tierDef.maxAIQueries}/month` },
+      { label: 'Team member limit', value: tierDef.maxTeamMembers === 'Unlimited' ? 'Unlimited' : `${tierDef.maxTeamMembers}` },
+    ];
+
+    for (const row of utilRows) {
+      if (y > 270) { doc.addPage(); y = 20; }
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(row.label, 18, y);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont('helvetica', 'bold');
+      doc.text(row.value, 140, y);
+      y += 6;
+    }
+    y += 4;
+
+    doc.setDrawColor(203, 213, 225);
+    doc.line(15, y, 195, y);
+    y += 8;
+
+    // ── Detailed Findings ──
+    if (y > 240) { doc.addPage(); y = 20; }
     doc.setFontSize(14);
     doc.setTextColor(30, 41, 59);
     doc.setFont('helvetica', 'bold');
@@ -329,6 +643,76 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
       y += 6;
     });
 
+    // ── Upsell Section (for non-enterprise tiers) ──
+    const higherTiers = getAllHigherTiers(tier);
+    if (higherTiers.length > 0) {
+      doc.addPage();
+      y = 20;
+
+      // Upsell header
+      doc.setFillColor(53, 198, 255);
+      doc.rect(0, 0, 210, 2, 'F');
+
+      doc.setFontSize(16);
+      doc.setTextColor(53, 198, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Unlock More for Your Business', 15, y + 5);
+      y += 12;
+
+      doc.setFontSize(10);
+      doc.setTextColor(51, 65, 85);
+      doc.setFont('helvetica', 'normal');
+      y = addWrappedText(doc, `You're currently on the ${tierDef.name} plan. Here's what upgrading would give your organisation:`, 15, y, 180, 5);
+      y += 6;
+
+      for (const ht of higherTiers) {
+        if (y > 220) { doc.addPage(); y = 20; }
+
+        // Tier title bar
+        doc.setFillColor(30, 41, 59);
+        doc.roundedRect(15, y - 4, 180, 10, 2, 2, 'F');
+        doc.setTextColor(53, 198, 255);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${ht.def.name} Plan — ${ht.def.monthlyPrice}`, 20, y + 2);
+        y += 12;
+
+        // Limits
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont('helvetica', 'normal');
+        const htLimits = ht.def.maxProjects === 'Unlimited'
+          ? 'Unlimited projects · Unlimited scans · Unlimited AI queries'
+          : `${ht.def.maxProjects} projects · ${ht.def.maxScansPerMonth} scans/mo · ${ht.def.maxAIQueries} AI queries/mo · ${ht.def.maxTeamMembers} members`;
+        doc.text(htLimits, 20, y);
+        y += 6;
+
+        // Features
+        doc.setTextColor(51, 65, 85);
+        for (const feat of ht.uniqueFeatures) {
+          if (y > 270) { doc.addPage(); y = 20; }
+          doc.text(`  ➜  ${feat}`, 20, y);
+          y += 4.5;
+        }
+        y += 6;
+      }
+
+      // CTA
+      if (y > 250) { doc.addPage(); y = 20; }
+      doc.setFillColor(53, 198, 255);
+      doc.roundedRect(40, y, 130, 14, 3, 3, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Upgrade at anchoraiguard.com/pricing', 50, y + 9);
+      y += 20;
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Contact sales@anchoraiguard.com for Enterprise & Government pricing.', 30, y);
+    }
+
     // Footer on each page
     const pageCount = doc.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
@@ -341,12 +725,38 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
     }
 
     doc.save(`anchor-security-report-${new Date().toISOString().slice(0, 10)}.pdf`);
-  }, [sortedFindings]);
+  }, [sortedFindings, tier, tierDef]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-      {/* Findings List */}
-      <div className="lg:col-span-1 bg-gray-900/50 border border-cyan-500/20 rounded-lg p-6 overflow-y-auto">
+    <div className="space-y-6 h-full">
+      {/* Subscription Banner */}
+      <div className="bg-gray-900/50 border border-cyan-500/20 rounded-lg p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-linear-to-r from-[#35c6ff] to-[#7a3cff] flex items-center justify-center">
+              <span className="text-white font-bold text-sm">{tierDef.name[0]}</span>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-white">{tierDef.name} Plan</h3>
+              <p className="text-xs text-gray-400">
+                {tierDef.maxProjects === 'Unlimited' ? 'Unlimited' : tierDef.maxProjects} projects · {tierDef.maxScansPerMonth === 'Unlimited' ? 'Unlimited' : tierDef.maxScansPerMonth} scans/mo · {tierDef.maxAIQueries === 'Unlimited' ? 'Unlimited' : tierDef.maxAIQueries} AI queries/mo
+              </p>
+            </div>
+          </div>
+          {tier !== 'enterprise' && onNavigateToUpgrade && (
+            <button
+              onClick={onNavigateToUpgrade}
+              className="px-4 py-2 bg-linear-to-r from-[#35c6ff] to-[#7a3cff] text-white text-xs rounded-lg font-medium hover:opacity-90 transition-opacity"
+            >
+              Upgrade Plan
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Findings List */}
+        <div className="lg:col-span-1 bg-gray-900/50 border border-cyan-500/20 rounded-lg p-6 overflow-y-auto max-h-[70vh]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white">
             Findings ({sortedFindings.length})
@@ -483,6 +893,62 @@ const FindingsReportScreen: React.FC<FindingsReportScreenProps> = ({
           </div>
         )}
       </div>
+      </div>
+
+      {/* Upsell Panel — only shown for non-Enterprise users */}
+      {tier !== 'enterprise' && (() => {
+        const upgradeInfo = getUpgradeFeatures(tier);
+        const allHigher = getAllHigherTiers(tier);
+        if (!upgradeInfo || allHigher.length === 0) return null;
+        return (
+          <div className="bg-gray-900/50 border border-cyan-500/20 rounded-lg p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl">🚀</span>
+              <h3 className="text-lg font-semibold text-white">Unlock More for Your Business</h3>
+            </div>
+            <p className="text-sm text-gray-400 mb-4">
+              You&apos;re on the <span className="text-cyan-400 font-medium">{tierDef.name}</span> plan. 
+              See what additional capabilities higher tiers would add to your security posture:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {allHigher.map((ht) => (
+                <div key={ht.tierKey} className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 hover:border-cyan-500/30 transition-colors">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-semibold text-cyan-400">{ht.def.name}</span>
+                    <span className="text-xs text-gray-500">{ht.def.monthlyPrice}</span>
+                  </div>
+                  <div className="text-xs text-gray-500 mb-3">
+                    {ht.def.maxProjects === 'Unlimited' ? '∞' : ht.def.maxProjects} projects · {ht.def.maxScansPerMonth === 'Unlimited' ? '∞' : ht.def.maxScansPerMonth} scans · {ht.def.maxAIQueries === 'Unlimited' ? '∞' : ht.def.maxAIQueries} AI queries
+                  </div>
+                  <ul className="space-y-1.5">
+                    {ht.uniqueFeatures.slice(0, 6).map((feat, i) => (
+                      <li key={i} className="text-xs text-gray-300 flex items-start gap-1.5">
+                        <span className="text-cyan-500 mt-0.5 shrink-0">✓</span>
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                    {ht.uniqueFeatures.length > 6 && (
+                      <li className="text-xs text-gray-500 pl-4">
+                        +{ht.uniqueFeatures.length - 6} more features
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            {onNavigateToUpgrade && (
+              <div className="mt-4 text-center">
+                <button
+                  onClick={onNavigateToUpgrade}
+                  className="px-6 py-2.5 bg-linear-to-r from-[#35c6ff] to-[#7a3cff] text-white text-sm rounded-lg font-medium hover:opacity-90 transition-opacity"
+                >
+                  Compare Plans & Upgrade
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 };

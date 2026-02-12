@@ -1,13 +1,13 @@
 # Anchor Security - Revenue Projections & Pricing Strategy
 
 > **Last Updated:** February 2026  
-> **Platform Status:** 95+ Security Modules | 25 World-First Features | 25 Unprotected Layers Covered
+> **Platform Status:** 109+ Security Modules | 29 World-First Features | 29 Unprotected Layers Covered
 
 ---
 
 ## 🏆 Market Position: What No One Has Ever Built Before
 
-Anchor is the **world's first and only** security platform protecting 9 layers the entire industry leaves exposed:
+Anchor is the **world's first and only** security platform protecting 29 layers the entire industry leaves exposed:
 
 | Layer | Industry Coverage | Anchor |
 |-------|-------------------|--------|
@@ -38,13 +38,13 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **Wiz** | $50,000 - $300,000+/year | Cloud only | 0 |
 | **Checkmarx** | $50,000 - $200,000+/year | SAST/DAST only | 0 |
 | **Fortinet** | $50,000 - $500,000+/year | Network/Firewall | 0 |
-| **Anchor** | $11,880 - $75,000,000+/year | **EVERYTHING** | **25** |
+| **Anchor** | $11,880 - $75,000,000+/year | **EVERYTHING** | **29** |
 
 ### Anchor's Competitive Advantage
 
-- **🔮 25 World-First Features** - Capabilities no competitor has built
-- **🛡️ 25 Unprotected Layers** - Security blind spots only we cover
-- **🤖 95+ Security Modules** - Complete platform, not point solution
+- **🔮 29 World-First Features** - Capabilities no competitor has built
+- **🛡️ 29 Unprotected Layers** - Security blind spots only we cover
+- **🤖 109+ Security Modules** - Complete platform, not point solution
 - **🧠 Self-Evolving AI** - Gets smarter autonomously
 - **⚔️ Autonomous Red Team** - Self-attacking security engine
 - **🏛️ Sovereign-Grade** - Government & defense ready
@@ -131,7 +131,7 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 - 500 projects
 - 10,000 scans/month
 - 50,000 AI queries/month
-- **🏆 ALL 25 WORLD-FIRST FEATURES**
+- **🏆 ALL 29 WORLD-FIRST FEATURES**
 - 🔩 Hardware Integrity Verification
 - 📟 Firmware & Microcode Scanner
 - ⚔️ Autonomous Red Team
@@ -167,7 +167,7 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **SLA** | 99.95% uptime guarantee |
 
 ### Enterprise Features
-- All 95+ modules + 25 World-Firsts
+- All 109+ modules + 29 World-Firsts
 - On-premise deployment option
 - Custom AI model training
 - Dedicated security engineer
@@ -577,7 +577,7 @@ Other 7 Streams:           5.2% ($255M)
 | Stage | Rate | Notes |
 |-------|------|-------|
 | Visitor → Free Sign-up | 12% | World-first tech drives interest |
-| Free → Paid | 8% | 25 world-firsts = high perceived value |
+| Free → Paid | 8% | 29 world-firsts = high perceived value |
 | Paid → Enterprise | 5% | Strong enterprise demand |
 | Monthly Churn | 1.5% | Very sticky product |
 | Net Revenue Retention | 165% | High expansion from upgrades + add-ons |
@@ -628,15 +628,15 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 | CrowdStrike | 12 years | Started with single EDR product |
 | Palo Alto | 10 years | 15+ acquisitions |
 | Zscaler | 11 years | Slow enterprise grind |
-| **Anchor** | **3 years** | 95+ modules + 25 world-firsts from day 1 |
+| **Anchor** | **3 years** | 109+ modules + 29 world-firsts from day 1 |
 
 ### Why Anchor Can 10x the Industry Norm
 
 1. **Platform from Day 1** - Not a point solution that expands
-2. **25 World-Firsts** - No competition in 25 critical layers
+2. **29 World-Firsts** - No competition in 29 critical layers
 3. **Government Ready** - $25M-$75M+ contracts from Year 1
 4. **Premium Pricing Justified** - Monopoly on unprotected layers
-5. **12 Revenue Streams** - Diversified, not dependent on one model
+5. **13 Revenue Streams** - Diversified, not dependent on one model
 
 ### $10B ARR Timeline
 
@@ -723,7 +723,7 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 | Timeframe | ARR Target | Key Milestone |
 |-----------|------------|---------------|
 | **6 Months** | $50M | First government contract signed |
-| **12 Months** | $111M | 12 revenue streams active |
+| **12 Months** | $111M | 13 revenue streams active |
 | **24 Months** | $424M | IPO-ready metrics |
 | **36 Months** | $1.06B | Unicorn status |
 | **60 Months** | $3.99B | Market dominance |
@@ -732,14 +732,14 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 
 ## 🎯 The Bottom Line
 
-### 12 Revenue Streams. 25 World-Firsts. 25 Unprotected Layers. One Platform.
+### 13 Revenue Streams. 29 World-Firsts. 29 Unprotected Layers. One Platform.
 
 | Metric | Value |
 |--------|-------|
-| **Security Modules** | 95+ |
-| **World-First Features** | 25 |
-| **Unprotected Layers Covered** | 9 |
-| **Revenue Streams** | 12 |
+| **Security Modules** | 109+ |
+| **World-First Features** | 29 |
+| **Unprotected Layers Covered** | 29 |
+| **Revenue Streams** | 13 |
 | **Year 1 ARR Target** | $111M |
 | **Year 3 ARR Target** | $1.06B |
 | **Year 5 ARR Target** | $3.99B |

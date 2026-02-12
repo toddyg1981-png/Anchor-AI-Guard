@@ -316,10 +316,10 @@ export default function AIStatusWidget({ onOpenDashboard }: AIStatusWidgetProps)
     <>
       {/* Threat Announcement Popup - Shows at top of screen */}
       {showAnnouncement && threatAnnouncements.length > 0 && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-top duration-300">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-100 animate-in slide-in-from-top duration-300">
           <div 
             className={`
-              bg-gradient-to-r ${getSeverityColor(threatAnnouncements[0].severity)}
+              bg-linear-to-r ${getSeverityColor(threatAnnouncements[0].severity)}
               rounded-xl border-2 shadow-2xl p-4 max-w-lg backdrop-blur-xl
               cursor-pointer hover:scale-105 transition-transform
             `}

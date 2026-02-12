@@ -77,7 +77,7 @@ jobs:
             ⏱️ Scan duration: ${duration || 0}s
 
             ---
-            *Powered by [Anchor Security Scanner](https://github.com/toddyg1981-png/Anchor-AI-Guard) — 95+ Security Modules • 25 World-First Features*`;
+            *Powered by [Anchor Security Scanner](https://github.com/toddyg1981-png/Anchor-AI-Guard) — 109+ Security Modules • 29 World-First Features*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,

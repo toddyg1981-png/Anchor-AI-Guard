@@ -23,6 +23,17 @@ const SecurityPage = React.lazy(() => import('./components/LegalPages').then(m =
 const AboutPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.AboutPage })));
 const ContactPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.ContactPage })));
 const PurchaseTerms = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.PurchaseTerms })));
+const CookiePolicy = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.CookiePolicy })));
+const AcceptableUsePolicy = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.AcceptableUsePolicy })));
+const DataProcessingAgreement = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.DataProcessingAgreement })));
+const DisclaimerPage = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.Disclaimer })));
+const ResponsibleDisclosure = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.ResponsibleDisclosure })));
+const ServiceLevelAgreement = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.ServiceLevelAgreement })));
+const EndUserLicenceAgreement = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.EndUserLicenceAgreement })));
+const SovereignDataResidencyPolicy = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.SovereignDataResidencyPolicy })));
+const WhistleblowerPolicy = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.WhistleblowerPolicy })));
+const IncidentResponsePolicy = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.IncidentResponsePolicy })));
+const AccessibilityStatement = React.lazy(() => import('./components/LegalPages').then(m => ({ default: m.AccessibilityStatement })));
 
 // Lazy-loaded dashboard sub-views
 const ProjectDetailScreen = React.lazy(() => import('./components/ProjectDetailScreen'));
@@ -120,6 +131,22 @@ const ForensicsInvestigation = React.lazy(() => import('./components/ForensicsIn
 const SecurityAwarenessTraining = React.lazy(() => import('./components/SecurityAwarenessTraining'));
 const NotFoundPage = React.lazy(() => import('./components/NotFoundPage'));
 
+// New Security Modules (Gap Closure)
+const DNSSecurity = React.lazy(() => import('./components/DNSSecurity'));
+const WebApplicationFirewall = React.lazy(() => import('./components/WebApplicationFirewall'));
+const DDoSProtection = React.lazy(() => import('./components/DDoSProtection'));
+const PrivilegedAccessManagement = React.lazy(() => import('./components/PrivilegedAccessManagement'));
+const CASBSecurity = React.lazy(() => import('./components/CASBSecurity'));
+const IoTSecurity = React.lazy(() => import('./components/IoTSecurity'));
+const SIEMPlatform = React.lazy(() => import('./components/SIEMPlatform'));
+const PrivacyImpactAssessment = React.lazy(() => import('./components/PrivacyImpactAssessment'));
+const PatchManagement = React.lazy(() => import('./components/PatchManagement'));
+const SecureCodeReview = React.lazy(() => import('./components/SecureCodeReview'));
+const AIAgentSecurity = React.lazy(() => import('./components/AIAgentSecurity'));
+const DeepfakeDetection = React.lazy(() => import('./components/DeepfakeDetection'));
+const SatelliteCommsSecurity = React.lazy(() => import('./components/SatelliteCommsSecurity'));
+const LLMSupplyChain = React.lazy(() => import('./components/LLMSupplyChain'));
+
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
   <div className="min-h-100 flex items-center justify-center">
@@ -155,6 +182,17 @@ export type AppView =
   | 'pillar-pricing'   // 5-Pillar pricing page
   | 'product-narratives' // Product deep-dive pages
   | 'investor-slides'   // Investor pitch deck
+  | 'cookie-policy'     // Cookie policy
+  | 'acceptable-use'    // Acceptable use policy
+  | 'dpa'               // Data processing agreement
+  | 'disclaimer'        // Disclaimer
+  | 'responsible-disclosure' // Responsible disclosure
+  | 'sla'               // Service level agreement
+  | 'eula'              // End user licence agreement
+  | 'sovereign-data'    // Sovereign data residency policy
+  | 'whistleblower'     // Whistleblower policy
+  | 'incident-response-policy' // Incident response policy
+  | 'accessibility'     // Accessibility statement
   | 'not-found';        // 404 page
 
 // Dashboard sub-views
@@ -243,7 +281,21 @@ export type DashboardView =
   | 'aiLLMSecurity'
   | 'antiTampering'
   | 'forensicsInvestigation'
-  | 'securityAwarenessTraining';
+  | 'securityAwarenessTraining'
+  | 'dnsSecurity'
+  | 'waf'
+  | 'ddosProtection'
+  | 'privilegedAccess'
+  | 'casbSecurity'
+  | 'iotSecurity'
+  | 'siemPlatform'
+  | 'privacyImpact'
+  | 'patchManagement'
+  | 'secureCodeReview'
+  | 'aiAgentSecurity'
+  | 'deepfakeDetection'
+  | 'satelliteComms'
+  | 'llmSupplyChain';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout, isDemoMode } = useAuth();
@@ -256,8 +308,8 @@ const AppContent: React.FC = () => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
   const [currentPlan, setCurrentPlan] = useState<string | undefined>(undefined);
-  // Demo mode gets enterprise tier to unlock everything
-  const userPlan = isDemoMode ? 'enterprise' : (currentPlan || 'starter');
+  // Demo mode gets starter tier — users must subscribe for premium features
+  const userPlan = isDemoMode ? 'starter' : (currentPlan || 'starter');
   const [checkoutNotification, setCheckoutNotification] = useState<string | null>(null);
   
     const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
@@ -309,6 +361,28 @@ const AppContent: React.FC = () => {
       setCurrentView('product-narratives');
     } else if (path === '/investors') {
       setCurrentView('investor-slides');
+    } else if (path === '/sla') {
+      setCurrentView('sla');
+    } else if (path === '/eula') {
+      setCurrentView('eula');
+    } else if (path === '/sovereign-data') {
+      setCurrentView('sovereign-data');
+    } else if (path === '/whistleblower') {
+      setCurrentView('whistleblower');
+    } else if (path === '/incident-response-policy') {
+      setCurrentView('incident-response-policy');
+    } else if (path === '/accessibility') {
+      setCurrentView('accessibility');
+    } else if (path === '/cookie-policy') {
+      setCurrentView('cookie-policy');
+    } else if (path === '/acceptable-use') {
+      setCurrentView('acceptable-use');
+    } else if (path === '/dpa') {
+      setCurrentView('dpa');
+    } else if (path === '/disclaimer') {
+      setCurrentView('disclaimer');
+    } else if (path === '/responsible-disclosure') {
+      setCurrentView('responsible-disclosure');
     } else if (path !== '/' && path !== '/dashboard') {
       // Unknown route — show 404
       setCurrentView('not-found');
@@ -371,6 +445,28 @@ const AppContent: React.FC = () => {
         setCurrentView('investor-slides');
       } else if (path === '/purchase-terms') {
         setCurrentView('purchase-terms');
+      } else if (path === '/sla') {
+        setCurrentView('sla');
+      } else if (path === '/eula') {
+        setCurrentView('eula');
+      } else if (path === '/sovereign-data') {
+        setCurrentView('sovereign-data');
+      } else if (path === '/whistleblower') {
+        setCurrentView('whistleblower');
+      } else if (path === '/incident-response-policy') {
+        setCurrentView('incident-response-policy');
+      } else if (path === '/accessibility') {
+        setCurrentView('accessibility');
+      } else if (path === '/cookie-policy') {
+        setCurrentView('cookie-policy');
+      } else if (path === '/acceptable-use') {
+        setCurrentView('acceptable-use');
+      } else if (path === '/dpa') {
+        setCurrentView('dpa');
+      } else if (path === '/disclaimer') {
+        setCurrentView('disclaimer');
+      } else if (path === '/responsible-disclosure') {
+        setCurrentView('responsible-disclosure');
       } else if (path === '/dashboard') {
         setCurrentView('dashboard');
       } else if (path === '/') {
@@ -411,12 +507,12 @@ const AppContent: React.FC = () => {
     if (!authLoading) {
       // Only skip redirect for unauthenticated users on public/special pages.
       // Authenticated users on 'auth' or 'auth-callback' should be sent to dashboard.
-      if (!isAuthenticated && ['auth', 'auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard', 'government', 'pillar-pricing', 'product-narratives', 'investor-slides'].includes(currentView)) {
+      if (!isAuthenticated && ['auth', 'auth-callback', 'reset-password', 'forgot-password', 'pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'government', 'pillar-pricing', 'product-narratives', 'investor-slides'].includes(currentView)) {
         return;
       }
 
       // Allow authenticated users to stay on truly public info pages
-      if (isAuthenticated && ['pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'intelligence-dashboard', 'government', 'pillar-pricing', 'product-narratives', 'investor-slides', 'purchase-terms'].includes(currentView)) {
+      if (isAuthenticated && ['pricing', 'privacy', 'terms', 'security-info', 'about', 'contact', 'intelligence', 'government', 'pillar-pricing', 'product-narratives', 'investor-slides', 'purchase-terms'].includes(currentView)) {
         return;
       }
       
@@ -488,6 +584,61 @@ const AppContent: React.FC = () => {
   const handleViewPurchaseTerms = useCallback(() => {
     setCurrentView('purchase-terms');
     window.history.pushState({}, '', '/purchase-terms');
+  }, []);
+
+  const handleViewCookiePolicy = useCallback(() => {
+    setCurrentView('cookie-policy');
+    window.history.pushState({}, '', '/cookie-policy');
+  }, []);
+
+  const handleViewAcceptableUse = useCallback(() => {
+    setCurrentView('acceptable-use');
+    window.history.pushState({}, '', '/acceptable-use');
+  }, []);
+
+  const handleViewDPA = useCallback(() => {
+    setCurrentView('dpa');
+    window.history.pushState({}, '', '/dpa');
+  }, []);
+
+  const handleViewDisclaimer = useCallback(() => {
+    setCurrentView('disclaimer');
+    window.history.pushState({}, '', '/disclaimer');
+  }, []);
+
+  const handleViewResponsibleDisclosure = useCallback(() => {
+    setCurrentView('responsible-disclosure');
+    window.history.pushState({}, '', '/responsible-disclosure');
+  }, []);
+
+  const handleViewSLA = useCallback(() => {
+    setCurrentView('sla');
+    window.history.pushState({}, '', '/sla');
+  }, []);
+
+  const handleViewEULA = useCallback(() => {
+    setCurrentView('eula');
+    window.history.pushState({}, '', '/eula');
+  }, []);
+
+  const handleViewSovereignData = useCallback(() => {
+    setCurrentView('sovereign-data');
+    window.history.pushState({}, '', '/sovereign-data');
+  }, []);
+
+  const handleViewWhistleblower = useCallback(() => {
+    setCurrentView('whistleblower');
+    window.history.pushState({}, '', '/whistleblower');
+  }, []);
+
+  const handleViewIncidentResponsePolicy = useCallback(() => {
+    setCurrentView('incident-response-policy');
+    window.history.pushState({}, '', '/incident-response-policy');
+  }, []);
+
+  const handleViewAccessibility = useCallback(() => {
+    setCurrentView('accessibility');
+    window.history.pushState({}, '', '/accessibility');
   }, []);
 
   const handleBackToMarketing = useCallback(() => {
@@ -600,6 +751,8 @@ const AppContent: React.FC = () => {
             findings={findings}
             selectedFinding={selectedFinding}
             onSelectFinding={setSelectedFinding}
+            subscriptionTier={userPlan}
+            onNavigateToUpgrade={() => handleNavigate('billing')}
           />
         );
       case 'team':
@@ -810,6 +963,34 @@ const AppContent: React.FC = () => {
         return <ForensicsInvestigation />;
       case 'securityAwarenessTraining':
         return <SecurityAwarenessTraining />;
+      case 'dnsSecurity':
+        return <DNSSecurity />;
+      case 'waf':
+        return <WebApplicationFirewall />;
+      case 'ddosProtection':
+        return <DDoSProtection />;
+      case 'privilegedAccess':
+        return <PrivilegedAccessManagement />;
+      case 'casbSecurity':
+        return <CASBSecurity />;
+      case 'iotSecurity':
+        return <IoTSecurity />;
+      case 'siemPlatform':
+        return <SIEMPlatform />;
+      case 'privacyImpact':
+        return <PrivacyImpactAssessment />;
+      case 'patchManagement':
+        return <PatchManagement />;
+      case 'secureCodeReview':
+        return <SecureCodeReview />;
+      case 'aiAgentSecurity':
+        return <FeatureGate addonId="ai-agent-security" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><AIAgentSecurity /></FeatureGate>;
+      case 'deepfakeDetection':
+        return <FeatureGate addonId="deepfake-detection" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><DeepfakeDetection /></FeatureGate>;
+      case 'satelliteComms':
+        return <FeatureGate addonId="satellite-comms" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><SatelliteCommsSecurity /></FeatureGate>;
+      case 'llmSupplyChain':
+        return <FeatureGate addonId="llm-supply-chain" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><LLMSupplyChain /></FeatureGate>;
       case 'overview':
       default:
         return (
@@ -861,11 +1042,22 @@ const AppContent: React.FC = () => {
             onViewAbout={handleViewAbout}
             onViewContact={handleViewContact}
             onViewPurchaseTerms={handleViewPurchaseTerms}
+            onViewCookiePolicy={handleViewCookiePolicy}
+            onViewAcceptableUse={handleViewAcceptableUse}
+            onViewDPA={handleViewDPA}
+            onViewDisclaimer={handleViewDisclaimer}
+            onViewResponsibleDisclosure={handleViewResponsibleDisclosure}
             onViewIntelligence={handleViewIntelligence}
             onViewGovernment={handleViewGovernment}
             onViewPillarPricing={handleViewPillarPricing}
             onViewProducts={handleViewProductNarratives}
             onViewInvestors={handleViewInvestorSlides}
+            onViewSLA={handleViewSLA}
+            onViewEULA={handleViewEULA}
+            onViewSovereignData={handleViewSovereignData}
+            onViewWhistleblower={handleViewWhistleblower}
+            onViewIncidentResponsePolicy={handleViewIncidentResponsePolicy}
+            onViewAccessibility={handleViewAccessibility}
           />
         );
       
@@ -973,6 +1165,39 @@ const AppContent: React.FC = () => {
       case 'purchase-terms':
         return <PurchaseTerms onBack={handleBackToMarketing} />;
 
+      case 'cookie-policy':
+        return <CookiePolicy onBack={handleBackToMarketing} />;
+
+      case 'acceptable-use':
+        return <AcceptableUsePolicy onBack={handleBackToMarketing} />;
+
+      case 'dpa':
+        return <DataProcessingAgreement onBack={handleBackToMarketing} />;
+
+      case 'disclaimer':
+        return <DisclaimerPage onBack={handleBackToMarketing} />;
+
+      case 'responsible-disclosure':
+        return <ResponsibleDisclosure onBack={handleBackToMarketing} />;
+
+      case 'sla':
+        return <ServiceLevelAgreement onBack={handleBackToMarketing} />;
+
+      case 'eula':
+        return <EndUserLicenceAgreement onBack={handleBackToMarketing} />;
+
+      case 'sovereign-data':
+        return <SovereignDataResidencyPolicy onBack={handleBackToMarketing} />;
+
+      case 'whistleblower':
+        return <WhistleblowerPolicy onBack={handleBackToMarketing} />;
+
+      case 'incident-response-policy':
+        return <IncidentResponsePolicy onBack={handleBackToMarketing} />;
+
+      case 'accessibility':
+        return <AccessibilityStatement onBack={handleBackToMarketing} />;
+
       case 'intelligence':
         return <AnchorIntelligenceLanding onBack={handleBackToMarketing} />;
 
@@ -1031,11 +1256,22 @@ const AppContent: React.FC = () => {
             onViewAbout={handleViewAbout}
             onViewContact={handleViewContact}
             onViewPurchaseTerms={handleViewPurchaseTerms}
+            onViewCookiePolicy={handleViewCookiePolicy}
+            onViewAcceptableUse={handleViewAcceptableUse}
+            onViewDPA={handleViewDPA}
+            onViewDisclaimer={handleViewDisclaimer}
+            onViewResponsibleDisclosure={handleViewResponsibleDisclosure}
             onViewIntelligence={handleViewIntelligence}
             onViewGovernment={handleViewGovernment}
             onViewPillarPricing={handleViewPillarPricing}
             onViewProducts={handleViewProductNarratives}
             onViewInvestors={handleViewInvestorSlides}
+            onViewSLA={handleViewSLA}
+            onViewEULA={handleViewEULA}
+            onViewSovereignData={handleViewSovereignData}
+            onViewWhistleblower={handleViewWhistleblower}
+            onViewIncidentResponsePolicy={handleViewIncidentResponsePolicy}
+            onViewAccessibility={handleViewAccessibility}
           />
         );
     }

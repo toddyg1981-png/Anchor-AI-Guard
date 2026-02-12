@@ -166,7 +166,7 @@ export default function AnchorIntelligenceDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center font-bold text-lg">AI</div>
+                <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center font-bold text-lg">AI</div>
                 <div>
                   <h1 className="text-xl font-bold">Anchor Intelligence Dashboard</h1>
                   <p className="text-gray-400 text-sm">Manage your API keys, monitor usage, and test endpoints</p>
@@ -228,7 +228,7 @@ export default function AnchorIntelligenceDashboard() {
                 <code className="text-green-400 text-sm flex-1 break-all">{createdKey}</code>
                 <button
                   onClick={() => copyToClipboard(createdKey)}
-                  className="px-3 py-1 bg-gray-700 rounded text-xs hover:bg-gray-600 transition-all flex-shrink-0"
+                  className="px-3 py-1 bg-gray-700 rounded text-xs hover:bg-gray-600 transition-all shrink-0"
                 >
                   {copySuccess ? '✓ Copied!' : 'Copy'}
                 </button>
@@ -262,10 +262,12 @@ export default function AnchorIntelligenceDashboard() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Plan</label>
+                <label className="block text-sm font-medium text-gray-400 mb-1" id="plan-label">Plan</label>
                 <select
                   value={newKeyPlan}
                   onChange={e => setNewKeyPlan(e.target.value)}
+                  aria-labelledby="plan-label"
+                  title="Select API key plan"
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:outline-none"
                 >
                   <option value="starter">Starter ($99,990/mo)</option>
@@ -610,9 +612,11 @@ export default function AnchorIntelligenceDashboard() {
                     </div>
 
                     <div>
-                      <label className="block text-sm text-gray-400 mb-1">Endpoint</label>
+                      <label className="block text-sm text-gray-400 mb-1" id="endpoint-label">Endpoint</label>
                       <select
                         value={playgroundEndpoint}
+                        aria-labelledby="endpoint-label"
+                        title="Select API endpoint"
                         onChange={e => {
                           setPlaygroundEndpoint(e.target.value);
                           // Set default body
@@ -639,11 +643,13 @@ export default function AnchorIntelligenceDashboard() {
 
                     {playgroundBody && (
                       <div>
-                        <label className="block text-sm text-gray-400 mb-1">Request Body (JSON)</label>
+                        <label className="block text-sm text-gray-400 mb-1" id="request-body-label">Request Body (JSON)</label>
                         <textarea
                           value={playgroundBody}
                           onChange={e => setPlaygroundBody(e.target.value)}
                           rows={6}
+                          aria-labelledby="request-body-label"
+                          placeholder="Enter JSON request body"
                           className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white font-mono text-sm focus:border-purple-500 focus:outline-none resize-none"
                         />
                       </div>
@@ -671,7 +677,7 @@ export default function AnchorIntelligenceDashboard() {
                         </button>
                       )}
                     </div>
-                    <pre className="bg-gray-800 rounded-lg p-4 text-sm text-gray-300 overflow-auto max-h-[400px] font-mono">
+                    <pre className="bg-gray-800 rounded-lg p-4 text-sm text-gray-300 overflow-auto max-h-100 font-mono">
                       {playgroundResult || 'Response will appear here...'}
                     </pre>
                   </div>
