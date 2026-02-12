@@ -56,14 +56,15 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
         <DownloadButton title="Privacy Policy" />
         
         <div className="prose prose-invert prose-cyan max-w-none space-y-6 text-purple-200">
-          <p className="text-sm text-purple-400">Last updated: February 5, 2026</p>
+          <p className="text-sm text-purple-400">Last updated: February 12, 2026</p>
           
           <section>
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">1. Introduction</h2>
             <p>
-              Anchor Security (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. 
+              Anchor Security Pty Ltd (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. 
               This Privacy Policy explains how we collect, use, disclose, and safeguard your 
-              information when you use our platform.
+              information when you use the Anchor AI Guard cybersecurity platform (&ldquo;Platform&rdquo;), 
+              which comprises 109+ security modules and 29 world-first capabilities.
             </p>
           </section>
 
@@ -77,10 +78,11 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
               <li>Authentication data from OAuth providers (GitHub, Google)</li>
             </ul>
             
-            <h3 className="text-xl text-pink-400 mt-4 mb-2">Technical Information</h3>
+            <h3 className="text-xl text-pink-400 mt-4 mb-2">Technical &amp; Security Information</h3>
             <ul className="list-disc list-inside space-y-2">
-              <li>Code repositories you choose to scan</li>
-              <li>Security scan results and findings</li>
+              <li>Code repositories, infrastructure configurations, and network data you choose to analyse</li>
+              <li>Security analysis results, threat intelligence, and compliance reports</li>
+              <li>Endpoint telemetry, SIEM event data, and IoT device metadata (where applicable)</li>
               <li>Usage analytics and platform interactions</li>
               <li>Log data and device information</li>
             </ul>
@@ -89,7 +91,7 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
           <section>
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">3. How We Use Your Information</h2>
             <ul className="list-disc list-inside space-y-2">
-              <li>To provide and maintain our security scanning services</li>
+              <li>To provide and maintain our cybersecurity platform services across all 109+ modules</li>
               <li>To process transactions and manage subscriptions</li>
               <li>To improve and personalise your experience</li>
               <li>To communicate with you about service updates</li>
@@ -168,27 +170,32 @@ export const TermsOfService: React.FC<LegalPageProps> = ({ onBack }) => {
         <DownloadButton title="Terms of Service" />
         
         <div className="prose prose-invert prose-cyan max-w-none space-y-6 text-purple-200">
-          <p className="text-sm text-purple-400">Last updated: February 5, 2026</p>
+          <p className="text-sm text-purple-400">Last updated: February 12, 2026</p>
           
           <section>
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using Anchor Security&apos;s platform, you agree to be bound by these 
-              Terms of Service. If you do not agree to these terms, do not use our services.
+              By accessing or using the Anchor AI Guard platform (&ldquo;Platform&rdquo;), operated by 
+              Anchor Security Pty Ltd, you agree to be bound by these Terms of Service. If you 
+              do not agree to these terms, do not use our services.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">2. Description of Service</h2>
             <p>
-              Anchor Security provides an AI-powered security platform including:
+              Anchor AI Guard is a comprehensive AI-powered cybersecurity platform comprising 
+              109+ security modules and 29 world-first capabilities, including but not limited to:
             </p>
             <ul className="list-disc list-inside space-y-2 mt-2">
-              <li>Automated code security scanning</li>
-              <li>Vulnerability detection and management</li>
-              <li>Compliance monitoring and reporting</li>
-              <li>Threat intelligence and analysis</li>
-              <li>Security operations automation</li>
+              <li>AI security (LLM supply chain, AI agent security, deepfake detection, AI runtime protection)</li>
+              <li>Network security (SIEM, WAF, DDoS protection, DNS security, firewall management)</li>
+              <li>Cloud &amp; infrastructure security (CASB, container security, cloud posture management)</li>
+              <li>Identity &amp; access management (privileged access, zero trust, identity drift detection)</li>
+              <li>Endpoint protection (EDR, IoT security, satellite communications security)</li>
+              <li>Compliance &amp; governance (privacy impact assessments, patch management, secure code review)</li>
+              <li>Threat intelligence, attack surface management, and autonomous security operations</li>
+              <li>Code scanning, vulnerability detection, and AI-powered auto-remediation</li>
             </ul>
           </section>
 
@@ -416,8 +423,9 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
         
         <div className="prose prose-invert prose-cyan max-w-none space-y-6 text-purple-200">
           <p className="text-xl leading-relaxed">
-            We built the security tools we wished existed. Twelve world-first innovations 
-            that fundamentally change how organisations protect their critical assets and code.
+            We built the security tools we wished existed. Twenty-nine world-first innovations 
+            across 109+ modules that fundamentally change how organisations protect their 
+            critical assets, infrastructure, and data.
           </p>
 
           <section className="mt-12">
@@ -441,7 +449,7 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
                 <h3 className="text-xl font-semibold text-pink-400 mb-2">🚀 World-First Features</h3>
                 <p className="text-sm">
-                  12 capabilities that don&apos;t exist anywhere else in the market.
+                  29 world-first capabilities that don&apos;t exist anywhere else in the market.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
@@ -514,7 +522,7 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
         <DownloadButton title="Purchase Terms" />
         
         <div className="prose prose-invert prose-cyan max-w-none space-y-6 text-purple-200">
-          <p className="text-sm text-purple-400">Last updated: February 7, 2026</p>
+          <p className="text-sm text-purple-400">Last updated: February 12, 2026</p>
           
           <p className="text-lg">
             These Purchase Terms & Conditions govern your purchase and use of Anchor Security 
@@ -526,20 +534,36 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
             <p>Anchor Security offers the following subscription tiers:</p>
             <div className="grid gap-4 mt-4">
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
-                <h3 className="font-semibold text-pink-400">Starter</h3>
-                <p className="text-sm mt-1">$990/month - Ideal for individual developers and small projects</p>
+                <h3 className="font-semibold text-pink-400">Free</h3>
+                <p className="text-sm mt-1">$0/month - 1 project, 5 scans/month, basic vulnerability scanning</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
-                <h3 className="font-semibold text-pink-400">Professional</h3>
-                <p className="text-sm mt-1">$4,990/month - For growing teams with advanced security needs</p>
+                <h3 className="font-semibold text-pink-400">Starter</h3>
+                <p className="text-sm mt-1">$990/month - 3 projects, 50 scans/month, all vulnerability scanners, AI Security Chat</p>
+              </div>
+              <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
+                <h3 className="font-semibold text-pink-400">Pro</h3>
+                <p className="text-sm mt-1">$4,990/month - 10 projects, world-first features including Predictive CVE Intelligence &amp; AI Auto-Fix</p>
+              </div>
+              <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
+                <h3 className="font-semibold text-pink-400">Team</h3>
+                <p className="text-sm mt-1">$14,990/month - 50 projects, 15 team members, Digital Twin Security, Autonomous SOC, collaboration</p>
+              </div>
+              <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
+                <h3 className="font-semibold text-pink-400">Business</h3>
+                <p className="text-sm mt-1">$49,990/month - All 109+ modules, 29 world-firsts, SSO/SAML, 99.9% SLA, dedicated CSM</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Enterprise</h3>
-                <p className="text-sm mt-1">$49,990/month - Full platform access with premium support</p>
+                <p className="text-sm mt-1">Custom pricing ($5M-$10M/year) - On-premise, custom AI models, 99.95% SLA</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
-                <h3 className="font-semibold text-pink-400">Government</h3>
-                <p className="text-sm mt-1">Custom pricing - Sovereign security for government agencies</p>
+                <h3 className="font-semibold text-pink-400">Enterprise+</h3>
+                <p className="text-sm mt-1">Custom pricing ($10M-$25M/year) - Multi-region, white-label, 99.99% SLA</p>
+              </div>
+              <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
+                <h3 className="font-semibold text-pink-400">Government &amp; Defense</h3>
+                <p className="text-sm mt-1">Custom pricing ($25M-$75M+/year) - FedRAMP High, air-gapped, TS/SCI, sovereign deployment</p>
               </div>
             </div>
           </section>
@@ -934,9 +958,9 @@ export const DataProcessingAgreement: React.FC<LegalPageProps> = ({ onBack }) =>
             <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4 mt-4">
               <table className="w-full text-sm">
                 <tbody>
-                  <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold w-1/3">Subject matter</td><td className="py-2">Provision of AI-powered security scanning and analysis services</td></tr>
+                  <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold w-1/3">Subject matter</td><td className="py-2">Provision of the Anchor AI Guard comprehensive cybersecurity platform (109+ security modules across AI security, network security, cloud security, identity &amp; access management, endpoint protection, compliance &amp; governance)</td></tr>
                   <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Duration</td><td className="py-2">For the duration of the service agreement plus 30 days</td></tr>
-                  <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Nature &amp; purpose</td><td className="py-2">Security analysis of code, infrastructure, and threat data to identify vulnerabilities</td></tr>
+                  <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Nature &amp; purpose</td><td className="py-2">Security analysis of code, infrastructure, networks, endpoints, cloud environments, AI models, and threat data to identify vulnerabilities, monitor compliance, and automate security operations</td></tr>
                   <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Categories of data</td><td className="py-2">User account data, code repositories, scan results, usage logs, IP addresses</td></tr>
                   <tr><td className="py-2 text-pink-400 font-semibold">Data subjects</td><td className="py-2">Customer employees, authorised users</td></tr>
                 </tbody>
@@ -1050,7 +1074,7 @@ export const Disclaimer: React.FC<LegalPageProps> = ({ onBack }) => {
 
           <section className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6">
             <h2 className="text-2xl font-semibold text-amber-400 mt-0 mb-4">Important Notice</h2>
-            <p className="text-amber-200">Anchor Security is a <strong>security analysis and monitoring tool</strong>. It is <strong>not</strong> a guarantee of absolute security. No software can detect all vulnerabilities or prevent all breaches. Use of our platform should be part of a comprehensive security programme, not a substitute for one.</p>
+            <p className="text-amber-200">Anchor AI Guard is a <strong>comprehensive cybersecurity platform</strong> comprising 109+ security modules and 29 world-first capabilities. It is <strong>not</strong> a guarantee of absolute security. No software can detect all vulnerabilities or prevent all breaches. Use of our platform should be part of a comprehensive security programme, not a substitute for one.</p>
           </section>
 
           <section>
@@ -1359,6 +1383,7 @@ export const ServiceLevelAgreement: React.FC<LegalPageProps> = ({ onBack }) => {
               <tr className="border-b border-gray-800"><td className="py-2 px-3">Business</td><td className="py-2 px-3">99.9%</td><td className="py-2 px-3">~43 minutes</td></tr>
               <tr className="border-b border-gray-800"><td className="py-2 px-3">Enterprise</td><td className="py-2 px-3">99.95%</td><td className="py-2 px-3">~22 minutes</td></tr>
               <tr className="border-b border-gray-800"><td className="py-2 px-3">Enterprise+</td><td className="py-2 px-3">99.99%</td><td className="py-2 px-3">~4.3 minutes</td></tr>
+              <tr className="border-b border-gray-800"><td className="py-2 px-3">Government &amp; Defense</td><td className="py-2 px-3">99.99%</td><td className="py-2 px-3">~4.3 minutes</td></tr>
             </tbody>
           </table>
 
@@ -1391,10 +1416,10 @@ export const ServiceLevelAgreement: React.FC<LegalPageProps> = ({ onBack }) => {
           <table className="w-full text-sm border-collapse mt-4">
             <thead><tr className="border-b border-gray-700">
               <th className="text-left py-2 px-3 text-cyan-400">Priority</th>
-              <th className="text-left py-2 px-3 text-cyan-400">Free/Starter</th>
+              <th className="text-left py-2 px-3 text-cyan-400">Free / Starter</th>
               <th className="text-left py-2 px-3 text-cyan-400">Pro</th>
-              <th className="text-left py-2 px-3 text-cyan-400">Team/Business</th>
-              <th className="text-left py-2 px-3 text-cyan-400">Enterprise</th>
+              <th className="text-left py-2 px-3 text-cyan-400">Team / Business</th>
+              <th className="text-left py-2 px-3 text-cyan-400">Enterprise / Enterprise+ / Gov</th>
             </tr></thead>
             <tbody>
               <tr className="border-b border-gray-800"><td className="py-2 px-3">P1 - Critical</td><td className="py-2 px-3">48h</td><td className="py-2 px-3">4h</td><td className="py-2 px-3">1h</td><td className="py-2 px-3">15 min</td></tr>

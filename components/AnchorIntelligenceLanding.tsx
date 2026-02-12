@@ -882,7 +882,7 @@ const ioc = await fetch(\`\${BASE}/enrich\`, {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} Anchor Intelligence, a division of Anchor Security. All rights reserved. Powered by TITAN Engine.
+            © {new Date().getFullYear()} Anchor Intelligence, a division of Anchor Security Pty Ltd. All rights reserved. Powered by TITAN Engine.
           </div>
         </div>
       </div>

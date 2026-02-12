@@ -94,7 +94,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           <p>By accessing or using Anchor Security (&quot;Service&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
           
           <h3 className="text-lg font-semibold text-white">2. Description of Service</h3>
-          <p>Anchor Security provides automated security scanning, vulnerability detection, and AI-powered security analysis for software projects. The Service includes web-based dashboards, CLI tools, and API access.</p>
+          <p>Anchor AI Guard is a comprehensive AI-powered cybersecurity platform comprising 109+ security modules and 29 world-first capabilities, including code scanning, vulnerability detection, AI security, network protection (SIEM, WAF, DDoS), cloud security, identity management, endpoint protection, compliance automation, threat intelligence, and autonomous security operations. The Service includes web-based dashboards, CLI tools, and API access.</p>
           
           <h3 className="text-lg font-semibold text-white">3. User Accounts</h3>
           <p>You must provide accurate information when creating an account. You are responsible for maintaining the security of your account credentials. You must notify us immediately of any unauthorized access.</p>
@@ -110,10 +110,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           </ul>
           
           <h3 className="text-lg font-semibold text-white">5. Subscription and Billing</h3>
-          <p>Paid subscriptions are billed in advance on a monthly or yearly basis. Refunds are available within 30 days of initial purchase. Subscription cancellations take effect at the end of the billing period.</p>
+          <p>Paid subscriptions (Starter $990/mo, Pro $4,990/mo, Team $14,990/mo, Business $49,990/mo, Enterprise, Enterprise+, and Government &amp; Defense) are billed in advance on a monthly or yearly basis. Refunds are available within 30 days of initial purchase. Subscription cancellations take effect at the end of the billing period.</p>
           
           <h3 className="text-lg font-semibold text-white">6. Data and Security</h3>
-          <p>We scan your code to identify security vulnerabilities. We do not store your source code beyond the duration of the scan. Scan results and metadata are retained according to your plan&apos;s data retention policy.</p>
+          <p>We analyse your code, infrastructure, networks, and environments to identify security vulnerabilities and threats. We do not store your source code beyond the duration of the analysis. Scan results and telemetry data are retained according to your plan&apos;s data retention policy.</p>
           
           <h3 className="text-lg font-semibold text-white">7. Intellectual Property</h3>
           <p>The Service and its original content, features, and functionality are owned by Anchor Security and are protected by international copyright, trademark, and other intellectual property laws.</p>
@@ -157,8 +157,8 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           
           <h3 className="text-lg font-semibold text-white">1. Information We Collect</h3>
           <p><strong>Account Information:</strong> Email address, name, organization name, and password (hashed).</p>
-          <p><strong>Usage Data:</strong> Scan history, feature usage, and interaction with the Service.</p>
-          <p><strong>Technical Data:</strong> IP address, browser type, device information, and cookies.</p>
+          <p><strong>Usage Data:</strong> Scan history, module usage, threat intelligence data, and interaction with the Platform.</p>
+          <p><strong>Technical Data:</strong> IP address, browser type, device information, endpoint telemetry, and cookies.</p>
           
           <h3 className="text-lg font-semibold text-white">2. How We Use Your Information</h3>
           <ul className="list-disc pl-6 space-y-1">
@@ -170,7 +170,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           </ul>
           
           <h3 className="text-lg font-semibold text-white">3. Code Scanning</h3>
-          <p>When you scan code, we temporarily process it to identify security vulnerabilities. We do NOT:</p>
+          <p>When you analyse code and infrastructure, we temporarily process it to identify security vulnerabilities and threats. We do NOT:</p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Store your source code after scanning is complete</li>
             <li>Share your code with third parties</li>

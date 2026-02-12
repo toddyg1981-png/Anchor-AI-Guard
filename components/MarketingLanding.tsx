@@ -345,7 +345,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
     },
     {
       question: 'What\'s included in each pricing tier?',
-      answer: 'Free gives you basic scanning for 1 project. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence, AI Auto-Fix, Identity Drift Detection, and Architecture Drift. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, Data Trust Engine, Human Behaviour Risk Engine, AI Runtime Security, and real-time collaboration for 15 users. Business ($49,990/mo) includes all 109+ security modules, Hardware Integrity, Firmware Scanner, Autonomous Red Team, National Telemetry, SSO, and 99.9% SLA. Enterprise and Government plans start at $5M/year with unlimited everything.',
+      answer: 'Free gives you basic scanning for 1 project. Starter ($990/mo) adds extended scanning, API access for 3 projects, and email support. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence, AI Auto-Fix, Identity Drift Detection, and Architecture Drift for 10 projects. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, Data Trust Engine, Human Behaviour Risk Engine, AI Runtime Security, and real-time collaboration for 15 users. Business ($49,990/mo) includes all 109+ security modules, Hardware Integrity, Firmware Scanner, Autonomous Red Team, National Telemetry, SSO, and 99.9% SLA. Enterprise ($5M–$10M/yr), Enterprise+ ($10M–$25M/yr), and Government & Defence ($25M–$75M+/yr) plans include unlimited everything with dedicated support, air-gapped options, and sovereign deployment.',
     },
     {
       question: 'What languages, frameworks, and platforms do you support?',
@@ -627,7 +627,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       </section>
 
       {/* 5 Product Pillars Section — Replaces flat feature grid */}
-      <PillarLandingSections onViewPricing={onViewPillarPricing || onViewPricing} onGetStarted={onGetStarted} />
+      <div id="pillars">
+        <PillarLandingSections onViewPricing={onViewPillarPricing || onViewPricing} onGetStarted={onGetStarted} />
+      </div>
 
       {/* Quick Links to Deep-Dive Pages */}
       <section className="py-12 px-4">
@@ -1296,7 +1298,7 @@ print(rule["rule"]["content"])
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-6 mb-12">
+          <div className="grid md:grid-cols-5 gap-5 mb-12">
             {/* Free */}
             <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Free</h3>
@@ -1309,6 +1311,21 @@ print(rule["rule"]["content"])
               </ul>
               <button onClick={onGetStarted} className="w-full py-2 rounded-lg border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 transition-colors">
                 Get Started
+              </button>
+            </div>
+
+            {/* Starter */}
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
+              <h3 className="text-xl font-bold text-white mb-2">Starter</h3>
+              <div className="text-3xl font-bold text-cyan-400 mb-4">$990<span className="text-lg text-purple-400">/mo</span></div>
+              <ul className="space-y-2 text-sm text-purple-300 mb-6">
+                <li>✓ 3 projects</li>
+                <li>✓ 50 scans/month</li>
+                <li>✓ API access</li>
+                <li>✓ Email support</li>
+              </ul>
+              <button onClick={onViewPricing} className="w-full py-2 rounded-lg border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 transition-colors">
+                Start Free Trial
               </button>
             </div>
 
@@ -1366,7 +1383,7 @@ print(rule["rule"]["content"])
 
           <div className="text-center">
             <p className="text-purple-400 mb-4">
-              <strong>Enterprise & Government</strong> plans available from <span className="text-pink-400">$5M/year</span>
+              <strong>Enterprise</strong> from <span className="text-pink-400">$5M/year</span> · <strong>Enterprise+</strong> from <span className="text-pink-400">$10M/year</span> · <strong>Government & Defence</strong> from <span className="text-pink-400">$25M/year</span>
             </p>
             <button
               onClick={onViewPricing}
@@ -1556,7 +1573,7 @@ print(rule["rule"]["content"])
               <strong>Replace a $345K+ security stack with one platform.</strong>
             </p>
             <p className="text-lg text-purple-400 mb-8">
-              109+ modules. 29 world-first features. 29 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$4,990/month</span>.
+              109+ modules. 29 world-first features. 29 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$990/month</span>.
             </p>
             <button
               onClick={onGetStarted}
@@ -1629,7 +1646,7 @@ print(rule["rule"]["content"])
           </div>
           <div className="border-t border-cyan-500/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-purple-400 text-sm">
-              © 2026 Anchor Security. All rights reserved.
+              © 2026 Anchor Security Pty Ltd. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="https://youtube.com/@anchoraiguard" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-pink-400 transition-colors">YouTube</a>
