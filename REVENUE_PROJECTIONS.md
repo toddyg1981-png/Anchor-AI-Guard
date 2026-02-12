@@ -9,17 +9,37 @@
 
 Anchor is the **world's first and only** security platform protecting 29 layers the entire industry leaves exposed:
 
-| Layer | Industry Coverage | Anchor |
-|-------|-------------------|--------|
-| Hardware Integrity | 0 vendors | ✅ WORLD FIRST |
-| Firmware & Microcode | 0 vendors | ✅ WORLD FIRST |
-| Identity Drift Detection | 0 vendors | ✅ WORLD FIRST |
-| Data Trust Engine | 0 vendors | ✅ WORLD FIRST |
-| AI Runtime Security | 0 vendors | ✅ WORLD FIRST |
-| Human Behaviour Risk | 0 vendors | ✅ WORLD FIRST |
-| National-Scale Telemetry | 0 vendors | ✅ WORLD FIRST |
-| Architecture Drift | 0 vendors | ✅ WORLD FIRST |
-| Autonomous Red Team | 0 vendors | ✅ WORLD FIRST |
+| # | Layer | Industry Coverage | Anchor |
+|---|-------|-------------------|--------|
+| 1 | Hardware Integrity | 0 vendors | ✅ WORLD FIRST |
+| 2 | Firmware & Microcode | 0 vendors | ✅ WORLD FIRST |
+| 3 | Identity Drift Detection | 0 vendors | ✅ WORLD FIRST |
+| 4 | Data Trust Engine | 0 vendors | ✅ WORLD FIRST |
+| 5 | AI Runtime Security | 0 vendors | ✅ WORLD FIRST |
+| 6 | Human Behaviour Risk | 0 vendors | ✅ WORLD FIRST |
+| 7 | National-Scale Telemetry | 0 vendors | ✅ WORLD FIRST |
+| 8 | Architecture Drift | 0 vendors | ✅ WORLD FIRST |
+| 9 | Autonomous Red Team | 0 vendors | ✅ WORLD FIRST |
+| 10 | AI LLM Security | 0 vendors | ✅ WORLD FIRST |
+| 11 | Supply Chain AI | 0 vendors | ✅ WORLD FIRST |
+| 12 | Autonomous SOC | 0 vendors | ✅ WORLD FIRST |
+| 13 | Predictive Attack Intelligence | 0 vendors | ✅ WORLD FIRST |
+| 14 | Digital Twin Security | 0 vendors | ✅ WORLD FIRST |
+| 15 | AI Breach Simulation | 0 vendors | ✅ WORLD FIRST |
+| 16 | Predictive CVE Intelligence | 0 vendors | ✅ WORLD FIRST |
+| 17 | Developer Security Score | 0 vendors | ✅ WORLD FIRST |
+| 18 | Real-Time Security Collaboration | 0 vendors | ✅ WORLD FIRST |
+| 19 | AI Evolution (Self-Evolving AI) | 0 vendors | ✅ WORLD FIRST |
+| 20 | Anti-Tampering | 0 vendors | ✅ WORLD FIRST |
+| 21 | Quantum-Safe Cryptography | 0 vendors | ✅ WORLD FIRST |
+| 22 | Cyber Insurance Integration | 0 vendors | ✅ WORLD FIRST |
+| 23 | AI Regulatory Intelligence | 0 vendors | ✅ WORLD FIRST |
+| 24 | Critical Infrastructure (16 CISA Sectors) | 0 vendors | ✅ WORLD FIRST |
+| 25 | Security Awareness Training | 0 vendors | ✅ WORLD FIRST |
+| 26 | AI Agent Security | 0 vendors | ✅ WORLD FIRST |
+| 27 | Deepfake Detection & Defence | 0 vendors | ✅ WORLD FIRST |
+| 28 | Satellite Communications Security | 0 vendors | ✅ WORLD FIRST |
+| 29 | LLM Supply Chain Protection | 0 vendors | ✅ WORLD FIRST |
 
 **Verified across CrowdStrike, Palo Alto Networks, SentinelOne, Snyk, Wiz, Checkmarx, Fortinet, and 40+ other vendors.**
 
@@ -85,7 +105,7 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **Starter** | $990 | $11,880 | Startups, small teams | 0 (core features) |
 | **Pro** | $4,990 | $59,880 | Scale-ups | 2 (Identity Drift, Architecture Drift) |
 | **Team** | $14,990 | $179,880 | Mid-market | 5 (+Data Trust, Human Behaviour, AI Runtime) |
-| **Business** | $49,990 | $599,880 | Enterprise | **All 25** (Hardware, Firmware, Red Team, National Telemetry, etc.) |
+| **Business** | $49,990 | $599,880 | Enterprise | **All 29** (Hardware, Firmware, Red Team, National Telemetry, AI Agent Security, Deepfake Detection, Satellite Comms, LLM Supply Chain, etc.) |
 
 ### Feature Breakdown
 
