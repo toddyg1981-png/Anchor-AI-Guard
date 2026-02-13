@@ -38,6 +38,78 @@ export async function verificationRoutes(app: FastifyInstance): Promise<void> {
     return reply.send({ verification: verification || { status: 'UNVERIFIED' } });
   });
 
+  // ─── SAVE business details as draft (without submitting for verification) ───
+  app.put('/verification/save', { preHandler: authMiddleware([Roles.OWNER, Roles.ADMIN]) }, async (request, reply) => {
+    const { userId, orgId } = (request as any).user;
+
+    // Use a relaxed schema for drafts — companyLegalName not strictly required to save
+    const draftSchema = z.object({
+      companyLegalName: z.string().max(300).optional().nullable(),
+      companyTradingName: z.string().max(300).optional().nullable(),
+      companyRegistrationNo: z.string().max(100).optional().nullable(),
+      companyType: z.string().max(100).optional().nullable(),
+      industry: z.string().max(200).optional().nullable(),
+      companyWebsite: z.string().max(500).optional().nullable(),
+      companyEmail: z.string().max(200).optional().nullable(),
+      companyPhone: z.string().max(30).optional().nullable(),
+      regAddress: z.string().max(500).optional().nullable(),
+      regCity: z.string().max(100).optional().nullable(),
+      regState: z.string().max(100).optional().nullable(),
+      regPostalCode: z.string().max(20).optional().nullable(),
+      regCountry: z.string().max(100).optional().nullable(),
+    });
+
+    const parsed = draftSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: 'Invalid payload', details: parsed.error.flatten() });
+    }
+
+    const data = parsed.data;
+
+    // Find existing verification to preserve its status
+    const existing = await prisma.businessVerification.findUnique({ where: { orgId } });
+    const currentStatus = existing?.status || 'UNVERIFIED';
+
+    // Only allow saving drafts if not already PENDING/UNDER_REVIEW/VERIFIED
+    // (don't overwrite data that is currently being reviewed)
+    const protectedStatuses = ['PENDING', 'UNDER_REVIEW'];
+    if (protectedStatuses.includes(currentStatus)) {
+      return reply.status(400).send({
+        error: 'Cannot modify business details while verification is under review. Please wait for the review to complete.',
+      });
+    }
+
+    const verification = await prisma.businessVerification.upsert({
+      where: { orgId },
+      create: {
+        orgId,
+        status: 'UNVERIFIED',
+        ...data,
+      },
+      update: {
+        ...data,
+        // Keep existing status (UNVERIFIED, REJECTED, or VERIFIED) — don't change it
+      },
+    });
+
+    logAuditEvent({
+      userId,
+      orgId,
+      action: 'BUSINESS_DETAILS_SAVED',
+      resource: 'verification',
+      resourceId: verification.id,
+      ip: request.ip,
+      userAgent: request.headers['user-agent'],
+      success: true,
+      details: { companyName: data.companyLegalName },
+    });
+
+    return reply.send({
+      verification,
+      message: 'Business details saved successfully.',
+    });
+  });
+
   // ─── SUBMIT business details for verification ───
   app.post('/verification/submit', { preHandler: authMiddleware([Roles.OWNER, Roles.ADMIN]) }, async (request, reply) => {
     const { userId, orgId } = (request as any).user;

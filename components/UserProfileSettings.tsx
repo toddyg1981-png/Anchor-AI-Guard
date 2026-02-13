@@ -233,6 +233,42 @@ const UserProfileSettings: React.FC = () => {
     setVerification(prev => ({ ...prev, [field]: value || null }));
   };
 
+  const saveBusinessDetails = async () => {
+    try {
+      setSaving(true);
+      const res = await fetch(`${env.apiBaseUrl}/verification/save`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyLegalName: verification.companyLegalName,
+          companyTradingName: verification.companyTradingName,
+          companyRegistrationNo: verification.companyRegistrationNo,
+          companyType: verification.companyType,
+          industry: verification.industry,
+          companyWebsite: verification.companyWebsite,
+          companyEmail: verification.companyEmail,
+          companyPhone: verification.companyPhone,
+          regAddress: verification.regAddress,
+          regCity: verification.regCity,
+          regState: verification.regState,
+          regPostalCode: verification.regPostalCode,
+          regCountry: verification.regCountry,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to save business details');
+      }
+      const data = await res.json();
+      setVerification(data.verification);
+      showNotif('success', 'Business details saved successfully');
+    } catch (err: any) {
+      showNotif('error', err.message || 'Failed to save business details');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const submitVerification = async () => {
     if (!verification.companyLegalName) {
       showNotif('error', 'Company legal name is required');
@@ -379,16 +415,20 @@ const UserProfileSettings: React.FC = () => {
                   type="text"
                   value={nameValue}
                   onChange={e => setNameValue(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && nameValue.trim()) saveUserName(); if (e.key === 'Escape') { setEditingName(false); setNameValue(userData?.name || ''); } }}
                   className="bg-slate-700/50 border border-slate-600 rounded-lg px-3 py-1.5 text-white text-lg font-semibold focus:outline-none focus:border-cyan-500"
                   autoFocus
+                  placeholder="Enter your name"
                 />
-                <button onClick={saveUserName} disabled={saving} className="px-3 py-1.5 bg-cyan-500/20 text-cyan-400 rounded-lg text-sm hover:bg-cyan-500/30 disabled:opacity-50">Save</button>
+                <button onClick={saveUserName} disabled={saving || !nameValue.trim()} className="px-3 py-1.5 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                  {saving ? 'Saving...' : 'Save'}
+                </button>
                 <button onClick={() => { setEditingName(false); setNameValue(userData?.name || ''); }} className="px-3 py-1.5 text-slate-400 rounded-lg text-sm hover:text-white">Cancel</button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-white">{userData?.name || 'No name set'}</h2>
-                <button onClick={() => setEditingName(true)} className="text-slate-500 hover:text-cyan-400 transition-colors">
+                <button onClick={() => setEditingName(true)} className="text-slate-500 hover:text-cyan-400 transition-colors" title="Edit your display name">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
@@ -396,6 +436,14 @@ const UserProfileSettings: React.FC = () => {
               </div>
             )}
             <p className="text-slate-400 text-sm">{userData?.email}</p>
+            {/* Company name from verification data */}
+            {verification.companyLegalName && (
+              <p className="text-slate-300 text-sm mt-0.5 flex items-center gap-1.5">
+                <span className="text-slate-500">🏢</span>
+                {verification.companyLegalName}
+                {verification.status === 'VERIFIED' && <span className="text-emerald-400 text-xs">✅</span>}
+              </p>
+            )}
             <div className="flex items-center gap-3 mt-2">
               <span className="inline-block px-2.5 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs rounded-full capitalize font-medium">
                 {userData?.role}
@@ -610,13 +658,35 @@ const UserProfileSettings: React.FC = () => {
               </div>
             </div>
 
-            {/* Submit Verification */}
-            {(verification.status === 'UNVERIFIED' || verification.status === 'REJECTED') && (
-              <div className="flex justify-end mt-6 pt-5 border-t border-slate-700/50">
+            {/* Save & Submit Buttons */}
+            <div className="flex items-center justify-between mt-6 pt-5 border-t border-slate-700/50">
+              {/* Save Draft Button — always available when not under review */}
+              {verification.status !== 'PENDING' && verification.status !== 'UNDER_REVIEW' && (
+                <button
+                  onClick={saveBusinessDetails}
+                  disabled={saving}
+                  className="px-6 py-2.5 bg-slate-700/50 text-white border border-slate-600/50 rounded-xl text-sm font-semibold hover:bg-slate-600/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {saving ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                      Save Business Details
+                    </>
+                  )}
+                </button>
+              )}
+
+              {/* Submit for Verification — only if UNVERIFIED or REJECTED */}
+              {(verification.status === 'UNVERIFIED' || verification.status === 'REJECTED') && (
                 <button
                   onClick={submitVerification}
                   disabled={saving || !verification.companyLegalName}
-                  className="px-6 py-2.5 bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-xl text-sm font-semibold hover:brightness-110 transition-all shadow-lg shadow-pink-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] text-white rounded-xl text-sm font-semibold hover:brightness-110 transition-all shadow-lg shadow-pink-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 ml-auto"
                 >
                   {saving ? (
                     <>
@@ -625,8 +695,13 @@ const UserProfileSettings: React.FC = () => {
                     </>
                   ) : verification.status === 'REJECTED' ? 'Resubmit for Verification' : 'Submit for Verification'}
                 </button>
-              </div>
-            )}
+              )}
+
+              {/* Verified status — show save for updates */}
+              {verification.status === 'VERIFIED' && (
+                <span className="text-xs text-slate-500 ml-auto">Verified details can be updated and saved at any time</span>
+              )}
+            </div>
           </div>
         )}
 

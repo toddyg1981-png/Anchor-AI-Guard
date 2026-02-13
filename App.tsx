@@ -1068,15 +1068,6 @@ const AppContent: React.FC = () => {
               setCurrentView(isAuthenticated ? 'dashboard' : 'marketing');
               window.history.pushState({}, '', '/');
             }}
-            onSelectPlan={(tier) => {
-              if (['ENTERPRISE', 'ENTERPRISE_PLUS', 'GOVERNMENT'].includes(tier)) {
-                window.open('mailto:sales@anchoraiguard.com?subject=Enterprise%20Inquiry%20-%20' + encodeURIComponent(tier), '_blank');
-              } else if (!isAuthenticated) {
-                setCurrentView('auth');
-                window.history.pushState({}, '', `/signup?plan=${tier}`);
-              }
-              // For authenticated users, PricingPage handles checkout internally
-            }}
             currentPlan={currentPlan}
             isAuthenticated={isAuthenticated}
           />
