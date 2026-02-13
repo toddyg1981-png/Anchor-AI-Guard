@@ -308,8 +308,8 @@ const AppContent: React.FC = () => {
     return localStorage.getItem('onboarding_complete') === 'true';
   });
   const [currentPlan, setCurrentPlan] = useState<string | undefined>(undefined);
-  // Demo mode gets starter tier — users must subscribe for premium features
-  const userPlan = isDemoMode ? 'starter' : (currentPlan || 'starter');
+  // Demo mode gets full enterprise access so DSTG can evaluate all features
+  const userPlan = isDemoMode ? 'enterprise' : (currentPlan || 'starter');
   const [checkoutNotification, setCheckoutNotification] = useState<string | null>(null);
   
     const { projects, findings, activeScans, loading, error, refetch } = useBackendData(isAuthenticated, authLoading);
