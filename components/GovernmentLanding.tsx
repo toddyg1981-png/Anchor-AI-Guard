@@ -40,7 +40,7 @@ function useCountUp(end: number, duration: number = 2000, startOnView: boolean =
 }
 
 // ─── Shield Icon SVG ───
-const SovereignShield: React.FC<{ className?: string }> = ({ className }) => (
+const _SovereignShield: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 120 140" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="shieldGrad" x1="0" y1="0" x2="120" y2="140" gradientUnits="userSpaceOnUse">
@@ -91,14 +91,14 @@ const AnimatedGrid: React.FC = () => (
       animation: 'gridShift 20s linear infinite',
     }} />
     {/* Radar sweep */}
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-[0.03]" style={{
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 rounded-full opacity-3" style={{
       background: 'conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.4) 30deg, transparent 60deg)',
       animation: 'radarSweep 8s linear infinite',
     }} />
     {/* Floating orbs */}
     <div className="absolute top-20 left-[10%] w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse" />
     <div className="absolute bottom-40 right-[15%] w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-    <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-amber-500/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+    <div className="absolute top-1/2 left-1/2 w-125 h-125 bg-amber-500/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
   </div>
 );
 
@@ -165,6 +165,58 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
     { flag: '🇮🇳', country: 'India', frameworks: ['CERT-In', 'NCSP 2020', 'DPDP Act', 'MeitY Standards'], color: 'from-orange-600/20 to-green-600/20', border: 'border-orange-400/30' },
     { flag: '🇮🇱', country: 'Israel', frameworks: ['INCD Methodology', 'IL-CERT', 'Cyber Defense Doctrine', 'Reg. 362'], color: 'from-blue-600/20 to-white/10', border: 'border-blue-400/30' },
     { flag: '🇸🇬', country: 'Singapore', frameworks: ['CSA Cybersecurity Act', 'PDPA', 'MAS TRM', 'CCOP'], color: 'from-red-600/20 to-white/10', border: 'border-red-400/30' },
+  ];
+
+  // ─── SOVEREIGN CAPABILITIES DATA ───
+  const sovereignCapabilities = [
+    {
+      icon: '🌐',
+      title: 'National Telemetry Layer',
+      desc: 'Sovereign cyber intelligence at scale. Aggregate threat data across government networks with full data sovereignty.',
+      tag: 'SOVEREIGN',
+    },
+    {
+      icon: '⚡',
+      title: 'TITAN Autonomous Engine',
+      desc: '24/7 autonomous threat response. Self-evolving detection that adapts faster than adversaries can innovate.',
+      tag: 'TITAN',
+    },
+    {
+      icon: '🧠',
+      title: 'Cortex Intelligence Core',
+      desc: 'AI that thinks, predicts, and acts. The strategic brain that orchestrates all security operations.',
+      tag: 'CORTEX',
+    },
+    {
+      icon: '👤',
+      title: 'Human Behaviour Engine',
+      desc: 'Predict insider threats before they happen. Behavioral analytics that detect compromised or malicious actors.',
+      tag: 'BEHAVIOR',
+    },
+    {
+      icon: '🏭',
+      title: 'Critical Infrastructure Protection',
+      desc: 'ICS/SCADA/OT security purpose-built for power grids, water systems, and transport networks.',
+      tag: 'OT/ICS',
+    },
+    {
+      icon: '🛰️',
+      title: 'Satellite Communications Security',
+      desc: 'Space-based comms protection. Secure military and government satellite communications.',
+      tag: 'SATCOM',
+    },
+    {
+      icon: '🔗',
+      title: 'Supply Chain AI',
+      desc: 'Detect upstream compromises before they reach you. AI-powered supply chain threat intelligence.',
+      tag: 'SUPPLY',
+    },
+    {
+      icon: '🔮',
+      title: 'Predictive Attack Intel',
+      desc: 'Forecast campaigns before execution. Predict nation-state attacks before they launch.',
+      tag: 'PREDICTIVE',
+    },
   ];
 
   // ─── CAPABILITIES DATA ───
@@ -252,7 +304,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
   const pricing = [
     {
       tier: 'Department Level',
-      price: '$49,990',
+      price: '$29,990',
       period: '/month',
       users: 'Up to 500 users',
       desc: 'For individual government departments and small agencies requiring essential cybersecurity compliance.',
@@ -359,27 +411,56 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
 
           {/* TITAN Engine Pulse */}
           <div className="flex justify-center mb-6">
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 border border-amber-500/30">
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-linear-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 border border-amber-500/30">
               <div className="relative">
                 <div className="w-3 h-3 bg-amber-500 rounded-full animate-ping absolute" />
                 <div className="w-3 h-3 bg-amber-400 rounded-full relative" />
               </div>
-              <span className="text-amber-300 text-sm font-bold tracking-widest">TITAN ENGINE — SOVEREIGN DEFENSE ACTIVE</span>
+              <span className="text-amber-300 text-sm font-bold tracking-widest">TITAN ENGINE — SOVEREIGN INTELLIGENCE ACTIVE</span>
             </div>
           </div>
 
           {/* Headline */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-            <span className="text-white">Sovereign Cyber Defense</span>
+            <span className="text-white">Sovereign-Grade Cyber Defence</span>
             <br />
-            <span className="shimmer-text">for World Governments</span>
+            <span className="shimmer-text">for National Security</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-            The world&apos;s first self-evolving AI security platform built for national defense.
-            Protect critical infrastructure, government networks, and classified environments
-            with <span className="text-amber-400 font-semibold">TITAN</span> — autonomous threat detection that outpaces nation-state adversaries.
+          {/* Organism Architecture */}
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 mb-6">
+            <span className="px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium">Anchor is the organism</span>
+            <span className="text-slate-600">—</span>
+            <span className="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium">TITAN is the autonomous engine</span>
+            <span className="text-slate-600">—</span>
+            <span className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium">The Cortex is the intelligence core</span>
+          </div>
+
+          <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-6 leading-relaxed">
+            The first cybersecurity platform that behaves like a <span className="text-cyan-400 font-semibold">sovereign intelligence entity</span>.
+            Self-describing, self-auditing, self-evolving — protecting critical infrastructure, government networks, and classified environments
+            with <span className="text-amber-400 font-semibold">TITAN</span> autonomous threat response that outpaces nation-state adversaries.
           </p>
+
+          {/* Platform Stats */}
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 mb-10">
+            <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+              <span className="text-2xl font-bold text-cyan-400">109</span>
+              <span className="text-sm text-slate-400 ml-1">modules</span>
+            </div>
+            <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+              <span className="text-2xl font-bold text-amber-400">24</span>
+              <span className="text-sm text-slate-400 ml-1">engines</span>
+            </div>
+            <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+              <span className="text-2xl font-bold text-purple-400">32+</span>
+              <span className="text-sm text-slate-400 ml-1">world-firsts</span>
+            </div>
+            <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+              <span className="text-2xl font-bold text-emerald-400">8</span>
+              <span className="text-sm text-slate-400 ml-1">sovereign-grade</span>
+            </div>
+          </div>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -479,6 +560,60 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* SECTION 2B: SOVEREIGN CAPABILITIES                             */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative py-24 px-4 border-t border-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader
+            label="Sovereign-Grade Capabilities"
+            title="8 Sovereign-Grade Security Capabilities"
+            subtitle="No other vendor offers sovereign-grade AI that operates autonomously. Deploy on-premise, air-gapped, or in your sovereign cloud."
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            {sovereignCapabilities.map((cap, i) => (
+              <div key={i} className="gov-card group relative p-5 rounded-xl bg-linear-to-b from-white/3 to-transparent border border-white/6 hover:border-amber-500/30 transition-all">
+                <div className="absolute top-3 right-3">
+                  <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    {cap.tag}
+                  </span>
+                </div>
+                <div className="text-3xl mb-3">{cap.icon}</div>
+                <h3 className="text-sm font-semibold text-white mb-2 pr-12">{cap.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">{cap.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Government Differentiators */}
+          <div className="classified-border rounded-2xl p-8 bg-linear-to-b from-amber-500/2 to-transparent">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-6">
+                <div className="w-14 h-14 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-7 h-7 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
+                <h4 className="text-base font-semibold text-white mb-2">Autonomous Sovereign AI</h4>
+                <p className="text-sm text-slate-400">No other vendor offers sovereign-grade AI that operates autonomously without human intervention</p>
+              </div>
+              <div className="text-center p-6">
+                <div className="w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-7 h-7 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <h4 className="text-base font-semibold text-white mb-2">Flexible Deployment</h4>
+                <p className="text-sm text-slate-400">Deploy on-premise, air-gapped, or in your sovereign cloud — complete data sovereignty guaranteed</p>
+              </div>
+              <div className="text-center p-6">
+                <div className="w-14 h-14 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-7 h-7 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+                </div>
+                <h4 className="text-base font-semibold text-white mb-2">Highest Standards</h4>
+                <p className="text-sm text-slate-400">Meets the highest government security standards: FedRAMP, IL5, NATO RESTRICTED, and beyond</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
       {/* SECTION 3: CAPABILITIES                                        */}
       {/* ═══════════════════════════════════════════════════════════════ */}
       <section id="capabilities" className="relative py-24 px-4 border-t border-slate-800/50">
@@ -490,7 +625,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {capabilities.map((cap, i) => (
-              <div key={i} className="gov-card group relative p-6 rounded-2xl bg-linear-to-b from-white/[0.03] to-transparent border border-white/[0.06] hover:border-cyan-500/30 transition-all animate-pulse-glow" style={{ animationDelay: `${i * 0.5}s` }}>
+              <div key={i} className="gov-card group relative p-6 rounded-2xl bg-linear-to-b from-white/3 to-transparent border border-white/6 hover:border-cyan-500/30 transition-all animate-pulse-glow" style={{ animationDelay: `${i * 0.5}s` }}>
                 {/* Tag */}
                 <div className="absolute top-4 right-4">
                   <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
@@ -498,7 +633,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                   </span>
                 </div>
                 {/* Icon */}
-                <div className="w-14 h-14 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-5 group-hover:border-cyan-500/30 transition-colors">
+                <div className="w-14 h-14 rounded-xl bg-white/3 border border-white/8 flex items-center justify-center mb-5 group-hover:border-cyan-500/30 transition-colors">
                   {cap.icon}
                 </div>
                 {/* Content */}
@@ -530,7 +665,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                 className={`gov-card text-left p-5 rounded-xl border transition-all ${
                   activeCompliance === item.country
                     ? `${item.border} bg-linear-to-br ${item.color} shadow-lg`
-                    : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04]'
+                    : 'border-white/6 bg-white/2 hover:border-white/12 hover:bg-white/4'
                 }`}
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -570,7 +705,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
             title="Five Eyes & Allied Nations Compatible"
             subtitle="Purpose-built for the most demanding intelligence-sharing alliances and multinational defense cooperation frameworks."
           />
-          <div className="classified-border rounded-2xl p-8 md:p-12 bg-linear-to-b from-amber-500/[0.02] to-transparent">
+          <div className="classified-border rounded-2xl p-8 md:p-12 bg-linear-to-b from-amber-500/2 to-transparent">
             {/* Alliance visual */}
             <div className="flex flex-wrap items-center justify-center gap-6 mb-12">
               {[
@@ -620,8 +755,8 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                   icon: <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
                 },
               ].map((feature, i) => (
-                <div key={i} className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.05] flex items-center justify-center mb-4">
+                <div key={i} className="p-5 rounded-xl bg-white/2 border border-white/6">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4">
                     {feature.icon}
                   </div>
                   <h4 className="text-sm font-semibold text-white mb-2">{feature.title}</h4>
@@ -663,7 +798,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {deployments.map((dep, i) => (
-              <div key={i} className={`gov-card relative p-8 rounded-2xl bg-white/[0.02] border ${dep.accent} transition-all hover:bg-white/[0.04] ${dep.glow ? `hover:shadow-xl ${dep.glow}` : ''}`}>
+              <div key={i} className={`gov-card relative p-8 rounded-2xl bg-white/2 border ${dep.accent} transition-all hover:bg-white/4 ${dep.glow ? `hover:shadow-xl ${dep.glow}` : ''}`}>
                 {dep.recommended && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-cyan-500 text-[11px] font-bold text-white tracking-wider">
                     RECOMMENDED
@@ -702,8 +837,8 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                 key={i}
                 className={`gov-card relative p-8 rounded-2xl border transition-all ${
                   plan.recommended
-                    ? 'bg-linear-to-b from-cyan-500/[0.08] to-transparent border-cyan-500/30 shadow-xl shadow-cyan-500/5'
-                    : `bg-white/[0.02] ${plan.accent}`
+                    ? 'bg-linear-to-b from-cyan-500/8 to-transparent border-cyan-500/30 shadow-xl shadow-cyan-500/5'
+                    : `bg-white/2 ${plan.accent}`
                 } ${activePricing === i ? 'ring-1 ring-cyan-500/30' : ''}`}
                 onMouseEnter={() => setActivePricing(i)}
               >
@@ -744,7 +879,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
           </div>
           {/* SLA Note */}
           <div className="mt-10 text-center">
-            <div className="inline-flex flex-wrap items-center justify-center gap-6 px-8 py-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs text-slate-400">
+            <div className="inline-flex flex-wrap items-center justify-center gap-6 px-8 py-4 rounded-xl bg-white/2 border border-white/6 text-xs text-slate-400">
               <span className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                 99.99% SLA Guarantee
@@ -817,10 +952,10 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                 org: 'Federal Government Department',
               },
             ].map((testimonial, i) => (
-              <div key={i} className="p-6 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-all">
+              <div key={i} className="p-6 rounded-xl bg-white/2 border border-white/6 hover:border-white/10 transition-all">
                 <svg className="w-8 h-8 text-cyan-500/30 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H0z" /></svg>
                 <p className="text-sm text-slate-300 leading-relaxed mb-4 italic">&ldquo;{testimonial.quote}&rdquo;</p>
-                <div className="border-t border-white/[0.06] pt-4">
+                <div className="border-t border-white/6 pt-4">
                   <div className="text-sm font-medium text-white">{testimonial.role}</div>
                   <div className="text-xs text-slate-500">{testimonial.org}</div>
                 </div>
@@ -841,7 +976,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
             subtitle="Connect with our government solutions team for a secure briefing tailored to your agency's requirements. All communications are end-to-end encrypted."
           />
 
-          <div className="classified-border rounded-2xl p-8 md:p-12 bg-linear-to-b from-white/[0.02] to-transparent">
+          <div className="classified-border rounded-2xl p-8 md:p-12 bg-linear-to-b from-white/2 to-transparent">
             {formSubmitted ? (
               <div className="text-center py-12 animate-fade-in">
                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
@@ -862,7 +997,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                       type="text" required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -873,7 +1008,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                       type="text" required
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
                       placeholder="e.g. CISO, Director of IT Security"
                     />
                   </div>
@@ -884,7 +1019,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                       type="text" required
                       value={formData.agency}
                       onChange={(e) => setFormData({ ...formData, agency: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
                       placeholder="Government agency or department"
                     />
                   </div>
@@ -895,7 +1030,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                       type="text" required
                       value={formData.country}
                       onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
+                      className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm"
                       placeholder="Your country"
                     />
                   </div>
@@ -907,7 +1042,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                     aria-label="Required Classification Level"
                     value={formData.classification}
                     onChange={(e) => setFormData({ ...formData, classification: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm appearance-none cursor-pointer"
                     style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.25em 1.25em' }}
                   >
                     <option value="UNCLASSIFIED" className="bg-[#0f1629]">UNCLASSIFIED</option>
@@ -923,7 +1058,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                     rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-white/4 border border-white/8 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all text-sm resize-none"
                     placeholder="Describe your agency's cybersecurity requirements, current challenges, or specific areas of interest..."
                   />
                 </div>
@@ -983,7 +1118,7 @@ const GovernmentLanding: React.FC<GovernmentLandingProps> = ({ onBack, onGetStar
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                  World&apos;s first self-evolving AI security platform. Australian sovereign technology protecting governments globally.
+                  109 modules. 24 engines. 32+ world-firsts. 8 sovereign-grade capabilities. Australian sovereign technology protecting governments globally.
                 </p>
                 {/* Sovereign badge */}
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">

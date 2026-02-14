@@ -4,7 +4,7 @@ import { PRODUCT_PILLARS, PILLAR_STATS, type ProductPillar } from './PillarData'
 // =============================================================================
 // INVESTOR SLIDES � SOVEREIGN-GRADE PITCH DECK
 // 16 slides: Title > TITAN > 5 Pillars (summary) > 5 Pillar deep-dives >
-// 29 World-Firsts > National Security > Digital Twin + Red Team >
+// 32 World-Firsts > National Security > Digital Twin + Red Team >
 // Telemetry + Satellite > AI/LLM Security > Compliance + Threat Hub >
 // Valuation Narrative > Financials & Ask
 // =============================================================================
@@ -13,7 +13,7 @@ interface InvestorSlidesProps {
   onBack?: () => void;
 }
 
-// 29 World-First Technologies
+// 32 World-First Technologies
 const WORLD_FIRSTS = [
   { name: 'Predictive CVE Intelligence', icon: '\u{1F52E}', pillar: 1 },
   { name: 'Developer Security Score', icon: '\u{1F3C6}', pillar: 1 },
@@ -44,6 +44,9 @@ const WORLD_FIRSTS = [
   { name: 'Cyber Insurance Integration', icon: '\u{1F6E1}\uFE0F', pillar: 5 },
   { name: 'Critical Infrastructure (16 CISA)', icon: '\u{1F3D7}\uFE0F', pillar: 5 },
   { name: 'National Security Module', icon: '\u{1F3DB}\uFE0F', pillar: 5 },
+  { name: 'The Cortex Intelligence Core', icon: '\u{1F9E0}', pillar: 1 },
+  { name: 'Self-Healing Security Engine', icon: '\u{1FA79}', pillar: 2 },
+  { name: 'Living Organism Architecture', icon: '\u{1F9EC}', pillar: 1 },
 ];
 
 const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
@@ -82,15 +85,16 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
           Sovereign Cyber Defence Platform
         </p>
         <p className="text-lg text-slate-400 mt-3 max-w-2xl mx-auto">
-          The world&apos;s first and only all-in-one cybersecurity platform � protecting 29 layers no other vendor covers.
+          The world&apos;s first and only all-in-one cybersecurity platform — protecting 32 layers no other vendor covers.
+          A living organism that learns, adapts, and evolves autonomously.
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12 max-w-5xl w-full">
         {[
-          { value: '109+', label: 'Security Modules', color: 'text-cyan-400' },
-          { value: '29', label: 'World-First Technologies', color: 'text-amber-400' },
-          { value: '5', label: 'Product Pillars', color: 'text-pink-400' },
-          { value: '13', label: 'Revenue Streams', color: 'text-green-400' },
+          { value: '109', label: 'Security Modules', color: 'text-cyan-400' },
+          { value: '32', label: 'World-First Technologies', color: 'text-amber-400' },
+          { value: '24', label: 'Autonomous Engines', color: 'text-pink-400' },
+          { value: '8', label: 'Sovereign-Grade Capabilities', color: 'text-green-400' },
           { value: PILLAR_STATS.totalTAM, label: 'Combined TAM', color: 'text-purple-400' },
         ].map((s, i) => (
           <div key={i} className="p-5 rounded-2xl bg-slate-800/50 border border-slate-700/30 backdrop-blur-sm">
@@ -101,11 +105,15 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
       </div>
       <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-purple-500/20 p-10">
         <p className="text-lg text-purple-200 leading-relaxed">
-          Anchor is not a startup pitch. It is a <strong className="text-white">sovereign cyber-defence capability</strong> �
-          a platform that consolidates the entire cybersecurity stack into{' '}
-          <strong className="text-cyan-400">five unified pillars</strong> with{' '}
-          <strong className="text-amber-400">29 world-first innovations</strong> that no competitor, no government lab, and no
-          defence contractor has ever built. We are <strong className="text-pink-400">strategic infrastructure</strong>.
+          <strong className="text-cyan-400">Anchor is the organism.</strong>{' '}
+          <strong className="text-purple-400">TITAN is the autonomous engine.</strong>{' '}
+          <strong className="text-pink-400">The Cortex is the intelligence core.</strong>{' '}
+          Self-describing, self-auditing, and self-evolving — the first cybersecurity platform that behaves like a{' '}
+          <strong className="text-white">sovereign intelligence entity</strong>. With{' '}
+          <strong className="text-amber-400">32 world-first innovations</strong>,{' '}
+          <strong className="text-cyan-400">24 interconnected engines</strong>, and{' '}
+          <strong className="text-green-400">8 sovereign-grade capabilities</strong>, we are{' '}
+          <strong className="text-pink-400">strategic infrastructure</strong> — not a vendor.
         </p>
       </div>
       <div className="mt-8 inline-flex items-center gap-2 px-6 py-2 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold uppercase tracking-widest">
@@ -128,8 +136,9 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
           </div>
         </div>
         <p className="text-lg text-purple-300 max-w-3xl mx-auto">
-          Every module, every signal, every threat � flowing through one sovereign-grade intelligence layer.
-          TITAN is the self-evolving AI engine at the heart of Anchor.
+          Every module, every signal, every threat — flowing through one sovereign-grade intelligence layer.
+          TITAN is the autonomous engine at the heart of Anchor — orchestrating 24 interconnected engines as one neural network.
+          Self-healing, self-auditing, and capable of protecting nation-states.
         </p>
       </div>
       <div className="flex-1 grid md:grid-cols-2 gap-8">
@@ -137,11 +146,11 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
           <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Architecture</h3>
           <div className="rounded-2xl bg-slate-800/40 border border-cyan-500/20 p-6 space-y-4">
             {[
-              { icon: '\u{1F9EC}', title: 'Self-Evolving Detection', desc: 'Generates new threat rules autonomously. Every generation improves on the last.' },
+              { icon: '\u{1F9EC}', title: 'Living Organism Architecture', desc: '24 interconnected engines working as one neural network. Learns and adapts continuously.' },
               { icon: '\u{1F52E}', title: 'Predictive Intelligence', desc: 'Predicts CVEs before disclosure, attacks before launch, drift before breach.' },
-              { icon: '\u{1F4E1}', title: 'Cross-Pillar Telemetry', desc: 'All 109+ modules feed telemetry into TITAN � creating compound intelligence.' },
-              { icon: '\u{1F916}', title: 'Autonomous Operations', desc: 'Triage, investigate, remediate � without human intervention. 24/7/365.' },
-              { icon: '\u{1F6E1}\uFE0F', title: 'Sovereign Isolation', desc: 'Air-gapped deployment option. No data leaves sovereign boundaries.' },
+              { icon: '\u{1F4E1}', title: 'Cross-Pillar Telemetry', desc: 'All 109 modules feed telemetry into TITAN — creating compound intelligence.' },
+              { icon: '\u{1F916}', title: 'Autonomous Operations', desc: 'Self-healing, self-auditing. Triage, investigate, remediate — 24/7/365.' },
+              { icon: '\u{1F6E1}\uFE0F', title: 'Sovereign-Grade', desc: 'Capable of protecting nation-states. Air-gapped. No data leaves sovereign boundaries.' },
             ].map((item, i) => (
               <div key={i} className="flex gap-4">
                 <span className="text-2xl shrink-0">{item.icon}</span>
@@ -165,7 +174,7 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
             {[
               { label: 'Vendor Sprawl Eliminated', before: '15+ tools', after: '1 platform' },
               { label: 'MTTR Reduction', before: 'Hours', after: 'Minutes (autonomous)' },
-              { label: 'Detection Coverage', before: '~40 layers', after: '109+ modules / 29 world-firsts' },
+              { label: 'Detection Coverage', before: '~40 layers', after: '109 modules / 32 world-firsts' },
               { label: 'AI Model Generations', before: 'Static rules', after: 'Self-evolving (Gen N+1 auto-deployed)' },
             ].map((row, i) => (
               <div key={i} className="flex items-center justify-between">
@@ -353,15 +362,16 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
     );
   };
 
-  // SLIDE 8: 29 WORLD-FIRST MODULES
+  // SLIDE 8: 32 WORLD-FIRST MODULES
   const renderWorldFirstsSlide = () => (
     <div className="h-full px-8 py-6 flex flex-col">
       <div className="text-center mb-6">
         <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Unmatched Breadth</span>
-        <h2 className="text-4xl font-black text-white mt-2">29 World-First Technologies</h2>
+        <h2 className="text-4xl font-black text-white mt-2">32 World-First Technologies</h2>
         <p className="text-purple-300 mt-2 max-w-3xl mx-auto">
           Every single one of these capabilities has <strong className="text-amber-400">zero vendors</strong> covering it.
-          Not CrowdStrike. Not Palo Alto. Not SentinelOne. Not any government lab. <strong className="text-white">Nobody.</strong>
+          Not CrowdStrike. Not Palo Alto. Not SentinelOne. Not any government lab. <strong className="text-white">Nobody.</strong>{' '}
+          Anchor is the <strong className="text-cyan-400">first cybersecurity platform that behaves like a sovereign intelligence entity</strong>.
         </p>
       </div>
       <div className="flex-1 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2.5 overflow-auto">
@@ -380,13 +390,13 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
           <div className="flex items-center gap-6">
             {['CrowdStrike', 'Palo Alto', 'SentinelOne', 'Snyk', 'Wiz'].map(v => (
               <div key={v} className="text-center">
-                <div className="text-lg font-black text-red-400">0/29</div>
+                <div className="text-lg font-black text-red-400">0/32</div>
                 <div className="text-[10px] text-slate-500">{v}</div>
               </div>
             ))}
           </div>
           <div className="text-center px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500/10 to-cyan-500/10 border border-amber-500/30">
-            <div className="text-3xl font-black text-amber-400">29/29</div>
+            <div className="text-3xl font-black text-amber-400">32/32</div>
             <div className="text-xs text-white font-bold">ANCHOR</div>
           </div>
         </div>
@@ -816,10 +826,10 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
               </thead>
               <tbody>
                 {[
-                  { method: 'Comparable Transactions', value: '$50M \u2013 $100M', highlight: true },
-                  { method: 'Berkus Method', value: '$32M', highlight: false },
-                  { method: 'IP-Based (29 World-Firsts)', value: '$93M', highlight: false },
-                  { method: 'Forward Revenue (Conservative)', value: '$80M \u2013 $100M', highlight: false },
+                  { method: 'Comparable Transactions', value: '$100M \u2013 $200M', highlight: true },
+                  { method: 'Berkus Method (Extended)', value: '$52M', highlight: false },
+                  { method: 'IP-Based (32 World-Firsts × $1.5M)', value: '$97M', highlight: false },
+                  { method: 'Forward Revenue (Conservative)', value: '$100M \u2013 $200M', highlight: false },
                 ].map((row, i) => (
                   <tr key={i} className={`border-b border-slate-700/20 ${row.highlight ? 'bg-pink-500/5' : ''}`}>
                     <td className="px-4 py-3 text-slate-300">{row.method}</td>
@@ -828,7 +838,7 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
                 ))}
                 <tr className="bg-gradient-to-r from-pink-500/10 to-purple-500/10">
                   <td className="px-4 py-3 text-white font-bold">Blended Estimate</td>
-                  <td className="px-4 py-3 text-right font-black text-pink-400 text-lg">$50M \u2013 $100M</td>
+                  <td className="px-4 py-3 text-right font-black text-pink-400 text-lg">$100M \u2013 $150M</td>
                 </tr>
               </tbody>
             </table>
@@ -850,8 +860,8 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
               ))}
               <div className="flex items-center justify-between text-sm pt-2 border-t border-slate-700/30">
                 <span className="text-pink-400 font-bold">Anchor (2026)</span>
-                <span className="text-amber-400">109+ modules, 29 world-firsts</span>
-                <span className="text-white font-bold">$50M\u2013$100M</span>
+                <span className="text-amber-400">109 modules, 32 world-firsts, 24 engines</span>
+                <span className="text-white font-bold">$100M\u2013$150M</span>
               </div>
             </div>
             <p className="text-xs text-slate-500 mt-3">
@@ -863,12 +873,12 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
           <h3 className="text-sm font-bold text-pink-400 uppercase tracking-wider">Post-Traction Trajectory</h3>
           <div className="rounded-2xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 p-5 space-y-3">
             {[
-              { milestone: 'Prototype Complete (Now)', val: '$50M \u2013 $100M', active: true },
-              { milestone: 'First Paying Customers', val: '$100M \u2013 $175M', active: false },
-              { milestone: '$1M ARR', val: '$175M \u2013 $300M', active: false },
-              { milestone: '$10M ARR', val: '$500M \u2013 $1B', active: false },
-              { milestone: '$50M ARR', val: '$2B \u2013 $4B', active: false },
-              { milestone: '$100M ARR', val: '$5B \u2013 $10B', active: false },
+              { milestone: 'Prototype Complete (Now)', val: '$100M \u2013 $150M', active: true },
+              { milestone: 'Y1: $25M ARR', val: '$250M \u2013 $400M', active: false },
+              { milestone: 'Y2: $85M ARR', val: '$600M \u2013 $1B', active: false },
+              { milestone: 'Y3: $250M ARR', val: '$1.8B \u2013 $3B', active: false },
+              { milestone: 'Y4: $650M ARR', val: '$5B \u2013 $8B', active: false },
+              { milestone: 'Y5: $1.5B ARR', val: '$12B \u2013 $20B', active: false },
             ].map((row, i) => (
               <div key={i} className={`flex items-center justify-between p-3 rounded-xl ${row.active ? 'bg-pink-500/20 border border-pink-500/30' : 'bg-slate-800/30 border border-transparent'}`}>
                 <div className="flex items-center gap-3">
@@ -882,14 +892,15 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
           <div className="rounded-2xl bg-slate-800/40 border border-amber-500/20 p-5">
             <h4 className="text-sm font-bold text-amber-400 uppercase tracking-wider mb-3">{'\u{1F3C6}'} IP Portfolio Value</h4>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-slate-400">29 World-First Layer Modules</span><span className="text-white font-bold">$29M</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Predictive CVE IP</span><span className="text-white">$2M</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Self-Evolving AI Engine</span><span className="text-white">$2M</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Autonomous SOC IP</span><span className="text-white">$1.5M</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Other 16 World-Firsts</span><span className="text-white">$8M</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">32 World-First Modules × $1.5M</span><span className="text-white font-bold">$48M</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">TITAN Autonomous Engine</span><span className="text-white">$15M</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">Cortex Intelligence Core</span><span className="text-white">$12M</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">Predictive CVE Intelligence</span><span className="text-white">$5M</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">Self-Evolving AI Engine</span><span className="text-white">$8M</span></div>
+              <div className="flex justify-between"><span className="text-slate-400">Autonomous SOC</span><span className="text-white">$8M</span></div>
               <div className="flex justify-between pt-2 border-t border-slate-700/30">
                 <span className="text-amber-400 font-bold">Total IP Value</span>
-                <span className="text-amber-400 font-black text-lg">$46.5M</span>
+                <span className="text-amber-400 font-black text-lg">$96M</span>
               </div>
             </div>
           </div>
@@ -1001,7 +1012,7 @@ const InvestorSlides: React.FC<InvestorSlidesProps> = ({ onBack }) => {
     'TITAN Command Centre',
     'The 5 Pillars',
     ...PRODUCT_PILLARS.map(p => p.name),
-    '29 World-Firsts',
+    '32 World-Firsts',
     'National Security',
     'Digital Twin + Red Team',
     'Telemetry + Satellite',

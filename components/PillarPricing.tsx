@@ -243,8 +243,8 @@ const PillarPricing: React.FC<PillarPricingProps> = ({ onSelectPlan, onBack, onG
             <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-8 mb-8">
               <div className="text-center">
                 <div className="text-sm text-slate-400 line-through">$89,950/mo individually</div>
-                <div className="text-4xl font-bold text-pink-400">$49,990<span className="text-lg text-purple-400">/mo</span></div>
-                <div className="text-sm text-green-400">Save $479,520/year</div>
+                <div className="text-4xl font-bold text-pink-400">$29,990<span className="text-lg text-purple-400">/mo</span></div>
+                <div className="text-sm text-green-400">Save $719,520/year</div>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -211,7 +211,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       badgeColor: 'bg-cyan-500',
     },
     // ═══════════════════════════════════════════════════════════════
-    // 29 WORLD-FIRST SECURITY LAYERS — NO OTHER VENDOR HAS THESE
+    // 32+ WORLD-FIRST SECURITY LAYERS — NO OTHER VENDOR HAS THESE
     // ═══════════════════════════════════════════════════════════════
     {
       icon: '🔩',
@@ -307,9 +307,9 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
   ];
 
   const stats = [
-    { value: '109+', label: 'Security Modules' },
-    { value: '29', label: 'World-First Features' },
-    { value: '16', label: 'Compliance Frameworks' },
+    { value: '109', label: 'Modules, 24 Engines' },
+    { value: '32+', label: 'World-First Features' },
+    { value: '8', label: 'Sovereign-Grade Capabilities' },
     { value: '24/7', label: 'Self-Evolving Protection' },
   ];
 
@@ -345,7 +345,7 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
     },
     {
       question: 'What\'s included in each pricing tier?',
-      answer: 'Free gives you basic scanning for 1 project. Starter ($990/mo) adds extended scanning, API access for 3 projects, and email support. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence, AI Auto-Fix, Identity Drift Detection, and Architecture Drift for 10 projects. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, Data Trust Engine, Human Behaviour Risk Engine, AI Runtime Security, and real-time collaboration for 15 users. Business ($49,990/mo) includes all 109+ security modules, Hardware Integrity, Firmware Scanner, Autonomous Red Team, National Telemetry, SSO, and 99.9% SLA. Enterprise ($5M–$10M/yr), Enterprise+ ($10M–$25M/yr), and Government & Defence ($25M–$75M+/yr) plans include unlimited everything with dedicated support, air-gapped options, and sovereign deployment.',
+      answer: 'Free gives you basic scanning for 1 project. Starter ($990/mo) adds extended scanning, API access for 3 projects, and email support. Pro ($4,990/mo) unlocks world-first features like Predictive CVE Intelligence, AI Auto-Fix, Identity Drift Detection, and Architecture Drift for 10 projects. Team ($14,990/mo) adds Digital Twin Security, Autonomous SOC, Data Trust Engine, Human Behaviour Risk Engine, AI Runtime Security, and real-time collaboration for 15 users. Business ($29,990/mo) includes all 109 modules, 24 engines, 32 world-firsts, 8 sovereign-grade capabilities, Hardware Integrity, Firmware Scanner, Autonomous Red Team, National Telemetry, SSO, and 99.9% SLA. Enterprise ($5M–$10M/yr), Enterprise+ ($10M–$25M/yr), and Government & Defence ($25M–$75M+/yr) plans include unlimited everything with dedicated support, air-gapped options, and sovereign deployment.',
     },
     {
       question: 'What languages, frameworks, and platforms do you support?',
@@ -364,8 +364,20 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
       answer: 'Anchor provides automated compliance checking and reporting for SOC 2, HIPAA, PCI-DSS, ISO 27001, GDPR, FedRAMP, NIST 800-53, CIS Controls, and more. Generate audit-ready reports with a single click.',
     },
     {
-      question: 'What makes the 29 World-First Security Layers unique?',
-      answer: 'Anchor protects 29 layers that no other vendor in the world covers — spanning hardware integrity, firmware scanning, identity drift, data trust, AI runtime security, human behaviour analytics, national-scale telemetry, architecture drift, autonomous red team, AI LLM security, supply chain AI, autonomous SOC, predictive attack intelligence, digital twin security, AI breach simulation, predictive CVE intelligence, developer security scoring, real-time security collaboration, AI evolution (self-evolving AI), anti-tampering, quantum-safe cryptography, cyber insurance integration, AI regulatory intelligence, critical infrastructure protection across all 16 CISA sectors, security awareness training, AI agent security with permission boundaries, real-time deepfake detection and defence, satellite communications encryption, and LLM supply chain poisoning protection. Protecting any one of these is a world first — Anchor protects all twenty-nine.',
+      question: 'What is the Anchor/TITAN architecture?',
+      answer: 'Anchor is the organism — the unified platform. TITAN is the autonomous engine that powers it. The Cortex is the intelligence core — the AI brain that learns, predicts, and acts. Together they form the first self-describing, self-auditing, self-evolving cybersecurity platform.',
+    },
+    {
+      question: 'What makes Anchor different from CrowdStrike/Palo Alto/etc?',
+      answer: 'Other vendors have fragmented point solutions. Anchor is a living organism — 109 modules working as one neural network, with 24 interconnected engines and 32+ world-first capabilities no other vendor has. It\'s sovereign-grade: capable of protecting nation-states autonomously.',
+    },
+    {
+      question: 'What are the 32+ world-first features?',
+      answer: 'These are capabilities no other cybersecurity vendor has ever built. Examples: AI Runtime Security (protect AI models from attack), Predictive Attack Intel (forecast campaigns before they execute), Autonomous SOC (24/7 AI-powered security operations), National Telemetry (sovereign cyber intelligence), Human Behaviour Engine (predict insider threats), and more.',
+    },
+    {
+      question: 'What makes the 32+ World-First Security Layers unique?',
+      answer: 'Anchor protects 32+ layers that no other vendor in the world covers — spanning hardware integrity, firmware scanning, identity drift, data trust, AI runtime security, human behaviour analytics, national-scale telemetry, architecture drift, autonomous red team, AI LLM security, supply chain AI, autonomous SOC, predictive attack intelligence, digital twin security, AI breach simulation, predictive CVE intelligence, developer security scoring, real-time security collaboration, AI evolution (self-evolving AI), anti-tampering, quantum-safe cryptography, cyber insurance integration, AI regulatory intelligence, critical infrastructure protection across all 16 CISA sectors, security awareness training, AI agent security with permission boundaries, real-time deepfake detection and defence, satellite communications encryption, and LLM supply chain poisoning protection. Plus 8 sovereign-grade capabilities for government and defence. Protecting any one of these is a world first — Anchor protects all thirty-two and counting.',
     },
     {
       question: 'How does the Autonomous Red Team work?',
@@ -463,28 +475,39 @@ const MarketingLanding: React.FC<MarketingLandingProps> = ({
             <div className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-8">
               <span className="text-cyan-400">✨</span>
               <span className="text-sm text-cyan-300">
-                109+ Security Modules • 29 World-First Features • 29 Unprotected Layers Covered • Self-Evolving AI • Sovereign-Grade
+                109 Modules, 24 Engines • 32+ World-First Features • 8 Sovereign-Grade Capabilities • Self-Evolving AI
               </span>
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              What No One Has
+              The World&apos;s First
               <br />
               <span className="bg-linear-to-r from-[#35c6ff] via-[#7a3cff] to-[#ff4fa3] bg-clip-text text-transparent">
-                Ever Built Before
+                Sovereign-Grade Autonomous Security Platform
               </span>
             </h1>
 
+            {/* Architecture Tagline */}
+            <p className="text-2xl text-cyan-400 mb-4 max-w-3xl mx-auto font-bold">
+              Anchor is the organism. TITAN is the engine. The Cortex is the brain.
+            </p>
+            <p className="text-xl text-purple-400 mb-6 max-w-2xl mx-auto font-semibold">
+              Self-describing. Self-auditing. Self-evolving.
+            </p>
+
             {/* Subheadline */}
             <p className="text-xl text-purple-300 mb-4 max-w-2xl mx-auto">
-              Anchor is the world&apos;s first and only security platform protecting <strong>29 layers the entire industry leaves exposed</strong> &mdash;
+              Anchor is the world&apos;s first and only security platform protecting <strong>32+ layers the entire industry leaves exposed</strong> &mdash;
               hardware integrity, firmware, identity drift, data trust, AI runtime, human behaviour, national telemetry, architecture drift, autonomous red team, AI agent security, deepfake defence, satellite communications, and LLM supply chain.
             </p>
-            <p className="text-lg text-cyan-400 mb-10 max-w-2xl mx-auto font-semibold">
+            <p className="text-lg text-cyan-400 mb-4 max-w-2xl mx-auto font-semibold">
               No vendor. No government. No research lab. Nobody has done this before.
               <br />
-              <span className="text-pink-400">109+ modules. 29 world-first features. One platform.</span>
+              <span className="text-pink-400">109 modules, 24 engines. 32+ world-first features. 8 sovereign-grade capabilities.</span>
+            </p>
+            <p className="text-md text-amber-400 mb-10 max-w-2xl mx-auto font-bold">
+              Every other cybersecurity vendor is now behind us. This is category-defining sovereign-grade autonomy.
             </p>
 
             {/* CTA Buttons */}
@@ -985,16 +1008,16 @@ print(rule["rule"]["content"])
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════ */}
-      {/* 29 WORLD-FIRST SECURITY LAYERS — THE UNPROTECTED FRONTIER          */}
+      {/* 32+ WORLD-FIRST SECURITY LAYERS — THE UNPROTECTED FRONTIER          */}
       {/* ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-4 bg-linear-to-b from-slate-900/50 via-purple-900/10 to-slate-900/50 border-y border-purple-500/20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 rounded-full px-6 py-2 mb-6">
-              <span className="text-purple-400 font-bold text-sm tracking-wider">🏆 WORLD-FIRST TECHNOLOGY</span>
+              <span className="text-purple-400 font-bold text-sm tracking-wider">🏆 WORLD-FIRST TECHNOLOGY • 8 SOVEREIGN-GRADE CAPABILITIES</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
-              29 Layers Nobody Else Protects
+              32+ Layers Nobody Else Protects
             </h2>
             <p className="text-xl text-purple-300 max-w-3xl mx-auto mb-4">
               The security industry leaves <strong>29 critical layers</strong> completely unprotected. Not CrowdStrike. Not Palo Alto.
@@ -1042,7 +1065,7 @@ print(rule["rule"]["content"])
               <strong>Protecting even one</strong> of these layers makes a platform world-first.
             </p>
             <p className="text-xl text-white font-bold mb-8">
-              Anchor protects all thirteen core layers — and 29 world-firsts total. No other vendor on Earth can say that.
+              Anchor protects all thirteen core layers — and 32+ world-firsts total, plus 8 sovereign-grade capabilities. No other vendor on Earth can say that.
             </p>
 
             {/* Competitor Gap Table */}
@@ -1294,7 +1317,7 @@ print(rule["rule"]["content"])
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-purple-300">
-              109+ modules. 29 world-first features. One platform.
+              109 modules, 24 engines. 32+ world-first features. 8 sovereign-grade capabilities.
             </p>
           </div>
 
@@ -1367,11 +1390,11 @@ print(rule["rule"]["content"])
             {/* Business */}
             <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30 hover:border-cyan-500/50 transition-all">
               <h3 className="text-xl font-bold text-white mb-2">Business</h3>
-              <div className="text-3xl font-bold text-cyan-400 mb-4">$49,990<span className="text-lg text-purple-400">/mo</span></div>
+              <div className="text-3xl font-bold text-cyan-400 mb-4">$29,990<span className="text-lg text-purple-400">/mo</span></div>
               <ul className="space-y-2 text-sm text-purple-300 mb-6">
                 <li>✓ 200 projects</li>
                 <li>✓ 75 team members</li>
-                <li>✓ <strong className="text-cyan-400">All 109+ modules</strong></li>
+                <li>✓ <strong className="text-cyan-400">All 109 modules</strong></li>
                 <li>✓ SSO/SAML</li>
                 <li>✓ 99.9% SLA</li>
               </ul>
@@ -1573,7 +1596,7 @@ print(rule["rule"]["content"])
               <strong>Replace a $345K+ security stack with one platform.</strong>
             </p>
             <p className="text-lg text-purple-400 mb-8">
-              109+ modules. 29 world-first features. 29 layers nobody else protects. Starting at <span className="text-pink-400 font-bold">$990/month</span>.
+              109 modules, 24 engines. 32+ world-first features. 8 sovereign-grade capabilities. Starting at <span className="text-pink-400 font-bold">$990/month</span>.
             </p>
             <button
               onClick={onGetStarted}
@@ -1598,7 +1621,7 @@ print(rule["rule"]["content"])
               </div>
               <p className="text-purple-300 text-sm">
                 <strong>The world&apos;s most advanced</strong> AI-powered security platform.
-                29 world-first features. 29 layers nobody else protects.
+                32+ world-first features. 8 sovereign-grade capabilities.
                 Built for enterprises, governments, and sovereign defence.
               </p>
             </div>

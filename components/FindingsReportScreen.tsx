@@ -99,13 +99,13 @@ const TIER_DEFINITIONS: Record<TierKey, TierDefinition> = {
   },
   business: {
     name: 'Business',
-    monthlyPrice: '$49,990/mo',
+    monthlyPrice: '$29,990/mo',
     maxProjects: 200,
     maxScansPerMonth: 10000,
     maxAIQueries: 50000,
     maxTeamMembers: 75,
     features: [
-      'All 109+ Security Modules',
+      'All 109 Security Modules',
       'SSO/SAML authentication',
       'Custom security rules',
       'Advanced threat analytics',
@@ -140,7 +140,7 @@ const TIER_DEFINITIONS: Record<TierKey, TierDefinition> = {
       'Custom integrations',
     ],
     worldFirsts: [
-      'All 29 World-First features',
+      'All 32 World-First features',
     ],
   },
 };

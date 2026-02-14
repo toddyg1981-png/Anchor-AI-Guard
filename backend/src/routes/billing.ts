@@ -53,7 +53,7 @@ type PlanConfig = {
 // Define plan tier keys explicitly to avoid Prisma type cache issues
 type PlanTierKey = 'FREE' | 'STARTER' | 'PRO' | 'TEAM' | 'BUSINESS' | 'ENTERPRISE' | 'ENTERPRISE_PLUS' | 'GOVERNMENT';
 
-// Plan configuration - 109+ modules, 29 world-first features
+// Plan configuration - 109 modules, 32 world-first features
 export const PLANS: Record<PlanTierKey, PlanConfig> = {
   FREE: {
     name: 'Free',
@@ -139,8 +139,8 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
   },
   BUSINESS: {
     name: 'Business',
-    monthlyPrice: 4999000, // $49,990
-    yearlyPrice: 47990000, // $479,900 (20% off)
+    monthlyPrice: 2999000, // $29,990
+    yearlyPrice: 28790000, // $287,900 (20% off)
     maxProjects: 200,
     maxScansPerMonth: 10000,
     maxTeamMembers: 75,
@@ -150,7 +150,7 @@ export const PLANS: Record<PlanTierKey, PlanConfig> = {
       '10,000 scans/month',
       '50,000 AI queries/month',
       '75 team members',
-      'All 109+ Security Modules',
+      'All 109 Security Modules',
       'SSO/SAML authentication',
       'Cyber Insurance Integration (WORLD FIRST)',
       'Supply Chain Attestation (WORLD FIRST)',

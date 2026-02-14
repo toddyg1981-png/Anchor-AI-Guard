@@ -63,8 +63,10 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
             <p>
               Anchor Security Pty Ltd (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) is committed to protecting your privacy. 
               This Privacy Policy explains how we collect, use, disclose, and safeguard your 
-              information when you use the Anchor AI Guard cybersecurity platform (&ldquo;Platform&rdquo;), 
-              which comprises 109+ security modules and 29 world-first capabilities.
+              information when you use the Anchor AI Guard sovereign-grade cybersecurity platform (&ldquo;Platform&rdquo;), 
+              which comprises 109 security modules, 24 interconnected engines, and 32+ world-first capabilities.
+              The Platform operates as Anchor (the organism), TITAN (the autonomous engine), and the Cortex (the intelligence core) — 
+              a self-describing, self-auditing, and self-evolving security platform.
             </p>
           </section>
 
@@ -91,7 +93,7 @@ export const PrivacyPolicy: React.FC<LegalPageProps> = ({ onBack }) => {
           <section>
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">3. How We Use Your Information</h2>
             <ul className="list-disc list-inside space-y-2">
-              <li>To provide and maintain our cybersecurity platform services across all 109+ modules</li>
+              <li>To provide and maintain our autonomous, self-evolving cybersecurity platform services across all 109 modules and 24 engines</li>
               <li>To process transactions and manage subscriptions</li>
               <li>To improve and personalise your experience</li>
               <li>To communicate with you about service updates</li>
@@ -184,8 +186,10 @@ export const TermsOfService: React.FC<LegalPageProps> = ({ onBack }) => {
           <section>
             <h2 className="text-2xl font-semibold text-cyan-400 mt-8 mb-4">2. Description of Service</h2>
             <p>
-              Anchor AI Guard is a comprehensive AI-powered cybersecurity platform comprising 
-              109+ security modules and 29 world-first capabilities, including but not limited to:
+              Anchor AI Guard is a category-defining, sovereign-grade cybersecurity platform comprising 
+              109 security modules, 24 interconnected engines, and 32+ world-first capabilities. The Platform 
+              operates as Anchor (the organism), TITAN (the autonomous engine), and the Cortex (the intelligence core) — 
+              a self-describing, self-auditing, and self-evolving security platform. Services include but are not limited to:
             </p>
             <ul className="list-disc list-inside space-y-2 mt-2">
               <li>AI security (LLM supply chain, AI agent security, deepfake detection, AI runtime protection)</li>
@@ -423,9 +427,11 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
         
         <div className="prose prose-invert prose-cyan max-w-none space-y-6 text-purple-200">
           <p className="text-xl leading-relaxed">
-            We built the security tools we wished existed. Twenty-nine world-first innovations 
-            across 109+ modules that fundamentally change how organisations protect their 
-            critical assets, infrastructure, and data.
+            We built the security tools we wished existed. 32+ world-first innovations 
+            across 109 modules and 24 interconnected engines that fundamentally change how organisations protect their 
+            critical assets, infrastructure, and data. Anchor operates as a living organism — Anchor (the organism), 
+            TITAN (the autonomous engine), and the Cortex (the intelligence core) — self-describing, self-auditing, 
+            and self-evolving to stay ahead of emerging threats.
           </p>
 
           <section className="mt-12">
@@ -449,7 +455,7 @@ export const AboutPage: React.FC<LegalPageProps> = ({ onBack }) => {
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
                 <h3 className="text-xl font-semibold text-pink-400 mb-2">🚀 World-First Features</h3>
                 <p className="text-sm">
-                  29 world-first capabilities that don&apos;t exist anywhere else in the market.
+                  32+ world-first capabilities that don&apos;t exist anywhere else in the market.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-xl p-6">
@@ -551,7 +557,7 @@ export const PurchaseTerms: React.FC<LegalPageProps> = ({ onBack }) => {
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Business</h3>
-                <p className="text-sm mt-1">$49,990/month - All 109+ modules, 29 world-firsts, SSO/SAML, 99.9% SLA, dedicated CSM</p>
+                <p className="text-sm mt-1">$29,990/month - All 109 modules, 24 engines, 32 world-firsts, SSO/SAML, 99.9% SLA, dedicated CSM</p>
               </div>
               <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4">
                 <h3 className="font-semibold text-pink-400">Enterprise</h3>
@@ -958,7 +964,7 @@ export const DataProcessingAgreement: React.FC<LegalPageProps> = ({ onBack }) =>
             <div className="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-4 mt-4">
               <table className="w-full text-sm">
                 <tbody>
-                  <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold w-1/3">Subject matter</td><td className="py-2">Provision of the Anchor AI Guard comprehensive cybersecurity platform (109+ security modules across AI security, network security, cloud security, identity &amp; access management, endpoint protection, compliance &amp; governance)</td></tr>
+                  <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold w-1/3">Subject matter</td><td className="py-2">Provision of the Anchor AI Guard sovereign-grade cybersecurity platform (109 security modules, 24 interconnected engines, 32+ world-first capabilities across AI security, network security, cloud security, identity &amp; access management, endpoint protection, compliance &amp; governance) — operating as Anchor (the organism), TITAN (the autonomous engine), and the Cortex (the intelligence core)</td></tr>
                   <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Duration</td><td className="py-2">For the duration of the service agreement plus 30 days</td></tr>
                   <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Nature &amp; purpose</td><td className="py-2">Security analysis of code, infrastructure, networks, endpoints, cloud environments, AI models, and threat data to identify vulnerabilities, monitor compliance, and automate security operations</td></tr>
                   <tr className="border-b border-slate-700"><td className="py-2 text-pink-400 font-semibold">Categories of data</td><td className="py-2">User account data, code repositories, scan results, usage logs, IP addresses</td></tr>
@@ -1074,7 +1080,7 @@ export const Disclaimer: React.FC<LegalPageProps> = ({ onBack }) => {
 
           <section className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6">
             <h2 className="text-2xl font-semibold text-amber-400 mt-0 mb-4">Important Notice</h2>
-            <p className="text-amber-200">Anchor AI Guard is a <strong>comprehensive cybersecurity platform</strong> comprising 109+ security modules and 29 world-first capabilities. It is <strong>not</strong> a guarantee of absolute security. No software can detect all vulnerabilities or prevent all breaches. Use of our platform should be part of a comprehensive security programme, not a substitute for one.</p>
+            <p className="text-amber-200">Anchor AI Guard is a <strong>category-defining, sovereign-grade cybersecurity platform</strong> comprising 109 security modules, 24 interconnected engines, and 32+ world-first capabilities — operating as Anchor (the organism), TITAN (the autonomous engine), and the Cortex (the intelligence core). It is <strong>not</strong> a guarantee of absolute security. No software can detect all vulnerabilities or prevent all breaches. Use of our autonomous, self-evolving platform should be part of a comprehensive security programme, not a substitute for one.</p>
           </section>
 
           <section>

@@ -110,9 +110,9 @@ describe('Billing Module', () => {
       expect(PLANS.TEAM.yearlyPrice).toBe(14390000);
     });
 
-    it('BUSINESS plan has correct pricing ($49,990/mo)', () => {
-      expect(PLANS.BUSINESS.monthlyPrice).toBe(4999000);
-      expect(PLANS.BUSINESS.yearlyPrice).toBe(47990000);
+    it('BUSINESS plan has correct pricing ($29,990/mo)', () => {
+      expect(PLANS.BUSINESS.monthlyPrice).toBe(2999000);
+      expect(PLANS.BUSINESS.yearlyPrice).toBe(28790000);
     });
 
     it('yearly pricing is always <= 12x monthly (discount)', () => {

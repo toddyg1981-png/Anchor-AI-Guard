@@ -5,7 +5,8 @@
 
 > **Enterprise-grade security scanning for your CI/CD pipeline.**  
 > SAST • Secrets Detection • Dependency Audit • AI Security Analysis  
-> 109+ Security Modules • 29 World-First Features
+> 109 modules, 24 engines • 32+ World-First Features • 8 sovereign-grade capabilities  
+> Sovereign-grade cybersecurity — self-describing, self-auditing, self-evolving
 
 ---
 
@@ -190,8 +191,9 @@ rules:
 | SARIF Output | ✅ | ✅ | ✅ | ✅ |
 | PR Annotations | ✅ | ✅ | ✅ | ✅ |
 | Zero Config | ✅ | ❌ | ❌ | ❌ |
-| Scan Modules | 109+ | ~30 | ~50 | ~40 |
-| World-First Features | 29 | 0 | 0 | 0 |
+| Scan Modules | 109 modules, 24 engines | ~30 | ~50 | ~40 |
+| World-First Features | 32+ | 0 | 0 | 0 |
+| Sovereign-Grade Capabilities | 8 | 0 | 0 | 0 |
 
 ## 📄 License
 

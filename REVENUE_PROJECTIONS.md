@@ -1,13 +1,14 @@
 # Anchor Security - Revenue Projections & Pricing Strategy
 
 > **Last Updated:** February 2026  
-> **Platform Status:** 109+ Security Modules | 29 World-First Features | 29 Unprotected Layers Covered
+> **Platform Status:** 109 Security Modules | 32 World-First Features | 32 Unprotected Layers Covered
+> **Current Valuation:** $100M — $150M
 
 ---
 
 ## 🏆 Market Position: What No One Has Ever Built Before
 
-Anchor is the **world's first and only** security platform protecting 29 layers the entire industry leaves exposed:
+Anchor is the **world's first and only** security platform protecting 32 layers the entire industry leaves exposed:
 
 | # | Layer | Industry Coverage | Anchor |
 |---|-------|-------------------|--------|
@@ -40,6 +41,9 @@ Anchor is the **world's first and only** security platform protecting 29 layers 
 | 27 | Deepfake Detection & Defence | 0 vendors | ✅ WORLD FIRST |
 | 28 | Satellite Communications Security | 0 vendors | ✅ WORLD FIRST |
 | 29 | LLM Supply Chain Protection | 0 vendors | ✅ WORLD FIRST |
+| 30 | AI Auto-Remediation Engine | 0 vendors | ✅ WORLD FIRST |
+| 31 | SDK Security Verification | 0 vendors | ✅ WORLD FIRST |
+| 32 | TITAN Cortex (Self-Auditing AI) | 0 vendors | ✅ WORLD FIRST |
 
 **Verified across CrowdStrike, Palo Alto Networks, SentinelOne, Snyk, Wiz, Checkmarx, Fortinet, and 40+ other vendors.**
 
@@ -58,13 +62,13 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **Wiz** | $50,000 - $300,000+/year | Cloud only | 0 |
 | **Checkmarx** | $50,000 - $200,000+/year | SAST/DAST only | 0 |
 | **Fortinet** | $50,000 - $500,000+/year | Network/Firewall | 0 |
-| **Anchor** | $11,880 - $75,000,000+/year | **EVERYTHING** | **29** |
+| **Anchor** | $11,880 - $75,000,000+/year | **EVERYTHING** | **32** |
 
 ### Anchor's Competitive Advantage
 
-- **🔮 29 World-First Features** - Capabilities no competitor has built
-- **🛡️ 29 Unprotected Layers** - Security blind spots only we cover
-- **🤖 109+ Security Modules** - Complete platform, not point solution
+- **🔮 32 World-First Features** - Capabilities no competitor has built
+- **🛡️ 32 Unprotected Layers** - Security blind spots only we cover
+- **🤖 109 Security Modules** - Complete platform, not point solution
 - **🧠 Self-Evolving AI** - Gets smarter autonomously
 - **⚔️ Autonomous Red Team** - Self-attacking security engine
 - **🏛️ Sovereign-Grade** - Government & defense ready
@@ -105,7 +109,7 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **Starter** | $990 | $11,880 | Startups, small teams | 0 (core features) |
 | **Pro** | $4,990 | $59,880 | Scale-ups | 2 (Identity Drift, Architecture Drift) |
 | **Team** | $14,990 | $179,880 | Mid-market | 5 (+Data Trust, Human Behaviour, AI Runtime) |
-| **Business** | $49,990 | $599,880 | Enterprise | **All 29** (Hardware, Firmware, Red Team, National Telemetry, AI Agent Security, Deepfake Detection, Satellite Comms, LLM Supply Chain, etc.) |
+| **Business** | $29,990 | $359,880 | Enterprise | **All 32** (Hardware, Firmware, Red Team, National Telemetry, AI Agent Security, Deepfake Detection, Satellite Comms, LLM Supply Chain, AI Auto-Remediation, TITAN Cortex, etc.) |
 
 ### Feature Breakdown
 
@@ -147,11 +151,11 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 - Real-time Collaboration (15 users)
 - Dedicated CSM
 
-#### Business ($49,990/mo)
+#### Business ($29,990/mo)
 - 500 projects
 - 10,000 scans/month
 - 50,000 AI queries/month
-- **🏆 ALL 29 WORLD-FIRST FEATURES**
+- **🏆 ALL 32 WORLD-FIRST FEATURES**
 - 🔩 Hardware Integrity Verification
 - 📟 Firmware & Microcode Scanner
 - ⚔️ Autonomous Red Team
@@ -187,7 +191,7 @@ This monopoly position justifies premium pricing that reflects the unprecedented
 | **SLA** | 99.95% uptime guarantee |
 
 ### Enterprise Features
-- All 109+ modules + 29 World-Firsts
+- All 109 modules + 32 World-Firsts
 - On-premise deployment option
 - Custom AI model training
 - Dedicated security engineer
@@ -597,7 +601,7 @@ Other 7 Streams:           5.2% ($255M)
 | Stage | Rate | Notes |
 |-------|------|-------|
 | Visitor → Free Sign-up | 12% | World-first tech drives interest |
-| Free → Paid | 8% | 29 world-firsts = high perceived value |
+| Free → Paid | 8% | 32 world-firsts = high perceived value |
 | Paid → Enterprise | 5% | Strong enterprise demand |
 | Monthly Churn | 1.5% | Very sticky product |
 | Net Revenue Retention | 165% | High expansion from upgrades + add-ons |
@@ -609,7 +613,7 @@ Other 7 Streams:           5.2% ($255M)
 | **Starter** | $990 | $11,880 |
 | **Pro** | $4,990 | $59,880 |
 | **Team** | $14,990 | $179,880 |
-| **Business** | $49,990 | $599,880 |
+| **Business** | $29,990 | $359,880 |
 | **Enterprise** | $583,333 | $7,000,000 |
 | **Enterprise+** | $1,416,667 | $17,000,000 |
 | **Government** | $4,166,667 | $50,000,000 |
@@ -648,12 +652,12 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 | CrowdStrike | 12 years | Started with single EDR product |
 | Palo Alto | 10 years | 15+ acquisitions |
 | Zscaler | 11 years | Slow enterprise grind |
-| **Anchor** | **3 years** | 109+ modules + 29 world-firsts from day 1 |
+| **Anchor** | **3 years** | 109 modules + 32 world-firsts from day 1 |
 
 ### Why Anchor Can 10x the Industry Norm
 
 1. **Platform from Day 1** - Not a point solution that expands
-2. **29 World-Firsts** - No competition in 29 critical layers
+2. **32 World-Firsts** - No competition in 32 critical layers
 3. **Government Ready** - $25M-$75M+ contracts from Year 1
 4. **Premium Pricing Justified** - Monopoly on unprotected layers
 5. **13 Revenue Streams** - Diversified, not dependent on one model
@@ -752,13 +756,13 @@ Unlike competitors who took 10-15 years to reach $1B ARR:
 
 ## 🎯 The Bottom Line
 
-### 13 Revenue Streams. 29 World-Firsts. 29 Unprotected Layers. One Platform.
+### 13 Revenue Streams. 32 World-Firsts. 32 Unprotected Layers. One Platform.
 
 | Metric | Value |
 |--------|-------|
-| **Security Modules** | 109+ |
-| **World-First Features** | 29 |
-| **Unprotected Layers Covered** | 29 |
+| **Security Modules** | 109 |
+| **World-First Features** | 32 |
+| **Unprotected Layers Covered** | 32 |
 | **Revenue Streams** | 13 |
 | **Year 1 ARR Target** | $111M |
 | **Year 3 ARR Target** | $1.06B |

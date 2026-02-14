@@ -94,7 +94,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           <p>By accessing or using Anchor Security (&quot;Service&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
           
           <h3 className="text-lg font-semibold text-white">2. Description of Service</h3>
-          <p>Anchor AI Guard is a comprehensive AI-powered cybersecurity platform comprising 109+ security modules and 29 world-first capabilities, including code scanning, vulnerability detection, AI security, network protection (SIEM, WAF, DDoS), cloud security, identity management, endpoint protection, compliance automation, threat intelligence, and autonomous security operations. The Service includes web-based dashboards, CLI tools, and API access.</p>
+          <p>Anchor AI Guard is a comprehensive AI-powered cybersecurity platform comprising 109 security modules and 32 world-first capabilities, including code scanning, vulnerability detection, AI security, network protection (SIEM, WAF, DDoS), cloud security, identity management, endpoint protection, compliance automation, threat intelligence, and autonomous security operations. The Service includes web-based dashboards, CLI tools, and API access.</p>
           
           <h3 className="text-lg font-semibold text-white">3. User Accounts</h3>
           <p>You must provide accurate information when creating an account. You are responsible for maintaining the security of your account credentials. You must notify us immediately of any unauthorized access.</p>
@@ -110,7 +110,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess }) => {
           </ul>
           
           <h3 className="text-lg font-semibold text-white">5. Subscription and Billing</h3>
-          <p>Paid subscriptions (Starter $990/mo, Pro $4,990/mo, Team $14,990/mo, Business $49,990/mo, Enterprise, Enterprise+, and Government &amp; Defense) are billed in advance on a monthly or yearly basis. Refunds are available within 30 days of initial purchase. Subscription cancellations take effect at the end of the billing period.</p>
+          <p>Paid subscriptions (Starter $990/mo, Pro $4,990/mo, Team $14,990/mo, Business $29,990/mo, Enterprise, Enterprise+, and Government &amp; Defense) are billed in advance on a monthly or yearly basis. Refunds are available within 30 days of initial purchase. Subscription cancellations take effect at the end of the billing period.</p>
           
           <h3 className="text-lg font-semibold text-white">6. Data and Security</h3>
           <p>We analyse your code, infrastructure, networks, and environments to identify security vulnerabilities and threats. We do not store your source code beyond the duration of the analysis. Scan results and telemetry data are retained according to your plan&apos;s data retention policy.</p>

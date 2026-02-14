@@ -146,6 +146,8 @@ const AIAgentSecurity = React.lazy(() => import('./components/AIAgentSecurity'))
 const DeepfakeDetection = React.lazy(() => import('./components/DeepfakeDetection'));
 const SatelliteCommsSecurity = React.lazy(() => import('./components/SatelliteCommsSecurity'));
 const LLMSupplyChain = React.lazy(() => import('./components/LLMSupplyChain'));
+const PredictiveAttackIntel = React.lazy(() => import('./components/PredictiveAttackIntel'));
+const AIAutoRemediation = React.lazy(() => import('./components/AIAutoRemediation'));
 
 // Loading spinner for lazy-loaded components
 const LazyFallback = () => (
@@ -295,7 +297,9 @@ export type DashboardView =
   | 'aiAgentSecurity'
   | 'deepfakeDetection'
   | 'satelliteComms'
-  | 'llmSupplyChain';
+  | 'llmSupplyChain'
+  | 'predictiveAttackIntel'
+  | 'aiAutoRemediation';
 
 const AppContent: React.FC = () => {
   const { user, isAuthenticated, isLoading: authLoading, logout, isDemoMode } = useAuth();
@@ -991,6 +995,10 @@ const AppContent: React.FC = () => {
         return <FeatureGate addonId="satellite-comms" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><SatelliteCommsSecurity /></FeatureGate>;
       case 'llmSupplyChain':
         return <FeatureGate addonId="llm-supply-chain" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><LLMSupplyChain /></FeatureGate>;
+      case 'predictiveAttackIntel':
+        return <FeatureGate addonId="predictive-attack-intel" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><PredictiveAttackIntel /></FeatureGate>;
+      case 'aiAutoRemediation':
+        return <FeatureGate addonId="ai-auto-remediation" currentTier={userPlan} onUpgrade={() => handleNavigate('billing')}><AIAutoRemediation /></FeatureGate>;
       case 'overview':
       default:
         return (
